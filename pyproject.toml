@@ -1,0 +1,35 @@
+[project]
+name = "ulwazi"
+version = "0.1"
+dependencies = [
+    "sphinx",
+    "sphinx-basic-ng",
+    "sphinxcontrib-jquery",
+]
+description = 'Ulwazi theme for Sphinx documentation projects'
+readme = "README.md"
+
+classifiers = [
+    'Framework :: Sphinx',
+    'Framework :: Sphinx :: Theme',
+    'Development Status :: 1 - Planning',
+    'License :: OSI Approved :: GNU General Public License (GPL)',
+    'Environment :: Console',
+    'Environment :: Web Environment',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.8',
+    'Topic :: Documentation',
+    'Topic :: Software Development :: Documentation',
+]
+
+[build-system]
+requires = [
+    "setuptools",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.sphinx-theme-builder]
+node-version = "18.16.0"
+
+[project.entry-points."sphinx.html_themes"]
+umlwazi = "ulwazi"

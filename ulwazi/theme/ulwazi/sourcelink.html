@@ -1,0 +1,7 @@
+{# Sphinx sidebar template: "show source" link. #}
+{%- if show_source and has_source and sourcename %}
+  <div role="note" aria-label="source link">
+    <a href="{{ pathto('_sources/' + sourcename, true)|e }}"
+            rel="nofollow">{{ _('Show Source') }}</a>
+   </div>
+{%- endif %}

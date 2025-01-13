@@ -1,0 +1,17 @@
+{%- macro sidebar() %}
+    <div class="sphinxsidebarwrapper">
+        {%- block sidebarlogo %}
+        {%- if logo_url %}
+        <p class="logo"><a href="{{ pathto(root_doc)|e }}">
+            <img class="logo" src="{{ logo_url|e }}" alt="{{ logo_alt|e }}"/>
+        </a></p>
+        {%- endif %}
+        {%- endblock %}
+    {%- for sidebartemplate in sidebars %}
+    {%- include sidebartemplate %}
+    {%- endfor %}
+{%- endmacro %}
+
+{%- include "components/toggle-sidebar-primary.html" %}
+{%- block sidebar %}{{ sidebar() }}{% endblock %}
+

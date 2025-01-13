@@ -1,0 +1,12 @@
+[theme]
+inherit = "basic-ng"
+stylesheets = [
+    "css/default.css",
+]
+sidebars = [
+    "globaltoc.html", 
+]
+
+[options]
+globaltoc_collapse = "true"
+globaltoc_maxdepth = "3"
