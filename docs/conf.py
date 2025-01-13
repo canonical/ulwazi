@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Test'
-copyright = '2024, secondskoll'
-author = 'secondskoll'
+copyright = '2024'
+author = 'Canonical'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
