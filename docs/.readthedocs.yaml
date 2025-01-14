@@ -11,6 +11,12 @@ build:
   tools:
     python: "3.11"
 
+  jobs:
+    post_create_environment:
+      - pip install sphinx build
+      - python -m build
+      - pip install dist/ulwazi-0.1.tar.gz
+
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
   builder: dirhtml
@@ -22,6 +28,6 @@ sphinx:
 #    - pdf
 
 # Optionally declare the Python requirements required to build your docs
-python:
-   install:
-   - requirements: docs/requirements.txt
+# python:
+#    install:
+#    - requirements: docs/requirements.txt
