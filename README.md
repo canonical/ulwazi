@@ -1,8 +1,10 @@
 # Ulwazi
 
-This is a proof of concept for a Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
+Ulwazi, Xhosa for infomration, is a work-in-progress Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
 
 Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng), developed by [praduimsg](https://github.com/pradyunsg), and [Alabaster](https://github.com/sphinx-doc/alabaster).
+
+The theme will default to a generic Vanilla Framework style, but will have options for Canonical specific theming to support the org's documentation needs. 
 
 ## Testing
 
