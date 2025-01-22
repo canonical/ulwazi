@@ -1,20 +1,24 @@
 # Ulwazi
 
-Ulwazi, Xhosa for infomration, is a work-in-progress Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
+Ulwazi, Xhosa for information, is a work-in-progress Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
 
-Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng), developed by [praduimsg](https://github.com/pradyunsg), and [Alabaster](https://github.com/sphinx-doc/alabaster).
+[Demo website](https://canonical-ulwazi.readthedocs-hosted.com/)
 
-The theme will default to a generic Vanilla Framework style, but will have options for Canonical specific theming to support the org's documentation needs. 
+Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng), developed by [praduimsg](https://github.com/pradyunsg) and [Alabaster](https://github.com/sphinx-doc/alabaster).
+
+The theme will default to a generic Vanilla Framework style but will have options for the specific Canonical theming to support the org's documentation needs. 
 
 ## Testing
 
-A Makefile is included with some basic functionality to run and rebuild the test content. To build documentation using the theme, clone the repository and run:
+A Makefile includes some basic functionality to build the theme and then build and run the test content with the theme.
+
+To build documentation using the theme, run:
 
 ```
 make run
 ```
 
-Once built, any changes to the source of the theme will require a new package to be built and installed. To do this, run:
+Once built, any changes to the theme will require a new package to be built and installed. To do this, run:
 
 ```
 make rebuild
