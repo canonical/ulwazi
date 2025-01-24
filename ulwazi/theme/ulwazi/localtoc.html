@@ -1,7 +1,9 @@
 {# Sphinx sidebar template: local table of contents. #}
 {%- if display_toc %}
-  <div>
+<nav class="p-table-of-contents__nav" aria-label="Table of contents">
+  <ul class="p-table-of-contents__list">
     <!-- <h3><a href="{{ pathto(root_doc)|e }}">{{ _('Table of Contents') }}</a></h3> -->
     {{ toc }}
-  </div>
+  </ul>
+</nav>
 {%- endif %}

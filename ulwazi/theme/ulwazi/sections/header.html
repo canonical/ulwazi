@@ -107,8 +107,15 @@
 {% endmacro %}
 
 
-<header id="navigation" class="p-navigation is-dark">
-
+<header id="navigation" class="p-navigation--reduced is-dark" style="height: 32px;">
+  <div class="p-navigation__row">
+    <a class="p-navigation__link" href="#" style="width: 208px;">
+      <span class="p-navigation__logo-title">Canonical Ubuntu</span>
+    </a>
+     {% include "./sections/navigation_dropdowns.html" %}
+  </div>
+</header>
+<div id="secondary-navigation" class="p-navigation is-sticky is-secondary is-dark">
   {% if is_docs %}
   <div class="l-docs__subgrid">
     <div class="l-docs__sidebar">
@@ -126,4 +133,4 @@
     {{ nav_items() }}
   </div>
   {% endif %}
-</header>
+</div>
