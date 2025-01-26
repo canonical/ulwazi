@@ -1,5 +1,6 @@
 {% macro nav_logo() %}
 <div class="p-navigation__banner">
+  <script src="{{ pathto('_static/js/top-menu.js', 1) }}"></script>
   <div class="p-navigation__tagged-logo">
     <a class="p-navigation__link" href="/">
       <div class="p-navigation__logo-tag">
@@ -107,30 +108,3018 @@
 {% endmacro %}
 
 
-<header id="navigation" class="p-navigation--reduced is-dark" style="height: 32px;">
-  <div class="p-navigation__row">
-    <a class="p-navigation__link" href="#" style="width: 208px;">
-      <span class="p-navigation__logo-title">Canonical Ubuntu</span>
-    </a>
-     {% include "./sections/navigation_dropdowns.html" %}
-  </div>
-</header>
-<div id="secondary-navigation" class="p-navigation is-sticky is-secondary is-dark">
-  {% if is_docs %}
-  <div class="l-docs__subgrid">
-    <div class="l-docs__sidebar">
-      {{ nav_logo() }}
-    </div>
-    <div class="l-docs__main">
-      <div class="p-navigation__row u-fixed-width">
-        {{ nav_items() }}
-      </div>
-    </div>
-  </div>
-  {% else %}
+<header id="navigation" class="p-navigation--reduced is-dark">
   <div class="p-navigation__row--25-75">
-    {{ nav_logo() }}
-    {{ nav_items() }}
+    <div class="p-navigation__banner">
+      <div class="p-navigation__tagged-logo">
+        <a class="p-navigation__link" href="#">
+          <div class="p-navigation__logo-tag">
+            <img class="p-navigation__logo-icon" src="https://assets.ubuntu.com/v1/82818827-CoF_white.svg" alt="">
+          </div>
+          <span class="p-navigation__logo-title">Canonical Ubuntu</span>
+        </a>
+      </div>
+      <ul class="p-navigation__items">
+        <li class="p-navigation__item">
+          <a href="#/search" class="js-search-button p-navigation__link--search-toggle" aria-label="Search"></a>
+        </li>
+        <li class="p-navigation__item">
+          <a href="#/navigation" class="js-menu-button p-navigation__link">Menu</a>
+        </li>
+      </ul>
+    </div>
+    <nav class="p-navigation__nav js-show-nav" aria-label="Categories">
+      <ul class="p-navigation__items js-dropdown-nav-list js-navigation-sliding-panel">
+        <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" role="menuitem" id="products">
+          <a class="p-navigation__link" href="#products" aria-controls="products-content" tabindex="0">Products</a>
+          <div class="p-navigation__dropdown is-full-width is-collapsed js-navigation-sliding-panel" data-level="1" id="products-content" aria-hidden="true">
+            <div class="p-navigation__dropdown-content--sliding">
+              <ul class="p-list u-no-margin js-dropdown-nav-list">
+                <li class="p-navigation__item--dropdown-close" id="products-content-back">
+                  <button aria-controls="products-content" class="p-navigation__link js-back-button">
+                    Back
+                  </button>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-1">
+                  <button aria-controls="Products-group-1-menu" class="p-navigation__link">
+                    Products 1
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-1-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-1-back">
+                      <button aria-controls="Products-group-1-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 1 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 1 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 1 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 1 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 1 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 1 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 1 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-2">
+                  <button aria-controls="Products-group-2-menu" class="p-navigation__link">
+                    Products 2
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-2-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-2-back">
+                      <button aria-controls="Products-group-2-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 2 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 2 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 2 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 2 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 2 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 2 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 2 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-3">
+                  <button aria-controls="Products-group-3-menu" class="p-navigation__link">
+                    Products 3
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-3-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-3-back">
+                      <button aria-controls="Products-group-3-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 3 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 3 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 3 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 3 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 3 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 3 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 3 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-4">
+                  <button aria-controls="Products-group-4-menu" class="p-navigation__link">
+                    Products 4
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-4-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-4-back">
+                      <button aria-controls="Products-group-4-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 4 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 4 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 4 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 4 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 4 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 4 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 4 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-5">
+                  <button aria-controls="Products-group-5-menu" class="p-navigation__link">
+                    Products 5
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-5-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-5-back">
+                      <button aria-controls="Products-group-5-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 5 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 5 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 5 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 5 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 5 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 5 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 5 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-6">
+                  <button aria-controls="Products-group-6-menu" class="p-navigation__link">
+                    Products 6
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-6-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-6-back">
+                      <button aria-controls="Products-group-6-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 6 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 6 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 6 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 6 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 6 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 6 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 6 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-7">
+                  <button aria-controls="Products-group-7-menu" class="p-navigation__link">
+                    Products 7
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-7-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-7-back">
+                      <button aria-controls="Products-group-7-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 7 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 7 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 7 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 7 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 7 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 7 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 7 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-8">
+                  <button aria-controls="Products-group-8-menu" class="p-navigation__link">
+                    Products 8
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-8-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-8-back">
+                      <button aria-controls="Products-group-8-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 8 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 8 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 8 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 8 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 8 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 8 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 8 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-9">
+                  <button aria-controls="Products-group-9-menu" class="p-navigation__link">
+                    Products 9
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-9-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-9-back">
+                      <button aria-controls="Products-group-9-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 9 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 9 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 9 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 9 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 9 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 9 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 9 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-10">
+                  <button aria-controls="Products-group-10-menu" class="p-navigation__link">
+                    Products 10
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-10-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-10-back">
+                      <button aria-controls="Products-group-10-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 10 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 10 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 10 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 10 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 10 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 10 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 10 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Products-group-11">
+                  <button aria-controls="Products-group-11-menu" class="p-navigation__link">
+                    Products 11
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Products-group-11-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Products-group-11-back">
+                      <button aria-controls="Products-group-11-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Products 11 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Products 11 item 10</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Products 11 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Products 11 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Products 11 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Products 11 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Products 11 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="p-navigation__dropdown-content--full-width">
+              <div class="p-strip is-shallow">
+                <div class="row">
+                  <div class="col-9">
+                    <p class="p-muted-heading">Products</p>
+                    <div class="row  u-no-margin u-no-padding">
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Products 1<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Products 2<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Products 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Products 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Products 4<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Products 5<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Products 7<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Products 8<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Products 9<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <p class="p-muted-heading">Quick links</p>
+                    <ul class="p-list js-dropdown-nav-list">
+                      <li class="p-list__item"><a href="#quicklink">Quick link 1</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 2</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 3</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 4</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" role="menuitem" id="use-case">
+          <a class="p-navigation__link" href="#use-case" aria-controls="use-case-content" tabindex="0">Use cases</a>
+          <div class="p-navigation__dropdown is-full-width is-collapsed js-navigation-sliding-panel" data-level="1" id="use-case-content" aria-hidden="true">
+            <div class="p-navigation__dropdown-content--sliding">
+              <ul class="p-list u-no-margin js-dropdown-nav-list">
+                <li class="p-navigation__item--dropdown-close" id="use-case-content-back">
+                  <button aria-controls="use-case-content" class="p-navigation__link js-back-button">
+                    Back
+                  </button>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Use cases-group-1">
+                  <button aria-controls="Use cases-group-1-menu" class="p-navigation__link">
+                    Use cases 1
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Use cases-group-1-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Use cases-group-1-back">
+                      <button aria-controls="Use cases-group-1-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 10</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 11
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 11</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 12
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 12</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 13
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 13</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 14
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 14</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 15
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 15</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 1 item 16
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 1 item 16</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Use cases-group-2">
+                  <button aria-controls="Use cases-group-2-menu" class="p-navigation__link">
+                    Use cases 2
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Use cases-group-2-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Use cases-group-2-back">
+                      <button aria-controls="Use cases-group-2-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 10</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 11
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 11</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 12
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 12</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 13
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 13</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 14
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 14</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 15
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 15</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 2 item 16
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 2 item 16</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Use cases-group-3">
+                  <button aria-controls="Use cases-group-3-menu" class="p-navigation__link">
+                    Use cases 3
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Use cases-group-3-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Use cases-group-3-back">
+                      <button aria-controls="Use cases-group-3-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 8</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 9
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 9</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 10
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 10</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 11
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 11</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 12
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 12</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 13
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 13</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 14
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 14</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 15
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 15</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Use cases 3 item 16
+                        <br>
+                        <span class="u-text--muted">Description for Use cases 3 item 16</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="p-navigation__dropdown-content--full-width">
+              <div class="p-strip is-shallow">
+                <div class="row">
+                  <div class="col-9">
+                    <p class="p-muted-heading">Use cases</p>
+                    <div class="row  u-no-margin u-no-padding">
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Use cases 1<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Use cases 2<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Use cases 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Use cases 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Use cases 4<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Use cases 5<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Use cases 7<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Use cases 8<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Use cases 9<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <p class="p-muted-heading">Quick links</p>
+                    <ul class="p-list js-dropdown-nav-list">
+                      <li class="p-list__item"><a href="#quicklink">Quick link 1</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 2</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 3</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 4</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" role="menuitem" id="support">
+          <a class="p-navigation__link" href="#support" aria-controls="support-content" tabindex="0">Support</a>
+          <div class="p-navigation__dropdown is-full-width is-collapsed js-navigation-sliding-panel" data-level="1" id="support-content" aria-hidden="true">
+            <div class="p-navigation__dropdown-content--sliding">
+              <ul class="p-list u-no-margin js-dropdown-nav-list">
+                <li class="p-navigation__item--dropdown-close" id="support-content-back">
+                  <button aria-controls="support-content" class="p-navigation__link js-back-button">
+                    Back
+                  </button>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Support-group-1">
+                  <button aria-controls="Support-group-1-menu" class="p-navigation__link">
+                    Support 1
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Support-group-1-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Support-group-1-back">
+                      <button aria-controls="Support-group-1-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 1 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Support 1 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 1 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Support 1 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 1 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Support 1 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 1 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Support 1 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 1 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Support 1 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 1 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Support 1 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 1 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Support 1 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 1 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Support 1 item 8</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Support 1 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Support 1 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Support 1 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Support 1 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Support 1 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Support-group-2">
+                  <button aria-controls="Support-group-2-menu" class="p-navigation__link">
+                    Support 2
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Support-group-2-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Support-group-2-back">
+                      <button aria-controls="Support-group-2-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 2 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Support 2 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 2 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Support 2 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 2 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Support 2 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 2 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Support 2 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 2 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Support 2 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 2 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Support 2 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 2 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Support 2 item 7</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Support 2 item 8
+                        <br>
+                        <span class="u-text--muted">Description for Support 2 item 8</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Support 2 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Support 2 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Support 2 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Support 2 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Support 2 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="p-navigation__dropdown-content--full-width">
+              <div class="p-strip is-shallow">
+                <div class="row">
+                  <div class="col-9">
+                    <p class="p-muted-heading">Support</p>
+                    <div class="row  u-no-margin u-no-padding">
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Support 1<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Support 2<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Support 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Support 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Support 4<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Support 5<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Support 7<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Support 8<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Support 9<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <p class="p-muted-heading">Quick links</p>
+                    <ul class="p-list js-dropdown-nav-list">
+                      <li class="p-list__item"><a href="#quicklink">Quick link 1</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 2</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 3</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 4</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" role="menuitem" id="community">
+          <a class="p-navigation__link" href="#community" aria-controls="community-content" tabindex="0">Community</a>
+          <div class="p-navigation__dropdown is-full-width is-collapsed js-navigation-sliding-panel" data-level="1" id="community-content" aria-hidden="true">
+            <div class="p-navigation__dropdown-content--sliding">
+              <ul class="p-list u-no-margin js-dropdown-nav-list">
+                <li class="p-navigation__item--dropdown-close" id="community-content-back">
+                  <button aria-controls="community-content" class="p-navigation__link js-back-button">
+                    Back
+                  </button>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Community-group-1">
+                  <button aria-controls="Community-group-1-menu" class="p-navigation__link">
+                    Community 1
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Community-group-1-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Community-group-1-back">
+                      <button aria-controls="Community-group-1-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 1 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Community 1 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 1 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Community 1 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 1 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Community 1 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 1 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Community 1 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 1 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Community 1 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 1 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Community 1 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 1 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Community 1 item 7</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Community 1 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Community 1 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Community 1 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Community 1 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Community 1 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Community-group-2">
+                  <button aria-controls="Community-group-2-menu" class="p-navigation__link">
+                    Community 2
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Community-group-2-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Community-group-2-back">
+                      <button aria-controls="Community-group-2-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 2 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Community 2 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 2 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Community 2 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 2 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Community 2 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 2 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Community 2 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 2 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Community 2 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 2 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Community 2 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 2 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Community 2 item 7</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Community 2 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Community 2 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Community 2 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Community 2 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Community 2 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Community-group-3">
+                  <button aria-controls="Community-group-3-menu" class="p-navigation__link">
+                    Community 3
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Community-group-3-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Community-group-3-back">
+                      <button aria-controls="Community-group-3-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 3 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Community 3 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 3 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Community 3 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 3 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Community 3 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 3 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Community 3 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 3 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Community 3 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 3 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Community 3 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 3 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Community 3 item 7</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Community 3 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Community 3 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Community 3 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Community 3 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Community 3 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Community-group-4">
+                  <button aria-controls="Community-group-4-menu" class="p-navigation__link">
+                    Community 4
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Community-group-4-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Community-group-4-back">
+                      <button aria-controls="Community-group-4-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 4 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Community 4 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 4 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Community 4 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 4 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Community 4 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 4 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Community 4 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 4 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Community 4 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 4 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Community 4 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 4 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Community 4 item 7</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Community 4 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Community 4 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Community 4 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Community 4 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Community 4 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Community-group-5">
+                  <button aria-controls="Community-group-5-menu" class="p-navigation__link">
+                    Community 5
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Community-group-5-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Community-group-5-back">
+                      <button aria-controls="Community-group-5-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 5 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Community 5 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 5 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Community 5 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 5 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Community 5 item 3</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 5 item 4
+                        <br>
+                        <span class="u-text--muted">Description for Community 5 item 4</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 5 item 5
+                        <br>
+                        <span class="u-text--muted">Description for Community 5 item 5</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 5 item 6
+                        <br>
+                        <span class="u-text--muted">Description for Community 5 item 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Community 5 item 7
+                        <br>
+                        <span class="u-text--muted">Description for Community 5 item 7</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Community 5 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Community 5 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Community 5 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Community 5 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Community 5 quick link 5</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="p-navigation__dropdown-content--full-width">
+              <div class="p-strip is-shallow">
+                <div class="row">
+                  <div class="col-9">
+                    <p class="p-muted-heading">Community</p>
+                    <div class="row  u-no-margin u-no-padding">
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Community 1<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Community 2<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Community 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Community 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Community 4<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Community 5<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Community 7<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Community 8<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Community 9<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <p class="p-muted-heading">Quick links</p>
+                    <ul class="p-list js-dropdown-nav-list">
+                      <li class="p-list__item"><a href="#quicklink">Quick link 1</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 2</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 3</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 4</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" role="menuitem" id="get-ubuntu">
+          <a class="p-navigation__link" href="#get-ubuntu" aria-controls="get-ubuntu-content" tabindex="0">Get Ubuntu</a>
+          <div class="p-navigation__dropdown is-full-width is-collapsed js-navigation-sliding-panel" data-level="1" id="get-ubuntu-content" aria-hidden="true">
+            <div class="p-navigation__dropdown-content--sliding">
+              <ul class="p-list u-no-margin js-dropdown-nav-list">
+                <li class="p-navigation__item--dropdown-close" id="get-ubuntu-content-back">
+                  <button aria-controls="get-ubuntu-content" class="p-navigation__link js-back-button">
+                    Back
+                  </button>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Get Ubuntu-group-1">
+                  <button aria-controls="Get Ubuntu-group-1-menu" class="p-navigation__link">
+                    Get Ubuntu 1
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Get Ubuntu-group-1-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Get Ubuntu-group-1-back">
+                      <button aria-controls="Get Ubuntu-group-1-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li class="p-navigation__dropdown-item">
+                      <a href="#" class="p-link--inverted">
+                        <span>Get Ubuntu 1</span>
+                        <br>
+                        <small class="u-text--muted">Description for Get Ubuntu 1 item</small>
+                      </a>
+                      <br>
+                      <a href="#" class="p-button--positive u-no-margin">Get Ubuntu 1</a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 1 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 1 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 1 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 1 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 1 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 1 item 3</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Get Ubuntu 1 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Get Ubuntu 1 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Get Ubuntu 1 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Get Ubuntu 1 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Get Ubuntu 1 quick link 5</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-6" tabindex="0">Get Ubuntu 1 quick link 6</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-7" tabindex="0">Get Ubuntu 1 quick link 7</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-8" tabindex="0">Get Ubuntu 1 quick link 8</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Get Ubuntu-group-2">
+                  <button aria-controls="Get Ubuntu-group-2-menu" class="p-navigation__link">
+                    Get Ubuntu 2
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Get Ubuntu-group-2-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Get Ubuntu-group-2-back">
+                      <button aria-controls="Get Ubuntu-group-2-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li class="p-navigation__dropdown-item">
+                      <a href="#" class="p-link--inverted">
+                        <span>Get Ubuntu 2</span>
+                        <br>
+                        <small class="u-text--muted">Description for Get Ubuntu 2 item</small>
+                      </a>
+                      <br>
+                      <a href="#" class="p-button--positive u-no-margin">Get Ubuntu 2</a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 2 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 2 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 2 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 2 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 2 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 2 item 3</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Get Ubuntu 2 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Get Ubuntu 2 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Get Ubuntu 2 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Get Ubuntu 2 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Get Ubuntu 2 quick link 5</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-6" tabindex="0">Get Ubuntu 2 quick link 6</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-7" tabindex="0">Get Ubuntu 2 quick link 7</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-8" tabindex="0">Get Ubuntu 2 quick link 8</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Get Ubuntu-group-3">
+                  <button aria-controls="Get Ubuntu-group-3-menu" class="p-navigation__link">
+                    Get Ubuntu 3
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Get Ubuntu-group-3-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Get Ubuntu-group-3-back">
+                      <button aria-controls="Get Ubuntu-group-3-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li class="p-navigation__dropdown-item">
+                      <a href="#" class="p-link--inverted">
+                        <span>Get Ubuntu 3</span>
+                        <br>
+                        <small class="u-text--muted">Description for Get Ubuntu 3 item</small>
+                      </a>
+                      <br>
+                      <a href="#" class="p-button--positive u-no-margin">Get Ubuntu 3</a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 3 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 3 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 3 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 3 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 3 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 3 item 3</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Get Ubuntu 3 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Get Ubuntu 3 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Get Ubuntu 3 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Get Ubuntu 3 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Get Ubuntu 3 quick link 5</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-6" tabindex="0">Get Ubuntu 3 quick link 6</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-7" tabindex="0">Get Ubuntu 3 quick link 7</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-8" tabindex="0">Get Ubuntu 3 quick link 8</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Get Ubuntu-group-4">
+                  <button aria-controls="Get Ubuntu-group-4-menu" class="p-navigation__link">
+                    Get Ubuntu 4
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Get Ubuntu-group-4-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Get Ubuntu-group-4-back">
+                      <button aria-controls="Get Ubuntu-group-4-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li class="p-navigation__dropdown-item">
+                      <a href="#" class="p-link--inverted">
+                        <span>Get Ubuntu 4</span>
+                        <br>
+                        <small class="u-text--muted">Description for Get Ubuntu 4 item</small>
+                      </a>
+                      <br>
+                      <a href="#" class="p-button--positive u-no-margin">Get Ubuntu 4</a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 4 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 4 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 4 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 4 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 4 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 4 item 3</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Get Ubuntu 4 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Get Ubuntu 4 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Get Ubuntu 4 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Get Ubuntu 4 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Get Ubuntu 4 quick link 5</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-6" tabindex="0">Get Ubuntu 4 quick link 6</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-7" tabindex="0">Get Ubuntu 4 quick link 7</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-8" tabindex="0">Get Ubuntu 4 quick link 8</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Get Ubuntu-group-5">
+                  <button aria-controls="Get Ubuntu-group-5-menu" class="p-navigation__link">
+                    Get Ubuntu 5
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Get Ubuntu-group-5-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Get Ubuntu-group-5-back">
+                      <button aria-controls="Get Ubuntu-group-5-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li class="p-navigation__dropdown-item">
+                      <a href="#" class="p-link--inverted">
+                        <span>Get Ubuntu 5</span>
+                        <br>
+                        <small class="u-text--muted">Description for Get Ubuntu 5 item</small>
+                      </a>
+                      <br>
+                      <a href="#" class="p-button--positive u-no-margin">Get Ubuntu 5</a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 5 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 5 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 5 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 5 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 5 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 5 item 3</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Get Ubuntu 5 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Get Ubuntu 5 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Get Ubuntu 5 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Get Ubuntu 5 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Get Ubuntu 5 quick link 5</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-6" tabindex="0">Get Ubuntu 5 quick link 6</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-7" tabindex="0">Get Ubuntu 5 quick link 7</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-8" tabindex="0">Get Ubuntu 5 quick link 8</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="p-navigation__item--dropdown-toggle js-navigation-dropdown-toggle" id="Get Ubuntu-group-6">
+                  <button aria-controls="Get Ubuntu-group-6-menu" class="p-navigation__link">
+                    Get Ubuntu 6
+                  </button>
+                  <ul class="p-navigation__dropdown is-collapsed js-dropdown-nav-list js-navigation-sliding-panel" id="Get Ubuntu-group-6-menu" aria-hidden="true">
+                    <li class="p-navigation__item--dropdown-close" id="Get Ubuntu-group-6-back">
+                      <button aria-controls="Get Ubuntu-group-6-menu" class="p-navigation__link js-back-button">
+                        Back
+                      </button>
+                    </li>
+                    <li class="p-navigation__dropdown-item">
+                      <a href="#" class="p-link--inverted">
+                        <span>Get Ubuntu 6</span>
+                        <br>
+                        <small class="u-text--muted">Description for Get Ubuntu 6 item</small>
+                      </a>
+                      <br>
+                      <a href="#" class="p-button--positive u-no-margin">Get Ubuntu 6</a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 6 item 1
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 6 item 1</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 6 item 2
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 6 item 2</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="p-navigation__dropdown-item">
+                        Get Ubuntu 6 item 3
+                        <br>
+                        <span class="u-text--muted">Description for Get Ubuntu 6 item 3</span>
+                      </a>
+                    </li>
+                    <li class="p-navigation__dropdown-item no-hover">
+                      <ul class="p-list p-navigation__secondary-links">
+                        <li class="p-list__item">
+                          <h2 class="p-muted-heading" tabindex="0">Quick links</h2>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-1" tabindex="0">Get Ubuntu 6 quick link 1</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-2" tabindex="0">Get Ubuntu 6 quick link 2</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-3" tabindex="0">Get Ubuntu 6 quick link 3</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-4" tabindex="0">Get Ubuntu 6 quick link 4</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-5" tabindex="0">Get Ubuntu 6 quick link 5</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-6" tabindex="0">Get Ubuntu 6 quick link 6</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-7" tabindex="0">Get Ubuntu 6 quick link 7</a>
+                        </li>
+                        <li class="p-list__item">
+                          <a class="p-navigation__secondary-link" href="#quick-link-8" tabindex="0">Get Ubuntu 6 quick link 8</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="p-navigation__dropdown-content--full-width">
+              <div class="p-strip is-shallow">
+                <div class="row">
+                  <div class="col-9">
+                    <p class="p-muted-heading">Get Ubuntu</p>
+                    <div class="row  u-no-margin u-no-padding">
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Get Ubuntu 1<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Get Ubuntu 2<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Get Ubuntu 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Get Ubuntu 3<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Get Ubuntu 4<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Get Ubuntu 5<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-3">
+                        <ul class="p-list--divided">
+                          <li class="p-list__item">
+                            Get Ubuntu 7<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Get Ubuntu 8<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                          <li class="p-list__item">
+                            Get Ubuntu 9<br>
+                            <small class="u-text--muted">Subtitle...</small>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <p class="p-muted-heading">Quick links</p>
+                    <ul class="p-list js-dropdown-nav-list">
+                      <li class="p-list__item"><a href="#quicklink">Quick link 1</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 2</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 3</a></li>
+                      <li class="p-list__item"><a href="#quicklink">Quick link 4</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="p-navigation__item--dropdown-toggle is-right-shifted js-navigation-dropdown-toggle" role="menuitem" id="all-canonical">
+          <button aria-controls="canonical-products" class="p-navigation__link" id="all-canonical-link" aria-expanded="false">All Canonical</button>
+          <ul class="p-navigation__dropdown js-navigation-sliding-panel" id="canonical-products" aria-hidden="true" data-level="1">
+            <li class="p-navigation__item--dropdown-close" id="link-6-back">
+              <button aria-controls="canonical-products" class="p-navigation__link js-back-button">
+                Back
+              </button>
+            </li>
+            <li>
+              <a href="#" class="p-navigation__dropdown-item">TODO...</a>
+            </li>
+            <li>
+              <a href="#" class="p-navigation__dropdown-item">TODO....</a>
+            </li>
+          </ul>
+        </li>
+        <li class="p-navigation__item js-account" role="menuitem" id="canonical-login">
+          <a href="#" class="p-navigation__link" tabindex="0">Sign in</a>
+        </li>
+        <li class="p-navigation__item">
+          <a href="#" class="js-search-button p-navigation__link--search-toggle" aria-label="Toggle search"></a>
+        </li>
+      </ul>
+      <div class="p-navigation__search">
+        <form class="p-search-box">
+          <input type="search" class="p-search-box__input" name="q" placeholder="Search our sites" required="" aria-label="Search our sites">
+          <button type="reset" class="p-search-box__reset"><i class="p-icon--close"></i></button>
+          <button type="submit" class="p-search-box__button"><i class="p-icon--search"></i></button>
+        </form>
+      </div>
+    </nav>
   </div>
-  {% endif %}
-</div>
+  <div class="p-navigation__search-overlay"></div>
+</header>
