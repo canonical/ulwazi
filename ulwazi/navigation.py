@@ -28,8 +28,24 @@ def get_navigation_tree(toctree_html: str) -> str:
 
     soup = BeautifulSoup(toctree_html, "html.parser")
 
+    # We add a proper style for each <ul> in the globaltoc
+    for element in soup.find_all("ul", recursive=True):
+        # classes = element.get("class", [])
+        # element["class"] = classes + ["p-side-navigation__list"]
+        element["class"] = "p-side-navigation__list"
+    
+    # We add a proper style for each <li> in the globaltoc
+    for element in soup.find_all("li", recursive=True):
+        # element["class"] = "p-side-navigation__item"
+        element["class"].append("p-side-navigation__item")
+
+    # We add a proper style for each <a> in the globaltoc
+    for element in soup.find_all("a", recursive=True):
+        element["class"].append("p-side-navigation__link")
+
     toctree_checkbox_count = 0
     last_element_with_current = None
+
     for element in soup.find_all("li", recursive=True):
         # We check all "li" elements, to add a "current-page" to the correct li.
         classes = element.get("class", [])
@@ -83,5 +99,6 @@ def get_navigation_tree(toctree_html: str) -> str:
 
     if last_element_with_current is not None:
         last_element_with_current["class"].append("current-page")
+        last_element_with_current["class"].append('aria-current="page"')
 
     return str(soup)

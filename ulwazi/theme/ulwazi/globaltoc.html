@@ -1,5 +1,2 @@
 {# Sphinx sidebar template: global table of contents. #}
-<!-- <h3><a href="{{ pathto(root_doc)|e }}">{{ _('Table of Contents') }}</a></h3> -->
-<a href="{{ pathto(root_doc)|e }}" class="p-side-naigation__heading">{{ project }} documentation</a>
-<!-- {{ toctree(includehidden=theme_globaltoc_includehidden, collapse=theme_globaltoc_collapse, maxdepth=theme_globaltoc_maxdepth) }} -->
 {{ expandable_navigation_tree }}

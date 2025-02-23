@@ -19,5 +19,6 @@ Some content.
 
 .. toctree::
    :hidden:
-
+   
+   self
    test
