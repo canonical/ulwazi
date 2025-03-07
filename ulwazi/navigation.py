@@ -1,6 +1,7 @@
 """Generate the navigation tree from Sphinx's toctree function's output."""
 
 import functools
+import copy
 
 from bs4 import BeautifulSoup, Tag
 
@@ -59,28 +60,9 @@ def get_navigation_tree(toctree_html: str) -> str:
         # Add a class to indicate that this has children.
         element["class"] = classes + ["has-children"]
 
-        # We're gonna add a checkbox.
         toctree_checkbox_count += 1
-        checkbox_name = f"toctree-checkbox-{toctree_checkbox_count}"
-
-        # Add the "label" for the checkbox which will get filled.
-        label = soup.new_tag(
-            "label",
-            attrs={
-                "for": checkbox_name,
-            },
-        )
-        screen_reader_label = soup.new_tag(
-            "div",
-            attrs={"class": "visually-hidden"},
-        )
-        screen_reader_label.string = f"Toggle navigation of {element.find('a').text}"
-        label.append(screen_reader_label)
-        label.append(_get_navigation_expand_image(soup))
-
-        element.insert(1, label)
-
-        # Add the checkbox that's used to store expanded/collapsed state.
+        checkbox_name = f"toctree-checkbox-{toctree_checkbox_count}" 
+        # We're gonna add a checkbox.
         checkbox = soup.new_tag(
             "input",
             attrs={
@@ -95,7 +77,51 @@ def get_navigation_tree(toctree_html: str) -> str:
         if "current" in classes:
             checkbox.attrs["checked"] = ""
 
-        element.insert(1, checkbox)
+        # Identify the title of the li item
+        a_item = element.find("a")
+        # create a row to contain both the title, checkbox and arrow
+        if a_item:
+            # create a copy of the A_tag to avoid modifying the original
+            a_copy = copy.copy(a_item)
+            # create a new div to contain the checkbox, title and arrow
+            new_div = soup.new_tag("div", attrs={"class": "p-side-navigation__item-content"})
+            # Add the checkbox that's used to store expanded/collapsed state.
+            new_div.append(checkbox)
+            # Add the title of the li item
+            new_div.append(a_copy)
+            # Add the arrow to indicat t has childrem and can be expanded
+            icon = _get_navigation_expand_image(soup)
+            # check if the current page is the one being expanded and rotate the arrow
+            if "current" in classes:
+                icon["class"] = icon["class"] + ["current"]
+            # add the arrow to the div
+            new_div.append(icon)
+            # replace the a tag with the new div
+            a_item.replace_with(new_div)
+
+        if "current" not in classes:
+            children = element.find("ul")
+
+            for child in children.find_all("li"):
+                child["class"] = child.get("class", []) + ["hidden"]
+                # Add a class to indicate
+
+        # Add the "label" for the checkbox which will get filled.
+        # label = soup.new_tag(
+        #     "label",
+        #     attrs={
+        #         "for": checkbox_name,
+        #     },
+        # )
+        # screen_reader_label = soup.new_tag(
+        #     "div",
+        #     attrs={"class": "visually-hidden"},
+        # )
+        # screen_reader_label.string = f"Toggle navigation of {element.find('a').text}"
+        # label.append(screen_reader_label)
+
+        # element.insert(1, label)
+
 
     if last_element_with_current is not None:
         last_element_with_current["class"].append("current-page")

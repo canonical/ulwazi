@@ -92,3 +92,96 @@ ul {
 a.headerlink {
     color: transparent;
 }
+.icon {
+    --readthedocs-font-size: 0.725rem;
+    --readthedocs-flyout-header-font-size: 0.845rem;
+    --readthedocs-flyout-font-size: 0.725rem;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    font-weight: 400;
+    scrollbar-color: rgb(135, 135, 135) transparent;
+    font-size: 0.875rem;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    color: rgb(17, 17, 17);
+}
+
+.icon:hover {
+    background-color:rgb(242.25, 242.25, 242.25);
+}
+
+.icon.current {
+    transform: rotate(90deg);
+}
+
+svg {
+    display: inline-block;
+    padding-top: 4px;
+    padding-left: 4px;
+    height: 28px;
+    width: 28px;
+    color: rgb(17, 17, 17);
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    color: rgb(17, 17, 17);
+    background: rgb(255, 255, 255);
+    display: none !important;
+}
+
+.p-side-navigation__item.hidden{
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    color: rgb(17, 17, 17);
+    background: rgb(255, 255, 255);
+    display: none !important;
+}
+
+.toctree-checkbox {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    color: rgb(17, 17, 17);
+    background: rgb(255, 255, 255);
+    display: none !important;
+}
+
+.p-side-navigation__item-content{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+.p-side-navigation__item-content:hover {
+    background-color: rgb(242.25, 242.25, 242.25);
+}
+
+.p-side-navigation__item-content a {
+    flex-grow: 1;
+} 
