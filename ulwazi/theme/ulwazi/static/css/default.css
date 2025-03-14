@@ -220,3 +220,8 @@ svg {
     gap: 5px;
     white-space: nowrap;
 }
+
+.p-side-navigation__item > label i {
+    position: relative;
+    top: 5px; /* Moves the icon down */
+}
