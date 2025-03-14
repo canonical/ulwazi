@@ -10,6 +10,7 @@ def _get_navigation_expand_image(soup: BeautifulSoup) -> Tag:
     retval = soup.new_tag("i", attrs={"class": "icon"})
 
     svg_element = soup.new_tag("svg")
+    svg_element.attrs["class"] = "svg"
     svg_use_element = soup.new_tag("use", href="#svg-arrow-right")
     svg_element.append(svg_use_element)
 
@@ -87,7 +88,9 @@ def get_navigation_tree(toctree_html: str) -> str:
             icon["class"] = icon["class"] + ["current"]
 
         # Add label for clickability of the arrow icon
-        label = soup.new_tag("label", attrs={"for": f"toctree-checkbox-{toctree_checkbox_count}"})
+        label = soup.new_tag("label")
+        label.attrs["for"] = f"toctree-checkbox-{toctree_checkbox_count}"
+        label.attrs["style"] = "padding-top: 0px; margin-bottom: 0px"
         label.append(icon)
         a_item.insert_after(label)
 

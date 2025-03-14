@@ -105,8 +105,10 @@ a.headerlink {
     cursor: pointer;
     user-select: none;
     display: inline-block;
-    height: 32px;
-    width: 32px;
+    height: 24px;
+    width: 24px;
+    top: 6px;
+    margin-left: -5px;
     color: rgb(17, 17, 17);
 }
 
@@ -118,12 +120,14 @@ a.headerlink {
     transform: rotate(90deg);
 } */
 
-svg {
+.svg {
     display: inline-block;
-    padding-top: 4px;
-    padding-left: 4px;
-    height: 28px;
-    width: 28px;
+    padding-top: 0px;
+    padding-left: 0px;
+    margin-top: 0px;
+    margin-left: 0px;
+    width: 24px;
+    height: 24px;
     color: rgb(17, 17, 17);
 }
 
@@ -164,6 +168,10 @@ svg {
 
 .toctree-checkbox {
     position: absolute !important;
+    bottom: 0px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
     width: 1px !important;
     height: 1px !important;
     padding: 0 !important;
@@ -223,5 +231,10 @@ svg {
 
 .p-side-navigation__item > label i {
     position: relative;
-    top: 5px; /* Moves the icon down */
+    top: 6px; /* Moves the icon down */
+}
+
+.p-side-navigation__item {
+    position: relative;
+    top: -5px; /* Moves everything inside up by 5px */
 }
