@@ -4,9 +4,11 @@ This is a test
 Test content.
 
 .. toctree::
-   :maxdepth: 2
+   :hidden:
 
    test2
+   test3
+   test4
 
 Nest test
 ---------

@@ -1,7 +1,7 @@
-This is a test2
+This is a test4
 ===============
 
-Test content2.
+Test content4.
 
 
 
@@ -13,3 +13,9 @@ Nest test2!
 
 More tests
 **********
+
+
+.. toctree::
+   :hidden:
+
+   test5

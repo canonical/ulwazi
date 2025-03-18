@@ -1,7 +1,9 @@
 from os import path
 from pathlib import Path
 import importlib.util
-
+from typing import Any, Dict
+import sphinx.application
+from .navigation import get_navigation_tree
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
@@ -13,6 +15,7 @@ def setup(app):
         "config-inited",
         config_inited,
     )
+    app.connect("html-page-context", _html_page_context)
 
     return {
         "version": "0.1",
@@ -66,3 +69,28 @@ def config_inited(app, config):  # noqa: ANN401
 
     config.html_css_files.extend(extra_css)
     config.html_js_files.extend(extra_js)
+
+def _compute_navigation_tree(context: Dict[str, Any]) -> str:
+    # The globaltoc tree by Sphinx
+    if "toctree" in context:
+        toctree = context["toctree"]
+        toctree_html = toctree(
+            collapse=False,
+            titles_only=True,
+            includehidden=True,
+        )
+    else:
+        toctree_html = ""
+
+    return get_navigation_tree(toctree_html)
+
+def _html_page_context(
+    app: sphinx.application.Sphinx,
+    pagename: str,
+    templatename: str,
+    context: Dict[str, Any],
+    doctree: Any,
+) -> None:
+   
+    # Values computed from page-level context.
+    context["expandable_navigation_tree"] = _compute_navigation_tree(context)
