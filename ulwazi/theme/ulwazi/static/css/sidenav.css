@@ -1,0 +1,170 @@
+.p-side-naigation__heading {
+    padding-left: 1.5rem;
+    display: flex;
+    padding-bottom: .25rem;
+    padding-right: 1rem;
+    padding-top: .25rem;
+    text-decoration: none;
+    box-sizing: inherit;
+    font-size: 1rem;
+    font-weight: 550;
+    line-height: 1.5rem;
+}
+
+li[class*=' toctree'],li[class^='toctree'] {
+    list-style: none;
+    padding-left: .5rem;
+    list-style: none;
+
+}
+
+ul {
+    padding-left: 0rem;
+}
+
+.icon {
+    --readthedocs-font-size: 0.725rem;
+    --readthedocs-flyout-header-font-size: 0.845rem;
+    --readthedocs-flyout-font-size: 0.725rem;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    font-weight: 400;
+    scrollbar-color: rgb(135, 135, 135) transparent;
+    font-size: 0.875rem;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    top: 6px;
+    margin-left: -5px;
+    color: rgb(17, 17, 17);
+}
+
+.icon:hover {
+    background-color:rgb(242.25, 242.25, 242.25);
+}
+
+/* .icon.current {
+    transform: rotate(90deg);
+} */
+
+.svg {
+    display: inline-block;
+    padding-top: 0px;
+    padding-left: 0px;
+    margin-top: 0px;
+    margin-left: 0px;
+    width: 24px;
+    height: 24px;
+    color: rgb(17, 17, 17);
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    color: rgb(17, 17, 17);
+    background: rgb(255, 255, 255);
+    display: none !important;
+}
+
+/* .p-side-navigation__item.hidden{
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    color: rgb(17, 17, 17);
+    background: rgb(255, 255, 255);
+    display: none !important;
+} */
+
+/* .p-side-navigation__item:hover {
+    background-color: rgb(242.25, 242.25, 242.25);
+} */
+
+
+.toctree-checkbox {
+    position: absolute !important;
+    bottom: 0px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    color: rgb(17, 17, 17);
+    background: rgb(255, 255, 255);
+}
+
+.toctree-checkbox ~ ul {
+    display: none;
+  }
+  
+/* .toctree-checkbox ~ label .icon svg {
+    transform: rotate(90deg);
+} */
+  
+.toctree-checkbox:checked ~ ul {
+    display: block;
+}
+  
+.toctree-checkbox:checked ~ label .icon svg {
+    transform: rotate(90deg);
+}
+
+.p-side-navigation__item-content{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+/* .p-side-navigation__item-content:hover {
+    background-color: rgb(242.25, 242.25, 242.25);
+} */
+
+.p-side-navigation__item-content a {
+    flex-grow: 1;
+    white-space: nowrap;
+} 
+
+.p-side-navigation__item-content a :hover {
+    background-color: rgb(242.25, 242.25, 242.25);
+} 
+
+/* Wrap only the <a>, <input>, and <label> in a flex container */
+.p-side-navigation__item > a,
+.p-side-navigation__item > input,
+.p-side-navigation__item > label {
+    display: inline-flex;
+    align-items: bottom;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.p-side-navigation__item > label i {
+    position: relative;
+    top: 6px; /* Moves the icon down */
+}
+
+.p-side-navigation__item {
+    position: relative;
+    top: -5px; /* Moves everything inside up by 5px */
+}
