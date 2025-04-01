@@ -16,14 +16,14 @@
     line-height: 1.5rem;
 }
 
-/* Toctree List Items */
+/* All the toctree styles (default stules from Sphinx) */
 li[class*=' toctree'], li[class^='toctree'] {
     list-style: none;
     padding-left: 0.5rem;
 }
 
 /* Unordered List */
-ul {
+.p-side-navigation__list {
     padding-left: 0;
 }
 
