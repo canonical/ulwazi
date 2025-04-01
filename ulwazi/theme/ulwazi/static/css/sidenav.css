@@ -16,10 +16,9 @@
     line-height: 1.5rem;
 }
 
-/* All the toctree styles (default stules from Sphinx) */
+/* All the toctree styles (default stules from Sphinx) are nullified */
 li[class*=' toctree'], li[class^='toctree'] {
-    list-style: none;
-    padding-left: 0.5rem;
+    all: unset;
 }
 
 /* Unordered List */
