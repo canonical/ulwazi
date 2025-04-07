@@ -2,6 +2,12 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% block product_menu %}
+{% if product_menu_enabled %}
+  {% include "sections/product-menu.html" %}
+{% endif %}
+{% endblock product_menu %}
+<!-- DEBUG: product_menu_enabled = {{ product_menu_enabled }} -->
 {% block header %}
 <header>
     {% include "sections/header.html" %}
