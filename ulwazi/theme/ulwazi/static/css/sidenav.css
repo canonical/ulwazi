@@ -16,7 +16,7 @@
     line-height: 1.5rem;
 }
 
-/* All the toctree styles (default stules from Sphinx) are nullified */
+/* All the toctree styles (default styles from Sphinx) are nullified */
 li[class*=' toctree'], li[class^='toctree'] {
     all: unset;
 }
@@ -81,26 +81,6 @@ li[class*=' toctree'], li[class^='toctree'] {
     display: none;
 }
 
-/* .p-side-navigation__item.hidden{
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0,0,0,0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-    color: rgb(17, 17, 17);
-    background: rgb(255, 255, 255);
-    display: none !important;
-} */
-
-/* .p-side-navigation__item:hover {
-    background-color: rgb(242.25, 242.25, 242.25);
-} */
-
-
 /* Checkbox is used for expanded state storage */
 .toctree-checkbox {
     position: absolute;
@@ -117,11 +97,7 @@ li[class*=' toctree'], li[class^='toctree'] {
 
 .toctree-checkbox ~ ul {
     display: none;
-  }
-  
-/* .toctree-checkbox ~ label .icon svg {
-    transform: rotate(90deg);
-} */
+}
   
 .toctree-checkbox:checked ~ ul {
     display: block;
@@ -137,10 +113,6 @@ li[class*=' toctree'], li[class^='toctree'] {
     flex-flow: row;
     align-items: center;
 }
-
-/* .p-side-navigation__item-content:hover {
-    background-color: rgb(242.25, 242.25, 242.25);
-} */
 
 /* NavMenu item link */
 .p-side-navigation__item-content a {
