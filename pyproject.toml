@@ -5,6 +5,7 @@ dependencies = [
     "sphinx",
     "sphinx-basic-ng",
     "sphinxcontrib-jquery",
+    "beautifulsoup4",
 ]
 description = 'Ulwazi theme for Sphinx documentation projects'
 readme = "README.md"
