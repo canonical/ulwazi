@@ -4,6 +4,7 @@ import importlib.util
 from typing import Any, Dict
 import sphinx.application
 from .navigation import get_navigation_tree
+from bs4 import BeautifulSoup
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
@@ -85,6 +86,31 @@ def _compute_navigation_tree(context: Dict[str, Any]) -> str:
 
     return get_navigation_tree(toctree_html)
 
+def apply_heading_classes(body_html: str) -> str:
+    """Add custom CSS classes to headings in the generated body HTML."""
+    if not body_html:
+        return body_html
+
+    HEADING_STYLES = {
+        "h1": "p-heading--1",
+        "h2": "p-heading--2",
+        "h3": "p-heading--3",
+        "h4": "p-heading--4",
+        "h5": "p-heading--5",
+        "h6": "p-heading--6",
+    }
+
+    soup = BeautifulSoup(body_html, "html.parser")
+
+    for tag_name, class_name in HEADING_STYLES.items():
+        for tag in soup.find_all(tag_name):
+            existing_classes = tag.get("class", [])
+            if class_name not in existing_classes:
+                existing_classes.append(class_name)
+            tag["class"] = existing_classes
+
+    return str(soup)
+
 def _html_page_context(
     app: sphinx.application.Sphinx,
     pagename: str,
@@ -95,3 +121,7 @@ def _html_page_context(
    
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(context)
+
+    # Modify the body of the content
+    if "body" in context:
+        context["body"] = apply_heading_classes(context["body"])
