@@ -112,7 +112,7 @@ def apply_heading_classes(body_html: str) -> str:
     return str(soup)
 
 def apply_admonition_classes(body_html:str) -> str:
-    """Add custom CSS classes to admonitions in the generated body HTML"""
+    """Convert notification classes to admonitions in the generated body HTML"""
     if not body_html:
         return body_html
     
