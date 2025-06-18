@@ -111,6 +111,37 @@ def apply_heading_classes(body_html: str) -> str:
 
     return str(soup)
 
+def apply_admonition_classes(body_html:str) -> str:
+    """Add custom CSS classes to admonitions in the generated body HTML"""
+    if not body_html:
+        return body_html
+    
+    soup = BeautifulSoup(body_html, "html.parser")     
+
+    admonitions = soup.find_all(class_="admonition")
+    div_tag = soup.new_tag("div", attrs={"class":"p-notification--information"})
+    title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+    message = soup.new_tag("p",attrs={"class":"p-notification__message"})
+
+    for admonition in admonitions:
+        child_tags = admonition.findChildren()
+        print(child_tags)
+        print("\n\n")
+        for child in child_tags:
+            if child.get("class") == "admonition-title":
+                title.string = child.string
+            else:
+                message.append(child)
+        div_tag.append(title)
+        div_tag.append(message)
+        admonition.replace_with(div_tag)
+
+    print(div_tag)
+
+    return str(soup)
+
+
+
 def _html_page_context(
     app: sphinx.application.Sphinx,
     pagename: str,
@@ -125,3 +156,4 @@ def _html_page_context(
     # Modify the body of the content
     if "body" in context:
         context["body"] = apply_heading_classes(context["body"])
+        context["body"] = apply_admonition_classes(context["body"])

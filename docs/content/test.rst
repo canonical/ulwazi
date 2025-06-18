@@ -9,6 +9,7 @@ Test content.
    test2
    test3
    test4
+   test6_admonitions
 
 Nest test
 ---------
