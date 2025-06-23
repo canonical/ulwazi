@@ -119,14 +119,15 @@ def apply_admonition_classes(body_html:str) -> str:
     soup = BeautifulSoup(body_html, "html.parser")     
 
     admonitions = soup.find_all(class_="admonition")
-    div_tag = soup.new_tag("div", attrs={"class":"p-notification--information"})
-    title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
-    message = soup.new_tag("p",attrs={"class":"p-notification__message"})
+
 
     for admonition in admonitions:
         child_tags = admonition.findChildren()
         print(child_tags)
         print("\n\n")
+        div_tag = soup.new_tag("div", attrs={"class":"p-notification--information"})
+        title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+        message = soup.new_tag("p",attrs={"class":"p-notification__message"})
         for child in child_tags:
             if child.get("class") == "admonition-title":
                 title.string = child.string
@@ -135,8 +136,7 @@ def apply_admonition_classes(body_html:str) -> str:
         div_tag.append(title)
         div_tag.append(message)
         admonition.replace_with(div_tag)
-
-    print(div_tag)
+        print("div_tag",div_tag)
 
     return str(soup)
 

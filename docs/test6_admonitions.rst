@@ -1,9 +1,9 @@
 Admonition Test
 ==================
 
-Generic extre text to add space here.
-Blah
-Blah
+| Generic extre text to add space here.
+| Blah
+| Blah
 
 
 .. important::
@@ -11,3 +11,11 @@ Blah
     Should you get stuck or notice issues, please get in touch on
     `Matrix <https://matrix.to/#/#12-factor-charms:ubuntu.com>`_ or
     `Discourse <https://discourse.charmhub.io/>`_
+
+| More generic spacing text
+| And here
+| And here
+
+.. note::
+    Admonition titles can differe but have same box coloring.
+
