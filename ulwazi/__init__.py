@@ -123,20 +123,60 @@ def apply_admonition_classes(body_html:str) -> str:
 
     for admonition in admonitions:
         child_tags = admonition.findChildren()
-        print(child_tags)
+        #print(child_tags)
         print("\n\n")
-        div_tag = soup.new_tag("div", attrs={"class":"p-notification--information"})
-        title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+        div_tag = 0
+        title = 0
         message = soup.new_tag("p",attrs={"class":"p-notification__message"})
         for child in child_tags:
-            if child.get("class") == "admonition-title":
-                title.string = child.string
+            print("each child: ", child)
+            if child.get("class") == ["admonition-title"]:
+                print("admonition title: ",child.text)
+                match child.text:
+                        case 'Attention':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Caution':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Danger':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Error':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--negative"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Hint':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--positive"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Important':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--information"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Note':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--information"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Tip':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--positive"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Warning':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        
             else:
                 message.append(child)
+                #print("child class append: ",child.get("class"))
         div_tag.append(title)
         div_tag.append(message)
         admonition.replace_with(div_tag)
-        print("div_tag",div_tag)
+        #print("div_tag",div_tag)
 
     return str(soup)
 
