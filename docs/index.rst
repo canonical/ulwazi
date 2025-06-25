@@ -11,13 +11,13 @@ First heading (h2)
 
 Lorem ipsum
 
-Sub-heading
-***********
+Sub-heading (h3)
+****************
 
 Lorem ipsum
 
-Second heading!
----------------
+Second heading! (h2)
+--------------------
 
 Some content.
 

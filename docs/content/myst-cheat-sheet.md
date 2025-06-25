@@ -1,20 +1,4 @@
----
-orphan: true
-myst:
-    substitutions:
-      reuse_key: "This is **included** text."
-      advanced_reuse_key: "This is a substitution that includes a code block:
-                         ```
-                         code block
-                         ```"
----
-
-<!-- vale off -->
-
-(cheat-sheet-myst)=
 # Markdown/MyST cheat sheet
-
-<!-- vale on -->
 
 This file contains the syntax for commonly used Markdown and MyST markup.
 Open it in your text editor to quickly copy and paste the markup you need.
