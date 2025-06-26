@@ -6,14 +6,18 @@ Add your content using ``reStructuredText`` syntax. See the
 documentation for details.
 
 
-First heading
--------------
+First heading (h2)
+------------------
 
 Lorem ipsum
 
+Sub-heading (h3)
+****************
 
-Second heading!
----------------
+Lorem ipsum
+
+Second heading! (h2)
+--------------------
 
 Some content.
 
@@ -21,4 +25,5 @@ Some content.
    :hidden:
    
    self
-   test
+   content/test
+   content/contribute
