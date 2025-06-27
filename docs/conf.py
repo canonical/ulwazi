@@ -15,6 +15,7 @@ author = 'Canonical'
 
 extensions = [
     "ulwazi",
+    "myst_parser"
 ]
 
 templates_path = ['_templates']

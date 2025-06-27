@@ -1,3 +1,5 @@
 sphinx
 build
-ulwazi @ git+https://github.com/canonical/ulwazi@main
+sphinx-autobuild
+# ulwazi @ git+https://github.com/canonical/ulwazi@main
+myst-parser
