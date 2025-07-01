@@ -208,18 +208,18 @@ Reuse
    :start-after: [include_start]
    :end-before: [include_end]
 
-Tabs
-----
+.. Tabs
+.. ----
 
-.. tab-set::
+.. .. tab-set::
 
-   .. tab-item:: Tab 1
+..    .. tab-item:: Tab 1
 
-      Content Tab 1
+..       Content Tab 1
 
-   .. tab-item:: Tab 2
+..    .. tab-item:: Tab 2
 
-      Content Tab 2
+..       Content Tab 2
 
 
 Glossary
@@ -244,42 +244,42 @@ More useful markup
 
 ----
 
-Custom extensions
------------------
+.. Custom extensions
+.. -----------------
 
-Related links at the top of the page::
+.. Related links at the top of the page::
 
-  :relatedlinks: https://github.com/canonical/lxd-sphinx-extensions, [RTFM](https://www.google.com)
-  :discourse: 12345
+..   :relatedlinks: https://github.com/canonical/lxd-sphinx-extensions, [RTFM](https://www.google.com)
+..   :discourse: 12345
 
-Terms that should not be checked by the spelling checker: :spellexception:`PurposelyWrong`
+.. Terms that should not be checked by the spelling checker: :spellexception:`PurposelyWrong`
 
-A single-line terminal view that separates input from output:
+.. A single-line terminal view that separates input from output:
 
-.. terminal::
-   :input: command
-   :user: root
-   :host: vampyr
-   :dir: /home/user/directory/
+.. .. terminal::
+..    :input: command
+..    :user: root
+..    :host: vampyr
+..    :dir: /home/user/directory/
 
-   the output
+..    the output
 
-A multi-line version of the same:
+.. A multi-line version of the same:
 
-.. terminal::
-   :user: root
-   :host: vampyr
-   :dir: /home/user/directory/
+.. .. terminal::
+..    :user: root
+..    :host: vampyr
+..    :dir: /home/user/directory/
 
-   :input: command 1
-   output 1
-   :input: command 2
-   output 2
+..    :input: command 1
+..    output 1
+..    :input: command 2
+..    output 2
 
-A link to a YouTube video:
+.. A link to a YouTube video:
 
-.. youtube:: https://www.youtube.com/watch?v=iMLiK1fX4I0
-          :title: Demo
+.. .. youtube:: https://www.youtube.com/watch?v=iMLiK1fX4I0
+..           :title: Demo
 
 
 
