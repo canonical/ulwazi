@@ -175,7 +175,7 @@ Keys can be defined at the top of a file, or in a `myst_substitutions` option in
    :end-before: [include_end]
 ```
 
-## Tabs
+<!-- ## Tabs
 
 ````{tab-set}
 ```{tab-item} Tab 1
@@ -186,7 +186,7 @@ Content Tab 1
 ```{tab-item} Tab 2
 Content Tab 2
 ```
-````
+```` -->
 
 ## Glossary
 
@@ -205,16 +205,16 @@ some term
 
 ----
 
-## Custom extensions
+<!-- ## Custom extensions
 
 Related links at the top of the page (surrounded by `---`):
 
     relatedlinks: https://github.com/canonical/lxd-sphinx-extensions, [RTFM](https://www.google.com)
-    discourse: 12345
+    discourse: 12345 -->
 
-Terms that should not be checked by the spelling checker: {spellexception}`PurposelyWrong`
+<!-- Terms that should not be checked by the spelling checker: {spellexception}`PurposelyWrong` -->
 
-A single-line terminal view that separates input from output:
+<!-- A single-line terminal view that separates input from output:
 
 ```{terminal}
    :input: command
@@ -242,4 +242,4 @@ A link to a YouTube video:
 
 ```{youtube} https://www.youtube.com/watch?v=iMLiK1fX4I0
    :title: Demo
-```
+``` -->
