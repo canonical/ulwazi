@@ -15,6 +15,7 @@ Make sure you have [Yarn](https://yarnpkg.com/) installed, then run:
 
 ```shell
 yarn install
+```
 
 ## Testing
 
