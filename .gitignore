@@ -3,3 +3,5 @@ ulwazi.egg-info/
 dist/
 .venv/
 docs/_build
+node_modules/
+*.lock

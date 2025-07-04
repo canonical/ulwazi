@@ -27,7 +27,16 @@ clean:
 	rm -r ./ulwazi.egg-info | true
 	rm -r ./docs/_build | true
 
-build: venv
+yarn-install:
+	yarn install
+
+build-css: yarn-install
+	npx sass --load-path=node_modules ulwazi/theme/ulwazi/static/css/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css
+
+clean-css:
+	rm -f ulwazi/theme/ulwazi/static/css/vanilla-main.css
+
+build: venv build-css
 	. ${VENV}; python3 -m build
 
 install: build
@@ -36,4 +45,4 @@ install: build
 run: install
 	. ${VENV}; cd docs && sphinx-autobuild . _build
 
-rebuild: clean run
+rebuild: clean clean-css run
