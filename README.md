@@ -10,6 +10,13 @@ The theme will default to a generic Vanilla Framework style but will have option
 
 ## Installing Node Modules
 
+Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [Yarn](https://yarnpkg.com/) installed:
+
+```shell
+sudo apt install npm
+sudo npm install -g corepack
+```
+
 If you do not have the `node_modules` directory (for example, after cloning the repository for the first time), install the JavaScript dependencies:
 
 ```shell
