@@ -21,7 +21,7 @@ fclean:
 	rm -r ./docs/_build | true
 	rm -r ${VENVDIR}
 
-clean:
+clean: clean-css
 	. ${VENV}; pip uninstall -y ulwazi
 	rm -r ./dist | true
 	rm -r ./ulwazi.egg-info | true
@@ -45,4 +45,4 @@ install: build
 run: install
 	. ${VENV}; cd docs && sphinx-autobuild . _build
 
-rebuild: clean clean-css run
+rebuild: clean run
