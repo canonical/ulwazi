@@ -10,8 +10,7 @@ The theme will default to a generic Vanilla Framework style but will have option
 
 ## Installing Node Modules
 
-If you do not have the `node_modules` directory (for example, after cloning the repository for the first time), you need to install the JavaScript dependencies.  
-Make sure you have [Yarn](https://yarnpkg.com/) installed, then run:
+If you do not have the `node_modules` directory (for example, after cloning the repository for the first time), install the JavaScript dependencies:
 
 ```shell
 yarn install
