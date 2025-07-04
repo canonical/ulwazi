@@ -45,4 +45,4 @@ install: build
 run: install
 	. ${VENV}; cd docs && sphinx-autobuild . _build
 
-rebuild: clean run
+rebuild: clean clean-css run
