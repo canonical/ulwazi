@@ -1,5 +1,10 @@
-sphinx
-build
-sphinx-autobuild
+# sphinx
+# build
+# sphinx-autobuild
 # ulwazi @ git+https://github.com/canonical/ulwazi@main
-myst-parser
+# myst-parser
+canonical-sphinx[full]
+packaging
+sphinxcontrib-svg2pdfconverter[CairoSVG]
+sphinx-last-updated-by-git
+sphinx-sitemap
