@@ -1,13 +1,13 @@
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXDIR       = docs/.sphinx
+SPHINXDIR       = $(SOURCEDIR)/.sphinx
 SPHINXOPTS      ?= -c . -d $(SPHINXDIR)/.doctrees -j auto
 SPHINXBUILD     ?= $(VENVDIR)/bin/sphinx-build
-SOURCEDIR       = docs
-BUILDDIR        = docs/_build
-VENVDIR         = .venv
+SOURCEDIR       = ./docs
+BUILDDIR        = $(SOURCEDIR)/_build
+VENVDIR         = ./.venv
 PA11Y           = $(SPHINXDIR)/node_modules/pa11y/bin/pa11y.js --config $(SPHINXDIR)/pa11y.json
-VENV         	   = $(VENVDIR)/bin/activate
+VENV         	= $(VENVDIR)/bin/activate
 TARGET          = *
 ALLFILES        =  *.rst **/*.rst
 METRICSDIR      = $(SOURCEDIR)/.sphinx/metrics
@@ -44,15 +44,12 @@ venv:
 	@echo "... setting up virtualenv"
 	python3 -m venv $(VENVDIR)
 	. $(VENV); pip install --require-virtualenv \
-	    --upgrade -r docs/requirements.txt \
+	    --upgrade -r requirements.txt \
 		--log $(VENVDIR)/pip_install.log
 	@test ! -f $(VENVDIR)/pip_list.txt || \
             mv $(VENVDIR)/pip_list.txt $(VENVDIR)/pip_list.txt.bak
 	@. $(VENV); pip list --local --format=freeze > $(VENVDIR)/pip_list.txt
 	@touch $(VENVDIR)
-
-
-
 
 .PHONY: full-help spellcheck-install pa11y-install install run html \
         epub serve clean clean-doc spelling spellcheck linkcheck woke \
@@ -65,18 +62,7 @@ full-help: $(VENVDIR)
 	@echo "Run 'make help' to see supported targets."
 
 # If requirements are updated, venv should be rebuilt and timestamped.
-$(VENVDIR):
-	python3 -c "import venv" || \
-        (echo "You must install python3-venv before you can build the documentation."; exit 1)
-	@echo "... setting up virtualenv"
-	python3 -m venv $(VENVDIR)
-	. $(VENV); pip install $(PIPOPTS) --require-virtualenv \
-	    --upgrade -r requirements.txt \
-            --log $(VENVDIR)/pip_install.log
-	@test ! -f $(VENVDIR)/pip_list.txt || \
-            mv $(VENVDIR)/pip_list.txt $(VENVDIR)/pip_list.txt.bak
-	@. $(VENV); pip list --local --format=freeze > $(VENVDIR)/pip_list.txt
-	@touch $(VENVDIR)
+$(VENVDIR): venv
 
 spellcheck-install:
 	@type aspell >/dev/null 2>&1 || \
@@ -215,4 +201,4 @@ update: install
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %:
-	. $(VENV); $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	. $(VENV); $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
