@@ -1,10 +1,10 @@
 Admonition Test
 ==================
 
-There are `nine directive types <https://docutils.sourceforge.io/docs/ref/rst/directives.html>`_
-for admonitions within docutils used by rST. There are 
+There are `nine explicit directive types <https://docutils.sourceforge.io/docs/ref/rst/directives.html>`, 
+and one generic type, for admonitions within docutils used by rST. There are 
 `four types <https://vanillaframework.io/docs/patterns/notification>`_ within Vanilla, and as 
-such there is no one to one mapping. Below shows each of the nine and how they are mapped to Vanilla.
+such there is no one to one mapping. Below shows each of the admonitions and how they are mapped to Vanilla.
 
 .. attention::
     Attention admonitions map to caution notifications.
@@ -32,6 +32,12 @@ such there is no one to one mapping. Below shows each of the nine and how they a
 
 .. warning::
     Warning admonitions map to caution notifications. 
+
+.. admonition:: Generic Admonition
+    
+    Generic admonitions map to information notifications.
+    NOTE: currently requires a blank line between title and text
+    
 
 
 

@@ -119,11 +119,12 @@ def apply_admonition_classes(body_html:str) -> str:
     soup = BeautifulSoup(body_html, "html.parser")     
 
     admonitions = soup.find_all(class_="admonition")
+    generic = soup.find_all(class_="admonition-generic-admonition")
 
-
+    print(generic)
     for admonition in admonitions:
         child_tags = admonition.findChildren()
-        #print(child_tags)
+        print(child_tags)
         print("\n\n")
         div_tag = 0
         title = 0
@@ -167,6 +168,10 @@ def apply_admonition_classes(body_html:str) -> str:
                             title.string = child.string
                         case 'Warning':
                             div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution"})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case _:
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--information"})
                             title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
                             title.string = child.string
                         
