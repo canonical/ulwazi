@@ -1,5 +1,11 @@
 # Tests for Admonitions in Markdown
 
+:::{note}
+:name: note-reference
+This note admonition has a reference target name that is referenced at the bottom of this page.
+:::
+
+
 ```{attention}
 This is an Attention admonition
 ```
@@ -40,3 +46,8 @@ This is a tip admonition
 This is a warning admonition
 :::
 
+:::{admonition} Generic Admonition - Personalized title
+This is a generic admonition
+:::
+
+[This is a reference to the note admonition above](#note-reference)

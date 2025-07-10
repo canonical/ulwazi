@@ -1,7 +1,7 @@
 Admonition Test
 ==================
 
-There are `nine explicit directive types <https://docutils.sourceforge.io/docs/ref/rst/directives.html>`, 
+There are `nine explicit directive types <https://docutils.sourceforge.io/docs/ref/rst/directives.html>`_, 
 and one generic type, for admonitions within docutils used by rST. There are 
 `four types <https://vanillaframework.io/docs/patterns/notification>`_ within Vanilla, and as 
 such there is no one to one mapping. Below shows each of the admonitions and how they are mapped to Vanilla.
