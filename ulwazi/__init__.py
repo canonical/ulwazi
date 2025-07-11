@@ -46,7 +46,7 @@ def config_inited(app, config):  # noqa: ANN401
         "css/debug.css",
         # "css/skeleton.css",
         "css/sidenav.css",
-        "css/vanilla-framework-version-4.18.5.min.css",
+        "css/vanilla-main.css",
     ]
 
     extra_js = [

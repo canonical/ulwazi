@@ -21,13 +21,22 @@ fclean:
 	rm -r ./docs/_build | true
 	rm -r ${VENVDIR}
 
-clean:
+clean: clean-css
 	. ${VENV}; pip uninstall -y ulwazi
 	rm -r ./dist | true
 	rm -r ./ulwazi.egg-info | true
 	rm -r ./docs/_build | true
 
-build: venv
+yarn-install:
+	yarn install
+
+build-css: yarn-install
+	npx sass --load-path=node_modules ulwazi/theme/ulwazi/static/css/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css
+
+clean-css:
+	rm -f ulwazi/theme/ulwazi/static/css/vanilla-main.css
+
+build: venv build-css
 	. ${VENV}; python3 -m build
 
 install: build
