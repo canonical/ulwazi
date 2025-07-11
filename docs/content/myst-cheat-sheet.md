@@ -1,3 +1,14 @@
+---
+orphan: true
+myst:
+    substitutions:
+      reuse_key: "This is **included** text."
+      advanced_reuse_key: "This is a substitution that includes a code block:
+                         ```
+                         code block
+                         ```"
+---
+
 # Markdown/MyST cheat sheet
 
 This file contains the syntax for commonly used Markdown and MyST markup.

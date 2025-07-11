@@ -1,7 +1,7 @@
 # You can set these variables from the command line, and also
 # from the environment for the first two.
 SPHINXDIR       = $(SOURCEDIR)/.sphinx
-SPHINXOPTS      ?= -c . -d $(SPHINXDIR)/.doctrees -j auto
+SPHINXOPTS      ?= -d $(SPHINXDIR)/.doctrees -j auto
 SPHINXBUILD     ?= $(VENVDIR)/bin/sphinx-build
 SOURCEDIR       = ./docs
 BUILDDIR        = $(SOURCEDIR)/_build
@@ -21,11 +21,13 @@ SPHINX_PORT     ?= 8000
 help:
 	@echo
 	@echo "-------------------------------------------------------------"
-	@echo "* watch, build and serve the documentation:  make run"
+	@echo "* build the theme, build and serve the sample documentation:  make run"
 	@echo "* only build:                                make html"
 	@echo "* only serve:                                make serve"
 	@echo "* clean built doc files:                     make clean-doc"
-	@echo "* clean full environment:                    make clean"
+	@echo "* clean doc environment:                     make clean-sp"
+	@echo "* clean theme files and doc environment:     make clean"
+	@echo "* same as clean and uninstal ulwazi using pip:  make fclean"
 	@echo "* check links:                               make linkcheck"
 	@echo "* check spelling:                            make spelling"
 	@echo "* check spelling (without building again):   make spellcheck"
@@ -52,7 +54,7 @@ venv:
 	@touch $(VENVDIR)
 
 .PHONY: full-help spellcheck-install pa11y-install install run html \
-        epub serve clean clean-doc spelling spellcheck linkcheck woke \
+        epub serve clean fclean clean-sp clean-doc spelling spellcheck linkcheck woke \
         allmetrics pa11y pdf-prep-force pdf-prep pdf vale-install vale \
 		update
 
@@ -200,5 +202,5 @@ update: install
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%:
-	. $(VENV); $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+# %:
+# 	. $(VENV); $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
