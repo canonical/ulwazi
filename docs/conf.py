@@ -10,46 +10,92 @@ import yaml
 #
 # A complete list of built-in Sphinx configuration values:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
-project = 'Test'
-copyright = '2024'
-author = 'Canonical'
-
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-
-extensions = [
-    "ulwazi",
-    "myst_parser"
-]
-
-myst_enable_extensions = [
-    "colon_fence"
-]
-
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+#
+# Our starter pack uses the custom Canonical Sphinx extension
+# to keep all documentation based on it consistent and on brand:
+# https://github.com/canonical/canonical-sphinx
 
 
+#######################
+# Project information #
+#######################
 
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+# Project name
+#
+# TODO: Update with the official name of your project or product
 
-html_theme = "ulwazi"
-html_static_path = ['_static']
-
-myst_enable_extensions = [
-    "colon_fence"
-]
-
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+project = "The Ulwazi theme sample"
+author = "Canonical Ltd."
 
 
-# -- Theme customisation  ----------------------------------------------------
+# Sidebar documentation title; best kept reasonably short
+#
+# TODO: To include a version number, add it here (hardcoded or automated).
+#
+# TODO: To disable the title, set to an empty string.
+
+html_title = project + " documentation"
+
+
+# Copyright string; shown at the bottom of the page
+#
+# Now, the starter pack uses CC-BY-SA as the license
+# and the current year as the copyright year.
+#
+# TODO: If your docs need another license, specify it instead of 'CC-BY-SA'.
+#
+# TODO: If your documentation is a part of the code repository of your project,
+#       it inherits the code license instead; specify it instead of 'CC-BY-SA'.
+#
+# NOTE: For static works, it is common to provide the first publication year.
+#       Another option is to provide both the first year of publication
+#       and the current year, especially for docs that frequently change,
+#       e.g. 2022–2023 (note the en-dash).
+#
+#       A way to check a repo's creation date is to get a classic GitHub token
+#       with 'repo' permissions; see https://github.com/settings/tokens
+#       Next, use 'curl' and 'jq' to extract the date from the API's output:
+#
+#       curl -H 'Authorization: token <TOKEN>' \
+#         -H 'Accept: application/vnd.github.v3.raw' \
+#         https://api.github.com/repos/canonical/<REPO> | jq '.created_at'
+
+copyright = "%s CC-BY-SA, %s" % (datetime.date.today().year, author)
+
+
+# Documentation website URL
+#
+# TODO: Update with the official URL of your docs or leave empty if unsure.
+#
+# NOTE: The Open Graph Protocol (OGP) enhances page display in a social graph
+#       and is used by social media platforms; see https://ogp.me/
+
+ogp_site_url = "https://canonical-starter-pack.readthedocs-hosted.com/"
+
+
+# Preview name of the documentation website
+#
+# TODO: To use a different name for the project in previews, update as needed.
+
+ogp_site_name = project
+
+
+# Preview image URL
+#
+# TODO: To customise the preview image, update as needed.
+
+ogp_image = "https://assets.ubuntu.com/v1/253da317-image-document-ubuntudocs.svg"
+
+
+# Product favicon; shown in bookmarks, browser tabs, etc.
+
+# TODO: To customise the favicon, uncomment and update as needed.
+
+# html_favicon = ".sphinx/_static/favicon.png"
+
+
+# Dictionary of values to pass into the Sphinx context for all pages:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
 
 html_context = {
     # Product page URL; can be different from product docs URL
@@ -206,8 +252,9 @@ linkcheck_retries = 3
 # NOTE: By default, the following MyST extensions are enabled:
 #       substitution, deflist, linkify
 
-# myst_enable_extensions = set()
-
+myst_enable_extensions = [
+    "colon_fence"
+]
 
 # Custom Sphinx extensions; see
 # https://www.sphinx-doc.org/en/master/usage/extensions/index.html
