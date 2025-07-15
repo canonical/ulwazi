@@ -5,6 +5,7 @@ from typing import Any, Dict
 import sphinx.application
 from .navigation import get_navigation_tree
 from bs4 import BeautifulSoup
+import ast
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
@@ -71,6 +72,21 @@ def config_inited(app, config):  # noqa: ANN401
 
     config.html_css_files.extend(extra_css)
     config.html_js_files.extend(extra_js)
+
+    # PDF config
+
+    config.latex_engine = "xelatex"
+    config.latex_show_pagerefs = True
+    config.latex_show_urls = "footnote"
+    config.latex_table_style = ["standard", "colorrows", "booktabs"]
+
+    with Path.open(THEME_PATH / "PDF/latex_elements_template.txt", "r+") as file:
+        config.latex_config = file.read()
+
+    if (
+        config.latex_elements == {}
+    ):  # pyright: ignore [reportUnnecessaryComparison] type: # ignore[comparison-overlap]
+        config.latex_elements = ast.literal_eval(config.latex_config)
 
 def _compute_navigation_tree(context: Dict[str, Any]) -> str:
     # The globaltoc tree by Sphinx

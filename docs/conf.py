@@ -1,6 +1,9 @@
 import datetime
 import os
 import yaml
+import sys
+
+sys.path.insert(0, os.path.abspath('../'))
 
 # Configuration for the Sphinx documentation builder.
 # All configuration specific to your project should be done in this file.
@@ -295,11 +298,9 @@ exclude_patterns = [
 
 # html_css_files = []
 
-
 # Adds custom JavaScript files, located under 'html_static_path'
 
 # html_js_files = []
-
 
 # Specifies a reST snippet to be appended to each .rst file
 

@@ -1,0 +1,290 @@
+{
+    'papersize': 'a4paper',
+    'pointsize': '11pt',
+    'fncychap': '',
+    'preamble': r'''
+%\usepackage{charter}
+%\usepackage[defaultsans]{lato}
+%\usepackage{inconsolata}
+\setmainfont[UprightFont = *-R, BoldFont = *-B, ItalicFont=*-RI, Extension = .ttf]{Ubuntu}
+\setmonofont[UprightFont = *-R, BoldFont = *-B, ItalicFont=*-RI, Extension = .ttf]{UbuntuMono}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{breakable}
+\usepackage{lastpage}
+\usepackage{tabto}
+\usepackage{ifthen}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{fontspec}
+\usepackage{tikz}
+\usepackage{changepage}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{longtable}
+
+\definecolor{yellowgreen}{RGB}{154, 205, 50}
+\definecolor{title}{RGB}{76, 17, 48}
+\definecolor{subtitle}{RGB}{116, 27, 71}
+\definecolor{label}{RGB}{119, 41, 100}
+\definecolor{copyright}{RGB}{174, 167, 159}
+\definecolor{class-red}{RGB}{139,0,0}
+\definecolor{code-io}{RGB}{238,238,238}
+\definecolor{red-io}{RGB}{192,0,0}
+\definecolor{orange-io}{RGB}{196,89,17}
+\definecolor{blue-io}{RGB}{47,84,150}
+
+\renewcommand{\arraystretch}{1.5}
+
+\tcbset{enhanced jigsaw, colback=black, colupper=white}
+
+\renewenvironment{quote}
+  {\begin{tcolorbox}[colback=code-io,
+                    colframe=code-io,
+                    colupper=black,
+                    boxsep=1mm,
+                    left=1mm,
+                    right=1mm,
+                    sharp corners,
+                    parbox=false]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinxnote}[1]
+  {\begin{tcolorbox}[colframe=blue-io,
+                     colbacktitle=blue-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinxhint}[1]
+  {\begin{tcolorbox}[colframe=blue-io,
+                     colbacktitle=blue-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinximportant}[1]
+  {\begin{tcolorbox}[colframe=blue-io,
+                     colbacktitle=blue-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinxtip}[1]
+  {\begin{tcolorbox}[colframe=blue-io,
+                     colbacktitle=blue-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinxwarning}[1]
+  {\begin{tcolorbox}[colframe=orange-io,
+                     colbacktitle=orange-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinxattention}[1]
+  {\begin{tcolorbox}[colframe=orange-io,
+                     colbacktitle=orange-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinxcaution}[1]
+  {\begin{tcolorbox}[colframe=orange-io,
+                     colbacktitle=orange-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinxerror}[1]
+  {\begin{tcolorbox}[colframe=red-io,
+                     colbacktitle=red-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\renewenvironment{sphinxerror}[1]
+  {\begin{tcolorbox}[colframe=red-io,
+                     colbacktitle=red-io,
+                     colback=white,
+                     colupper=black,
+                     boxsep=1mm,
+                     left=1mm,
+                     right=1mm,
+                     toptitle=1.5mm,
+                     bottomtitle=1.5mm,
+                     sharp corners,
+                     title=\sphinxstrong{#1}]}
+  {\end{tcolorbox}}
+
+\makeatletter
+\def\tcb@finalize@environment{%
+  \color{.}% hack for xelatex
+  \tcb@layer@dec%
+}
+\makeatother
+\newenvironment{sphinxclassprompt}{\color{yellowgreen}\setmonofont[Color = 9ACD32, UprightFont = *-R, Extension = .ttf]{UbuntuMono}}{}
+\newtcolorbox{termbox}{use color stack, breakable, colupper=white, halign=flush left}
+\newenvironment{sphinxclassterminal}{\setmonofont[Color = white, UprightFont = *-R, Extension = .ttf]{UbuntuMono}\sphinxsetup{VerbatimColor={black}}\begin{termbox}}{\end{termbox}}
+\newcommand{\dimtorightedge}{%
+  \dimexpr\paperwidth-1in-\hoffset-\oddsidemargin\relax}
+\newcommand{\dimtotop}{%
+  \dimexpr\height-1in-\voffset-\topmargin-\headheight-\headsep\relax}
+\newtoggle{tpage}
+\AtBeginEnvironment{titlepage}{\global\toggletrue{tpage}}
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[R]{\thepage\ of \pageref*{LastPage}}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{normal}{
+    \fancyhf{}
+    \fancyfoot[R]{\thepage\ of \pageref*{LastPage}}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{titlepage}{%
+    \fancyhf{}
+    \fancyfoot[L]{\footnotesize \textcolor{copyright}{© \the\year{} Canonical Ltd. All rights reserved.}}
+}
+\newcommand\sphinxbackoftitlepage{\thispagestyle{titlepage}}
+\titleformat{\chapter}[block]{\Huge \color{title} \bfseries\filright}{\thechapter .}{1.5ex}{}
+\titlespacing{\chapter}{0pt}{0pt}{0pt}
+\titleformat{\section}[block]{\huge \bfseries\filright}{\thesection .}{1.5ex}{} 
+\titlespacing{\section}{0pt}{0pt}{0pt}
+\titleformat{\subsection}[block]{\Large \bfseries\filright}{\thesubsection .}{1.5ex}{} 
+\titlespacing{\subsection}{0pt}{0pt}{0pt}
+\setcounter{tocdepth}{1}
+\renewcommand\pagenumbering[1]{}
+''',
+    'sphinxsetup': 'verbatimwithframe=false, pre_border-radius=0pt, verbatimvisiblespace=\\phantom{}, verbatimcontinued=\\phantom{}',
+    'extraclassoptions': 'openany,oneside',
+    'maketitle': r'''
+\begin{titlepage}
+\begin{flushleft}
+    \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south east, inner sep=0] at (current page.south east) {
+    \includegraphics[width=\paperwidth, height=\paperheight]{front-page-light}
+    };
+    \end{tikzpicture}
+\end{flushleft}
+
+\vspace*{3cm}
+
+\begin{adjustwidth}{8cm}{0pt}
+\begin{flushleft}
+    \huge \textcolor{black}{\textbf{}{\raggedright{\thetitle}}}
+\end{flushleft}
+\end{adjustwidth}
+
+\vfill
+
+\begin{adjustwidth}{8cm}{0pt}
+\begin{tabularx}{0.5\textwidth}{ l l }
+    \textcolor{lightgray}{© \the\year{} Canonical Ltd.}  & \hspace{3cm} \\
+    \textcolor{lightgray}{All rights reserved.}   & \hspace{3cm} \\
+                                                  & \hspace{3cm} \\
+                                                  & \hspace{3cm} \\
+
+\end{tabularx}
+\end{adjustwidth}
+
+\end{titlepage}
+\RemoveFromHook{shipout/background}
+\AddToHook{shipout/background}{
+      \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=south west, align=left, inner sep=0] at (current page.south west) {
+        \includegraphics[width=\paperwidth]{normal-page-footer}
+      };
+      \end{tikzpicture}
+      \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=north east, opacity=0.5, inner sep=35] at (current page.north east) {
+        \includegraphics[width=4cm]{Canonical-logo-4x}
+      };
+      \end{tikzpicture}
+    }
+
+% Define new commands for breakable characters
+\let\origus\_
+\newcommand\allowbreaksafterunderscoreinliterals {%
+  \def\_{\discretionary{\origus}{}{\origus}}% breaks after underscore_ in literals
+}%
+
+\let\orighyphenwithbraces\sphinxhyphen{}
+\newcommand\allowbreaksaftersphinxhypheninliterals {%
+  \def\sphinxhyphen{\discretionary{-}{}{-}}% breaks after \sphinxhyphen - in literals
+}%
+
+% Add to Sphinx literal environment
+\makeatletter
+\g@addto@macro\sphinx@literal@nolig@list{%
+  \allowbreaksafterunderscoreinliterals
+  \allowbreaksaftersphinxhypheninliterals
+}%
+\makeatother
+
+''',
+}
