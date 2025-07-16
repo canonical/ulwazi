@@ -12,6 +12,10 @@ THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 def setup(app):
     app.add_html_theme('ulwazi', str(THEME_PATH))
 
+    # Register static files path
+    static_path = str(THEME_PATH / "static")
+    app.config.html_static_path.append(static_path)
+
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
@@ -42,11 +46,16 @@ def config_inited(app, config):  # noqa: ANN401
         except ModuleNotFoundError:  # noqa: PERF203
             print(f"{package} not found.\n{package} will not be configured.")
 
+    # Add theme CSS files (without Vanilla Framework)
     extra_css = [
         "css/debug.css",
         # "css/skeleton.css",
         "css/sidenav.css",
-        "css/vanilla-main.css",
+    ]
+
+    # Add Vanilla Framework CSS LAST - overrides everything
+    final_css = [
+        "css/vanilla-main.css",  # MUST BE LAST - overrides 100% of styling
     ]
 
     extra_js = [
@@ -69,7 +78,9 @@ def config_inited(app, config):  # noqa: ANN401
     for value, default in values_and_defaults:
         html_context.setdefault(value, default)
 
+    # Add theme CSS, then append Vanilla Framework CSS at the very end
     config.html_css_files.extend(extra_css)
+    config.html_css_files.extend(final_css)
     config.html_js_files.extend(extra_js)
 
 def _compute_navigation_tree(context: Dict[str, Any]) -> str:
@@ -118,7 +129,7 @@ def _html_page_context(
     context: Dict[str, Any],
     doctree: Any,
 ) -> None:
-   
+
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(context)
 
