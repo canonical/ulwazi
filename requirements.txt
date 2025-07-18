@@ -1,7 +1,7 @@
 sphinx
 build
 sphinx-autobuild
-canonical-sphinx-config
+canonical-sphinx-config @ git+https://github.com/Canonical/canonical-sphinx-config.git@main
 sphinx-modern-pdf-style
 myst-parser
 # canonical-sphinx[full]
