@@ -1,7 +1,6 @@
 """Generate the navigation tree from Sphinx's toctree function's output."""
 
 import functools
-import copy
 
 from bs4 import BeautifulSoup, Tag
 
