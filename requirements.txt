@@ -1,9 +1,11 @@
-# sphinx
-# build
-# sphinx-autobuild
-# ulwazi @ git+https://github.com/canonical/ulwazi@main
-# myst-parser
-canonical-sphinx[full]
+sphinx
+build
+sphinx-autobuild
+ulwazi @ git+ssh://git@ssh.github.com:443/canonical/ulwazi@main
+canonical-sphinx-config @ git+ssh://git@ssh.github.com:443/canonical/canonical-sphinx-config@main
+sphinx-modern-pdf-style
+myst-parser
+# canonical-sphinx[full]
 packaging
 sphinxcontrib-svg2pdfconverter[CairoSVG]
 sphinx-last-updated-by-git

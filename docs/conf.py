@@ -274,12 +274,13 @@ linkcheck_retries = 3
 #       - youtube-links
 
 extensions = [
-    "canonical_sphinx",
     "sphinxcontrib.cairosvgconverter",
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
-    "ulwazi"
+    "ulwazi",
+    "sphinx_modern_pdf_style",
+    "canonical_sphinx_config",
 ]
 
 # Excludes files or directories from processing
@@ -359,3 +360,7 @@ if os.path.exists("./reuse/substitutions.yaml"):
 intersphinx_mapping = {
     'starter-pack': ('https://canonical-example-product-documentation.readthedocs-hosted.com/en/latest', None)
 }
+
+# PDF
+
+set_modern_pdf_config = True
