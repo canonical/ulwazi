@@ -139,8 +139,6 @@ html_context = {
     "repo_default_branch": "main",
     # Docs location in the repo; used in links for viewing the source files
     #
-
-
     # TODO: To customise the directory, uncomment and update as needed.
     "repo_folder": "/docs/",
     # TODO: To enable or disable the Previous / Next buttons at the bottom of pages
@@ -148,8 +146,7 @@ html_context = {
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
     "display_contributors": False,
-
-    # Required for feedback button    
+    # Required for feedback button
     "github_issues": "enabled",
     "company": "Canonical",
     "link1_URL": "https://snapcraft.io/",
@@ -228,10 +225,7 @@ redirects = {}
 #
 # TODO: Remove or adjust the ACME entry after you update the contributing guide
 
-linkcheck_ignore = [
-    "http://127.0.0.1:8000",
-    "https://github.com/canonical/ACME/*"
-    ]
+linkcheck_ignore = ["http://127.0.0.1:8000", "https://github.com/canonical/ACME/*"]
 
 
 # A regex list of URLs where anchors are ignored by 'make linkcheck'
@@ -289,12 +283,7 @@ extensions = [
 
 # Excludes files or directories from processing
 
-exclude_patterns = [
-    "doc-cheat-sheet*",
-    "_build", 
-    "Thumbs.db", 
-    ".DS_Store"
-]
+exclude_patterns = ["doc-cheat-sheet*", "_build", "Thumbs.db", ".DS_Store"]
 
 # Adds custom CSS files, located under 'html_static_path'
 
@@ -362,7 +351,10 @@ if os.path.exists("./reuse/substitutions.yaml"):
 # Add configuration for intersphinx mapping
 
 intersphinx_mapping = {
-    'starter-pack': ('https://canonical-example-product-documentation.readthedocs-hosted.com/en/latest', None)
+    "starter-pack": (
+        "https://canonical-example-product-documentation.readthedocs-hosted.com/en/latest",
+        None,
+    )
 }
 
 # PDF

@@ -34,7 +34,7 @@ def get_navigation_tree(toctree_html: str) -> str:
         # classes = element.get("class", [])
         # element["class"] = classes + ["p-side-navigation__list"]
         element["class"] = "p-side-navigation__list"
-    
+
     # We add a proper style for each <li> in the globaltoc
     for element in soup.find_all("li", recursive=True):
         # element["class"] = "p-side-navigation__item"
@@ -61,7 +61,7 @@ def get_navigation_tree(toctree_html: str) -> str:
         element["class"] = classes + ["has-children"]
 
         toctree_checkbox_count += 1
-        checkbox_name = f"toctree-checkbox-{toctree_checkbox_count}" 
+        checkbox_name = f"toctree-checkbox-{toctree_checkbox_count}"
         # We're gonna add a checkbox.
         checkbox = soup.new_tag(
             "input",
