@@ -4,6 +4,9 @@ sphinx-autobuild
 canonical-sphinx-config @ git+https://github.com/Canonical/canonical-sphinx-config.git@main
 sphinx-modern-pdf-style
 myst-parser
+sphinx-basic-ng
+sphinxcontrib-jquery
+beautifulsoup4
 # canonical-sphinx[full]
 packaging
 sphinxcontrib-svg2pdfconverter[CairoSVG]
