@@ -88,9 +88,15 @@ pa11y-install:
 			npm install --prefix $(SPHINXDIR) pa11y; \
 		}
 
-install: $(VENVDIR)
+build-css:
+	npx sass --load-path=node_modules ulwazi/theme/ulwazi/static/css/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css
 
-run: install
+clean-css:
+	rm -f ulwazi/theme/ulwazi/static/css/vanilla-main.css
+
+install: $(VENVDIR)  build-css
+
+run: install  build-css
 	. $(VENV); $(VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 
 # Doesn't depend on $(BUILDDIR) to rebuild properly at every run.
@@ -114,7 +120,7 @@ clean-doc:
 	git clean -fx "$(BUILDDIR)"
 	rm -rf $(SPHINXDIR)/.doctrees
 
-clean: clean-doc
+clean: clean-doc clean-css
 	. ${VENV}; pip uninstall -y ulwazi
 	rm -r ./dist | true
 	rm -r ./ulwazi.egg-info | true
@@ -199,6 +205,8 @@ allmetrics: html
 
 update: install
 	@. $(VENV); .sphinx/update_sp.py
+
+rebuild: clean run
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
