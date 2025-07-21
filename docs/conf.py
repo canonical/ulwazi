@@ -2,6 +2,9 @@ import datetime
 import os
 import yaml
 
+# Add the ulwazi folder to the Python path
+sys.path.insert(0, os.path.abspath("../ulwazi"))
+
 # Configuration for the Sphinx documentation builder.
 # All configuration specific to your project should be done in this file.
 #
@@ -280,12 +283,13 @@ extensions = [
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
+    "myst_parser",
     "ulwazi"
 ]
 
-myst_enable_extensions = [
+myst_enable_extensions = {
     "colon_fence"
-]
+}
 
 # Excludes files or directories from processing
 
