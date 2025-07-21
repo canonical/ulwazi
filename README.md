@@ -8,6 +8,21 @@ Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pr
 
 The theme will default to a generic Vanilla Framework style but will have options for the specific Canonical theming to support the org's documentation needs.
 
+## Installing Node Modules
+
+Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [Yarn](https://yarnpkg.com/) installed:
+
+```shell
+sudo apt install npm
+sudo npm install -g corepack
+```
+
+If you do not have the `node_modules` directory (for example, after cloning the repository for the first time), install the JavaScript dependencies:
+
+```shell
+yarn install
+```
+
 ## Testing
 
 A Makefile includes some basic functionality to build the theme and then build and run the test content with the theme.

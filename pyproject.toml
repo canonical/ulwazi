@@ -29,6 +29,9 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+exclude = ["node_modules*"]
+
 [tool.sphinx-theme-builder]
 node-version = "18.16.0"
 

@@ -12,6 +12,10 @@ THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 def setup(app):
     app.add_html_theme('ulwazi', str(THEME_PATH))
 
+    # Register static files path
+    static_path = str(THEME_PATH / "static")
+    app.config.html_static_path.append(static_path)
+
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
@@ -46,7 +50,11 @@ def config_inited(app, config):  # noqa: ANN401
         "css/debug.css",
         # "css/skeleton.css",
         "css/sidenav.css",
-        "css/vanilla-framework-version-4.18.5.min.css",
+    ]
+
+    # Add Vanilla Framework CSS LAST - overrides everything
+    final_css = [
+        "css/vanilla-main.css",  # MUST BE LAST - overrides 100% of styling
     ]
 
     extra_js = [
@@ -70,6 +78,7 @@ def config_inited(app, config):  # noqa: ANN401
         html_context.setdefault(value, default)
 
     config.html_css_files.extend(extra_css)
+    config.html_css_files.extend(final_css)
     config.html_js_files.extend(extra_js)
 
 def _compute_navigation_tree(context: Dict[str, Any]) -> str:
