@@ -50,7 +50,6 @@ def config_inited(app, config):  # noqa: ANN401
         "css/debug.css",
         # "css/skeleton.css",
         "css/sidenav.css",
-        "css/vanilla-main.css",
     ]
 
     # Add Vanilla Framework CSS LAST - overrides everything
