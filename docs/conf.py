@@ -1,6 +1,7 @@
 import datetime
 import os
 import yaml
+import sys
 
 # Add the ulwazi folder to the Python path
 sys.path.insert(0, os.path.abspath("../ulwazi"))
