@@ -92,12 +92,7 @@ install: $(VENVDIR)
 	. $(VENV); python -m build
 	. $(VENV); pip install dist/ulwazi-0.1.tar.gz
 
-clean-css:
-	rm -f ulwazi/theme/ulwazi/static/css/vanilla-main.css
-
-install: $(VENVDIR)  build-css
-
-run: install  build-css
+run: install
 	. $(VENV); $(VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 
 # Doesn't depend on $(BUILDDIR) to rebuild properly at every run.
