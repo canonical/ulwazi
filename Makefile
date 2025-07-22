@@ -56,7 +56,7 @@ venv:
 .PHONY: full-help spellcheck-install pa11y-install install run html \
         epub serve clean fclean clean-sp clean-doc spelling spellcheck linkcheck woke \
         allmetrics pa11y pdf-prep-force pdf-prep pdf vale-install vale \
-		update
+		update compile-scss
 
 full-help: $(VENVDIR)
 	@. $(VENV); $(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -201,6 +201,33 @@ allmetrics: html
 
 update: install
 	@. $(VENV); .sphinx/update_sp.py
+
+npm-install:
+	@command -v npm &> /dev/null
+	@if [ $? -eq 0 ]; then \
+	npm install ;\
+	else \
+	echo "Ensure npm is installed" ;\
+	fi
+	
+
+vanilla-min: npm-install
+	echo "Compiling SCSS to CSS..."
+
+# Check if we have sass available
+	@command -v sass &> /dev/null
+	@if [ $? -eq 0 ]; then \
+	echo "Using global sass..." & \
+	sass ulwazi/theme/ulwazi/assets/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css ;\
+	elif [ -f "node_modules/.bin/sass" ]; then \
+	echo "Using local sass..." & \
+	./node_modules/.bin/sass ulwazi/theme/ulwazi/assets/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css ;\
+	else \
+	echo "Error: sass not found. Please install sass first." & \
+	exit 1 ;\
+	fi
+
+	@echo "SCSS compilation complete!"
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
