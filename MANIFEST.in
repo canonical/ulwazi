@@ -1,4 +1,0 @@
-# Include the main package
-graft ulwazi
-#Exclude the node_modules
-prune node_modules
