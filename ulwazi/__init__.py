@@ -70,7 +70,9 @@ def config_inited(app, config):  # noqa: ANN401
         html_context.setdefault(value, default)
 
     config.html_css_files.extend(extra_css)
-    config.html_js_files.extend(extra_js)
+#    config.html_js_files.extend(extra_js)
+    for item in extra_js:
+        app.add_js_file(item)
 
 def _compute_navigation_tree(context: Dict[str, Any]) -> str:
     # The globaltoc tree by Sphinx
