@@ -42,13 +42,6 @@ def config_inited(app, config):  # noqa: ANN401
         except ModuleNotFoundError:  # noqa: PERF203
             print(f"{package} not found.\n{package} will not be configured.")
 
-    extra_css = [
-        "css/default.css",
-        "css/skeleton.css",
-        "css/sidenav.css",
-        "css/vanilla-main.css",
-    ]
-
     extra_js = [
         "js/scripts.js",
         "js/header-nav.js",
@@ -69,8 +62,6 @@ def config_inited(app, config):  # noqa: ANN401
     for value, default in values_and_defaults:
         html_context.setdefault(value, default)
 
-    config.html_css_files.extend(extra_css)
-#    config.html_js_files.extend(extra_js)
     for item in extra_js:
         app.add_js_file(item)
 

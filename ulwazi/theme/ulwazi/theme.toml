@@ -1,7 +1,10 @@
 [theme]
 inherit = "basic-ng"
 stylesheets = [
-    "css/vanilla-min.css",
+    "css/default.css",
+    "css/skeleton.css",
+    "css/sidenav.css",
+    "css/vanilla-main.css",
 ]
 sidebars = [
     "globaltoc.html",
