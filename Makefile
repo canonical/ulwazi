@@ -89,6 +89,8 @@ pa11y-install:
 		}
 
 install: $(VENVDIR)
+	. $(VENV); python -m build
+	. $(VENV); pip install dist/ulwazi-0.1.tar.gz
 
 run: install
 	. $(VENV); $(VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
