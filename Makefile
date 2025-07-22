@@ -92,7 +92,12 @@ install: $(VENVDIR)
 	. $(VENV); python -m build
 	. $(VENV); pip install dist/ulwazi-0.1.tar.gz
 
-run: install
+clean-css:
+	rm -f ulwazi/theme/ulwazi/static/css/vanilla-main.css
+
+install: $(VENVDIR)  build-css
+
+run: install  build-css
 	. $(VENV); $(VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 
 # Doesn't depend on $(BUILDDIR) to rebuild properly at every run.
@@ -116,7 +121,7 @@ clean-doc:
 	git clean -fx "$(BUILDDIR)"
 	rm -rf $(SPHINXDIR)/.doctrees
 
-clean: clean-doc
+clean: clean-doc clean-css
 	. ${VENV}; pip uninstall -y ulwazi
 	rm -r ./dist | true
 	rm -r ./ulwazi.egg-info | true
@@ -228,6 +233,8 @@ vanilla-main: npm-install
 	fi
 
 	@echo "SCSS compilation complete!"
+
+rebuild: clean run
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

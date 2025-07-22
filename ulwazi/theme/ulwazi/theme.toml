@@ -1,6 +1,7 @@
 [theme]
 inherit = "basic-ng"
 stylesheets = [
+    "css/vanilla-main.css",
     "css/default.css",
     "css/skeleton.css",
     "css/sidenav.css",
