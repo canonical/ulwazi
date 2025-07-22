@@ -43,8 +43,8 @@ def config_inited(app, config):  # noqa: ANN401
             print(f"{package} not found.\n{package} will not be configured.")
 
     extra_css = [
-        "css/debug.css",
-        # "css/skeleton.css",
+        "css/default.css",
+        "css/skeleton.css",
         "css/sidenav.css",
         "css/vanilla-main.css",
     ]
