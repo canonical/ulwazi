@@ -1,12 +1,6 @@
 import datetime
 import os
 import yaml
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path(__file__).parent.parent))
-
-from ulwazi import *
 
 # Configuration for the Sphinx documentation builder.
 # All configuration specific to your project should be done in this file.
@@ -258,7 +252,9 @@ linkcheck_retries = 3
 # NOTE: By default, the following MyST extensions are enabled:
 #       substitution, deflist, linkify
 
-# myst_enable_extensions = set()
+myst_enable_extensions = {
+    "colon_fence"
+}
 
 
 # Custom Sphinx extensions; see
@@ -288,6 +284,7 @@ extensions = [
     "sphinx_modern_pdf_style",
     "canonical_sphinx_config",
     "myst_parser",
+    "sphinxcontrib.jquery",
 ]
 
 # Excludes files or directories from processing

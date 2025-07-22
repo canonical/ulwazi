@@ -11,10 +11,10 @@ build:
   tools:
     python: "3.11"
   jobs:
-#    post_create_environment:
-#    - pip install sphinx build
-#    - python -m build
-#    - pip install dist/ulwazi-0.1.tar.gz
+    post_create_environment:
+    - pip install sphinx build
+    - python -m build
+    - pip install dist/ulwazi-0.1.tar.gz
     post_checkout:
     - git fetch --unshallow || true
     # Cancel building pull requests when there aren't changed in the docs directory.

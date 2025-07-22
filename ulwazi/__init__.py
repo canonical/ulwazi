@@ -43,8 +43,8 @@ def config_inited(app, config):  # noqa: ANN401
             print(f"{package} not found.\n{package} will not be configured.")
 
     extra_css = [
-        "css/debug.css",
-        # "css/skeleton.css",
+        "css/default.css",
+        "css/skeleton.css",
         "css/sidenav.css",
         "css/vanilla-main.css",
     ]
@@ -70,7 +70,9 @@ def config_inited(app, config):  # noqa: ANN401
         html_context.setdefault(value, default)
 
     config.html_css_files.extend(extra_css)
-    config.html_js_files.extend(extra_js)
+#    config.html_js_files.extend(extra_js)
+    for item in extra_js:
+        app.add_js_file(item)
 
 def _compute_navigation_tree(context: Dict[str, Any]) -> str:
     # The globaltoc tree by Sphinx
@@ -111,6 +113,75 @@ def apply_heading_classes(body_html: str) -> str:
 
     return str(soup)
 
+def apply_admonition_classes(body_html:str) -> str:
+    """Convert admonition classes to notifications in the generated body HTML"""
+    if not body_html:
+        return body_html
+
+    soup = BeautifulSoup(body_html, "html.parser")     
+
+    admonitions = soup.find_all(class_="admonition")
+    generic = soup.find_all(class_="admonition-generic-admonition")
+
+
+    for admonition in admonitions:
+        child_tags = admonition.findChildren()
+        div_tag = soup.new_tag('div')
+        title = 0
+        message = soup.new_tag("p",attrs={"class":"p-notification__message"})
+        div_id = admonition.get('id')
+        for child in child_tags:
+            if child.get("class") == ["admonition-title"]:
+                match child.text:
+                        case 'Attention':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Caution':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Danger':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Error':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--negative","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Hint':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--positive","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Important':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--information","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Note':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--information","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Tip':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--positive","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case 'Warning':
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--caution","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+                        case _:
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--information","id":div_id})
+                            title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
+                            title.string = child.string
+
+            else:
+                message.append(child)
+        div_tag.append(title)
+        div_tag.append(message)
+        admonition.replace_with(div_tag)
+
+    return str(soup)
+
 def _html_page_context(
     app: sphinx.application.Sphinx,
     pagename: str,
@@ -125,3 +196,4 @@ def _html_page_context(
     # Modify the body of the content
     if "body" in context:
         context["body"] = apply_heading_classes(context["body"])
+        context["body"] = apply_admonition_classes(context["body"])
