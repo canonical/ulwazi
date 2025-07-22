@@ -12,10 +12,6 @@ THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 def setup(app):
     app.add_html_theme('ulwazi', str(THEME_PATH))
 
-    # Register static files path
-    static_path = str(THEME_PATH / "static")
-    app.config.html_static_path.append(static_path)
-
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
