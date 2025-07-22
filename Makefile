@@ -211,7 +211,7 @@ npm-install:
 	fi
 	
 
-vanilla-min: npm-install
+vanilla-main: npm-install
 	echo "Compiling SCSS to CSS..."
 
 # Check if we have sass available
