@@ -203,32 +203,16 @@ update: install
 	@. $(VENV); .sphinx/update_sp.py
 
 npm-install:
-	@command -v npm &> /dev/null
-	@if [ $? -eq 0 ]; then \
-	npm install ;\
-	else \
-	echo "Ensure npm is installed" ;\
-	fi
-	
+	@command -v npm >/dev/null 2>&1 || { echo >&2 "Error: 'npm' not found. Please install it."; exit 1; }
+	@npm install
 
 vanilla-main: npm-install
 	echo "Compiling SCSS to CSS..."
 
-# Check if we have sass available
-	@command -v sass &> /dev/null
-	@if [ $? -eq 0 ]; then \
-	echo "Using global sass..." & \
-	sass ulwazi/theme/ulwazi/assets/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css ;\
-	elif [ -f "node_modules/.bin/sass" ]; then \
-	echo "Using local sass..." & \
-	./node_modules/.bin/sass ulwazi/theme/ulwazi/assets/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css ;\
-	else \
-	echo "Error: sass not found. Please install sass first." & \
-	exit 1 ;\
-	fi
+	@echo "Using local sass..."
+	@./node_modules/.bin/sass ulwazi/theme/ulwazi/assets/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css
 
 	@echo "SCSS compilation complete!"
-
 rebuild: clean run
 
 # Catch-all target: route all unknown targets to Sphinx using the new
