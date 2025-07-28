@@ -11858,8 +11858,8 @@ ol.u-text-max-width,
   font-variant-numeric: oldstyle-nums !important;
 }
 
-h1 {
-  color: yellowgreen;
+.heading-test-scss {
+  color: purple;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */

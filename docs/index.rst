@@ -19,6 +19,11 @@ Lorem ipsum
 Second heading! (h2)
 --------------------
 
+.. rst-class:: heading-test-scss
+
+This is a test about scss propagation
+
+
 Some content.
 
 .. toctree::
