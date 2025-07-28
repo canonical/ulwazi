@@ -1,0 +1,8 @@
+@import "../../../../node_modules/vanilla-framework"; // Imports from node_modules
+@include vanilla;
+
+// Custom styles
+
+.heading-test-scss{
+  color: purple;
+}

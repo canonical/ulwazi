@@ -3,6 +3,9 @@ inherit = "basic-ng"
 stylesheets = [
     "css/vanilla-main.css",
     "css/default.css",
+    "css/skeleton.css",
+    "css/sidenav.css",
+    "css/vanilla-main.css",
 ]
 sidebars = [
     "globaltoc.html",

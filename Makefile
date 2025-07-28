@@ -27,7 +27,10 @@ help:
 	@echo "* clean built doc files:                     make clean-doc"
 	@echo "* clean doc environment:                     make clean-sp"
 	@echo "* clean theme files and doc environment:     make clean"
-	@echo "* same as clean and uninstal ulwazi using pip:  make fclean"
+	@echo "* Same as clean and run:                     make rebuild"
+	@echo "* Same as clean + delete venv folder:        make fclean"
+	@echo "* Install Vanilla Framework node modules:    make npm-install"
+	@echo "* Compile Vanilla Framework SCSS to CSS:     make vanilla-main"
 	@echo "* check links:                               make linkcheck"
 	@echo "* check spelling:                            make spelling"
 	@echo "* check spelling (without building again):   make spellcheck"
@@ -56,7 +59,7 @@ venv:
 .PHONY: full-help spellcheck-install pa11y-install install run html \
         epub serve clean fclean clean-sp clean-doc spelling spellcheck linkcheck woke \
         allmetrics pa11y pdf-prep-force pdf-prep pdf vale-install vale \
-		update
+		update compile-scss
 
 full-help: $(VENVDIR)
 	@. $(VENV); $(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -88,15 +91,11 @@ pa11y-install:
 			npm install --prefix $(SPHINXDIR) pa11y; \
 		}
 
-build-css:
-	npx sass --load-path=node_modules ulwazi/theme/ulwazi/static/css/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css
+install: $(VENVDIR)
+	. $(VENV); python -m build
+	. $(VENV); pip install dist/ulwazi-0.1.tar.gz
 
-clean-css:
-	rm -f ulwazi/theme/ulwazi/static/css/vanilla-main.css
-
-install: $(VENVDIR)  build-css
-
-run: install  build-css
+run: install
 	. $(VENV); $(VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 
 # Doesn't depend on $(BUILDDIR) to rebuild properly at every run.
@@ -120,7 +119,7 @@ clean-doc:
 	git clean -fx "$(BUILDDIR)"
 	rm -rf $(SPHINXDIR)/.doctrees
 
-clean: clean-doc clean-css
+clean: clean-doc
 	. ${VENV}; pip uninstall -y ulwazi
 	rm -r ./dist | true
 	rm -r ./ulwazi.egg-info | true
@@ -206,6 +205,17 @@ allmetrics: html
 update: install
 	@. $(VENV); .sphinx/update_sp.py
 
+npm-install:
+	@command -v npm >/dev/null 2>&1 || { echo >&2 "Error: 'npm' not found. Please install it."; exit 1; }
+	@npm install
+
+vanilla-main: npm-install
+	echo "Compiling SCSS to CSS..."
+
+	@echo "Using local sass..."
+	@./node_modules/.bin/sass ulwazi/theme/ulwazi/assets/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css
+
+	@echo "SCSS compilation complete!"
 rebuild: clean run
 
 # Catch-all target: route all unknown targets to Sphinx using the new
