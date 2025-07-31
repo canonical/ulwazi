@@ -1,4 +1,5 @@
-# Lists (Markdown)
+
+# Lists (markdown)
 
 ````{list-table}
    :header-rows: 1

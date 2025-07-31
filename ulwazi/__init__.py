@@ -116,7 +116,8 @@ def apply_list_classes(body_html: str) -> str:
         "ol": "p-list--ordered",
         "li": "p-list__item",
         "ul.simple": "p-list--unordered p-list--simple",
-        "ol.simple": "p-list--ordered p-list--simple"
+        "ol.simple": "p-list--ordered p-list--simple",
+    
     }
 
     soup = BeautifulSoup(body_html, "html.parser")
@@ -231,6 +232,7 @@ def _html_page_context(
     # Modify the body of the content
     if "body" in context:
         context["body"] = apply_heading_classes(context["body"])
+        context["body"] = apply_list_classes(context["body"])
         context["body"] = apply_list_classes(context["body"])
         context["body"] = apply_admonition_classes(context["body"])
         context["body"] = modify_inline_code(context["body"])

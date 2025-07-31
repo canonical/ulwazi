@@ -33,9 +33,9 @@ Lists
 
 You can also nest lists:
 
-.. tabs::
+.. tab-set::
 
-   .. tab:: Input
+   .. tab-item:: Input
 
       .. code::
 
@@ -54,8 +54,10 @@ You can also nest lists:
 
                - Item
             #. Sub-step 2
+   .. tab-item:: Output
 
-   .. tab:: Output
+
+
        1. Step 1
 
           - Item 1
@@ -71,6 +73,8 @@ You can also nest lists:
 
              - Item
           #. Sub-step 2
+
+
 
 Adhere to the following conventions:
 
