@@ -11,6 +11,8 @@ Test content.
    test4
    test6_admonitions
    test7_admonitionsMD
+   test_lists_md.md
+   test_lists.rst
 
 Nest test
 ---------
