@@ -218,6 +218,10 @@ vanilla-main: npm-install
 	@echo "SCSS compilation complete!"
 rebuild: clean run
 
+test: npm-install
+	@echo "Running all tests with tox..."
+	@. $(VENV); tox
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 # %:
