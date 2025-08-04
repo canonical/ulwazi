@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 INDEX_PATH = "docs/_build/index.html"
@@ -14,5 +15,7 @@ def test_index_has_no_broken_assets():
             url = tag.get(attr)
 
             if url and not url.startswith(("http", "data:", "#")):
-                asset_path = os.path.normpath(os.path.join("docs/_build", url))
+                parsed_url = urlparse(url)
+                clean_path = parsed_url.path
+                asset_path = os.path.normpath(os.path.join("docs/_build", clean_path))
                 assert os.path.exists(asset_path), f"Missing asset: {asset_path}"
