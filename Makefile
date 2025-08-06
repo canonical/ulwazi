@@ -218,7 +218,11 @@ vanilla-main: npm-install
 	@echo "SCSS compilation complete!"
 rebuild: clean run
 
-test: npm-install
+test-install:
+	@echo "Installing tox..."
+	. $(VENV); pip install tox
+
+test: npm-install test-install
 	@echo "Running all tests with tox..."
 	@. $(VENV); tox
 
