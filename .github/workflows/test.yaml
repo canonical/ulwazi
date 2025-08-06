@@ -15,7 +15,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run make test
-        run: |
-          source venv/bin/activate
-          make test
+      - name: Build SCSS
+        run: make vanilla-main
+      
+      - name: Build HTML
+        run: make html
+
+      - name: Run tests
+        run: make test
