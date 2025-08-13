@@ -45,7 +45,8 @@ def config_inited(app, config):  # noqa: ANN401
     extra_js = [
         "js/scripts.js",
         "js/header-nav.js",
-        "js/dropdown.js"
+        "js/dropdown.js",
+        "js/main.js"
     ]
 
     values_and_defaults = [
