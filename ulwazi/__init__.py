@@ -114,8 +114,7 @@ def apply_list_classes(body_html: str) -> str:
         "ol": "p-list--ordered",
         "li": "p-list__item",
         "ul.simple": "p-list--unordered p-list--simple",
-        "ol.simple": "p-list--ordered p-list--simple",
-    
+        "ol.simple": "p-list--ordered p-list--simple"
     }
 
     soup = BeautifulSoup(body_html, "html.parser")
