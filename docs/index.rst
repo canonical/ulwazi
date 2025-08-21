@@ -32,3 +32,5 @@ Some content.
    self
    content/test
    content/contribute
+   content/myst
+
