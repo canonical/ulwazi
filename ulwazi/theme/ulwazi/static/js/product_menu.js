@@ -192,6 +192,41 @@ const initNavigationSliding = () => {
     setFocusable(target.parentNode.parentNode);
   };
 
+  // Handle subsection tabs inside product navigation menu
+  const tabs = document.querySelectorAll('.js-navigation-tab');
+
+  if (tabs.length > 0) {
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // 1. Reset all tabs
+        tabs.forEach((t) => {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected', 'false');
+          const contentId = t.getAttribute('aria-controls');
+          if (contentId) {
+            const content = document.getElementById(contentId);
+            if (content) {
+              content.setAttribute('hidden', ''); // hide non-selected panels
+            }
+          }
+        });
+
+        // 2. Activate the clicked tab
+        this.classList.add('is-active');
+        this.setAttribute('aria-selected', 'true');
+        const activeContentId = this.getAttribute('aria-controls');
+        if (activeContentId) {
+          const activeContent = document.getElementById(activeContentId);
+          if (activeContent) {
+            activeContent.removeAttribute('hidden'); // show selected panel
+          }
+        }
+      });
+    });
+  }
+
   dropdownNavLists.forEach(function(dropdown) {
     dropdown.children[1].addEventListener('keydown', function(e) {
       if (e.shiftKey && e.key === 'Tab' && window.getComputedStyle(dropdown.children[0], null).display === 'none') {
