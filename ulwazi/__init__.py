@@ -189,7 +189,8 @@ def modify_inline_code(body_html: str) -> str:
             child.decompose()
 
         code.string = " ".join(child_text)
-        code["class"] = []
+        if "class" in code.attrs:
+            del code["class"]
 
     return str(soup)
 
