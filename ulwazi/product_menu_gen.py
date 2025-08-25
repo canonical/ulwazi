@@ -28,10 +28,32 @@ def save2file(content:str) -> None:
     with open(filename, "w", encoding="utf-8") as file:
         file.write(content)
 
+def prefix_local_links(soup, base_url="https://canonical.com") -> BeautifulSoup:
+    """
+    Updates all local links/resources in a BeautifulSoup object by
+    prepending them with the given base URL.
+    """
+
+    # Tags and attributes to check for local references
+    link_attributes = {
+        "a": "href",
+        "link": "href",
+        "script": "src",
+        "img": "src",
+        "iframe": "src",
+        "source": "src",
+    }
+
+    for tag, attr in link_attributes.items():
+        for element in soup.find_all(tag):
+            if element.has_attr(attr) and element[attr].startswith("/"):
+                element[attr] = base_url + element[attr]
+    return soup
+
 if __name__ == "__main__":
     address = PRODUCT_MENU_PARSING_URL
     parsed_html = fetch_and_parse(address)
-    navigation_menu = get_nav_menu(parsed_html)
+    navigation_menu = get_nav_menu(prefix_local_links(parsed_html))
     num_lines = len(navigation_menu.splitlines())
     if num_lines > 100:
         logger.debug(f"The parsed the NavMenu has {num_lines} lines.")
@@ -42,4 +64,3 @@ if __name__ == "__main__":
     logger.debug("First 1000 symbols of the NavMenu: \n" + navigation_menu[:1000])
     save2file(navigation_menu)
     logger.info(f"Saved product menu as {PRODUCT_MENU_DIRECTORY.strip("/")}/{PRODUCT_MENU_FILENAME}")
-    
