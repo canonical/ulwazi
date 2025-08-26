@@ -5,7 +5,6 @@ from typing import Any, Dict
 import sphinx.application
 from .navigation import get_navigation_tree
 from bs4 import BeautifulSoup
-import re
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
