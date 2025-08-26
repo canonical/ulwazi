@@ -194,7 +194,7 @@ def modify_inline_code(body_html: str) -> str:
 
 def _html_page_context(
     app: sphinx.application.Sphinx,
-    pagename: str,  
+    pagename: str,
     templatename: str,
     context: Dict[str, Any],
     doctree: Any,
