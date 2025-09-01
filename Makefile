@@ -31,14 +31,7 @@ help:
 	@echo "* Same as clean + delete venv folder:        make fclean"
 	@echo "* Install Vanilla Framework node modules:    make npm-install"
 	@echo "* Compile Vanilla Framework SCSS to CSS:     make vanilla-main"
-	@echo "* check links:                               make linkcheck"
-	@echo "* check spelling:                            make spelling"
-	@echo "* check spelling (without building again):   make spellcheck"
-	@echo "* check inclusive language:                  make woke"
-	@echo "* check accessibility:                       make pa11y"
-	@echo "* check style guide compliance:              make vale"
-	@echo "* check style guide compliance on target:    make vale TARGET=*"
-	@echo "* check metrics for documentation:           make allmetrics"
+	@echo "* regenerate the latest product-menu from Canonical.com:  make product-menu"
 	@echo "* other possible targets:                    make <TAB twice>"
 	@echo "-------------------------------------------------------------"
 	@echo
@@ -226,6 +219,9 @@ test: npm-install test-install
 	@echo "Running all tests with tox..."
 	@. $(VENV); tox
 
+product-menu:
+	@echo "Running all tests with tox..."
+	python3 ulwazi/product_menu_gen.py
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 # %:

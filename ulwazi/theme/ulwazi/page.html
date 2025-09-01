@@ -2,6 +2,13 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% if add_product_menu %}
+{% block product %}
+<header>
+    {% include "components/product_menu_copy.html" %}
+</header>
+{% endblock product %}
+{% endif %}
 {% block header %}
 <header>
   <a href="#content" class="p-link--skip">Jump to main content</a>
