@@ -91,6 +91,19 @@ python:
   - requirements: requirements.txt
 ```
 
+Shell:
+
+```shell
+# Create and activate a virtual environment
+python3 -m venv .venv && source .venv/bin/activate
+
+# Install Sphinx and the RTD theme
+pip install sphinx sphinx-rtd-theme
+
+# Build HTML docs from the "docs" folder
+sphinx-build -b html docs/ _build/html
+```
+
 Python:
 
 ```python
