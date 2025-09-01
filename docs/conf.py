@@ -154,6 +154,10 @@ html_context = {
     "company": "Canonical",
     "link1_URL": "https://snapcraft.io/",
     "link1_name": "Snapcraft",
+
+    # Canonical Product menu
+    # Uncomment if you need a product menu added on the top of every page
+    "add_product_menu": True,
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a
