@@ -87,6 +87,8 @@ Use the following syntax::
       - Item
    1. Sub-step 2
 
+### Definition lists
+
 Term 1
 : Definition
 

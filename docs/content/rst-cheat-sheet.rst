@@ -106,6 +106,9 @@ Lists
       - Item
    #. Sub-step 2
 
+Definition lists
+~~~~~~~~~~~~~~~~
+
 Term 1:
   Definition
 Term 2:
