@@ -2,9 +2,17 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% if add_product_menu %}
+{% block product %}
+<header>
+    {% include "components/product_menu_copy.html" %}
+</header>
+{% endblock product %}
+{% endif %}
 {% block header %}
 <header>
-    {% include "sections/header.html" %}
+  <a href="#content" class="p-link--skip">Jump to main content</a>
+  {% include "sections/header.html" %}
 </header>
 {% endblock header %}
 {% block announcement %}
@@ -35,7 +43,7 @@
       {% include "sections/sidebar-primary.html" %}
     </aside>
     {% endblock sidebar_primary %}
-    <main class="sb-main">
+    <main class="sb-main" id="content">
       {% block header_content %}
       <header class="sb-header-content">
         <div class="sb-header-content__inner">

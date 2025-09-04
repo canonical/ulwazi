@@ -45,7 +45,9 @@ def config_inited(app, config):  # noqa: ANN401
     extra_js = [
         "js/scripts.js",
         "js/header-nav.js",
-        "js/dropdown.js"
+        "js/dropdown.js",
+        # "js/main.js"
+        "js/product_menu.js"
     ]
 
     values_and_defaults = [
@@ -114,7 +116,6 @@ def apply_admonition_classes(body_html:str) -> str:
     admonitions = soup.find_all(class_="admonition")
     generic = soup.find_all(class_="admonition-generic-admonition")
 
-
     for admonition in admonitions:
         child_tags = admonition.findChildren()
         div_tag = soup.new_tag('div')
@@ -173,6 +174,26 @@ def apply_admonition_classes(body_html:str) -> str:
 
     return str(soup)
 
+def modify_inline_code(body_html: str) -> str:
+    """Modify inline code elements in the HTML."""
+    if not body_html:
+        return body_html
+
+    soup = BeautifulSoup(body_html, "html.parser")
+
+    for code in soup.find_all("code", class_="docutils literal notranslate"):
+        child_tags = code.findChildren()
+        child_text = []
+        for child in child_tags:
+            child_text.append(child.string)
+            child.decompose()
+
+        code.string = " ".join(child_text)
+        if "class" in code.attrs:
+            del code["class"]
+
+    return str(soup)
+
 def _html_page_context(
     app: sphinx.application.Sphinx,
     pagename: str,
@@ -188,3 +209,4 @@ def _html_page_context(
     if "body" in context:
         context["body"] = apply_heading_classes(context["body"])
         context["body"] = apply_admonition_classes(context["body"])
+        context["body"] = modify_inline_code(context["body"])

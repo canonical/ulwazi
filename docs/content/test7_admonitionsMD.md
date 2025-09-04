@@ -1,10 +1,11 @@
 # Tests for Admonitions in Markdown
 
+This `is an inline code test` in `markdown`.
+
 :::{note}
 :name: note-reference
 This note admonition has a reference target name that is referenced at the bottom of this page.
 :::
-
 
 ```{attention}
 This is an Attention admonition
