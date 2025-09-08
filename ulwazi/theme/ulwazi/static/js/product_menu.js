@@ -1,7 +1,7 @@
 const initNavigationSliding = () => {
   const ANIMATION_SNAP_DURATION = 100;
-  const navigation = document.querySelector('.p-navigation--sliding, .p-navigation--reduced');
-  const secondaryNavigation = document.querySelector('.p-navigation--reduced + .p-navigation');
+  const productNavigation = document.querySelector('.product-menu');
+  const secondaryNavigation = document.querySelector('.is-secondary');
   const toggles = document.querySelectorAll('.p-navigation__nav .p-navigation__link[aria-controls]:not(.js-back-button)');
   const searchButtons = document.querySelectorAll('.js-search-button');
   const menuButton = document.querySelector('.js-menu-button');
@@ -15,11 +15,15 @@ const initNavigationSliding = () => {
       closeSearch();
     }
     resetToggles();
-    navigation.classList.remove('has-menu-open');
+    if (productNavigation) {
+      productNavigation.classList.remove('has-menu-open');
+    }
     if (secondaryNavigation) {
       secondaryNavigation.classList.remove('has-menu-open');
     }
-    menuButton.innerHTML = 'Menu';
+    if (menuButton) {
+      menuButton.innerHTML = 'Menu';
+    }
   };
 
   const keyPressHandler = (e) => {
@@ -33,24 +37,28 @@ const initNavigationSliding = () => {
       searchButton.removeAttribute('aria-pressed');
     });
 
-    navigation.classList.remove('has-search-open');
+    if (productNavigation) {
+      productNavigation.classList.remove('has-search-open');
+    }
     document.removeEventListener('keyup', keyPressHandler);
   };
 
-  menuButton.addEventListener('click', function(e) {
-    e.preventDefault();
-    closeSearch();
-    if (navigation.classList.contains('has-menu-open')) {
-      closeAllDropdowns();
-    } else {
-      navigation.classList.add('has-menu-open');
-      e.target.innerHTML = 'Close menu';
-      setFocusable(topNavList);
-    }
-  });
+  if (menuButton && productNavigation) {
+    menuButton.addEventListener('click', function (e) {
+      e.preventDefault();
+      closeSearch();
+      if (productNavigation.classList.contains('has-menu-open')) {
+        closeAllDropdowns();
+      } else {
+        productNavigation.classList.add('has-menu-open');
+        e.target.innerHTML = 'Close menu';
+        setFocusable(topNavList);
+      }
+    });
+  }
 
   const secondaryNavToggle = document.querySelector('.js-secondary-menu-toggle-button');
-  if (secondaryNavToggle) {
+  if (secondaryNavToggle && secondaryNavigation) {
     secondaryNavToggle.addEventListener('click', (event) => {
       event.preventDefault();
       closeSearch();
@@ -63,7 +71,7 @@ const initNavigationSliding = () => {
   }
 
   const resetToggles = (exception) => {
-    toggles.forEach(function(toggle) {
+    toggles.forEach(function (toggle) {
       const target = document.getElementById(toggle.getAttribute('aria-controls'));
       if (!target || target === exception) {
         return;
@@ -73,7 +81,6 @@ const initNavigationSliding = () => {
   };
 
   const setActiveDropdown = (dropdownToggleButton, isActive = true) => {
-    // find toggle wrapper
     const dropdownToggleEl = dropdownToggleButton.closest('.js-navigation-dropdown-toggle');
     if (dropdownToggleEl) {
       dropdownToggleEl.classList.toggle('is-active', isActive);
@@ -104,12 +111,10 @@ const initNavigationSliding = () => {
     targetDropdown.setAttribute('aria-hidden', 'false');
 
     if (animated) {
-      // trigger the CSS transition
       requestAnimationFrame(() => {
         targetDropdown.classList.remove('is-collapsed');
       });
     } else {
-      // make it appear immediately
       targetDropdown.classList.remove('is-collapsed');
     }
 
@@ -117,7 +122,7 @@ const initNavigationSliding = () => {
   };
 
   // when clicking outside navigation, close all dropdowns
-  document.addEventListener('click', function(event) {
+  document.addEventListener('click', function (event) {
     const target = event.target;
     if (target.closest) {
       if (!target.closest('.p-navigation, .p-navigation--sliding, .p-navigation--reduced')) {
@@ -127,7 +132,6 @@ const initNavigationSliding = () => {
   });
 
   const setListFocusable = (list) => {
-    // turn on focusability for all direct children in the target dropdown
     if (list) {
       for (const item of list.children) {
         item.children[0].setAttribute('tabindex', '0');
@@ -136,21 +140,18 @@ const initNavigationSliding = () => {
   };
 
   const setFocusable = (target) => {
-    // turn off focusability for all dropdown lists in the navigation
-    dropdownNavLists.forEach(function(list) {
+    dropdownNavLists.forEach(function (list) {
       if (list != topNavList) {
         const elements = list.querySelectorAll('ul > li > a, ul > li > button');
-        elements.forEach(function(element) {
+        elements.forEach(function (element) {
           element.setAttribute('tabindex', '-1');
         });
       }
     });
 
-    // if target dropdown is not a list, find the list in it
     const isList = target.classList.contains('js-dropdown-nav-list');
     if (!isList) {
-      // find all lists in the target dropdown and make them focusable
-      target.querySelectorAll('.js-dropdown-nav-list').forEach(function(element) {
+      target.querySelectorAll('.js-dropdown-nav-list').forEach(function (element) {
         setListFocusable(element);
       });
     } else {
@@ -158,26 +159,26 @@ const initNavigationSliding = () => {
     }
   };
 
-  toggles.forEach(function(toggle) {
-    toggle.addEventListener('click', function(e) {
+  toggles.forEach(function (toggle) {
+    toggle.addEventListener('click', function (e) {
       e.preventDefault();
       closeSearch();
       const target = document.getElementById(toggle.getAttribute('aria-controls'));
       if (target) {
-        // check if the toggled dropdown is child of another dropdown
         const isNested = !!target.parentNode.closest('.p-navigation__dropdown');
         if (!isNested) {
           resetToggles(target);
         }
 
         if (target.getAttribute('aria-hidden') === 'true') {
-          // only animate the dropdown if menu is not open, otherwise just switch the visible one
-          expandDropdown(toggle, target, !navigation.classList.contains('has-menu-open'));
-          navigation.classList.add('has-menu-open');
+          expandDropdown(toggle, target, !(productNavigation && productNavigation.classList.contains('has-menu-open')));
+          if (productNavigation) {
+            productNavigation.classList.add('has-menu-open');
+          }
         } else {
           collapseDropdown(toggle, target, true);
-          if (!isNested) {
-            navigation.classList.remove('has-menu-open');
+          if (!isNested && productNavigation) {
+            productNavigation.classList.remove('has-menu-open');
           }
         }
       }
@@ -193,62 +194,63 @@ const initNavigationSliding = () => {
   };
 
   // Handle subsection tabs inside product navigation menu
-  const tabs = document.querySelectorAll('.js-navigation-tab');
+  if (productNavigation) {
+    const tabs = productNavigation.querySelectorAll('.js-navigation-tab');
+    if (tabs.length > 0) {
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', function (e) {
+          e.preventDefault();
 
-  if (tabs.length > 0) {
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', function (e) {
-        e.preventDefault();
+          // Reset all tabs in product menu
+          tabs.forEach((t) => {
+            t.classList.remove('is-active');
+            t.setAttribute('aria-selected', 'false');
+            const contentId = t.getAttribute('aria-controls');
+            if (contentId) {
+              const content = document.getElementById(contentId);
+              if (content) {
+                content.setAttribute('hidden', '');
+              }
+            }
+          });
 
-        // 1. Reset all tabs
-        tabs.forEach((t) => {
-          t.classList.remove('is-active');
-          t.setAttribute('aria-selected', 'false');
-          const contentId = t.getAttribute('aria-controls');
-          if (contentId) {
-            const content = document.getElementById(contentId);
-            if (content) {
-              content.setAttribute('hidden', ''); // hide non-selected panels
+          // Activate clicked tab
+          this.classList.add('is-active');
+          this.setAttribute('aria-selected', 'true');
+          const activeContentId = this.getAttribute('aria-controls');
+          if (activeContentId) {
+            const activeContent = document.getElementById(activeContentId);
+            if (activeContent) {
+              activeContent.removeAttribute('hidden');
             }
           }
         });
-
-        // 2. Activate the clicked tab
-        this.classList.add('is-active');
-        this.setAttribute('aria-selected', 'true');
-        const activeContentId = this.getAttribute('aria-controls');
-        if (activeContentId) {
-          const activeContent = document.getElementById(activeContentId);
-          if (activeContent) {
-            activeContent.removeAttribute('hidden'); // show selected panel
-          }
-        }
       });
-    });
+    }
   }
 
-  dropdownNavLists.forEach(function(dropdown) {
-    dropdown.children[1].addEventListener('keydown', function(e) {
+  dropdownNavLists.forEach(function (dropdown) {
+    dropdown.children[1].addEventListener('keydown', function (e) {
       if (e.shiftKey && e.key === 'Tab' && window.getComputedStyle(dropdown.children[0], null).display === 'none') {
         goBackOneLevel(e, dropdown.children[1].children[0]);
         dropdown.parentNode.children[0].focus({
-          preventScroll: true
+          preventScroll: true,
         });
       }
     });
   });
 
-  document.querySelectorAll('.js-back-button').forEach(function(backButton) {
-    backButton.addEventListener('click', function(e) {
+  document.querySelectorAll('.js-back-button').forEach(function (backButton) {
+    backButton.addEventListener('click', function (e) {
       goBackOneLevel(e, backButton);
     });
   });
 
-  if (hasSearch) {
+  if (hasSearch && productNavigation) {
     const toggleSearch = (e) => {
       e.preventDefault();
 
-      if (navigation.classList.contains('has-search-open')) {
+      if (productNavigation.classList.contains('has-search-open')) {
         closeAllDropdowns();
       } else {
         closeAllDropdowns();
@@ -268,30 +270,32 @@ const initNavigationSliding = () => {
     const openSearch = (e) => {
       e.preventDefault();
 
-      var searchInput = navigation.querySelector('.p-search-box__input');
-      if (!searchInput) {
+      let searchInput = productNavigation.querySelector('.p-search-box__input');
+      if (!searchInput && secondaryNavigation) {
         searchInput = secondaryNavigation.querySelector('.p-search-box__input');
       }
-      var buttons = document.querySelectorAll('.js-search-button');
+      const buttons = document.querySelectorAll('.js-search-button');
 
       buttons.forEach((searchButton) => {
         searchButton.setAttribute('aria-pressed', true);
       });
 
-      navigation.classList.add('has-search-open');
-      searchInput.focus();
+      productNavigation.classList.add('has-search-open');
+      if (searchInput) {
+        searchInput.focus();
+      }
       document.addEventListener('keyup', keyPressHandler);
     };
   }
 
   // throttle util (for window resize event)
-  var throttle = function(fn, delay) {
+  var throttle = function (fn, delay) {
     var timer = null;
-    return function() {
+    return function () {
       var context = this,
         args = arguments;
       clearTimeout(timer);
-      timer = setTimeout(function() {
+      timer = setTimeout(function () {
         fn.apply(context, args);
       }, delay);
     };
@@ -301,7 +305,7 @@ const initNavigationSliding = () => {
   let previousWidth = window.innerWidth;
   window.addEventListener(
     'resize',
-    throttle(function() {
+    throttle(function () {
       const currentWidth = window.innerWidth;
       if (currentWidth !== previousWidth) {
         closeAllDropdowns();

@@ -67,37 +67,6 @@ document.addEventListener("click", function (event) {
 });
 
 /**
- * Handles when any toggle is clicked by reseting the other toggles and
- * managing whether the animation should run
- * @param {HTMLElement} toggle - The clicked toggle
- */
-function toggleDropdown(toggle) {
-  const target = document.getElementById(toggle.getAttribute("aria-controls"));
-  if (target) {
-    // check if the toggled dropdown is child of another dropdown
-    const isNested = target.parentNode.closest(".p-navigation__dropdown");
-    if (!isNested) {
-      resetToggles(target);
-    }
-    if (target.getAttribute("aria-hidden") === "true") {
-      // only animate the dropdown if menu is not open, otherwise just switch the visible one
-      expandDropdown(
-        toggle,
-        target,
-        !navigation.classList.contains("has-menu-open")
-      );
-      navigation.classList.add("has-menu-open");
-      navigation.addEventListener("keydown", handleDesktopKeyboardEvents);
-    } else {
-      collapseDropdown(toggle, target, true);
-      setFocusable();
-      navigation.classList.remove("has-menu-open");
-      navigation.removeEventListener("keydown", handleDesktopKeyboardEvents);
-    }
-  }
-}
-
-/**
  * Resets all toggles to their base state, unless an exception is passed
  * then this toggle is ignored
  * @param {HTMLElement} exception - The toggle to ignore
