@@ -22,6 +22,7 @@ help:
 	@echo
 	@echo "-------------------------------------------------------------"
 	@echo "* build the theme, build and serve the sample documentation:  make run"
+	@echo "* run all tests:                             make test"	
 	@echo "* only build:                                make html"
 	@echo "* only serve:                                make serve"
 	@echo "* clean built doc files:                     make clean-doc"
@@ -37,7 +38,7 @@ help:
 	@echo
 
 venv:
-	python3 -c "import venv" || \
+	@python3 -c "import venv" || \
         (echo "You must install python3-venv before you can build the documentation."; exit 1)
 	@echo "... setting up virtualenv"
 	python3 -m venv $(VENVDIR)
