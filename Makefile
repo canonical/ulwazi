@@ -38,7 +38,6 @@ help:
 	@echo
 
 venv:
-	
 	@python3 -c "import venv" || \
         (echo "You must install python3-venv before you can build the documentation."; exit 1)
 	@echo "... setting up virtualenv"
