@@ -153,11 +153,19 @@ html_context = {
     "github_issues": "enabled",
     "company": "Canonical",
     "link1_URL": "https://snapcraft.io/",
-    "link1_name": "Snapcraft",
+    "link1_name": "First optional link",
+    "link2_URL": "https://snapcraft.io/",
+    "link2_name": "Second optional link",
 
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
     "add_product_menu": True,
+    
+    # Main Horizontal menu
+    # "is_docs": False, # Purpose unknown
+    "logo_link_URL": "https://documentation.ubuntu.com",
+    "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
+    "logo_title": "Canonical", 
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a

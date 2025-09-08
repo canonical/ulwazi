@@ -1,23 +1,11 @@
 {% macro nav_logo() %}
 <div class="p-navigation__banner">
   <div class="p-navigation__tagged-logo">
-    <a class="p-navigation__link" href="/">
-      <div class="p-navigation__logo-tag">
-
-        {% if company == "Canonical" %}
-        
-        <img class="p-navigation__logo-tag" src="https://assets.ubuntu.com/v1/5924f0b8-CoF-2022.svg" alt="Canonical">
+    <a class="p-navigation__link" href= "{{ logo_link_URL }}">
+      <div class="p-navigation__logo-tag">        
+        <img class="p-navigation__logo-icon" src="{{ logo_img_URL }}" alt="Company logo">
       </div>
-      <span class="p-navigation__logo-title">Canonical</span>
-       
-        {% else %}
-
-        <img class="p-navigation__logo-icon" src="https://assets.ubuntu.com/v1/b36b0862-Vanilla_icon_RGB_2022.svg" alt="Vanilla framework">
-      </div>
-      <span class="p-navigation__logo-title">Vanilla Framework</span>
-
-        {% endif %}
-
+      <span class="p-navigation__logo-title"> {{ logo_title }}</span>
     </a>
   </div>
   <ul class="p-navigation__items">
@@ -37,7 +25,7 @@
 <nav class="p-navigation__nav" aria-label="Main">
   <ul class="p-navigation__items">
     <li class="p-navigation__item">
-      <a class="p-navigation__link" href="https://docs.ubuntu.com/">Canonical Documentation</a>
+      <a class="p-navigation__link" href="https://{{ product_page }}">Product</a>
     </li>
 
     {% if link1_name and link1_URL %}
@@ -55,59 +43,41 @@
 
     {% endif %}
 
-    <li>
-            <button onclick="dropDown()" class="dbutton p-navigation__link nav-more-links is-dark" style="box-sizing: content-box;">More resources</button>
-                <ul id="HeaderDropdown" class="more-links-dropdown" style="box-sizing: inherit;">
 
-                    {% if discourse %}
-                    <li>
-                      <a href="{{ discourse }}" class="p-navigation__sub-link p-dropdown__link">Discourse</a>
-                    </li>
-                    {% endif %}
-          
-                    {% if mattermost %}
-                    <li>
-                      <a href="{{ mattermost }}" class="p-navigation__sub-link p-dropdown__link">Mattermost</a>
-                    </li>
-                    {% endif %}
-          
-                    {% if matrix %}
-                    <li>
-                      <a href="{{ matrix }}" class="p-navigation__sub-link p-dropdown__link">Matrix</a>
-                    </li>
-                    {% endif %}
-          
-                    {% if github_url %}
-                    <li>
-                      <a href="{{ github_url }}" class="p-navigation__sub-link p-dropdown__link">GitHub</a>
-                    </li>
-                    {% endif %}
-          
-                  </ul>
+    <li class="p-navigation__item--dropdown-toggle" id="link-2">
+      <a href="#link-2-menu" aria-controls="link-2-menu" class="p-navigation__link">Resources</a>
+      <ul class="p-navigation__dropdown" id="link-2-menu" aria-hidden="true">
+        {% if discourse %}
+        <li>
+          <a href="{{ discourse }}" class="p-navigation__dropdown-item">Discourse</a>
+        </li>
+        {% endif %}
+
+        {% if mattermost %}
+        <li>
+          <a href="{{ mattermost }}" class="p-navigation__dropdown-item">Mattermost</a>
+        </li>
+        {% endif %}
+
+        {% if matrix %}
+        <li>
+          <a href="{{ matrix }}" class="p-navigation__dropdown-item">Matrix</a>
+        </li>
+        {% endif %}
+
+        {% if github_url %}
+        <li>
+          <a href="{{ github_url }}" class="p-navigation__dropdown-item">GitHub</a>
+        </li>
+        {% endif %}
+      </ul>
     </li>
-
-    <!-- Attempt to use existing JS code for submenu expansion. Ended up just using another code for the above section. -->
-
-    <!-- <li class="p-navigation__item">
-        <button class="js-menu-button p-navigation__link  p-navigation">More resources</button>
-            <ul class="p-navigation__items">
-
-                <li class="p-navigation__item">
-                  <a href="{{ discourse }}" class="p-navigation__sub-link p-dropdown__link">Discourse</a>
-                </li>
-      
-                <li class="p-navigation__item">
-                  <a class="p-navigation__sub-link p-dropdown__link">Mattermost</a>
-                </li>
-            </ul>
-    </li> -->
-
   </ul>
 </nav>
 {% endmacro %}
 
 
-<header id="navigation" class="p-navigation is-dark">
+<header id="navigation" class="p-navigation is-secondary is-dark">
 
   {% if is_docs %}
   <div class="l-docs__subgrid">
