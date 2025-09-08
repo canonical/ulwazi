@@ -48,10 +48,13 @@ const initNavigationSliding = () => {
       e.preventDefault();
       closeSearch();
       if (productNavigation.classList.contains('has-menu-open')) {
-        closeAllDropdowns();
+        // closing product menu
+        productNavigation.classList.remove('has-menu-open');
+        menuButton.innerHTML = 'Menu';
       } else {
+        // opening product menu
         productNavigation.classList.add('has-menu-open');
-        e.target.innerHTML = 'Close menu';
+        menuButton.innerHTML = 'Close menu';
         setFocusable(topNavList);
       }
     });
@@ -63,7 +66,7 @@ const initNavigationSliding = () => {
       event.preventDefault();
       closeSearch();
       if (secondaryNavigation.classList.contains('has-menu-open')) {
-        closeAllDropdowns();
+        secondaryNavigation.classList.remove('has-menu-open');
       } else {
         secondaryNavigation.classList.add('has-menu-open');
       }
@@ -170,15 +173,16 @@ const initNavigationSliding = () => {
           resetToggles(target);
         }
 
+        const parentNav = toggle.closest('.product-menu, .is-secondary');
         if (target.getAttribute('aria-hidden') === 'true') {
-          expandDropdown(toggle, target, !(productNavigation && productNavigation.classList.contains('has-menu-open')));
-          if (productNavigation) {
-            productNavigation.classList.add('has-menu-open');
+          expandDropdown(toggle, target, !(parentNav && parentNav.classList.contains('has-menu-open')));
+          if (parentNav) {
+            parentNav.classList.add('has-menu-open');
           }
         } else {
           collapseDropdown(toggle, target, true);
-          if (!isNested && productNavigation) {
-            productNavigation.classList.remove('has-menu-open');
+          if (!isNested && parentNav) {
+            parentNav.classList.remove('has-menu-open');
           }
         }
       }
@@ -314,5 +318,42 @@ const initNavigationSliding = () => {
     }, 10),
   );
 };
+
+const highlightProductMenuSelectedItems = () => {
+  const productMenu = document.querySelector('.product-menu');
+  if (!productMenu) return;
+
+  // Find all dropdown toggle buttons inside the product menu
+  const toggles = productMenu.querySelectorAll('.js-dropdown-button');
+
+  toggles.forEach((toggle) => {
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const parentLi = toggle.closest('.p-navigation__item--dropdown-toggle');
+      const targetUl = productMenu.querySelector('#' + toggle.getAttribute('aria-controls'));
+
+      if (!parentLi || !targetUl) return;
+
+      const isOpen = parentLi.classList.contains('is-active');
+
+      // Close all dropdowns first
+      toggles.forEach((t) => {
+        const li = t.closest('.p-navigation__item--dropdown-toggle');
+        const ul = productMenu.querySelector('#' + t.getAttribute('aria-controls'));
+        if (li) li.classList.remove('is-active');
+        // if (ul) ul.classList.remove('is-active');
+      });
+
+      // If it was closed, open it
+      if (!isOpen) {
+        parentLi.classList.add('is-active');
+        // targetUl.classList.add('is-active');
+      }
+    });
+  });
+};
+
+highlightProductMenuSelectedItems();
 
 initNavigationSliding();
