@@ -17,6 +17,8 @@ const initNavigationSliding = () => {
     resetToggles();
     if (productNavigation) {
       productNavigation.classList.remove('has-menu-open');
+      productNavigation.querySelectorAll('.p-navigation__item--dropdown-toggle.is-active, .js-dropdown-list.is-active')
+        .forEach(el => el.classList.remove('is-active'));
     }
     if (secondaryNavigation) {
       secondaryNavigation.classList.remove('has-menu-open');
