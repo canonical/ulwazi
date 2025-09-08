@@ -22,6 +22,7 @@ help:
 	@echo
 	@echo "-------------------------------------------------------------"
 	@echo "* build the theme, build and serve the sample documentation:  make run"
+	@echo "* run all tests:                             make test"	
 	@echo "* only build:                                make html"
 	@echo "* only serve:                                make serve"
 	@echo "* clean built doc files:                     make clean-doc"
