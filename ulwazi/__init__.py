@@ -43,7 +43,7 @@ def config_inited(app, config):  # noqa: ANN401
             print(f"{package} not found.\n{package} will not be configured.")
 
     extra_js = [
-        "js/scripts.js",
+        # "js/scripts.js",
         "js/header-nav.js",
         "js/dropdown.js",
         # "js/main.js"
