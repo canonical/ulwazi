@@ -185,6 +185,8 @@ Term 2:
 Tables
 ------
 
+Small grid table
+
 +----------------------+------------+
 | Header 1             | Header 2   |
 +======================+============+
@@ -195,15 +197,59 @@ Tables
 | Cell 3               | Cell 4     |
 +----------------------+------------+
 
-+----------------------+------------------+
-| :center:`Header 1`   | Header 2         |
-+======================+==================+
-| Cell 1               | Cell 2           |
-|                      |                  |
-| Second paragraph     |                  |
-+----------------------+------------------+
-| Cell 3               | :center:`Cell 4` |
-+----------------------+------------------+
+Wide grid table
+
++----------------------+------------+---------------+-----------+------------+-------------+-----------+-----------+------------+
+| Header 1             | Header 2   |     Header 3  | Header 4  | Header 5   | Header 6    | Header 7  | Header 8  | Header 9   |
++======================+============+===============+===========+============+=============+===========+===========+============+
+| Cell 1               | Cell 2     |   Cell 3      | Cell 4    | Cell 5     | Cell 6      | Cell 7    | Cell 8    | Cell 9     |
+|                      |            |               |           |            |             |           |           |            |
+| Second paragraph     |            |               |           |            |             |           |           |            |
++----------------------+------------+---------------+-----------+------------+-------------+-----------+-----------+------------+
+| Cell 10              | Cell 11    | Cell 12       | Cell 13   | Cell 14    | Cell 15     | Cell 16   | Cell 17   | Cell 18    |
++----------------------+------------+---------------+-----------+------------+-------------+-----------+-----------+------------+
+
+Grid table with table directive, right aligned
+
+.. table::
+  :align: right
+
+  +----------------------+------------------+
+  | :center:`Header 1`   | Header 2         |
+  +======================+==================+
+  | Cell 1               | Cell 2           |
+  |                      |                  |
+  | Second paragraph     |                  |
+  +----------------------+------------------+
+  | Cell 3               | :center:`Cell 4` |
+  +----------------------+------------------+
+
+simple table
+
+======== ======== ========
+Header 1 Header 2 Header 3
+======== ======== ========
+Cell 1   Cell 2   Cell 3
+Cell 4   Cell 5   Cell 6
+Cell 7   Cell 8   Cell 9
+======== ======== ========
+
+simple with table directive, right aligned
+
+.. table::
+  :widths: auto
+  :align: right
+
+  ======== ======== ========
+  Header 1 Header 2 Header 3
+  ======== ======== ========
+  Cell 1   Cell 2   Cell 3
+  Cell 4   Cell 5   Cell 6
+  Cell 7   Cell 8   Cell 9
+  ======== ======== ========
+
+
+list table
 
 .. list-table::
    :header-rows: 1
@@ -217,17 +263,7 @@ Tables
    * - Cell 3
      - Cell 4
 
-.. rst-class:: align-center
-
-   +----------------------+------------+
-   | Header 1             | Header 2   |
-   +======================+============+
-   | Cell 1               | Cell 2     |
-   |                      |            |
-   | Second paragraph     |            |
-   +----------------------+------------+
-   | Cell 3               | Cell 4     |
-   +----------------------+------------+
+list table align center
 
 .. list-table::
    :header-rows: 1
@@ -241,6 +277,44 @@ Tables
      - Cell 2
    * - Cell 3
      - Cell 4
+
+     
+csv table
+
+.. csv-table::
+  :header: "Header 1", "Header 2", "Header 3"
+  :widths: 15, 15, 15
+
+  "Cell 1", "Cell 2", "Cell 3"
+  "Cell 4", "Cell 5", "Cell 6"
+  "Cell 7", "Cell 8", "Cell 9"
+
+csv table align right
+
+.. csv-table::
+  :header: "Header 1", "Header 2", "Header 3"
+  :widths: 15, 15, 15
+  :align: right
+
+  "Cell 1", "Cell 2", "Cell 3"
+  "Cell 4", "Cell 5", "Cell 6"
+  "Cell 7", "Cell 8", "Cell 9"
+
+rst-class align center
+
+.. rst-class:: align-center
+
+   +----------------------+------------+
+   | Header 1             | Header 2   |
+   +======================+============+
+   | Cell 1               | Cell 2     |
+   |                      |            |
+   | Second paragraph     |            |
+   +----------------------+------------+
+   | Cell 3               | Cell 4     |
+   +----------------------+------------+
+
+
 
 Notes
 -----

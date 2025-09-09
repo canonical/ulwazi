@@ -175,21 +175,32 @@ Term 2
 
 ## Tables
 
-## Markdown tables
+### Markdown tables
 
 | Header 1                           | Header 2 |
 |------------------------------------|----------|
 | Cell 1<br>Second paragraph         | Cell 2   |
 | Cell 3                             | Cell 4   |
 
-Centred:
+Right aligned
 
 | Header 1                           | Header 2 |
-|:----------------------------------:|:--------:|
+|-----------------------------------:|---------:|
 | Cell 1<br>Second paragraph         | Cell 2   |
 | Cell 3                             | Cell 4   |
 
-## List tables
+With table directive, right aligned:
+
+:::{table}
+:align: right
+
+  | Header 1                           | Header 2 |
+  |------------------------------------|----------|
+  | Cell 1<br>Second paragraph         | Cell 2   |
+  | Cell 3                             | Cell 4   |
+:::
+
+### List tables
 
 ```{list-table}
    :header-rows: 1
@@ -204,11 +215,11 @@ Centred:
   - Cell 4
 ```
 
-Centred:
+Right aligned:
 
 ```{list-table}
    :header-rows: 1
-   :align: center
+   :align: right
 
 * - Header 1
   - Header 2
@@ -219,6 +230,17 @@ Centred:
 * - Cell 3
   - Cell 4
 ```
+
+### CSV tables
+
+:::{csv-table}
+:header: 
+"Header 1", "Header 2", "Header 3"
+
+"Cell 1", "Cell 2", "Cell 3"
+"Cell 4", "Cell 5", "Cell 6"
+"Cell 7", "Cell 8", "Cell 9"
+:::
 
 ## Notes
 
