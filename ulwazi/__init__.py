@@ -194,6 +194,19 @@ def modify_inline_code(body_html: str) -> str:
 
     return str(soup)
 
+def modify_local_toc(toc:str) -> str:
+    """Modify localtoc to apply Vanilla Framework styles"""
+    if not toc:
+        return toc
+
+    toc_html = BeautifulSoup(toc, "html.parser")
+    for li in toc_html.find_all("li"):
+        li["class"] = ["p-table-of-contents__item"]
+        a = li.find("a")
+        if a:
+            a["class"] = ["p-table-of-contents__link"]
+    return str(toc_html)
+
 def _html_page_context(
     app: sphinx.application.Sphinx,
     pagename: str,
@@ -204,6 +217,9 @@ def _html_page_context(
    
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(context)
+    
+    if "toc" in context:
+        context["toc"] = modify_local_toc(context["toc"])
 
     # Modify the body of the content
     if "body" in context:
