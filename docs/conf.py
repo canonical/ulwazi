@@ -31,13 +31,15 @@ author = "Canonical Ltd."
 # Sidebar documentation title; best kept reasonably short
 #
 # TODO: To include a version number, add it here (hardcoded or automated).
-#
+version = "beta"
+
+
 # TODO: To disable the title, set to an empty string.
 
 html_title = project + " documentation"
 
 
-# Copyright string; shown at the bottom of the page
+# Copyright and license strings; shown at the bottom of the page
 #
 # Now, the starter pack uses CC-BY-SA as the license
 # and the current year as the copyright year.
@@ -60,8 +62,7 @@ html_title = project + " documentation"
 #         -H 'Accept: application/vnd.github.v3.raw' \
 #         https://api.github.com/repos/canonical/<REPO> | jq '.created_at'
 
-copyright = "%s CC-BY-SA, %s" % (datetime.date.today().year, author)
-
+copyright = "&copy; %s %s" % (datetime.date.today().year, author)
 
 # Documentation website URL
 #
@@ -139,8 +140,6 @@ html_context = {
     "repo_default_branch": "main",
     # Docs location in the repo; used in links for viewing the source files
     #
-
-
     # TODO: To customise the directory, uncomment and update as needed.
     "repo_folder": "/docs/",
     # TODO: To enable or disable the Previous / Next buttons at the bottom of pages
@@ -148,6 +147,12 @@ html_context = {
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
     "display_contributors": False,
+
+    # TODO: Add your project's license
+    "license": {
+        "type": "CC-BY-SA",
+        "url": "https://github.com/canonical/ulwazi/blob/main/LICENSE",
+    },
 
     # Required for feedback button    
     "github_issues": "enabled",

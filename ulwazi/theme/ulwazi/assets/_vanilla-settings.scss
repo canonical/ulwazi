@@ -1,0 +1,19 @@
+/*
+  Vanilla settings and variables. These values are put into memory _before_ Vanilla is
+  rendered, so they cascade down the Vanilla stack.
+*/
+
+$text-max-width: 100%;
+$font-base-family: 'Ubuntu, Arial, "libra sans", sans-serif';
+$font-monospace: '"Ubuntu Mono", Consolas, Monaco, Courier, monospace';
+$font-base-size: 1rem;
+$font-weight-h1: 450;
+$font-size-h1: 32px;
+$font-weight-h2: 200;
+$font-size-h2: 32px;
+$font-weight-h3: 450;
+$font-size-h3: 24px;
+$font-weight-h4: 250;
+$font-size-h4: 24px;
+$font-weight-p: 400;
+$font-size-p: 14px;

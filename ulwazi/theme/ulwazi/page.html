@@ -5,7 +5,7 @@
 {% if add_product_menu %}
 {% block product %}
 <header>
-    {% include "components/product_menu_copy.html" %}
+  {% include "components/product_menu_copy.html" %}
 </header>
 {% endblock product %}
 {% endif %}
@@ -36,55 +36,29 @@
 <label class="sb-sidebar-overlay" for="sb-sidebar-toggle--secondary"></label>
 
 {% block container %}
-<div class="sb-container">
-  <div class="sb-container__inner sb-page-width">
-    {% block sidebar_primary %}
-    <aside class="sb-sidebar-primary">
-      {% include "sections/sidebar-primary.html" %}
-    </aside>
-    {% endblock sidebar_primary %}
-    <main class="sb-main" id="content">
-      {% block header_content %}
-      <header class="sb-header-content">
-        <div class="sb-header-content__inner">
-          {% include "sections/header-content.html" %}
-        </div>
-      </header>
-      {% endblock header_content %}
-      <div class="sb-content">
-        {% block content %}
-        <div class="sb-article-container">
-          <header class="sb-header-article">
-            {% include "sections/header-article.html" %}
-          </header>
-          <article class="sb-article" role="main">
-            {% include "sections/article.html" %}
-          </article>
-          <footer class="sb-footer-article">
-            {% include "sections/footer-article.html" %}
-          </footer>
-        </div>
-        {% endblock content %}
-        {% block sidebar_secondary %}
-        <aside class="sb-sidebar-secondary is-sticky">
-          {% include "sections/sidebar-secondary.html" %}
-        </aside>
-        {% endblock sidebar_secondary %}
-      </div>
-      {% block footer_content %}
-      <footer class="sb-footer-content">
-        <div class="sb-footer-content__inner">
-          {% include "sections/footer-content.html" %}
-        </div>
-      </footer>
-      {% endblock footer_content %}
-    </main>
-  </div>
+<div class="l-docs">
+  {% block sidebar_primary %}
+    {% include "sections/sidebar-primary.html" %}
+  {% endblock sidebar_primary %}
+  {% block header_content %}
+    {# include "sections/header-content.html" #}
+  {% endblock header_content %}
+  {% block sidebar_secondary %}
+    {% include "sections/sidebar-secondary.html" %}
+  {% endblock sidebar_secondary %}
+  {% block content %}
+  <main class="l-docs__main" id="content">
+    {# include "sections/header-article.html" #}
+    {% include "sections/article.html" %}
+    {# include "sections/footer-article.html" #}
+  </main>
+  {% endblock content %}
+  {% block footer_content %}
+    {# include "sections/footer-content.html" #}
+  {% endblock footer_content %}
+  {% block footer %}
+    {% include "sections/footer.html" %}
+  {% endblock footer %}
 </div>
 {% endblock container %}
-{% block footer %}
-<footer>
-    {% include "sections/footer.html" %}
-</footer>
-{% endblock footer %}
 {% endblock body %}

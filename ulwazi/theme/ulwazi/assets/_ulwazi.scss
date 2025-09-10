@@ -1,0 +1,105 @@
+/*
+  Ulwazi's custom CSS. These rules are put into the stylesheet _after_ Vanilla is
+  rendered. Has access to Vanilla's global classes and variables.
+*/
+
+/*
+  Typography classes.
+*/
+
+.p-heading--1 {
+  font-weight: $font-weight-h1;
+  font-size: $font-size-h1;
+  line-height: 40px;
+  padding-top: 0.62px;
+  padding-bottom: 6px;
+  margin: 0;
+} 
+
+.p-heading--2 {
+  font-weight: $font-weight-h2;
+  font-size: $font-size-h2;
+  line-height: 40px;
+  padding-top: 0.62px;
+  padding-bottom: 7.38px;
+  margin: 0;
+}
+.p-heading--3 {
+  font-weight: $font-weight-h3;
+  font-size: $font-size-h3;
+  line-height: 32px;
+  padding-top: 7.5px;
+  padding-bottom: 8.49px;
+  margin: 0;
+}
+.p-heading--4 {
+  font-weight: $font-weight-h4;
+  font-size: $font-size-h4;
+  line-height: 32px;
+  padding-top: 7.5px;
+  padding-bottom: 8.49px;
+  margin: 0;
+}
+p {
+  font-weight: $font-weight-p;
+  font-size: $font-size-p;
+  line-height: 20px;
+  padding-top: 1.24px;
+  padding-bottom: 14.76px;
+  margin: 0;
+}
+.align-right {
+  text-align: right;
+}
+
+/*
+  Override arrows.
+*/
+
+// Ensure the arrow is pushed to the right in flex containers.
+.arrow-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.arrow-toggle .icon,
+.arrow-toggle svg {
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+}
+
+/*
+  Set the documentation layout. The main work is to make the article content a column.
+*/
+
+// We can't access private variables, so we have to recreate the vars from layouts_docs.
+$l-documentation-sidebar-width: 15rem;
+$breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sidebar-width);
+
+// This is flimsy and over-reliant on `!important`. If Vanilla's docs layout remains unextendable, we should re-implement it from scratch.
+@media screen and (min-width: $breakpoint-full-screen-layout) {
+  .l-docs {
+    // Make the article a column and the footer full-width
+    grid-template-areas:
+      ".      header  header header .     "
+      ".      sidebar title  meta   .     "
+      ".      sidebar main   meta   .     "
+      "footer footer  footer footer footer"
+      !important;
+    // Main width is a magic number; recalculate and adjust later.
+    grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
+  }
+}
+
+/*
+  Canary class.
+*/
+
+.heading-test-scss{
+  color: purple;
+}
