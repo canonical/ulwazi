@@ -198,13 +198,16 @@ def modify_local_toc(toc:str) -> str:
     """Modify localtoc to apply Vanilla Framework styles"""
     if not toc:
         return toc
-
     toc_html = BeautifulSoup(toc, "html.parser")
+    top_ul = toc_html.find("ul")
+    if top_ul:
+        top_ul.unwrap() # Remove the outermost <ul>
     for li in toc_html.find_all("li"):
         li["class"] = ["p-table-of-contents__item"]
-        a = li.find("a")
+        a = li.find("a", recursive=False)
         if a:
             a["class"] = ["p-table-of-contents__link"]
+    
     return str(toc_html)
 
 def _html_page_context(
