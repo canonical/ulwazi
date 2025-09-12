@@ -93,6 +93,16 @@ Term 1
 Term 2
 : Definition
 
+## Task lists
+
+- [ ] Unchecked.
+
+    Continuation.
+
+- [x] Checked.
+
+    Continuation.
+
 ## Tables
 
 ## Markdown tables
