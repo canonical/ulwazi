@@ -319,6 +319,11 @@ exclude_patterns = [
 # html_js_files = []
 
 
+# Syntax highlighting settings
+
+highlight_language = "none" # default
+pygments_style = "autumn" # see https://pygments.org/styles for more
+
 # Specifies a reST snippet to be appended to each .rst file
 
 rst_epilog = """

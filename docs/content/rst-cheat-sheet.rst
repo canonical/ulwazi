@@ -49,17 +49,88 @@ Start a code block::
      code:
        - example: true
 
-.. code::
+.. code:: text
 
      # Demonstrate a code block
      code:
        - example: true
 
-.. code:: yaml
+.. code-block:: yaml
 
      # Demonstrate a code block
      code:
        - example: true
+
+Syntax highlighting
+~~~~~~~~~~~~~~~~~~~
+
+YAML:
+
+.. code-block:: yaml
+
+   # Required
+   version: 2
+
+   # Set the version of Python and other tools you might need
+   build:
+     os: ubuntu-22.04
+     tools:
+       python: "3.11"
+     jobs:
+       post_create_environment:
+       - pip install sphinx build
+       - python -m build
+       - pip install dist/ulwazi-0.1.tar.gz
+       post_checkout:
+       - git fetch --unshallow || true
+
+   # Build documentation in the docs/ directory with Sphinx
+   sphinx:
+     builder: dirhtml
+     configuration: docs/conf.py
+     fail_on_warning: true
+
+   # If using Sphinx, optionally build your docs in additional formats such as PDF
+   formats:
+   - pdf
+
+   # Optionally declare the Python requirements required to build your docs
+   python:
+     install:
+     - requirements: requirements.txt
+
+Shell:
+
+.. code-block:: shell
+
+   # Create and activate a virtual environment
+   python3 -m venv .venv && source .venv/bin/activate
+
+   # Install Sphinx and the RTD theme
+   pip install sphinx sphinx-rtd-theme
+
+   # Build HTML docs from the "docs" folder
+   sphinx-build -b html docs/ _build/html
+
+Python:
+
+.. code-block:: python
+
+   import datetime
+   import os
+   import yaml
+
+   copyright = "%s CC-BY-SA, %s" % (datetime.date.today().year, author)
+
+   if "READTHEDOCS_VERSION" in os.environ:
+       version = os.environ["READTHEDOCS_VERSION"]
+       sitemap_url_scheme = "{version}{link}"
+   else:
+       sitemap_url_scheme = "MANUAL/{link}"
+
+   if os.path.exists("./reuse/substitutions.yaml"):
+       with open("./reuse/substitutions.yaml", "r") as fd:
+           myst_substitutions = yaml.safe_load(fd.read())
 
 .. _a_section_target:
 
