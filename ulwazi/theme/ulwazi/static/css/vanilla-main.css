@@ -11886,6 +11886,7 @@ ol.u-text-max-width,
 .p-heading--1 {
   font-weight: 450;
   font-size: 32px;
+  line-height: 40px;
   padding-top: 0.62px;
   padding-bottom: 6px;
   margin: 0;
@@ -11894,6 +11895,7 @@ ol.u-text-max-width,
 .p-heading--2 {
   font-weight: 200;
   font-size: 32px;
+  line-height: 40px;
   padding-top: 0.62px;
   padding-bottom: 7.38px;
   margin: 0;
@@ -11902,6 +11904,7 @@ ol.u-text-max-width,
 .p-heading--3 {
   font-weight: 450;
   font-size: 24px;
+  line-height: 32px;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
   margin: 0;
@@ -11910,6 +11913,7 @@ ol.u-text-max-width,
 .p-heading--4 {
   font-weight: 250;
   font-size: 24px;
+  line-height: 32px;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
   margin: 0;
@@ -11918,6 +11922,7 @@ ol.u-text-max-width,
 p {
   font-weight: 400;
   font-size: 14px;
+  line-height: 20px;
   padding-top: 1.24px;
   padding-bottom: 14.76px;
   margin: 0;
