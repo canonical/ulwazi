@@ -11859,7 +11859,68 @@ ol.u-text-max-width,
 }
 
 .heading-test-scss {
-  color: purple;
+  color: hotpink;
+}
+
+.arrow-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+  /* Ensures the arrow is pushed to the right in flex containers */
+}
+
+.arrow-toggle .icon,
+.arrow-toggle svg {
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.p-heading--1 {
+  font-weight: 450;
+  font-size: 32px;
+  padding-top: 0.62px;
+  padding-bottom: 6px;
+  margin: 0;
+}
+
+.p-heading--2 {
+  font-weight: 200;
+  font-size: 32px;
+  padding-top: 0.62px;
+  padding-bottom: 7.38px;
+  margin: 0;
+}
+
+.p-heading--3 {
+  font-weight: 450;
+  font-size: 24px;
+  padding-top: 7.5px;
+  padding-bottom: 8.49px;
+  margin: 0;
+}
+
+.p-heading--4 {
+  font-weight: 250;
+  font-size: 24px;
+  padding-top: 7.5px;
+  padding-bottom: 8.49px;
+  margin: 0;
+}
+
+p {
+  font-weight: 400;
+  font-size: 14px;
+  padding-top: 1.24px;
+  padding-bottom: 14.76px;
+  margin: 0;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */
