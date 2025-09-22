@@ -221,7 +221,13 @@ def modify_local_toc(toc:str) -> str:
         a = li.find("a", recursive=False)
         if a:
             a["class"] = ["p-table-of-contents__link"]
-
+    # Add Back to top button at the end
+    back_to_top = BeautifulSoup(
+                    '<div class="p-top"><a href="#" class="p-top__link">Back to top</a></div>',
+                    "html.parser"
+                    )
+    toc_html.append(back_to_top)
+    
     return str(toc_html)
 
 def _html_page_context(
