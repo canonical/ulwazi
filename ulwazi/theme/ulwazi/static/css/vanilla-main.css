@@ -7518,21 +7518,6 @@ h1.p-stepped-list__title + .p-stepped-list__content {
   z-index: 98;
 }
 
-.sb-content {
-  align-items: flex-start;   /* don't stretch children */
-}
-
-.sb-sidebar-secondary {
-  flex: 0 0 auto;            /* don’t grow/shrink like the article */
-}
-
-.sb-sidebar-secondary.is-sticky {
-  position: sticky;
-  top: 0;                    /* adjust if you have a fixed header */
-  align-self: flex-start;    /* allow sticky inside flex */
-  height: fit-content;       /* shrink-wrap content */
-}
-
 .p-navigation__search {
   display: none;
   padding-top: 1rem;
