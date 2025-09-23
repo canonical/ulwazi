@@ -186,6 +186,9 @@ html_context = {
 
 # slug = ''
 
+# Limit the number of levels for Table of contents
+localtoc_max_depth = 3
+
 #######################
 # Sitemap configuration: https://sphinx-sitemap.readthedocs.io/
 #######################

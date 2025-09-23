@@ -12,6 +12,8 @@ THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 def setup(app):
     app.add_html_theme('ulwazi', str(THEME_PATH))
 
+    app.add_config_value("localtoc_max_depth", None, "html")
+
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
@@ -237,6 +239,31 @@ def modify_local_toc(toc:str) -> str:
 
     return str(toc_html)
 
+def truncate_local_toc(toc: str, max_depth: int = None) -> str:
+    """Limit the number of nested levels if localtoc_max_depth is set in conf.py."""
+    if not toc:
+        return toc
+
+    toc_html = BeautifulSoup(toc, "html.parser")
+
+    if max_depth is not None:
+        def trim_ul(ul, depth=1):
+            if depth >= max_depth:
+                # delete all nested <ul> inside <li>
+                for li in ul.find_all("li", recursive=False):
+                    nested = li.find("ul", recursive=False)
+                    if nested:
+                        nested.decompose()
+            else:
+                # recurse into each li's nested ul
+                for li in ul.find_all("li", recursive=False):
+                    nested = li.find("ul", recursive=False)
+                    if nested:
+                        trim_ul(nested, depth + 1)
+
+        trim_ul(toc_html, 1)
+    return str(toc_html)
+
 def _html_page_context(
     app: sphinx.application.Sphinx,
     pagename: str,
@@ -247,10 +274,14 @@ def _html_page_context(
    
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(context)
-    
+
     if "toc" in context:
         context["toc"] = modify_local_toc(context["toc"])
-
+        context["toc"] = truncate_local_toc(
+            context["toc"],
+            getattr(app.config, "localtoc_max_depth", None)
+        )
+    
     # Modify the body of the content
     if "body" in context:
         context["body"] = apply_heading_classes(context["body"])
