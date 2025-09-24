@@ -11859,7 +11859,29 @@ ol.u-text-max-width,
 }
 
 .heading-test-scss {
-  color: purple;
+  color: rgb(0, 128, 17);
+}
+
+.localtoc > ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+.localtoc > ul > li {
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+.localtoc > ul > li > a {
+  display: none;
+}
+.localtoc > ul > li > ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+div.localtoc ul {
+  list-style: none;
+  padding-left: 0;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */
