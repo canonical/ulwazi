@@ -1,4 +1,7 @@
 :orphan:
+.. |br| raw:: html
+  
+   <br />
 
 .. vale off
 
@@ -185,12 +188,18 @@ Term 2:
 Tables
 ------
 
+rST supports four table implementations: grid, list, CSV, and simple. Grid and simple tables can also use 
+the table directive or the  rst-class directive to provide more options.
+
+Grid tables
+~~~~~~~~~~~
+
 Small grid table, default aligned (no alignment options):
 
 +------------------------------------+----------+
 | Header 1                           | Header 2 |
 +====================================+==========+
-| [1,1]<br>Second paragraph          |  [1,2]   |
+| [1,1] |br| Second paragraph        |  [1,2]   |
 +------------------------------------+----------+
 | [2,1]                              |  [2,2]   |
 +------------------------------------+----------+
@@ -264,6 +273,10 @@ Grid table with rst-class directive, right aligned:
   | [2,1]                | [2,2]            |
   +----------------------+------------------+
 
+
+List tables
+~~~~~~~~~~~
+
 List table, default aligned:
 
 .. list-table::
@@ -293,6 +306,8 @@ List table, right aligned:
    * - [2,1]
      - [2,2]
 
+CSV tables
+~~~~~~~~~~
      
 CSV table, default aligned:
 
@@ -313,6 +328,8 @@ CSV table, right aligned:
   "[1,1]", "[1,2]"
   "[2,1]", "[2,2]"
 
+Simple tables
+~~~~~~~~~~~~~
 
 Simple table, default aligned (no alignment options):
 

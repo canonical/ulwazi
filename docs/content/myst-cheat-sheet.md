@@ -175,6 +175,10 @@ Term 2
 
 ## Tables
 
+MyST Markdown supports three main types of tables: Grid, List, and CSV. Grid tables have a 'simple' layout option, as well as the simple layout wrapped into a table directive to provide more options.
+
+### Grid tables
+
 Small grid table, default aligned:
 
 | Header 1                           | Header 2 |
