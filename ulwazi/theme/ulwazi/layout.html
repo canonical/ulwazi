@@ -60,6 +60,7 @@
   {% block head_extra %}{% endblock %}
 </head>
 <body{% block body_tag_attrs %}{% endblock %}>
+  <script src="{{ pathto('_static/js/nav-toggle.js', 1) }}"></script>
   {% block body %}{% endblock body -%}
   {% block body_javascript -%}
   {% for js in script_files -%}

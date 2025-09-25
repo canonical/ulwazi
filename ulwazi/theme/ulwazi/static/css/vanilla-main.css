@@ -11859,7 +11859,73 @@ ol.u-text-max-width,
 }
 
 .heading-test-scss {
-  color: purple;
+  color: orange;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  overflow: wrap;
+  min-height: 32px;
+  gap: 8px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.nav-item a {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 24px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-item input {
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item label {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.nav-item .icon,
+.nav-item svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+.nav-item label .p-icon--chevron-down {
+  display: inline-block;
+}
+
+.nav-item label .p-icon--chevron-up {
+  display: none;
+}
+
+/* When checkbox is checked, show chevron-up and hide chevron-down */
+.nav-item input:checked + label .p-icon--chevron-down {
+  display: none;
+}
+
+.nav-item input:checked + label .p-icon--chevron-up {
+  display: inline-block;
+}
+
+.nav-item label:hover,
+.nav-item label:focus {
+  background: #f3f3f3;
+  color: #333;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */

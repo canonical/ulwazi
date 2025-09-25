@@ -6,16 +6,14 @@ import copy
 from bs4 import BeautifulSoup, Tag
 
 
-def _get_navigation_expand_image(soup: BeautifulSoup) -> Tag:
-    retval = soup.new_tag("i", attrs={"class": "icon"})
-
-    svg_element = soup.new_tag("svg")
-    svg_element.attrs["class"] = "svg"
-    svg_use_element = soup.new_tag("use", href="#svg-arrow-right")
-    svg_element.append(svg_use_element)
-
-    retval.append(svg_element)
-    return retval
+def _get_navigation_expand_image(soup: BeautifulSoup, is_active: bool = False) -> Tag:
+    # Render both icons, CSS will toggle visibility
+    icon_down = soup.new_tag("i", attrs={"class": "p-icon--chevron-down"})
+    icon_up = soup.new_tag("i", attrs={"class": "p-icon--chevron-up"})
+    container = soup.new_tag("span")
+    container.append(icon_down)
+    container.append(icon_up)
+    return container
 
 
 @functools.lru_cache(maxsize=None)
@@ -49,60 +47,70 @@ def get_navigation_tree(toctree_html: str) -> str:
     last_element_with_current = None
 
     for element in soup.find_all("li", recursive=True):
-        # We check all "li" elements, to add a "current-page" to the correct li.
         classes = element.get("class", [])
         if "current" in classes:
             last_element_with_current = element
 
-        # Nothing more to do, unless this has "children"
-        if not element.find("ul"):
-            continue
+        has_children = bool(element.find("ul"))
 
-        # Add a class to indicate that this has children.
-        element["class"] = classes + ["has-children"]
+        if has_children:
+            element["class"] = classes + ["has-children"]
 
-        toctree_checkbox_count += 1
-        checkbox_name = f"toctree-checkbox-{toctree_checkbox_count}" 
-        # We're gonna add a checkbox.
-        checkbox = soup.new_tag(
-            "input",
-            attrs={
-                "type": "checkbox",
-                "class": ["toctree-checkbox"],
-                "id": checkbox_name,
-                "name": checkbox_name,
-                "role": "switch",
-            },
-        )
-        # if this has a "current" class, be expanded by default (by checking the checkbox)
-        if "current" in classes:
-            checkbox.attrs["checked"] = ""
+            toctree_checkbox_count += 1
+            checkbox_name = f"toctree-checkbox-{toctree_checkbox_count}"
 
-        # Identify the title of the li item
-        a_item = element.find("a")
+            checkbox = soup.new_tag(
+                "input",
+                attrs={
+                    "type": "checkbox",
+                    "class": ["toctree-checkbox"],
+                    "id": checkbox_name,
+                    "name": checkbox_name,
+                    "role": "switch",
+                },
+            )
+            if "current" in classes:
+                checkbox.attrs["checked"] = ""
 
-        # Add the arrow to indicat t has childrem and can be expanded
-        icon = _get_navigation_expand_image(soup)
-        # check if the current page is the one being expanded and rotate the arrow
-        if "current" in classes:
-            icon["class"] = icon["class"] + ["current"]
+            a_item = element.find("a")
 
-        # Add label for clickability of the arrow icon
-        label = soup.new_tag("label")
-        label.attrs["for"] = f"toctree-checkbox-{toctree_checkbox_count}"
-        label.attrs["style"] = "padding-top: 0px; margin-bottom: 0px"
-        label.append(icon)
-        a_item.insert_after(label)
+            # Pass is_active to icon generator
+            icon = _get_navigation_expand_image(soup, is_active="current" in classes)
 
-        # Add the checkbox that's used to store expanded/collapsed state.
-        a_item.insert_after(checkbox)
+            label = soup.new_tag("label")
+            label.attrs["for"] = checkbox_name
+            label.append(_get_navigation_expand_image(soup))
 
-        if "current" not in classes:
-            children = element.find("ul")
+            # Create nav-item div and append a, label, checkbox
+            nav_item_div = soup.new_tag("div", attrs={
+                "class": "nav-item",
+                "data-checkbox": checkbox_name
+            })
+            nav_item_div.append(a_item)
+            nav_item_div.append(label)
+            nav_item_div.append(checkbox)
 
-            for child in children.find_all("li"):
-                child["class"] = child.get("class", []) + ["hidden"]
-                # Add a class to indicate
+            # Remove a_item, label, checkbox from their previous positions
+            for tag in [a_item, label, checkbox]:
+                if tag in element.contents:
+                    element.contents.remove(tag)
+            element.insert(0, nav_item_div)
+
+            # Hide children unless this li is "current"
+            children_ul = element.find("ul")
+            if children_ul and "current" not in classes:
+                for child_li in children_ul.find_all("li", recursive=False):
+                    child_li["class"] = child_li.get("class", []) + ["hidden"]
+
+        else:
+            # For leaf li, wrap the <a> in .nav-item
+            a_item = element.find("a")
+            if a_item:
+                nav_item_div = soup.new_tag("div", attrs={"class": "nav-item"})
+                nav_item_div.append(a_item)
+                if a_item in element.contents:
+                    element.contents.remove(a_item)
+                element.insert(0, nav_item_div)
 
     if last_element_with_current is not None:
         last_element_with_current["class"].append("current-page")
