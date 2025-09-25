@@ -259,9 +259,8 @@ List table, right aligned:
 CSV table, default aligned:
 
 :::{csv-table}
-:header: 
-"Header 1", "Header 2"
-
+:header: >
+:  "Header 1", "Header 2"
 "[1,1]", "[1,2]"
 "[2,1]", "[2,2]"
 :::
@@ -270,9 +269,8 @@ CSV table, right aligned:
 
 :::{csv-table}
 :align: right
-:header: 
-"Header 1", "Header 2"
-
+:header: >
+:  "Header 1", "Header 2"
 "[1,1]", "[1,2]"
 "[2,1]", "[2,2]"
 :::
