@@ -11859,7 +11859,7 @@ ol.u-text-max-width,
 }
 
 .heading-test-scss {
-  color: orange;
+  color: green;
 }
 
 .nav-item {
@@ -11867,7 +11867,6 @@ ol.u-text-max-width,
   align-items: center;
   overflow: wrap;
   min-height: 32px;
-  gap: 8px;
 }
 
 .hidden {
@@ -11894,6 +11893,10 @@ ol.u-text-max-width,
   display: flex;
   align-items: center;
   height: 32px;
+  width: 32px;
+  padding-left: 6px;
+  margin-bottom: 0;
+  padding-top: 0;
   cursor: pointer;
   margin-left: auto;
 }
@@ -11920,6 +11923,36 @@ ol.u-text-max-width,
 
 .nav-item input:checked + label .p-icon--chevron-up {
   display: inline-block;
+}
+
+/* Darker background for selected nav-item */
+.nav-item .current {
+  background: #e5e5e5;
+  color: #333;
+}
+
+/* Show chevron-up, hide chevron-down when checked */
+.nav-item .toctree-checkbox:checked ~ label .p-icon--chevron-down {
+  display: none;
+}
+
+.nav-item .toctree-checkbox:checked ~ label .p-icon--chevron-up {
+  display: inline-block;
+}
+
+/* Show chevron-down, hide chevron-up when not checked */
+.nav-item .toctree-checkbox:not(:checked) ~ label .p-icon--chevron-down {
+  display: inline-block;
+}
+
+.nav-item .toctree-checkbox:not(:checked) ~ label .p-icon--chevron-up {
+  display: none;
+}
+
+/* Darker background for label when checkbox is checked */
+.nav-item input:checked + label {
+  background: #e5e5e5;
+  color: #333;
 }
 
 .nav-item label:hover,

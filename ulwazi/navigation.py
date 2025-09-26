@@ -79,7 +79,7 @@ def get_navigation_tree(toctree_html: str) -> str:
 
             label = soup.new_tag("label")
             label.attrs["for"] = checkbox_name
-            label.append(_get_navigation_expand_image(soup))
+            label.append(_get_navigation_expand_image(soup, is_active="current" in classes))
 
             # Create nav-item div and append a, label, checkbox
             nav_item_div = soup.new_tag("div", attrs={
@@ -87,8 +87,8 @@ def get_navigation_tree(toctree_html: str) -> str:
                 "data-checkbox": checkbox_name
             })
             nav_item_div.append(a_item)
+            nav_item_div.append(checkbox)  # <-- checkbox before label
             nav_item_div.append(label)
-            nav_item_div.append(checkbox)
 
             # Remove a_item, label, checkbox from their previous positions
             for tag in [a_item, label, checkbox]:
