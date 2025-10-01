@@ -11859,7 +11859,7 @@ ol.u-text-max-width,
 }
 
 .heading-test-scss {
-  color: green;
+  color: purple;
 }
 
 .nav-item {
@@ -11881,6 +11881,17 @@ ol.u-text-max-width,
   display: flex;
   align-items: center;
   width: 100%;
+}
+
+.nav-item label a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 .nav-item input {
@@ -11953,6 +11964,42 @@ ol.u-text-max-width,
 .nav-item input:checked + label {
   background: #e5e5e5;
   color: #333;
+}
+
+.nav-item input:checked + label .p-icon--chevron-down {
+  display: none;
+}
+
+.nav-item input:checked + label .p-icon--chevron-up {
+  display: inline-block;
+}
+
+.nav-item input:not(:checked) + label .p-icon--chevron-down {
+  display: inline-block;
+}
+
+.nav-item input:not(:checked) + label .p-icon--chevron-up {
+  display: none;
+}
+
+.nav-item input:checked + label a {
+  display: none;
+}
+
+.nav-item input:checked + label .p-icon--chevron-up {
+  display: inline-block;
+}
+
+.nav-item input:not(:checked) + label .p-icon--chevron-up {
+  display: none;
+}
+
+.nav-item input:not(:checked) + label a {
+  display: inline-flex;
+}
+
+.nav-item label .p-icon--chevron-down {
+  display: inline-block;
 }
 
 .nav-item label:hover,

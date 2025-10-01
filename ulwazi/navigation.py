@@ -6,12 +6,14 @@ import copy
 from bs4 import BeautifulSoup, Tag
 
 
-def _get_navigation_expand_image(soup: BeautifulSoup, is_active: bool = False) -> Tag:
+def _get_navigation_expand_image(soup: BeautifulSoup, href: str, is_active: bool = False) -> Tag:
     # Render both icons, CSS will toggle visibility
+    label_a = soup.new_tag("a", href=href)
     icon_down = soup.new_tag("i", attrs={"class": "p-icon--chevron-down"})
     icon_up = soup.new_tag("i", attrs={"class": "p-icon--chevron-up"})
     container = soup.new_tag("span")
-    container.append(icon_down)
+    label_a.append(icon_down)
+    container.append(label_a)
     container.append(icon_up)
     return container
 
@@ -73,13 +75,14 @@ def get_navigation_tree(toctree_html: str) -> str:
                 checkbox.attrs["checked"] = ""
 
             a_item = element.find("a")
+            href = a_item.attrs.get("href", "#") if a_item else "#"
 
             # Pass is_active to icon generator
-            icon = _get_navigation_expand_image(soup, is_active="current" in classes)
+            icon = _get_navigation_expand_image(soup, href=href, is_active="current" in classes)
 
             label = soup.new_tag("label")
             label.attrs["for"] = checkbox_name
-            label.append(_get_navigation_expand_image(soup, is_active="current" in classes))
+            label.append(_get_navigation_expand_image(soup, href=href, is_active="current" in classes))
 
             # Create nav-item div and append a, label, checkbox
             nav_item_div = soup.new_tag("div", attrs={

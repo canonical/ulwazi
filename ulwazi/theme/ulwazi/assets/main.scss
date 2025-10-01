@@ -27,6 +27,16 @@
   align-items: center;
   width: 100%; 
 }
+.nav-item label a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
 .nav-item input {
   height: 32px;
   display: flex;
@@ -93,8 +103,45 @@
 
 /* Darker background for label when checkbox is checked */
 .nav-item input:checked + label {
-  background: #e5e5e5; // or your preferred dark color
+  background: #e5e5e5;
   color: #333;
+}
+.nav-item input:checked + label .p-icon--chevron-down {
+  display: none;
+}
+.nav-item input:checked + label .p-icon--chevron-up {
+  display: inline-block;
+}
+.nav-item input:not(:checked) + label .p-icon--chevron-down {
+  display: inline-block;
+}
+.nav-item input:not(:checked) + label .p-icon--chevron-up {
+  display: none;
+}
+
+// Hide the arrow-link <a> inside the label when expanded (checked)
+.nav-item input:checked + label a {
+  display: none;
+}
+
+// Show the chevron-up icon when expanded (checked)
+.nav-item input:checked + label .p-icon--chevron-up {
+  display: inline-block;
+}
+
+// Hide the chevron-up icon when not expanded
+.nav-item input:not(:checked) + label .p-icon--chevron-up {
+  display: none;
+}
+
+// Show the arrow-link <a> inside the label when not expanded
+.nav-item input:not(:checked) + label a {
+  display: inline-flex;
+}
+
+// Optionally, always hide the chevron-down icon itself (since it's inside the <a>)
+.nav-item label .p-icon--chevron-down {
+  display: inline-block;
 }
 
 .nav-item label:hover,
