@@ -1,6 +1,22 @@
 @import "../../../../node_modules/vanilla-framework"; // Imports from node_modules
 @include vanilla;
 
+// Documentation specific Values for typography
+$font-weight-h1: 450;
+$font-size-h1: 32px;
+$font-weight-h2: 200;
+$font-size-h2: 32px; 
+$font-weight-h3: 450;
+$font-size-h3: 24px;
+$font-weight-h4: 250;
+$font-size-h4: 24px;
+$font-weight-p: 400;
+$font-size-p: 14px;
+
+$font-base-family: 'Ubuntu, Arial, "libra sans", sans-serif';
+$font-monospace: '"Ubuntu Mono", Consolas, Monaco, Courier, monospace';
+$font-base-size: 1rem;
+$font-heading-family: $font-base-family;
 // Custom styles
 
 .heading-test-scss{
@@ -103,4 +119,68 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
   display: none;
 }
 
+
+.arrow-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+  /* Ensures the arrow is pushed to the right in flex containers */
+}
+
+.arrow-toggle .icon,
+.arrow-toggle svg {
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+}
+
+.align-right {
+  text-align: right;
+}
+
+// typography styles
+.p-heading--1 {
+  font-weight: $font-weight-h1;
+  font-size: $font-size-h1;
+  line-height: 40px;
+  padding-top: 0.62px;
+  padding-bottom: 6px;
+  margin: 0;
+} 
+
+.p-heading--2 {
+  font-weight: $font-weight-h2;
+  font-size: $font-size-h2;
+  line-height: 40px;
+  padding-top: 0.62px;
+  padding-bottom: 7.38px;
+  margin: 0;
+}
+.p-heading--3 {
+  font-weight: $font-weight-h3;
+  font-size: $font-size-h3;
+  line-height: 32px;
+  padding-top: 7.5px;
+  padding-bottom: 8.49px;
+  margin: 0;
+}
+.p-heading--4 {
+  font-weight: $font-weight-h4;
+  font-size: $font-size-h4;
+  line-height: 32px;
+  padding-top: 7.5px;
+  padding-bottom: 8.49px;
+  margin: 0;
+}
+p {
+  font-weight: $font-weight-p;
+  font-size: $font-size-p;
+  line-height: 20px;
+  padding-top: 1.24px;
+  padding-bottom: 14.76px;
+  margin: 0;
+}
 
