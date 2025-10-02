@@ -11897,8 +11897,31 @@ ol.u-text-max-width,
 
 /* Darker background for selected nav-item */
 .nav-item .current {
-  background: #e5e5e5;
+  background: #e0e0e0;
   color: #333;
+}
+
+li.current .nav-item label {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.nav-item a:hover,
+.nav-item a:focus {
+  background: #e7e7e7;
+  color: #333;
+}
+
+.nav-item label:hover,
+.nav-item label:focus {
+  background: #e7e7e7;
+  color: #333;
+}
+
+li.current .nav-item label:hover,
+li.current .nav-item label:focus {
+  background: #e5e5e5;
+  color: #222;
 }
 
 .nav-item .icon,

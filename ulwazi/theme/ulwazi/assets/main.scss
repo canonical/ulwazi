@@ -43,8 +43,33 @@
 }
 /* Darker background for selected nav-item */
 .nav-item .current {
-  background: #e5e5e5; // adjust to your preferred color
+  background: #e0e0e0; // adjust to your preferred color
   color: #333;
+}
+
+// Add shadow to the arrow label when the parent li is current
+li.current .nav-item label {
+  background: #e0e0e0;
+  color: #333;
+}
+
+//Hover and focus states for links and labels
+.nav-item a:hover,
+.nav-item a:focus {
+  background: #e7e7e7;
+  color: #333;
+}
+
+.nav-item label:hover,
+.nav-item label:focus {
+  background: #e7e7e7;
+  color: #333;
+}
+
+li.current .nav-item label:hover,
+li.current .nav-item label:focus {
+  background: #e5e5e5;
+  color: #222;
 }
 
 .nav-item .icon,
