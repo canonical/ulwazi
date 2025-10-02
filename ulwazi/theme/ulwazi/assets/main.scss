@@ -7,7 +7,7 @@
   color: purple;
 }
 
-// Nav Item
+// Nav Item container
 .nav-item {
   display: flex;
   align-items: center;
@@ -15,9 +15,11 @@
   min-height: 32px;
 }
 
+// Hide elements with the 'hidden' class
 .hidden {
   display: none !important;
 }
+// Navigation link styles
 .nav-item a {
   flex: 1 1 auto;
   min-width: 0;
@@ -27,22 +29,7 @@
   align-items: center;
   width: 100%; 
 }
-.nav-item label a {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-}
-.nav-item input {
-  height: 32px;
-  display: flex;
-  align-items: center;
-}
-
+// arrow label styles
 .nav-item label {
   display: flex;
   align-items: center;
@@ -85,6 +72,8 @@
   color: #333;
 }
 
+
+
 /* Show chevron-up, hide chevron-down when checked */
 .nav-item .toctree-checkbox:checked ~ label .p-icon--chevron-down {
   display: none;
@@ -101,11 +90,6 @@
   display: none;
 }
 
-/* Darker background for label when checkbox is checked */
-.nav-item input:checked + label {
-  background: #e5e5e5;
-  color: #333;
-}
 .nav-item input:checked + label .p-icon--chevron-down {
   display: none;
 }
@@ -144,12 +128,6 @@
   display: inline-block;
 }
 
-.nav-item label:hover,
-.nav-item label:focus {
-  background: #f3f3f3; 
-  color: #333;         
-}
-
 
 .nav-item input:not(:checked) + label .p-icon--chevron-up {
   display: none;
@@ -159,3 +137,4 @@
 .nav-item input:checked + label .p-icon--chevron-up {
   display: inline-block;
 }
+
