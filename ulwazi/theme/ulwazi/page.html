@@ -2,7 +2,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div id="nav-block">
+<div class="nav-block">
   {% if add_product_menu %}
   {% block product %}
   <header id="product-menu-header">
@@ -38,7 +38,7 @@
 </div>
 
 {% block container %}
-<div class="l-docs" id="content-block">
+<div class="l-docs content-block">
   {% block sidebar_primary %}
     {% include "sections/sidebar-primary.html" %}
   {% endblock sidebar_primary %}
@@ -59,7 +59,7 @@
     {# include "sections/footer-content.html" #}
   {% endblock footer_content %}
 </div>
-<div id="footer-block">
+<div class="footer-block">
   {% block footer %}
     {% include "sections/footer.html" %}
   {% endblock footer %}

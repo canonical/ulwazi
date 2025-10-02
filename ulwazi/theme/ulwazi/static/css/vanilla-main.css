@@ -11919,8 +11919,9 @@ p {
 }
 
 .l-docs__footer p {
-  font-size: 1rem;
   margin-top: 0.25em;
+  font-size: 1rem;
+  line-height: 1.6875em;
 }
 
 /*
@@ -11951,7 +11952,7 @@ body {
   height: 100%;
 }
 
-#footer-block {
+.footer-block {
   align-self: end;
 }
 
@@ -11965,6 +11966,18 @@ body {
     grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
   }
 }
+/*
+  Make RTD elements behave in the grid.
+*/
+readthedocs-flyout,
+readthedocs-notification,
+readthedocs-search,
+readthedocs-hotkeys,
+readthedocs-filetreediff,
+readthedocs-docdiff {
+  position: fixed;
+}
+
 /*
   Canary class.
 */
