@@ -41,6 +41,11 @@
   cursor: pointer;
   margin-left: auto; // Pushes the label (arrow) to the right
 }
+/* Darker background for selected nav-item */
+.nav-item .current {
+  background: #e5e5e5; // adjust to your preferred color
+  color: #333;
+}
 
 .nav-item .icon,
 .nav-item svg {
@@ -49,6 +54,7 @@
   display: block;
 }
 
+// Show chevron-down by default, hide chevron-up
 .nav-item label .p-icon--chevron-down {
   display: inline-block;
 }
@@ -56,9 +62,7 @@
   display: none;
 }
 
-
-
-/* When checkbox is checked, show chevron-up and hide chevron-down */
+// When expanded (checkbox checked), show chevron-up, hide chevron-down
 .nav-item input:checked + label .p-icon--chevron-down {
   display: none;
 }
@@ -66,36 +70,7 @@
   display: inline-block;
 }
 
-/* Darker background for selected nav-item */
-.nav-item .current {
-  background: #e5e5e5; // adjust to your preferred color
-  color: #333;
-}
-
-
-
-/* Show chevron-up, hide chevron-down when checked */
-.nav-item .toctree-checkbox:checked ~ label .p-icon--chevron-down {
-  display: none;
-}
-.nav-item .toctree-checkbox:checked ~ label .p-icon--chevron-up {
-  display: inline-block;
-}
-
-/* Show chevron-down, hide chevron-up when not checked */
-.nav-item .toctree-checkbox:not(:checked) ~ label .p-icon--chevron-down {
-  display: inline-block;
-}
-.nav-item .toctree-checkbox:not(:checked) ~ label .p-icon--chevron-up {
-  display: none;
-}
-
-.nav-item input:checked + label .p-icon--chevron-down {
-  display: none;
-}
-.nav-item input:checked + label .p-icon--chevron-up {
-  display: inline-block;
-}
+// When collapsed (checkbox not checked), show chevron-down, hide chevron-up
 .nav-item input:not(:checked) + label .p-icon--chevron-down {
   display: inline-block;
 }
@@ -103,38 +78,4 @@
   display: none;
 }
 
-// Hide the arrow-link <a> inside the label when expanded (checked)
-.nav-item input:checked + label a {
-  display: none;
-}
-
-// Show the chevron-up icon when expanded (checked)
-.nav-item input:checked + label .p-icon--chevron-up {
-  display: inline-block;
-}
-
-// Hide the chevron-up icon when not expanded
-.nav-item input:not(:checked) + label .p-icon--chevron-up {
-  display: none;
-}
-
-// Show the arrow-link <a> inside the label when not expanded
-.nav-item input:not(:checked) + label a {
-  display: inline-flex;
-}
-
-// Optionally, always hide the chevron-down icon itself (since it's inside the <a>)
-.nav-item label .p-icon--chevron-down {
-  display: inline-block;
-}
-
-
-.nav-item input:not(:checked) + label .p-icon--chevron-up {
-  display: none;
-}
-
-
-.nav-item input:checked + label .p-icon--chevron-up {
-  display: inline-block;
-}
 
