@@ -12008,4 +12008,12 @@ ol.u-text-max-width,
   color: #333;
 }
 
+.nav-item input:not(:checked) + label .p-icon--chevron-up {
+  display: none;
+}
+
+.nav-item input:checked + label .p-icon--chevron-up {
+  display: inline-block;
+}
+
 /*# sourceMappingURL=vanilla-main.css.map */

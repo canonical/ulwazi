@@ -6,14 +6,11 @@ import copy
 from bs4 import BeautifulSoup, Tag
 
 
-def _get_navigation_expand_image(soup: BeautifulSoup, href: str, is_active: bool = False) -> Tag:
-    # Render both icons, CSS will toggle visibility
-    label_a = soup.new_tag("a", href=href)
+def _get_navigation_expand_image(soup: BeautifulSoup, href: str = "#", is_active: bool = False) -> Tag:
     icon_down = soup.new_tag("i", attrs={"class": "p-icon--chevron-down"})
     icon_up = soup.new_tag("i", attrs={"class": "p-icon--chevron-up"})
     container = soup.new_tag("span")
-    label_a.append(icon_down)
-    container.append(label_a)
+    container.append(icon_down)
     container.append(icon_up)
     return container
 
