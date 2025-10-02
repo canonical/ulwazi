@@ -1,7 +1,7 @@
 <footer class="l-docs__footer p-strip is-dark">
   <div class="l-docs__subgrid">
     <div class="l-docs__sidebar u-fixed-width">
-      <p>{{ copyright }}</p>
+      <p>&copy; {{ copyright }} {{ author }}</p>
     </div>
     <div class="l-docs__main">
       <nav class="row" aria-label="Footer">
@@ -9,9 +9,15 @@
           <li class="p-list__item">
             <a href="{{ product_page }}">{{ project }} {{ version }}</a>
           </li>
+          {%- if license and license.name -%}
           <li class="p-list__item">
-            This page is licensed under <a href="{{ license.url }}">{{ license.type }}</a>
+            {%- if license.url -%}
+            This page is licensed under <a href="{{ license.url }}">{{ license.name }}</a>
+            {%- else -%}
+            This page is licensed under {{ license.name }}
+            {%- endif -%}
           </li>
+          {%- endif -%}
           <li class="p-list__item">
             <a class="js-revoke-cookie-manager" href="#tracker-settings">Manage your tracker settings</a>
           </li>

@@ -62,7 +62,7 @@ html_title = project + " documentation"
 #         -H 'Accept: application/vnd.github.v3.raw' \
 #         https://api.github.com/repos/canonical/<REPO> | jq '.created_at'
 
-copyright = "&copy; %s %s" % (datetime.date.today().year, author)
+copyright = f"{datetime.date.today().year}"
 
 # Documentation website URL
 #
@@ -112,6 +112,21 @@ html_context = {
     #
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
+    # 
+    # Inherit the author value
+    # 
+    "author": author,
+    # Licensing information
+    # 
+    # TODO: Change your product's license name and a link to its file.
+    # For the name, we recommend using the standard shorthand identifier from
+    # https://spdx.org/licenses
+    # For the URL, link directly to the product's license statement, typically found on
+    # the product's home page or in its GitHub project.
+    "license": {
+        "name": "LGPL-3.0-only",
+        "url": "https://github.com/canonical/ulwazi/blob/main/LICENSE",
+    },
     # Your Discourse instance URL
     #
     # TODO: Change to your Discourse instance URL or leave empty.
@@ -147,12 +162,6 @@ html_context = {
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
     "display_contributors": False,
-
-    # TODO: Add your project's license
-    "license": {
-        "type": "CC-BY-SA",
-        "url": "https://github.com/canonical/ulwazi/blob/main/LICENSE",
-    },
 
     # Required for feedback button    
     "github_issues": "enabled",
