@@ -11901,14 +11901,14 @@ ol.u-text-max-width,
   color: #333;
 }
 
-li.current .nav-item label {
-  background: #e0e0e0;
+li.current:not(:has(li.current)) > .nav-item > label {
+  background: hsl(0, 0%, 88%);
   color: #333;
 }
 
 .nav-item a:hover,
 .nav-item a:focus {
-  background: #e7e7e7;
+  background: #e0e0e0;
   color: #333;
 }
 
@@ -11918,8 +11918,8 @@ li.current .nav-item label {
   color: #333;
 }
 
-li.current .nav-item label:hover,
-li.current .nav-item label:focus {
+li.current:not(:has(li.current)) > .nav-item > label:hover,
+li.current:not(:has(li.current)) > .nav-item > label:focus {
   background: #e5e5e5;
   color: #222;
 }
