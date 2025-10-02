@@ -52,6 +52,11 @@ p {
   text-align: right;
 }
 
+.l-docs__footer p {
+  font-size: 1rem;
+  margin-top: 0.25em;
+}
+
 /*
   Override arrows.
 */
@@ -104,6 +109,13 @@ $breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sideba
       "footer footer  footer footer footer"
       !important;
     // Main width is a magic number; recalculate and adjust later.
+    grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
+  }
+
+  .l-docs__subgrid {
+    grid-template-areas:
+      ".      sidebar main   meta   .     "
+      !important;
     grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
   }
 }

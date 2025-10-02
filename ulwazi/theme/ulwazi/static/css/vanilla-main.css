@@ -11918,6 +11918,11 @@ p {
   text-align: right;
 }
 
+.l-docs__footer p {
+  font-size: 1rem;
+  margin-top: 0.25em;
+}
+
 /*
   Override arrows.
 */
@@ -11953,6 +11958,10 @@ body {
 @media screen and (min-width: calc(1036px + 15rem)) {
   .l-docs {
     grid-template-areas: ".      header  header header .     " ".      sidebar title  meta   .     " ".      sidebar main   meta   .     " "footer footer  footer footer footer" !important;
+    grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
+  }
+  .l-docs__subgrid {
+    grid-template-areas: ".      sidebar main   meta   .     " !important;
     grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
   }
 }
