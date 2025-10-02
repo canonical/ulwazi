@@ -2,41 +2,43 @@
 {% extends "layout.html" %}
 
 {% block body %}
-{% if add_product_menu %}
-{% block product %}
-<header>
-  {% include "components/product_menu_copy.html" %}
-</header>
-{% endblock product %}
-{% endif %}
-{% block header %}
-<header>
-  <a href="#content" class="p-link--skip">Jump to main content</a>
-  {% include "sections/header.html" %}
-</header>
-{% endblock header %}
-{% block announcement %}
-<div class="sb-announcement">
-  {% include "sections/announcement.html" %}
-</div>
-{% endblock announcement %}
-{% block header_secondary %}
-<header>
-  <div class="p-strip is-shallow is-bordered l-docs__subgrid">
-    {% include "sections/header-secondary.html" %}
+<div id="nav-block">
+  {% if add_product_menu %}
+  {% block product %}
+  <header id="product-menu-header">
+    {% include "components/product_menu_copy.html" %}
+  </header>
+  {% endblock product %}
+  {% endif %}
+  {% block header %}
+  <header>
+    <a href="#content" class="p-link--skip">Jump to main content</a>
+    {% include "sections/header.html" %}
+  </header>
+  {% endblock header %}
+  {% block announcement %}
+  <div class="sb-announcement">
+    {% include "sections/announcement.html" %}
   </div>
-</header>
-{% endblock header_secondary %}
+  {% endblock announcement %}
+  {% block header_secondary %}
+  <header>
+    <div class="p-strip is-shallow is-bordered l-docs__subgrid">
+      {% include "sections/header-secondary.html" %}
+    </div>
+  </header>
+  {% endblock header_secondary %}
 
-{% include "components/icons.html" %}
+  {% include "components/icons.html" %}
 
-<input type="checkbox" class="sb-sidebar-toggle" name="sb-sidebar-toggle--primary" id="sb-sidebar-toggle--primary">
-<input type="checkbox" class="sb-sidebar-toggle" name="sb-sidebar-toggle--secondary" id="sb-sidebar-toggle--secondary">
-<label class="sb-sidebar-overlay" for="sb-sidebar-toggle--primary"></label>
-<label class="sb-sidebar-overlay" for="sb-sidebar-toggle--secondary"></label>
+  <input type="checkbox" class="sb-sidebar-toggle" name="sb-sidebar-toggle--primary" id="sb-sidebar-toggle--primary">
+  <input type="checkbox" class="sb-sidebar-toggle" name="sb-sidebar-toggle--secondary" id="sb-sidebar-toggle--secondary">
+  <label class="sb-sidebar-overlay" for="sb-sidebar-toggle--primary"></label>
+  <label class="sb-sidebar-overlay" for="sb-sidebar-toggle--secondary"></label>
+</div>
 
 {% block container %}
-<div class="l-docs">
+<div class="l-docs" id="content-block">
   {% block sidebar_primary %}
     {% include "sections/sidebar-primary.html" %}
   {% endblock sidebar_primary %}
@@ -56,6 +58,8 @@
   {% block footer_content %}
     {# include "sections/footer-content.html" #}
   {% endblock footer_content %}
+</div>
+<div id="footer-block">
   {% block footer %}
     {% include "sections/footer.html" %}
   {% endblock footer %}

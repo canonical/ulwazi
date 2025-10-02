@@ -77,6 +77,18 @@ p {
   Set the documentation layout. The main work is to make the article content a column.
 */
 
+// Make the page body a grid.
+body {
+  display: grid;
+  grid-template-rows: max-content;
+  height: 100%;
+}
+
+// Make the footer sticky when there's little content.
+#footer-block {
+  align-self: end;
+}
+
 // We can't access private variables, so we have to recreate the vars from layouts_docs.
 $l-documentation-sidebar-width: 15rem;
 $breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sidebar-width);

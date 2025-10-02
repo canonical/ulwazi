@@ -11940,6 +11940,16 @@ p {
 /*
   Set the documentation layout. The main work is to make the article content a column.
 */
+body {
+  display: grid;
+  grid-template-rows: max-content;
+  height: 100%;
+}
+
+#footer-block {
+  align-self: end;
+}
+
 @media screen and (min-width: calc(1036px + 15rem)) {
   .l-docs {
     grid-template-areas: ".      header  header header .     " ".      sidebar title  meta   .     " ".      sidebar main   meta   .     " "footer footer  footer footer footer" !important;
