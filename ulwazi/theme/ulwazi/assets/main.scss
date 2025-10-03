@@ -19,6 +19,19 @@ $font-base-size: 1rem;
 $font-heading-family: $font-base-family;
 // Custom styles
 
+// .p-table-of-contents__list {
+//   margin-left: $sph--small;
+// }
+
+.p-table-of-contents__list ul{
+  padding-left: 0rem;
+
+}
+
+.p-table-of-contents__link {
+  font-size: 14px;
+}
+
 .heading-test-scss{
   color: purple;
 }

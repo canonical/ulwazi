@@ -49,7 +49,8 @@ def config_inited(app, config):  # noqa: ANN401
         "js/header-nav.js",
         "js/dropdown.js",
         # "js/main.js"
-        "js/product_menu.js"
+        "js/product_menu.js",
+        "js/nav-toggle.js",
     ]
 
     values_and_defaults = [
