@@ -175,50 +175,105 @@ Term 2
 
 ## Tables
 
-## Markdown tables
+MyST Markdown supports three main types of tables: Grid, List, and CSV. Grid tables have a 'simple' layout option, as well as the simple layout wrapped into a table directive to provide more options.
+
+### Grid tables
+
+Small grid table, default aligned:
 
 | Header 1                           | Header 2 |
 |------------------------------------|----------|
-| Cell 1<br>Second paragraph         | Cell 2   |
-| Cell 3                             | Cell 4   |
+| [1,1]<br>Second paragraph          |  [1,2]   |
+| [2,1]                              |  [2,2]   |
 
-Centred:
+Small grid table, right aligned:
 
 | Header 1                           | Header 2 |
-|:----------------------------------:|:--------:|
-| Cell 1<br>Second paragraph         | Cell 2   |
-| Cell 3                             | Cell 4   |
+|-----------------------------------:|---------:|
+| [1,1]<br>Second paragraph          |  [1,2]   |
+| [2,1]                              |  [2,2]   |
 
-## List tables
+Wide grid table, default aligned:
+
+| Header 1                   | Header 2   |     Header 3  | Header 4  | Header 5   | Header 6    | Header 7  | Header 8  | Header 9   |
+|----------------------------|------------|---------------|-----------|------------|-------------|-----------|-----------|------------|
+| [1,1]<br>Second paragraph  | [1,2]      |   [1,3]       | [1,4]     | [1,5]      | [1,6]       | [1,7]     | [1,8]     | [1,9]      |
+| [2,1]                      | [2,2]      |   [2,3]       | [2,4]     | [2,5]      | [2,6]       | [2,7]     | [2,8]     | [2,9]      |
+
+Grid table with table directive, default aligned:
+
+:::{table}
+
+  | Header 1                           | Header 2 |
+  |------------------------------------|----------|
+  | [1,1]<br>Second paragraph          | [1,2]    |
+  | [2,1]                              | [2,2]    |
+:::
+
+Grid table with table directive, right aligned:
+
+:::{table}
+:align: right
+
+  | Header 1                           | Header 2 |
+  |------------------------------------|----------|
+  | [1,1]<br>Second paragraph          | [1,2]    |
+  | [2,1]                              | [2,2]    |
+:::
+
+### List tables
+
+List table, default aligned:
 
 ```{list-table}
    :header-rows: 1
 
 * - Header 1
   - Header 2
-* - Cell 1
+* - [1,1]
 
     Second paragraph
-  - Cell 2
-* - Cell 3
-  - Cell 4
+  - [1,2]
+* - [2,1]
+  - [2,2]
 ```
 
-Centred:
+List table, right aligned:
 
 ```{list-table}
    :header-rows: 1
-   :align: center
+   :align: right
 
 * - Header 1
   - Header 2
-* - Cell 1
+* - [1,1]
 
     Second paragraph
-  - Cell 2
-* - Cell 3
-  - Cell 4
+  - [1,2]
+* - [2,1]
+  - [2,2]
 ```
+
+### CSV tables
+
+CSV table, default aligned:
+
+:::{csv-table}
+:header: >
+:  "Header 1", "Header 2"
+"[1,1]", "[1,2]"
+"[2,1]", "[2,2]"
+:::
+
+CSV table, right aligned:
+
+:::{csv-table}
+:align: right
+:header: >
+:  "Header 1", "Header 2"
+"[1,1]", "[1,2]"
+"[2,1]", "[2,2]"
+:::
 
 ## Notes
 
