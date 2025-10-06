@@ -11870,28 +11870,6 @@ ol.u-text-max-width,
   color: purple;
 }
 
-.text-right {
-  text-align: right;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.align-right td, .align-right th {
-  text-align: right;
-}
-
-.align-center td, .align-center th {
-  text-align: center;
-}
-
-.align-left td, .align-left th {
-  text-align: left;
 .nav-item {
   display: flex;
   align-items: center;
@@ -12049,6 +12027,30 @@ p {
   padding-top: 1.24px;
   padding-bottom: 14.76px;
   margin: 0;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.align-right td, .align-right th {
+  text-align: right;
+}
+
+.align-center td, .align-center th {
+  text-align: center;
+}
+
+.align-left td, .align-left th {
+  text-align: left;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */
