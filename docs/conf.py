@@ -164,7 +164,10 @@ html_context = {
     "display_contributors": False,
 
     # Required for feedback button    
+    "feedback": True,
     "github_issues": "enabled",
+
+    # Horizontal Nav Menu
     "company": "Canonical",
     "link1_URL": "https://snapcraft.io/",
     "link1_name": "First optional link",
