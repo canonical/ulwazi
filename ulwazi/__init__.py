@@ -51,6 +51,7 @@ def config_inited(app, config):  # noqa: ANN401
         # "js/main.js"
         "js/product_menu.js",
         "js/nav-toggle.js",
+        "js/search.js",
     ]
 
     values_and_defaults = [
