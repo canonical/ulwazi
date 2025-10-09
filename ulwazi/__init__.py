@@ -120,7 +120,7 @@ def apply_list_classes(body_html: str) -> str:
         "li": "p-list__item",
         "ul.simple": "p-list--unordered p-list--simple",
         "ol.simple": "p-list--ordered p-list--simple",
-    
+
     }
 
     soup = BeautifulSoup(body_html, "html.parser")
@@ -138,7 +138,7 @@ def apply_admonition_classes(body_html:str) -> str:
     if not body_html:
         return body_html
 
-    soup = BeautifulSoup(body_html, "html.parser")     
+    soup = BeautifulSoup(body_html, "html.parser")
 
     admonitions = soup.find_all(class_="admonition")
     generic = soup.find_all(class_="admonition-generic-admonition")
@@ -296,7 +296,7 @@ def _html_page_context(
     context: Dict[str, Any],
     doctree: Any,
 ) -> None:
-   
+
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(context)
 
@@ -310,7 +310,6 @@ def _html_page_context(
     # Modify the body of the content
     if "body" in context:
         context["body"] = apply_heading_classes(context["body"])
-        context["body"] = apply_list_classes(context["body"])
         context["body"] = apply_list_classes(context["body"])
         context["body"] = apply_admonition_classes(context["body"])
         context["body"] = modify_inline_code(context["body"])
