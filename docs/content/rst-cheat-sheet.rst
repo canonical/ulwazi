@@ -1,4 +1,7 @@
 :orphan:
+.. |br| raw:: html
+  
+   <br />
 
 .. vale off
 
@@ -188,62 +191,205 @@ Term 2:
 Tables
 ------
 
-+----------------------+------------+
-| Header 1             | Header 2   |
-+======================+============+
-| Cell 1               | Cell 2     |
-|                      |            |
-| Second paragraph     |            |
-+----------------------+------------+
-| Cell 3               | Cell 4     |
-+----------------------+------------+
+rST supports four table implementations: grid, list, CSV, and simple. Grid and simple tables can also use 
+the table directive or the  rst-class directive to provide more options.
 
-+----------------------+------------------+
-| :center:`Header 1`   | Header 2         |
-+======================+==================+
-| Cell 1               | Cell 2           |
-|                      |                  |
-| Second paragraph     |                  |
-+----------------------+------------------+
-| Cell 3               | :center:`Cell 4` |
-+----------------------+------------------+
+Grid tables
+~~~~~~~~~~~
+
+Small grid table, default aligned (no alignment options):
+
++------------------------------------+----------+
+| Header 1                           | Header 2 |
++====================================+==========+
+| [1,1] |br| Second paragraph        |  [1,2]   |
++------------------------------------+----------+
+| [2,1]                              |  [2,2]   |
++------------------------------------+----------+
+
+Wide grid table, default aligned (no alignment options):
+
++----------------------+------------+---------------+-----------+------------+-------------+-----------+-----------+------------+
+| Header 1             | Header 2   |     Header 3  | Header 4  | Header 5   | Header 6    | Header 7  | Header 8  | Header 9   |
++======================+============+===============+===========+============+=============+===========+===========+============+
+| [1,1]                | [1,2]      |   [1,3]       | [1,4]     | [1,5]      | [1,6]       | [1,7]     | [1,8]     | [1,9]      |
+|                      |            |               |           |            |             |           |           |            |
+| Second paragraph     |            |               |           |            |             |           |           |            |
++----------------------+------------+---------------+-----------+------------+-------------+-----------+-----------+------------+
+| [2,1]                | [2,2]      |   [2,3]       | [2,4]     | [2,5]      | [2,6]       | [2,7]     | [2,8]     | [2,9]      |
++----------------------+------------+---------------+-----------+------------+-------------+-----------+-----------+------------+
+
+Grid table with table directive, default aligned:
+
+.. table::
+
+  +----------------------+------------------+
+  | Header 1             | Header 2         |
+  +======================+==================+
+  | [1,1]                | [1,2]            |
+  |                      |                  |
+  | Second paragraph     |                  |
+  +----------------------+------------------+
+  | [2,1]                | [2,2]            |
+  +----------------------+------------------+
+
+Grid table with table directive, right aligned:
+
+.. table::
+  :align: right
+
+  +----------------------+------------------+
+  | Header 1             | Header 2         |
+  +======================+==================+
+  | [1,1]                | [1,2]            |
+  |                      |                  |
+  | Second paragraph     |                  |
+  +----------------------+------------------+
+  | [2,1]                | [2,2]            |
+  +----------------------+------------------+
+
+Grid table with rst-class directive, default aligned:
+
+.. rst-class:: align-default
+
+  +----------------------+------------------+
+  | Header 1             | Header 2         |
+  +======================+==================+
+  | [1,1]                | [1,2]            |
+  |                      |                  |
+  | Second paragraph     |                  |
+  +----------------------+------------------+
+  | [2,1]                | [2,2]            |
+  +----------------------+------------------+
+
+Grid table with rst-class directive, right aligned:
+
+.. rst-class:: align-right
+
+  +----------------------+------------------+
+  | Header 1             | Header 2         |
+  +======================+==================+
+  | [1,1]                | [1,2]            |
+  |                      |                  |
+  | Second paragraph     |                  |
+  +----------------------+------------------+
+  | [2,1]                | [2,2]            |
+  +----------------------+------------------+
+
+
+List tables
+~~~~~~~~~~~
+
+List table, default aligned:
 
 .. list-table::
    :header-rows: 1
 
    * - Header 1
      - Header 2
-   * - Cell 1
+   * - [1,1]
 
        Second paragraph
-     - Cell 2
-   * - Cell 3
-     - Cell 4
+     - [1,2]
+   * - [2,1]
+     - [2,2]
 
-.. rst-class:: align-center
-
-   +----------------------+------------+
-   | Header 1             | Header 2   |
-   +======================+============+
-   | Cell 1               | Cell 2     |
-   |                      |            |
-   | Second paragraph     |            |
-   +----------------------+------------+
-   | Cell 3               | Cell 4     |
-   +----------------------+------------+
+List table, right aligned:
 
 .. list-table::
    :header-rows: 1
-   :align: center
+   :align: right
 
    * - Header 1
      - Header 2
-   * - Cell 1
+   * - [1,1]
 
        Second paragraph
-     - Cell 2
-   * - Cell 3
-     - Cell 4
+     - [1,2]
+   * - [2,1]
+     - [2,2]
+
+CSV tables
+~~~~~~~~~~
+     
+CSV table, default aligned:
+
+.. csv-table::
+  :header: "Header 1", "Header 2"
+  :widths: 15, 15
+
+  "[1,1]", "[1,2]"
+  "[2,1]", "[2,2]"
+
+CSV table, right aligned:
+
+.. csv-table::
+  :header: "Header 1", "Header 2"
+  :widths: 15, 15
+  :align: right
+
+  "[1,1]", "[1,2]"
+  "[2,1]", "[2,2]"
+
+Simple tables
+~~~~~~~~~~~~~
+
+Simple table, default aligned (no alignment options):
+
+======== ========
+Header 1 Header 2
+======== ========
+[1,1]    [1,2]   
+[1,2]    [2,2] 
+======== ========
+
+Simple with table directive, default aligned:
+
+.. table::
+  :widths: auto
+
+  ======== ========
+  Header 1 Header 2
+  ======== ========
+  [1,1]    [1,2]   
+  [1,2]    [2,2] 
+  ======== ========
+
+Simple with table directive, right aligned:
+
+.. table::
+  :widths: auto
+  :align: right
+
+  ======== ========
+  Header 1 Header 2
+  ======== ========
+  [1,1]    [1,2]   
+  [1,2]    [2,2] 
+  ======== ========
+
+Simple table with rst-class directive, default aligned:
+
+.. rst-class:: align-default
+  
+  ======== ========
+  Header 1 Header 2
+  ======== ========
+  [1,1]    [1,2]   
+  [1,2]    [2,2] 
+  ======== ========
+
+Simple table with rst-class directive, right aligned:
+
+.. rst-class:: align-right
+  
+  ======== ========
+  Header 1 Header 2
+  ======== ========
+  [1,1]    [1,2]   
+  [1,2]    [2,2] 
+  ======== ========
+
 
 Notes
 -----

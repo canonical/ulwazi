@@ -6,7 +6,8 @@ stylesheets = [
     "css/skeleton.css",
     "css/sidenav.css",
     "css/tasklist.css",
-    "css/vanilla-main.css"
+    "css/local-toc.css",
+    "css/vanilla-main.css",
 ]
 sidebars = [
     "globaltoc.html",
