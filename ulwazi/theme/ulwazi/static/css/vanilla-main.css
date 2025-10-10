@@ -11985,7 +11985,7 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 }
 
 .p-heading--1 {
-  font-weight: 450;
+  font-weight: 500;
   font-size: 32px;
   line-height: 40px;
   padding-top: 0.62px;
@@ -11994,7 +11994,7 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 }
 
 .p-heading--2 {
-  font-weight: 200;
+  font-weight: 300;
   font-size: 32px;
   line-height: 40px;
   padding-top: 0.62px;
@@ -12003,7 +12003,7 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 }
 
 .p-heading--3 {
-  font-weight: 450;
+  font-weight: 500;
   font-size: 24px;
   line-height: 32px;
   padding-top: 7.5px;
@@ -12012,11 +12012,29 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 }
 
 .p-heading--4 {
-  font-weight: 250;
+  font-weight: 300;
   font-size: 24px;
   line-height: 32px;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
+  margin: 0;
+}
+
+.p-heading--5 {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin: 0;
+}
+
+.p-heading--6 {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   margin: 0;
 }
 
@@ -12027,6 +12045,11 @@ p {
   padding-top: 1.24px;
   padding-bottom: 14.76px;
   margin: 0;
+}
+
+th > p {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .text-right {
