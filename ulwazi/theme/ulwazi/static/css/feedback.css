@@ -1,6 +1,6 @@
 .content-icon-container {
     display: flex;
-    float: right;
+    float: left;
     text-align: right;
     margin-bottom: 1rem;
     margin-left: auto;
@@ -73,3 +73,67 @@ svg:not(:root) {
     width: 1.25rem;
 }
 
+.p-table-of-contents__section .content-icon-container {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.p-table-of-contents__section .muted-link.github-issue-link {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+/* Container that holds all three buttons/links */
+.p-table-of-contents__section .content-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;          /* allows wrapping on narrow screens */
+  gap: 0.4rem;              /* small gap between buttons */
+  margin: 0 0 0.5rem 0;     /* space below button block */
+  padding: 0;
+}
+
+/* "Give feedback" button styling */
+.p-table-of-contents__section .muted-link.github-issue-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--pst-color-primary, #e95420);
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Hover effect */
+.p-table-of-contents__section .muted-link.github-issue-link:hover {
+  background-color: var(--pst-color-primary-hover, #c6411c);
+}
+
+/* Icon-only edit/view links — keep compact */
+.p-table-of-contents__section .edit-this-page.muted-link,
+.p-table-of-contents__section .view-source.muted-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  margin: 0;
+  color: var(--pst-color-text-muted, #444);
+}
+
+.p-table-of-contents__section .edit-this-page.muted-link:hover,
+.p-table-of-contents__section .view-source.muted-link:hover {
+  color: var(--pst-color-primary, #e95420);
+}
+
+.p-toc-feedback-block {
+  display: block;
+  margin-bottom: var(--pst-spacing-m, 1rem);
+}
