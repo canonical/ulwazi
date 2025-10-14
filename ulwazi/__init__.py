@@ -265,23 +265,6 @@ def truncate_local_toc(toc: str, max_depth: int = None) -> str:
         trim_ul(toc_html, 1)
     return str(toc_html)
 
-def apply_image_classes(body_html: str) -> str:
-    """Add custom CSS classes to images in the generated body HTML."""
-    if not body_html:
-        return body_html
-
-    soup = BeautifulSoup(body_html, "html.parser")
-
-    for img in soup.find_all("img"):
-        # Add class "p-image-container__image" to img tags
-        img["class"] = "p-image-container__image"
-        # put img inside a div with class "p-image-container is-highlighted"
-        wrapper = soup.new_tag("div", attrs={"class": "p-image-container is-highlighted"})
-        img.wrap(wrapper)
-
-    return str(soup)
-
-
 def _html_page_context(
     app: sphinx.application.Sphinx,
     pagename: str,
@@ -305,4 +288,3 @@ def _html_page_context(
         context["body"] = apply_heading_classes(context["body"])
         context["body"] = apply_admonition_classes(context["body"])
         context["body"] = modify_inline_code(context["body"])
-        context["body"] = apply_image_classes(context["body"])
