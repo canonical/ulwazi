@@ -1,121 +1,53 @@
-.content-icon-container {
-    display: flex;
-    float: left;
-    text-align: right;
-    margin-bottom: 1rem;
-    margin-left: auto;
-    margin-top: 1.5rem;
-    margin-right: 1rem;
-    gap: 0.5rem;
-}
-
-.github-issue-link-container {
-    padding-right: 0.5rem;
-}
-
-.github-issue-link {
-    font-size: var(--font-size--small);
-    font-weight: bold;
-    background-color: rgb(214, 65, 13);
-    padding: 13px 23px;
-    text-decoration: none;
-}
-
-.github-issue-link:link {
-    color: rgb(255, 255, 255);
-}
-
-a.muted-link {
-    color: inherit;
-}
-
-.visually-hidden {
-    color: var(--color-foreground-primary);
-    height: 1px !important;
-    position: absolute !important;
-    width: 1px !important;
-    clip: rect(0px, 0px, 0px, 0px) !important;
-    background: var(--color-background-primary);
-    margin: -1px !important;
-    overflow: hidden !important;
-    padding: 0px !important;
-    border-width: 0px !important;
-    border-style: initial !important;
-    border-color: initial !important;
-    border-image: initial !important;
-    white-space: nowrap !important;
-}
-
-.theme-toggle-container {
-    display: flex;
-}
-
-.theme-toggle {
-    cursor: pointer;
-    display: flex;
-    background: transparent;
-    border-width: initial;
-    border-style: none;
-    border-color: initial;
-    border-image: initial;
-    padding: 0px;
-}
-
-svg:not(:root) {
-    overflow-clip-margin: content-box;
-    overflow: hidden;
-}
-
-.theme-toggle svg {
-    color: var(--color-foreground-primary);
-    display: none;
-    height: 1.25rem;
-    width: 1.25rem;
-}
-
-.p-table-of-contents__section .content-icon-container {
-  display: block;
-  margin-bottom: 0.75rem;
-}
-
-.p-table-of-contents__section .muted-link.github-issue-link {
-  display: block;
-  margin-bottom: 0.4rem;
-}
-
-/* Container that holds all three buttons/links */
+/* Icon + button container */
+.content-icon-container,
 .p-table-of-contents__section .content-icon-container {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex-wrap: wrap;          /* allows wrapping on narrow screens */
-  gap: 0.4rem;              /* small gap between buttons */
-  margin: 0 0 0.5rem 0;     /* space below button block */
+  flex-wrap: wrap;
+  gap: 0.1rem;
+  margin: 0.5rem 1rem 1rem auto;
   padding: 0;
+  text-align: right;
 }
 
-/* "Give feedback" button styling */
+/* Optional variation in TOC context */
+.p-table-of-contents__section .content-icon-container {
+  margin-bottom: 0.5rem;
+}
+
+/* GitHub issue link container */
+.github-issue-link-container {
+  padding-right: 0.5rem;
+}
+
+/* "Give feedback" / issue link styling */
+.github-issue-link,
 .p-table-of-contents__section .muted-link.github-issue-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: var(--font-size--small, 0.875rem);
+  font-weight: 600;
   background-color: var(--pst-color-primary, #e95420);
   color: #fff;
   border-radius: 6px;
   text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 600;
   padding: 0.35rem 0.75rem;
   line-height: 1;
   white-space: nowrap;
 }
 
-/* Hover effect */
+.github-issue-link:hover,
 .p-table-of-contents__section .muted-link.github-issue-link:hover {
   background-color: var(--pst-color-primary-hover, #c6411c);
 }
 
-/* Icon-only edit/view links — keep compact */
+/* Muted links (edit/view) */
+a.muted-link {
+  color: inherit;
+}
+
 .p-table-of-contents__section .edit-this-page.muted-link,
 .p-table-of-contents__section .view-source.muted-link {
   display: inline-flex;
@@ -123,8 +55,8 @@ svg:not(:root) {
   justify-content: center;
   width: 1.6rem;
   height: 1.6rem;
-  padding: 0;
   margin: 0;
+  padding: 0;
   color: var(--pst-color-text-muted, #444);
 }
 
@@ -132,6 +64,48 @@ svg:not(:root) {
 .p-table-of-contents__section .view-source.muted-link:hover {
   color: var(--pst-color-primary, #e95420);
 }
+
+/* Hidden text for accessibility */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  background: var(--color-background-primary);
+  color: var(--color-foreground-primary);
+}
+
+/* Theme toggle button */
+.theme-toggle-container {
+  display: flex;
+}
+
+.theme-toggle {
+  display: flex;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.theme-toggle svg {
+  display: none;
+  color: var(--color-foreground-primary);
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* SVG rendering fix */
+svg:not(:root) {
+  overflow-clip-margin: content-box;
+  overflow: hidden;
+}
+
 
 .p-toc-feedback-block {
   display: block;
