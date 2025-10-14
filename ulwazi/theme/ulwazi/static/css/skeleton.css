@@ -125,6 +125,10 @@ article {
   right: 0;
 }
 
+.sb-container {
+  margin-top: 8px;
+}
+
 /* Full-width mode */
 .drop-secondary-sidebar-for-full-width-content
   .hide-when-secondary-sidebar-shown {
