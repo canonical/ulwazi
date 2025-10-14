@@ -421,10 +421,6 @@ Images can be inserted in-line |logo| via a substitution.
 
 .. |logo| image:: https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png
 
-```html
-
-```
-
 Reuse
 -----
 
