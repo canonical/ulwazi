@@ -6,9 +6,15 @@
     <div class="l-docs__main">
       <nav class="row" aria-label="Footer">
         <ul class="p-list">
+          {%- if footer and footer.product -%}
           <li class="p-list__item">
+            {%- if product_page %}
             <a href="{{ product_page }}">{{ project }} {{ version }}</a>
+            {%- else -%}
+            {{ project }} {{ version }}
+            {%- endif -%}
           </li>
+          {%- endif -%}
           {%- if license and license.name -%}
           <li class="p-list__item">
             {%- if license.url -%}
@@ -18,9 +24,13 @@
             {%- endif -%}
           </li>
           {%- endif -%}
-          <li class="p-list__item">
-            <a class="js-revoke-cookie-manager" href="#tracker-settings">Manage your tracker settings</a>
-          </li>
+          {%- if footer and footer.entries -%}
+            {%- for item in footer.entries -%}
+            <li class="p-list__item">
+              {{ item }}
+            </li>
+            {%- endfor -%}
+          {%- endif -%}
         </ul>
         <span class="u-off-screen">
           <!-- Non-functional -->

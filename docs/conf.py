@@ -179,7 +179,17 @@ html_context = {
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "https://documentation.ubuntu.com",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
-    "logo_title": "Canonical", 
+    "logo_title": "Canonical",
+
+    # TODO: Customize the footer.
+    "footer": {
+        # Whether to place the product name as the first entry.
+        "product": True,
+        # List your footer entries. Accepts HTML tags.
+        "entries": [
+            '<a class="js-revoke-cookie-manager" href="#tracker-settings">Manage your tracker settings</a>',
+        ]
+    }
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a
