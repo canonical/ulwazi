@@ -4,29 +4,18 @@
 {% block body %}
 <div class="nav-block">
   {% if add_product_menu %}
-  {% block product %}
-  <header id="product-menu-header">
-    {% include "components/product_menu_copy.html" %}
-  </header>
-  {% endblock product %}
+    {% block product %}
+      {% include "components/product_menu_copy.html" %}
+    {% endblock product %}
   {% endif %}
   {% block header %}
-  <header>
-    <a href="#content" class="p-link--skip">Jump to main content</a>
     {% include "sections/header.html" %}
-  </header>
   {% endblock header %}
   {% block announcement %}
-  <div class="sb-announcement">
     {% include "sections/announcement.html" %}
-  </div>
   {% endblock announcement %}
   {% block header_secondary %}
-  <header>
-    <div class="p-strip is-shallow is-bordered l-docs__subgrid">
-      {% include "sections/header-secondary.html" %}
-    </div>
-  </header>
+    {% include "sections/header-secondary.html" %}
   {% endblock header_secondary %}
 
   {% include "components/icons.html" %}

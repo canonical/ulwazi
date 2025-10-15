@@ -11967,6 +11967,11 @@ body {
   align-self: end;
 }
 
+@media all {
+  .p-navigation__nav {
+    flex-direction: column;
+  }
+}
 @media screen and (min-width: calc(1036px + 15rem)) {
   .l-docs {
     grid-template-areas: ".      header  header header .     " ".      sidebar title  meta   .     " ".      sidebar main   meta   .     " "footer footer  footer footer footer" !important;
@@ -11994,7 +11999,6 @@ readthedocs-docdiff {
 */
 .nav-item {
   display: flex;
-  min-height: 2rem;
   align-items: center;
 }
 

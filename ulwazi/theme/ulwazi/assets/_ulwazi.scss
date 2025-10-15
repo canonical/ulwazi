@@ -107,6 +107,13 @@ body {
   align-self: end;
 }
 
+// Make the product listing behave in the grid. This is hacky and should be reworked.
+@media all {
+  .p-navigation__nav {
+    flex-direction: column;
+  }
+}
+
 // We can't access private variables, so we have to recreate the vars from layouts_docs.
 $l-documentation-sidebar-width: 15rem;
 $breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sidebar-width);
