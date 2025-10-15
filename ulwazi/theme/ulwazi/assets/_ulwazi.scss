@@ -150,12 +150,9 @@ readthedocs-docdiff {
   TOC.
 */
 
-// Nav Item container
 .nav-item {
   display: flex;
   align-items: center;
-  overflow: wrap;
-  min-height: 32px;
 }
 
 .p-table-of-contents__list ul{
@@ -169,13 +166,9 @@ readthedocs-docdiff {
 
 // Navigation link styles
 .nav-item a {
-  flex: 1 1 auto;
-  min-width: 0;
-  height: 24px;
+  width: 100%;
   font-size: 14px;
-  display: flex;
-  align-items: center;
-  width: 100%; 
+  line-height: 24px !important;
 }
 // arrow label styles
 .nav-item label {

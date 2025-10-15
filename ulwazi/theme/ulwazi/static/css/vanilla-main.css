@@ -11994,9 +11994,8 @@ readthedocs-docdiff {
 */
 .nav-item {
   display: flex;
+  min-height: 2rem;
   align-items: center;
-  overflow: wrap;
-  min-height: 32px;
 }
 
 .p-table-of-contents__list ul {
@@ -12008,13 +12007,9 @@ readthedocs-docdiff {
 }
 
 .nav-item a {
-  flex: 1 1 auto;
-  min-width: 0;
-  height: 24px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
   width: 100%;
+  font-size: 14px;
+  line-height: 24px !important;
 }
 
 .nav-item label {
