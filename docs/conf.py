@@ -183,8 +183,10 @@ html_context = {
 
     # TODO: Customize the footer.
     "footer": {
-        # Whether to place the product name as the first entry.
+        # Whether to add the product name as the first entry.
         "product": True,
+        # Whether to add the license as the second entry.
+        "license": True,
         # List your footer entries. Accepts HTML tags.
         "entries": [
             '<a class="js-revoke-cookie-manager" href="#tracker-settings">Manage your tracker settings</a>',

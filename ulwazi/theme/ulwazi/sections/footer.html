@@ -15,7 +15,7 @@
             {%- endif -%}
           </li>
           {%- endif -%}
-          {%- if license and license.name -%}
+          {%- if footer and footer.license and license and license.name -%}
           <li class="p-list__item">
             {%- if license.url -%}
             This page is licensed under <a href="{{ license.url }}">{{ license.name }}</a>
