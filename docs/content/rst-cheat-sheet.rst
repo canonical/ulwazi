@@ -409,7 +409,7 @@ Use ``.. image::`` for simple images without captions.
 
 .. image:: https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png
 
-Use ``..figure::`` to include a caption, and to reference the image in text.
+Use ``.. figure::`` to include a caption, and to reference the image in text.
 
 .. figure:: https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png
    :width: 100px
