@@ -39,7 +39,7 @@ version = "beta"
 html_title = project + " documentation"
 
 
-# Copyright and license strings; shown at the bottom of the page
+# Copyright string; shown at the bottom of the page
 #
 # Now, the starter pack uses CC-BY-SA as the license
 # and the current year as the copyright year.
