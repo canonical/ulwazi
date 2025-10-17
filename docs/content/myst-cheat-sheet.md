@@ -310,7 +310,7 @@ Use the `{figure}` directive to include a caption, and to reference the image in
 
 Images can be inserted in-line ![logo] via a substitution. 
 
-[logo]: https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png
+[logo]: https://assets.ubuntu.com/v1/fdd161e2-canonical_logo_16.png
 
 ## Reuse
 
