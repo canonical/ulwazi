@@ -207,7 +207,10 @@ vanilla-main: npm-install
 	echo "Compiling SCSS to CSS..."
 
 	@echo "Using local sass..."
-	@./node_modules/.bin/sass ulwazi/theme/ulwazi/assets/main.scss ulwazi/theme/ulwazi/static/css/vanilla-main.css
+	@./node_modules/.bin/sass \
+		--load-path=node_modules \
+		ulwazi/theme/ulwazi/assets/main.scss \
+		ulwazi/theme/ulwazi/static/css/vanilla-main.css
 
 	@echo "SCSS compilation complete!"
 rebuild: clean run

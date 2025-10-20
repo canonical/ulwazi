@@ -1,0 +1,288 @@
+/*
+  Ulwazi's custom CSS. These rules are put into the stylesheet _after_ Vanilla is
+  rendered. Has access to Vanilla's global classes and variables.
+*/
+
+/*
+  Utility classes.
+*/
+
+.hidden {
+  display: none !important;
+}
+
+.align-right {
+  text-align: right;
+}
+
+/*
+  Typography classes.
+*/
+
+.p-heading--1 {
+  font-weight: $font-weight-h1;
+  font-size: $font-size-h1;
+  line-height: 40px;
+  padding-top: 0.62px;
+  padding-bottom: 6px;
+  margin: 0;
+} 
+
+.p-heading--2 {
+  font-weight: $font-weight-h2;
+  font-size: $font-size-h2;
+  line-height: 40px;
+  padding-top: 0.62px;
+  padding-bottom: 7.38px;
+  margin: 0;
+}
+.p-heading--3 {
+  font-weight: $font-weight-h3;
+  font-size: $font-size-h3;
+  line-height: 32px;
+  padding-top: 7.5px;
+  padding-bottom: 8.49px;
+  margin: 0;
+}
+.p-heading--4 {
+  font-weight: $font-weight-h4;
+  font-size: $font-size-h4;
+  line-height: 32px;
+  padding-top: 7.5px;
+  padding-bottom: 8.49px;
+  margin: 0;
+}
+p {
+  font-weight: $font-weight-p;
+  font-size: $font-size-p;
+  line-height: 20px;
+  padding-top: 1.24px;
+  padding-bottom: 14.76px;
+  margin: 0;
+}
+.align-right {
+  text-align: right;
+}
+
+.l-docs__footer p {
+  margin-top: 0.25em;
+  font-size: 1rem;
+  line-height: 1.6875em;
+}
+
+/*
+  Override arrows.
+*/
+
+// Ensure the arrow is pushed to the right in flex containers.
+.arrow-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.arrow-toggle .icon,
+.arrow-toggle svg {
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+}
+
+/*
+  Set the documentation layout. The main work is to make the article content a column.
+*/
+
+// Make the page body a grid.
+body {
+  display: grid;
+  grid-template-rows: max-content;
+  height: 100%;
+}
+
+// Make the footer sticky when there's little content.
+.footer-block {
+  align-self: end;
+}
+
+// Make the product listing behave in the grid. This is hacky and should be reworked.
+@media all {
+  .p-navigation__nav {
+    flex-direction: column;
+  }
+}
+
+// We can't access private variables, so we have to recreate the vars from layouts_docs.
+$l-documentation-sidebar-width: 15rem;
+$breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sidebar-width);
+
+// This is flimsy and over-reliant on `!important`. If Vanilla's docs layout remains unextendable, we should re-implement it from scratch.
+@media screen and (min-width: $breakpoint-full-screen-layout) {
+  .l-docs {
+    // Make the article a column and the footer full-width
+    grid-template-areas:
+      ".      header  header header .     "
+      ".      sidebar title  meta   .     "
+      ".      sidebar main   meta   .     "
+      "footer footer  footer footer footer"
+      !important;
+    // Main width is a magic number; recalculate and adjust later.
+    grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
+  }
+
+  .l-docs__subgrid {
+    grid-template-areas:
+      ".      sidebar main   meta   .     "
+      !important;
+    grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
+  }
+}
+
+/*
+  Make RTD elements behave in the grid.
+*/
+
+readthedocs-flyout,
+readthedocs-notification,
+readthedocs-search,
+readthedocs-hotkeys,
+readthedocs-filetreediff,
+readthedocs-docdiff {
+  position: fixed;
+}
+
+/*
+  TOC.
+*/
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.p-table-of-contents__list ul{
+  padding-left: 0rem;
+
+}
+
+.p-table-of-contents__link {
+  font-size: 14px;
+}
+
+// Navigation link styles
+.nav-item a {
+  width: 100%;
+  font-size: 14px;
+  line-height: 24px !important;
+}
+// arrow label styles
+.nav-item label {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  padding-left: 6px;
+  margin-bottom: 0;
+  padding-top: 0;
+  cursor: pointer;
+  margin-left: auto; // Pushes the label (arrow) to the right
+}
+/* Darker background for selected nav-item */
+.nav-item .current {
+  background: #e0e0e0; // adjust to your preferred color
+  color: #333;
+}
+
+// Add shadow to the arrow label when the parent li is current
+li.current:not(:has(li.current)) > .nav-item > label {
+  background: hsl(0, 0%, 88%);
+  color: #333;
+}
+
+//Hover and focus states for links and labels
+.nav-item a:hover,
+.nav-item a:focus {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.nav-item label:hover,
+.nav-item label:focus {
+  background: #e7e7e7;
+  color: #333;
+}
+
+li.current:not(:has(li.current)) > .nav-item > label:hover,
+li.current:not(:has(li.current)) > .nav-item > label:focus {
+  background: #e5e5e5;
+  color: #222;
+}
+
+.nav-item .icon,
+.nav-item svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+// Show chevron-down by default, hide chevron-up
+.nav-item label .p-icon--chevron-down {
+  display: inline-block;
+}
+.nav-item label .p-icon--chevron-up {
+  display: none;
+}
+
+// When expanded (checkbox checked), show chevron-up, hide chevron-down
+.nav-item input:checked + label .p-icon--chevron-down {
+  display: none;
+}
+.nav-item input:checked + label .p-icon--chevron-up {
+  display: inline-block;
+}
+
+// When collapsed (checkbox not checked), show chevron-down, hide chevron-up
+.nav-item input:not(:checked) + label .p-icon--chevron-down {
+  display: inline-block;
+}
+.nav-item input:not(:checked) + label .p-icon--chevron-up {
+  display: none;
+}
+
+/*
+  Table alignments.
+*/
+
+.text-right{
+  text-align: right;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.text-left{
+  text-align: left;
+}
+
+.align-right td, .align-right th{
+  text-align: right;
+}
+
+.align-center td, .align-center th{
+  text-align: center;
+}
+
+.align-left td, .align-left th{
+  text-align: left;
+}
+
+/*
+  Canary class.
+*/
+
+.heading-test-scss{
+  color: purple;
+}
