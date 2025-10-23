@@ -23,5 +23,8 @@ jobs:
       - name: Build HTML
         run: make html
 
+      - name: Build PDF
+        run: make pdf
+
       - name: Run tests
         run: make test
