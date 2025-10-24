@@ -12,3 +12,6 @@ packaging
 sphinxcontrib-svg2pdfconverter[CairoSVG]
 sphinx-last-updated-by-git
 sphinx-sitemap
+
+sphinx-terminal>=0.1.0
+sphinx-copybutton

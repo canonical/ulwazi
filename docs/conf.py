@@ -292,6 +292,8 @@ myst_enable_extensions = {
 #       - youtube-links
 
 extensions = [
+    "myst_parser",
+    "sphinx_copybutton", #copybutton needs to be listed first or errors
     "sphinxcontrib.cairosvgconverter",
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
@@ -299,9 +301,12 @@ extensions = [
     "ulwazi",
     "sphinx_modern_pdf_style",
     "canonical_sphinx_config",
-    "myst_parser",
+
     "sphinxcontrib.jquery",
+    "sphinx_terminal",
 ]
+
+# copybutton_selector = "div.highlight"
 
 # Excludes files or directories from processing
 
