@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install PDF dependencies
-        run: make pdf-prep-force
+        run: sudo make pdf-prep-force
 
       - name: Build SCSS
         run: make vanilla-main
