@@ -11882,74 +11882,49 @@ ol.u-text-max-width,
 */
 .p-heading--1 {
   font-weight: 500;
-  font-size: 32px;
-  line-height: 40px;
-  padding-top: 0.62px;
-  padding-bottom: 6px;
-  margin: 0;
+  font-size: 2rem;
+  line-height: 2.5rem;
 }
 
 .p-heading--2 {
   font-weight: 300;
-  font-size: 32px;
-  line-height: 40px;
-  padding-top: 0.62px;
-  padding-bottom: 7.38px;
-  margin: 0;
+  font-size: 2rem;
+  line-height: 2.5rem;
 }
 
 .p-heading--3 {
   font-weight: 500;
-  font-size: 24px;
-  line-height: 32px;
-  padding-top: 7.5px;
-  padding-bottom: 8.49px;
-  margin: 0;
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .p-heading--4 {
   font-weight: 300;
-  font-size: 24px;
-  line-height: 32px;
-  padding-top: 7.5px;
-  padding-bottom: 8.49px;
-  margin: 0;
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .p-heading--5 {
   font-weight: 600;
-  font-size: 18px;
-  line-height: 24px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
 }
 
 .p-heading--6 {
   font-weight: 400;
-  font-size: 18px;
-  line-height: 24px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
 }
 
 p {
   font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  padding-top: 1.24px;
-  padding-bottom: 14.76px;
-  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 th > p {
   padding-top: 0;
   padding-bottom: 0;
-}
-
-.align-right {
-  text-align: right;
 }
 
 .l-docs__footer p {
