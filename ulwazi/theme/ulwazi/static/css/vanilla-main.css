@@ -12135,4 +12135,10 @@ button.copybtn:hover {
   background-color: transparent !important;
 }
 
+.copybtn.o-tooltip--left[data-tooltip]::before,
+.copybtn.o-tooltip--left[data-tooltip]::after {
+  content: none !important;
+  display: none !important;
+}
+
 /*# sourceMappingURL=vanilla-main.css.map */
