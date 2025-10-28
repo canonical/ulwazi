@@ -290,8 +290,14 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
   copy-button formatting
 */
 
-.sb-container button.copybtn,
-.sb-container pre + button.copybtn:hover {
+button.copybtn,
+button.copybtn:hover {
   background: none;
-  border: none;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.highlight button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
 }
