@@ -12113,17 +12113,17 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
   text-align: left;
 }
 
-.sb-container button.copybtn,
-.sb-container pre + button.copybtn:hover {
-  background: none;
-  border: none;
-}
-
 /*
   Canary class.
 */
 .heading-test-scss {
   color: purple;
+}
+
+.sb-container button.copybtn,
+.sb-container pre + button.copybtn:hover {
+  background: none;
+  border: none;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */
