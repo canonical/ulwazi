@@ -221,3 +221,11 @@ p {
 .align-left td, .align-left th{
   text-align: left;
 }
+
+// copy-button
+
+.sb-container button.copybtn,
+.sb-container pre + button.copybtn:hover {
+    background: none;
+    border: none;
+}

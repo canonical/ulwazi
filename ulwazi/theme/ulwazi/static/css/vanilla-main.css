@@ -12053,4 +12053,10 @@ p {
   text-align: left;
 }
 
+.sb-container button.copybtn,
+.sb-container pre + button.copybtn:hover {
+  background: none;
+  border: none;
+}
+
 /*# sourceMappingURL=vanilla-main.css.map */
