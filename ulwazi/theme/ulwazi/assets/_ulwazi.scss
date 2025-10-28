@@ -285,3 +285,13 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 .heading-test-scss{
   color: purple;
 }
+
+/*
+  copy-button formatting
+*/
+
+.sb-container button.copybtn,
+.sb-container pre + button.copybtn:hover {
+  background: none;
+  border: none;
+}
