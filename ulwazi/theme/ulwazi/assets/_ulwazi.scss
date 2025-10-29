@@ -22,47 +22,46 @@
 .p-heading--1 {
   font-weight: $font-weight-h1;
   font-size: $font-size-h1;
-  line-height: 40px;
-  padding-top: 0.62px;
-  padding-bottom: 6px;
-  margin: 0;
+  line-height: $font-line-height-h1;
 } 
 
 .p-heading--2 {
   font-weight: $font-weight-h2;
   font-size: $font-size-h2;
-  line-height: 40px;
-  padding-top: 0.62px;
-  padding-bottom: 7.38px;
-  margin: 0;
+  line-height: $font-line-height-h2;
 }
 .p-heading--3 {
   font-weight: $font-weight-h3;
   font-size: $font-size-h3;
-  line-height: 32px;
-  padding-top: 7.5px;
-  padding-bottom: 8.49px;
-  margin: 0;
+  line-height: $font-line-height-h3;
 }
 .p-heading--4 {
   font-weight: $font-weight-h4;
   font-size: $font-size-h4;
-  line-height: 32px;
-  padding-top: 7.5px;
-  padding-bottom: 8.49px;
-  margin: 0;
+  line-height: $font-line-height-h4;
+}
+.p-heading--5 {
+  font-weight: $font-weight-h5;
+  font-size: $font-size-h5;
+  line-height: $font-line-height-h5;
+}
+.p-heading--6 {
+  font-weight: $font-weight-h6;
+  font-size: $font-size-h6;
+  line-height: $font-line-height-h6;
 }
 p {
   font-weight: $font-weight-p;
   font-size: $font-size-p;
-  line-height: 20px;
-  padding-top: 1.24px;
-  padding-bottom: 14.76px;
-  margin: 0;
+  line-height: $font-line-height-p;
 }
-.align-right {
-  text-align: right;
+th > p {
+  padding-top: 0;
+  padding-bottom: 0;
 }
+// .align-right {
+//   text-align: right;
+// }
 
 .l-docs__footer p {
   margin-top: 0.25em;
