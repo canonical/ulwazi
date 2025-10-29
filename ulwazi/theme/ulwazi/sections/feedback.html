@@ -5,16 +5,29 @@
        href="https://github.com/canonical/kafka-operator/issues/new?title=docs%3A+TYPE+YOUR+QUESTION+HERE&amp;body=*Please describe the question or issue you're facing with &quot;Charmed Apache Kafka documentation&quot;.*%0A%0A%0A%0A%0A---%0A*Reported+from%3A+https://documentation.ubuntu.com/charmed-kafka/3/*"
        target="_blank">Give feedback</a>
   </div>
+  {%- if github_url and pagename -%}
+    {%- if page_source_suffix is defined -%}
+      {%- set source_file_extension = page_source_suffix -%}
+    {%- else -%}
+      {%- set source_file_extension = default_source_extension -%}
+    {%- endif -%} 
+    {%- set edit_url = github_url + "/edit/" + repo_default_branch + repo_folder + pagename + source_file_extension -%}
+    {%- set view_url = github_url + "/blob/" + repo_default_branch + repo_folder + pagename + source_file_extension -%}
+  {%- else -%}
+    {%- set edit_url = default_edit_url -%}
+    {%- set view_url = default_view_url -%}
+    <!-- Warning: lacking parameters in conf.py: guthub_url or pagename -->
+  {%- endif -%}
   <div class="edit-this-page muted-link">
     <a class="p-icon--edit" 
-       href="https://github.com/canonical/kafka-operator/edit/3/edge/docs/index.md"
+       href="{{ edit_url }}"
        title="Contribute to this page"></a>
        <span class="visually-hidden">Contribute to this page</span>
     </a>
   </div>
   <div class="view-source muted-link">
     <a class="p-icon--show" 
-       href="https://github.com/canonical/kafka-operator/edit/3/edge/docs/index.md"
+       href="{{ view_url }}"
        title="View page source code"></a>
        <span class="visually-hidden">View page source code</span>
     </a>
