@@ -317,19 +317,19 @@ myst_enable_extensions = {
 #       - terminal-output
 #       - youtube-links
 
+#    "sphinx_copybutton", #copybutton needs to be listed first or errors
 extensions = [
+    "ulwazi",
     "myst_parser",
-    "sphinx_copybutton", #copybutton needs to be listed first or errors
+    "sphinx_terminal",
     "sphinxcontrib.cairosvgconverter",
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
-    "ulwazi",
     "sphinx_modern_pdf_style",
     "canonical_sphinx_config",
-
     "sphinxcontrib.jquery",
-    "sphinx_terminal",
+
 ]
 
 # copybutton_selector = "div.highlight"

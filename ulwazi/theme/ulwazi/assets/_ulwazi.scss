@@ -308,3 +308,8 @@ button.copybtn:hover {
   content: none !important;
   display: none !important;
 }
+
+.input button.copybtn{
+  background-color: transparent !important;
+  z-index: 999;
+}

@@ -12141,4 +12141,9 @@ button.copybtn:hover {
   display: none !important;
 }
 
+.input button.copybtn {
+  background-color: transparent !important;
+  z-index: 999;
+}
+
 /*# sourceMappingURL=vanilla-main.css.map */

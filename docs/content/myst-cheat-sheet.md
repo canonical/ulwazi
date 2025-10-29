@@ -133,14 +133,13 @@ if os.path.exists("./reuse/substitutions.yaml"):
 
 ```{terminal}
 :copy:
-:input: command number one
 :user: ubuntu
 :host: vm
 
+command number one
+
 output line one
 output line two
-:input: command number two
-more output
 ```
 
 (a_section_target_myst)=
