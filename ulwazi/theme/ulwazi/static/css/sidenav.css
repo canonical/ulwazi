@@ -146,3 +146,7 @@ li[class*=' toctree'], li[class^='toctree'] {
     position: relative;
     top: 6px;
 }
+
+.p-side-navigation--raw-html li > a {
+    display: inline-flex;
+}

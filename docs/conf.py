@@ -31,7 +31,9 @@ author = "Canonical Ltd."
 # Sidebar documentation title; best kept reasonably short
 #
 # TODO: To include a version number, add it here (hardcoded or automated).
-#
+version = "beta"
+
+
 # TODO: To disable the title, set to an empty string.
 
 html_title = project + " documentation"
@@ -60,8 +62,7 @@ html_title = project + " documentation"
 #         -H 'Accept: application/vnd.github.v3.raw' \
 #         https://api.github.com/repos/canonical/<REPO> | jq '.created_at'
 
-copyright = "%s CC-BY-SA, %s" % (datetime.date.today().year, author)
-
+copyright = f"{datetime.date.today().year}"
 
 # Documentation website URL
 #
@@ -111,6 +112,21 @@ html_context = {
     #
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
+    # 
+    # Inherit the author value
+    # 
+    "author": author,
+    # Licensing information
+    # 
+    # TODO: Change your product's license name and a link to its file.
+    # For the name, we recommend using the standard shorthand identifier from
+    # https://spdx.org/licenses
+    # For the URL, link directly to the product's license statement, typically found on
+    # the product's home page or in its GitHub project.
+    "license": {
+        "name": "LGPL-3.0-only",
+        "url": "https://github.com/canonical/ulwazi/blob/main/LICENSE",
+    },
     # Your Discourse instance URL
     #
     # TODO: Change to your Discourse instance URL or leave empty.
@@ -139,8 +155,6 @@ html_context = {
     "repo_default_branch": "main",
     # Docs location in the repo; used in links for viewing the source files
     #
-
-
     # TODO: To customise the directory, uncomment and update as needed.
     "repo_folder": "/docs/",
     # TODO: To enable or disable the Previous / Next buttons at the bottom of pages
@@ -165,7 +179,19 @@ html_context = {
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "https://documentation.ubuntu.com",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
-    "logo_title": "Canonical", 
+    "logo_title": "Canonical",
+
+    # TODO: Customize the footer.
+    "footer": {
+        # Whether to add the product name as the first entry.
+        "product": True,
+        # Whether to add the license as the second entry.
+        "license": True,
+        # List your footer entries. Accepts HTML tags.
+        "entries": [
+            '<a class="js-revoke-cookie-manager" href="#tracker-settings">Manage your tracker settings</a>',
+        ]
+    }
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a
