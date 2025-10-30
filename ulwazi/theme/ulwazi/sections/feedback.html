@@ -1,10 +1,5 @@
 {% if feedback %}
 <div class="content-icon-container">
-  <div class="github-issue-link-container">
-    <a class="muted-link github-issue-link"
-       href="https://github.com/canonical/kafka-operator/issues/new?title=docs%3A+TYPE+YOUR+QUESTION+HERE&amp;body=*Please describe the question or issue you're facing with &quot;Charmed Apache Kafka documentation&quot;.*%0A%0A%0A%0A%0A---%0A*Reported+from%3A+https://documentation.ubuntu.com/charmed-kafka/3/*"
-       target="_blank">Give feedback</a>
-  </div>
   {%- if github_url and pagename -%}
     {%- if page_source_suffix is defined -%}
       {%- set source_file_extension = page_source_suffix -%}
@@ -18,6 +13,11 @@
     {%- set view_url = default_view_url -%}
     <!-- Warning: lacking parameters in conf.py: guthub_url or pagename -->
   {%- endif -%}
+  <div class="github-issue-link-container">
+    <a class="muted-link github-issue-link"
+       href="{{ github_url }}/issues/new?title=docs%3A+TYPE+YOUR+QUESTION+HERE&amp;body=*Please describe the question or issue you're facing with &quot;Charmed Apache Kafka documentation&quot;.*%0A%0A%0A%0A%0A---%0A*Reported+from%3A+{{ pagename }}"
+       target="_blank">Give feedback</a>
+  </div>
   <div class="edit-this-page muted-link">
     <a class="p-icon--edit" 
        href="{{ edit_url }}"
