@@ -4,6 +4,7 @@ stylesheets = [
     "css/vanilla-main.css",
     "css/default.css",
     "css/skeleton.css",
+    "css/feedback.css",
     "css/sidenav.css",
     "css/tasklist.css",
     "css/local-toc.css",

@@ -113,8 +113,9 @@ html_context = {
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
     # 
+    # Inherit project name
+    "project": project, 
     # Inherit the author value
-    # 
     "author": author,
     # Licensing information
     # 
@@ -148,7 +149,7 @@ html_context = {
     #
     # NOTE: If set, links for viewing the documentation source files
     #       and creating GitHub issues are added at the bottom of each page.
-    "github_url": "https://github.com/canonical/sphinx-docs-starter-pack",
+    "github_url": "https://github.com/canonical/ulwazi",
     # Docs branch in the repo; used in links for viewing the source files
     #
     # TODO: To customise the branch, uncomment and update as needed.
@@ -164,7 +165,13 @@ html_context = {
     "display_contributors": False,
 
     # Required for feedback button    
+    "feedback": True,
     "github_issues": "enabled",
+    "default_source_extension": ".md",
+    "default_edit_url": "https://github.com/canonical/ulwazi/edit/main/docs/index.rst",
+    "default_view_url": "https://github.com/canonical/ulwazi/blob/main/docs/index.rst",
+
+    # Horizontal Nav Menu
     "company": "Canonical",
     "link1_URL": "https://snapcraft.io/",
     "link1_name": "First optional link",
