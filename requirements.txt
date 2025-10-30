@@ -11,4 +11,6 @@ beautifulsoup4
 packaging
 sphinxcontrib-svg2pdfconverter[CairoSVG]
 sphinx-last-updated-by-git
+sphinx-design
 sphinx-sitemap
+sphinx-tabs

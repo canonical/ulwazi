@@ -328,6 +328,8 @@ extensions = [
     "canonical_sphinx_config",
     "myst_parser",
     "sphinxcontrib.jquery",
+    "sphinx_tabs.tabs",
+    "sphinx_design"
 ]
 
 # Excludes files or directories from processing

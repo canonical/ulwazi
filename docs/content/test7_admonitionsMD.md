@@ -2,8 +2,8 @@
 
 This `is an inline code test` in `markdown`.
 
+(note-reference)=
 :::{note}
-:name: note-reference
 This note admonition has a reference target name that is referenced at the bottom of this page.
 :::
 
@@ -51,4 +51,4 @@ This is a warning admonition
 This is a generic admonition
 :::
 
-[This is a reference to the note admonition above](#note-reference)
+{ref}`This is a reference to the note admonition above <note-reference>`

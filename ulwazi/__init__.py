@@ -1,10 +1,13 @@
+import importlib.util
 from os import path
 from pathlib import Path
-import importlib.util
 from typing import Any, Dict
+
 import sphinx.application
-from .navigation import get_navigation_tree
 from bs4 import BeautifulSoup
+
+from .navigation import get_navigation_tree
+from .tabs import convert_tabs
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
@@ -50,6 +53,7 @@ def config_inited(app, config):  # noqa: ANN401
         "js/dropdown.js",
         # "js/main.js"
         "js/product_menu.js",
+        "js/vanilla-tabs.js",
         "js/nav-toggle.js",
     ]
 
@@ -296,7 +300,6 @@ def _html_page_context(
     context: Dict[str, Any],
     doctree: Any,
 ) -> None:
-
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(context)
 
@@ -313,3 +316,4 @@ def _html_page_context(
         context["body"] = apply_list_classes(context["body"])
         context["body"] = apply_admonition_classes(context["body"])
         context["body"] = modify_inline_code(context["body"])
+        context["body"] = convert_tabs(context["body"])
