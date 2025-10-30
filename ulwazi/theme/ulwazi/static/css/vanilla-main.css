@@ -11881,52 +11881,50 @@ ol.u-text-max-width,
   Typography classes.
 */
 .p-heading--1 {
-  font-weight: 450;
-  font-size: 32px;
-  line-height: 40px;
-  padding-top: 0.62px;
-  padding-bottom: 6px;
-  margin: 0;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 2.5rem;
 }
 
 .p-heading--2 {
-  font-weight: 200;
-  font-size: 32px;
-  line-height: 40px;
-  padding-top: 0.62px;
-  padding-bottom: 7.38px;
-  margin: 0;
+  font-weight: 300;
+  font-size: 2rem;
+  line-height: 2.5rem;
 }
 
 .p-heading--3 {
-  font-weight: 450;
-  font-size: 24px;
-  line-height: 32px;
-  padding-top: 7.5px;
-  padding-bottom: 8.49px;
-  margin: 0;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .p-heading--4 {
-  font-weight: 250;
-  font-size: 24px;
-  line-height: 32px;
-  padding-top: 7.5px;
-  padding-bottom: 8.49px;
-  margin: 0;
+  font-weight: 300;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.p-heading--5 {
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+}
+
+.p-heading--6 {
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
 }
 
 p {
   font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  padding-top: 1.24px;
-  padding-bottom: 14.76px;
-  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
-.align-right {
-  text-align: right;
+th > p {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .l-docs__footer p {
@@ -12120,6 +12118,18 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 */
 .heading-test-scss {
   color: purple;
+}
+
+.p-list__item p {
+  margin-bottom: 0;
+}
+
+.p-list__item p {
+  margin-bottom: 0;
+}
+
+dd p {
+  margin-bottom: 0;
 }
 
 [class*="--dark"] [class*=p-icon--],
