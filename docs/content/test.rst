@@ -11,8 +11,9 @@ Test content.
    test4
    test6_admonitions
    test7_admonitionsMD
-   test_sphinx_design_tabs_myst
    test_sphinx_tabs_myst
+   test_sphinx_tabs
+
 
 
 Nest test

@@ -384,8 +384,8 @@ Simple table with rst-class directive, right aligned:
   ======== ========
   Header 1 Header 2
   ======== ========
-  [1,1]    [1,2]   
-  [1,2]    [2,2] 
+  [1,1]    [1,2]
+  [1,2]    [2,2]
   ======== ========
 
 
@@ -418,7 +418,7 @@ Use ``.. figure::`` to include a caption, and to reference the image in text.
 
    Figure caption
 
-Images can be inserted in-line |logo| via a substitution. 
+Images can be inserted in-line |logo| via a substitution.
 
 .. |logo| image:: https://assets.ubuntu.com/v1/fdd161e2-canonical_logo_16.png
 
@@ -447,33 +447,15 @@ Sphinx-design tabs
 
     .. tab-item:: Tab 1
 
-        Content Tab 1
+        Content for tab 1
 
     .. tab-item:: Tab 2
 
-        Content Tab 2
+        Content for tab 2
 
     .. tab-item:: Tab 3
 
-        Content Tab 3
-
-
-Sphinx-tabs
-~~~~~~~~~~~
-
-.. tabs::
-
-   .. tab:: Tab 1
-
-      Content Tab 1
-
-   .. tab:: Tab 2
-
-      Content Tab 2
-
-   .. tab:: Tab 3
-
-      Content Tab 3
+        Content for tab 3
 
 
 Glossary

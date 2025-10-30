@@ -308,7 +308,7 @@ Use the `{figure}` directive to include a caption, and to reference the image in
    Figure caption
 ```
 
-Images can be inserted in-line ![logo] via a substitution. 
+Images can be inserted in-line ![logo] via a substitution.
 
 [logo]: https://assets.ubuntu.com/v1/fdd161e2-canonical_logo_16.png
 
@@ -356,23 +356,6 @@ Content Tab 3
 
 ````
 
-### Sphinx tabs
-
-````{tabs}
-```{tab} Tab 1
-
-Content Tab 1
-```
-
-```{tab} Tab 2
-Content Tab 2
-```
-
-```{tab} Tab 3
-Content Tab 3
-```
-
-````
 
 
 ## Glossary

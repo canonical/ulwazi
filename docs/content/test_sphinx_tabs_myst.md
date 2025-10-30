@@ -1,37 +1,56 @@
 # Sphinx tabs (MyST)
 
+This is implementation tests for [sphinx-tabs extension](https://sphinx-tabs.readthedocs.io/en/latest/).
+
 ````{tabs}
 ```{tab} Tab 1
 
-Content Tab 1
+Content for Tab 1
 ```
 
 ```{tab} Tab 2
-Content Tab 2
+Content for Tab 2
 ```
 
 ```{tab} Tab 3
-Content Tab 3
+Content for Tab 3
 ```
 
 ````
 
 
-## Another tab set
+## Synced tabs
+
+This is example 1:
 
 ````{tabs}
-```{tab} Tab 1
+```{tab} Synced tab 1
 
-Another content tab 1
+Content for tab 1 in **tab set 1**
 ```
 
-```{tab} Tab 2
-Another content tab 2
+```{tab} Synced tab 2
+Content for tab 2 in **tab set 1**
 ```
 
-```{tab} Tab 3
-Another content tab 3
+```{tab} Synced tab 3
+Content for tab 3 in **tab set 1**
 ```
 
 ````
 
+This is example 2:
+
+````{tabs}
+```{tab} Synced tab 1
+
+Content for tab 1 in **tab set 2**
+```
+
+```{tab} Synced tab 2
+Content for tab 2 in **tab set 2**
+```
+```{tab} Synced tab 3
+Content for tab 3 in **tab set 2**
+```
+````
