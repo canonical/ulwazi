@@ -1,4 +1,4 @@
-# Ulwazi
+# Ulwazi Sphinx theme
 
 Ulwazi, Xhosa for information, is a work-in-progress Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
 
