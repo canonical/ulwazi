@@ -113,8 +113,9 @@ html_context = {
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
     # 
+    # Inherit project name
+    "project": project, 
     # Inherit the author value
-    # 
     "author": author,
     # Licensing information
     # 
