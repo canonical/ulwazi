@@ -308,7 +308,7 @@ Use the `{figure}` directive to include a caption, and to reference the image in
    Figure caption
 ```
 
-Images can be inserted in-line ![logo] via a substitution. 
+Images can be inserted in-line ![logo] via a substitution.
 
 [logo]: https://assets.ubuntu.com/v1/fdd161e2-canonical_logo_16.png
 
@@ -329,18 +329,34 @@ Keys can be defined at the top of a file, or in a `myst_substitutions` option in
    :end-before: [include_end]
 ```
 
-<!-- ## Tabs
+## Tabs
+
+
+### Sphinx-design tabs
+
 
 ````{tab-set}
+
 ```{tab-item} Tab 1
+:sync: key1
 
 Content Tab 1
 ```
 
 ```{tab-item} Tab 2
+:sync: key2
+
 Content Tab 2
 ```
-```` -->
+
+```{tab-item} Tab 3
+:sync: key3
+Content Tab 3
+```
+
+````
+
+
 
 ## Glossary
 
