@@ -295,7 +295,8 @@ linkcheck_retries = 3
 
 myst_enable_extensions = {
     "colon_fence",
-    "tasklist",
+    "deflist",
+    "tasklist"
 }
 
 
