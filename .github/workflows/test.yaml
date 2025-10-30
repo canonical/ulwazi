@@ -17,11 +17,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install PDF dependencies
+        run: sudo make pdf-prep-force
+
       - name: Build SCSS
         run: make vanilla-main
       
       - name: Build HTML
         run: make html
+
+      - name: Build PDF
+        run: make pdf
 
       - name: Run tests
         run: make test
