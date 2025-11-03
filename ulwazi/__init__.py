@@ -173,7 +173,7 @@ def apply_admonition_classes(body_html:str) -> str:
                             title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
                             title.string = child.string
                         case 'Hint':
-                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--positive","id":div_id})
+                            div_tag = soup.new_tag("div", attrs={"class":"p-notification--positive p-notification--hint","id":div_id})
                             title = soup.new_tag("h5",attrs={"class":"p-notification__title"})
                             title.string = child.string
                         case 'Important':
