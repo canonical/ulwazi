@@ -4,21 +4,25 @@
 
 {% block content %}
 <main class="l-docs__main" id="content">
-  <div class="sb-article-container">
-    <article role="main">
-        {% block before_results -%}
-        <noscript>
-          <div class="admonition error">
-            <p class="admonition-title">{% trans %}Error{% endtrans %}</p>
-            <p>
-              {% trans %}Please activate JavaScript to enable the search functionality.{% endtrans %}
-            </p>
-          </div>
-        </noscript>
-        {%- endblock %}
-        <div id="search-results"></div>
-        {% block after_results %}{% endblock %}
-      </article>
+  <div class="row">
+    <div class="col-12">
+      <div class="sb-article-container">
+        <article role="main">
+          {% block before_results -%}
+          <noscript>
+            <div class="admonition error">
+              <p class="admonition-title">{% trans %}Error{% endtrans %}</p>
+              <p>
+                {% trans %}Please activate JavaScript to enable the search functionality.{% endtrans %}
+              </p>
+            </div>
+          </noscript>
+          {%- endblock %}
+          <div id="search-results"></div>
+          {% block after_results %}{% endblock %}
+        </article>
+      </div>
+    </div>
   </div>
 </main>
 {% endblock content %}
