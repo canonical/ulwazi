@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html{% block html_tag_attrs %}{% endblock %}>
+<html{% block html_tag_attrs %} lang="{{ language }}" data-content_root="{{ content_root }}"{% endblock %}>
 <head>
   {% block head_meta -%}
 
@@ -61,7 +61,9 @@
   {% block head_extra %}{% endblock %}
 </head>
 <body{% block body_tag_attrs %}{% endblock %}>
-  {% block body %}{% endblock body -%}
+  {% block body %}
+  <article role="main"></article>
+  {% endblock body -%}
   {% block body_javascript -%}
   {% for js in script_files -%}
     {{ js_tag(js) }}
