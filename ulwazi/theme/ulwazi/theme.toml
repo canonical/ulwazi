@@ -8,6 +8,7 @@ stylesheets = [
     "css/sidenav.css",
     "css/tasklist.css",
     "css/local-toc.css",
+    "css/search.css",
     "css/vanilla-main.css",
 ]
 sidebars = [
