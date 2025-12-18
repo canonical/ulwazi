@@ -39,9 +39,11 @@
   {% endblock sidebar_secondary %}
   {% block content %}
   <main class="l-docs__main" id="content">
-    {# include "sections/header-article.html" #}
-    {% include "sections/article.html" %}
-    {# include "sections/footer-article.html" #}
+    <article role="main">
+      {# include "sections/header-article.html" #}
+      {% include "sections/article.html" %}
+      {# include "sections/footer-article.html" #}
+    </article>
   </main>
   {% endblock content %}
   {% block footer_content %}

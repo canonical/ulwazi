@@ -1,6 +1,17 @@
 {% extends "page.html" %}
 
-{% block head_title %}{{ _("Search") }} - {{ docstitle }}{% endblock head_title %}
+{%- block regular_scripts -%}
+  {% block body_javascript -%}
+    {{ super() }}
+    <script src="{{ pathto('_static/searchtools.js', 1) }}"></script>
+    <script src="{{ pathto('_static/language_data.js', 1) }}"></script>
+    <script src="{{ pathto('searchindex.js', 1) }}"></script>
+  {%- endblock body_javascript %}
+{%- endblock regular_scripts-%}
+
+{%- block htmltitle -%}
+<title>{{ _("Search") }} - {{ docstitle }}</title>
+{%- endblock htmltitle -%}
 
 {% block content %}
 <main class="l-docs__main" id="content">
@@ -27,9 +38,7 @@
 </main>
 {% endblock content %}
 
-{% block body_javascript -%}
+{% block site_meta %}
 {{ super() }}
-<script src="{{ pathto('_static/language_data.js', 1) }}"></script>
-<script src="{{ pathto('_static/searchtools.js', 1) }}"></script>
-<script src="{{ pathto('searchindex.js', 1) }}"></script>
-{%- endblock body_javascript %}
+<meta name="robots" content="noindex" />
+{% endblock site_meta %}
