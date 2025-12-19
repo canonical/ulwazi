@@ -12132,6 +12132,32 @@ dd p {
   margin-bottom: 0;
 }
 
+/*
+  copy-button formatting
+*/
+button.copybtn,
+button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.highlight button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
+}
+
+.copybtn.o-tooltip--left[data-tooltip]::before,
+.copybtn.o-tooltip--left[data-tooltip]::after {
+  content: none !important;
+  display: none !important;
+}
+
+.input button.copybtn {
+  background-color: transparent !important;
+  z-index: 999;
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);

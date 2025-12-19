@@ -336,7 +336,8 @@ extensions = [
     "myst_parser",
     "sphinxcontrib.jquery",
     "sphinx_tabs.tabs",
-    "sphinx_design"
+    "sphinx_design",
+    "sphinx_terminal"
 ]
 
 # Excludes files or directories from processing

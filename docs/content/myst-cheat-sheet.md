@@ -54,6 +54,10 @@ code:
   - example: true
 ```
 
+```{code-block}
+test code
+```
+
 ### Syntax highlighting
 
 YAML:
@@ -122,6 +126,18 @@ else:
 if os.path.exists("./reuse/substitutions.yaml"):
     with open("./reuse/substitutions.yaml", "r") as fd:
         myst_substitutions = yaml.safe_load(fd.read())
+```
+## Terminal directives
+
+```{terminal}
+:copy:
+:user: ubuntu
+:host: vm
+
+command number one
+
+output line one
+output line two
 ```
 
 (a_section_target_myst)=

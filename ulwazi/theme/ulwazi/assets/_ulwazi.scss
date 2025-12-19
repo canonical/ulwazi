@@ -297,3 +297,31 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 dd p {
     margin-bottom: 0;
 }
+
+/*
+  copy-button formatting
+*/
+
+button.copybtn,
+button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.highlight button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
+}
+
+// Disable tooltip for copy buttons only
+.copybtn.o-tooltip--left[data-tooltip]::before,
+.copybtn.o-tooltip--left[data-tooltip]::after {
+  content: none !important;
+  display: none !important;
+}
+
+.input button.copybtn{
+  background-color: transparent !important;
+  z-index: 999;
+}

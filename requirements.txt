@@ -14,3 +14,4 @@ sphinx-last-updated-by-git
 sphinx-design
 sphinx-sitemap
 sphinx-tabs
+sphinx-terminal~=1.0.1

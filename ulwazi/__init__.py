@@ -225,6 +225,26 @@ def modify_inline_code(body_html: str) -> str:
 
     return str(soup)
 
+def modify_terminal_code(body_html: str) -> str:
+    """Modify terminal directive code elements in the HTML."""
+    if not body_html:
+        return body_html
+
+    soup = BeautifulSoup(body_html, "html.parser")
+
+    for code in soup.find_all("code", class_="command docutils literal notranslate"):
+        child_tags = code.findChildren()
+        child_text = []
+        for child in child_tags:
+            child_text.append(child.string)
+            child.decompose()
+
+        code.string = " ".join(child_text)
+        if "class" in code.attrs:
+            del code["class"]
+
+    return str(soup)
+
 def modify_local_toc(toc:str) -> str:
     """Modify localtoc to apply Vanilla Framework styles"""
     if not toc:
@@ -316,4 +336,5 @@ def _html_page_context(
         context["body"] = apply_list_classes(context["body"])
         context["body"] = apply_admonition_classes(context["body"])
         context["body"] = modify_inline_code(context["body"])
+        #context["body"] = modify_terminal_code(context["body"])
         context["body"] = convert_tabs(context["body"])
