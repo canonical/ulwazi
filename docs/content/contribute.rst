@@ -75,8 +75,8 @@ for contributing to this theme:
 - ``ulwazi/__init__.py``  -- Theme initialization and core hooks
 - ``ulwazi/navigation.py``  -- Manages the global TOC navigation tree
 - ``ulwazi/theme/ulwazi/`` -- Contains all theme files:
-  
-  - ``theme.conf``         -- Theme configuration
+
+  - ``theme.toml``         -- Theme configuration
   - ``static/``            -- Static assets (CSS, JS, images)
   - HTML files         -- Jinja templates used by Sphinx (look for ``.html`` files)
 
