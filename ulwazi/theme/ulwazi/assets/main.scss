@@ -21,22 +21,6 @@
 @include vf-p-icon-edit;
 @include vf-p-icon-show;
 
-// Documentation specific Values for typography
-$font-weight-h1: 450;
-$font-size-h1: 32px;
-$font-weight-h2: 200;
-$font-size-h2: 32px; 
-$font-weight-h3: 450;
-$font-size-h3: 24px;
-$font-weight-h4: 250;
-$font-size-h4: 24px;
-$font-weight-p: 400;
-$font-size-p: 14px;
-
-$font-base-family: 'Ubuntu, Arial, "libra sans", sans-serif';
-$font-monospace: '"Ubuntu Mono", Consolas, Monaco, Courier, monospace';
-$font-base-size: 1rem;
-$font-heading-family: $font-base-family;
 // Custom styles
 
 .heading-test-scss{
