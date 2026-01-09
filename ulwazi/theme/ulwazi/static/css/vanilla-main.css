@@ -12521,8 +12521,8 @@ p > [class*=p-icon] {
 }
 
 .p-heading--1 {
-  font-weight: 450;
-  font-size: 32px;
+  font-weight: 500;
+  font-size: 2rem;
   line-height: 40px;
   padding-top: 0.62px;
   padding-bottom: 6px;
@@ -12530,8 +12530,8 @@ p > [class*=p-icon] {
 }
 
 .p-heading--2 {
-  font-weight: 200;
-  font-size: 32px;
+  font-weight: 300;
+  font-size: 2rem;
   line-height: 40px;
   padding-top: 0.62px;
   padding-bottom: 7.38px;
@@ -12539,8 +12539,8 @@ p > [class*=p-icon] {
 }
 
 .p-heading--3 {
-  font-weight: 450;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 1.5rem;
   line-height: 32px;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
@@ -12548,8 +12548,8 @@ p > [class*=p-icon] {
 }
 
 .p-heading--4 {
-  font-weight: 250;
-  font-size: 24px;
+  font-weight: 300;
+  font-size: 1.5rem;
   line-height: 32px;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
@@ -12558,7 +12558,7 @@ p > [class*=p-icon] {
 
 p {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 20px;
   padding-top: 1.24px;
   padding-bottom: 14.76px;
