@@ -90,3 +90,7 @@ p {
   padding-bottom: 14.76px;
   margin: 0;
 }
+// Code blocks font size fix
+pre {
+  font-size: $font-base-size;
+}
