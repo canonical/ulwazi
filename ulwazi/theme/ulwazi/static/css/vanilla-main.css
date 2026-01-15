@@ -12169,6 +12169,10 @@ div.input > button.copybtn svg {
   margin-bottom: 0;
 }
 
+div.terminal > div.input > button.copybtn svg {
+  color: #f8f8f8 !important;
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);

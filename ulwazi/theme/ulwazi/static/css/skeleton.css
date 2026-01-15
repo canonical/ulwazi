@@ -297,7 +297,7 @@ article {
   }
 }
 
-/* .icon {
+.icon {
   --readthedocs-font-size: 0.725rem;
   --readthedocs-flyout-header-font-size: 0.845rem;
   --readthedocs-flyout-font-size: 0.725rem;
@@ -313,7 +313,7 @@ article {
   height: 1rem;
   width: 1rem;
   color: rgb(17, 17, 17);
-} */
+}
 
 .visually-hidden {
   position: absolute !important;
