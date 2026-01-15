@@ -1,4 +1,8 @@
 @charset "UTF-8";
+/*
+  Vanilla settings and variables. These values are put into memory _before_ Vanilla is
+  rendered, so they cascade down the Vanilla stack.
+*/
 .p-rule.is-fixed-width,
 .p-rule--muted.is-fixed-width,
 .p-rule--highlight.is-fixed-width, hr.is-fixed-width {
@@ -286,10 +290,6 @@
     However, it looks fine on all themes, and re-working it to support theming is a larger undertaking.
     So, it is being left as-is until it can be revisited as part of the tokens effort in the future.
  */
-/*
-  Vanilla settings and variables. These values are put into memory _before_ Vanilla is
-  rendered, so they cascade down the Vanilla stack.
-*/
 /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
   ========================================================================== */
@@ -12563,6 +12563,10 @@ p {
   padding-top: 1.24px;
   padding-bottom: 14.76px;
   margin: 0;
+}
+
+pre {
+  font-size: 0.875rem;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */
