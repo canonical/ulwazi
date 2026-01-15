@@ -12158,6 +12158,17 @@ button.copybtn:hover {
   z-index: 999;
 }
 
+div.input > button.copybtn svg {
+  height: 1.4em !important;
+  width: 1.4em !important;
+}
+
+/* terminal formatting */
+.terminal-code pre {
+  color: #ebebeb !important;
+  margin-bottom: 0;
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);

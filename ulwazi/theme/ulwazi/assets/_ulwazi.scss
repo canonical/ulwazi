@@ -327,3 +327,16 @@ button.copybtn:hover {
   background-color: transparent !important;
   z-index: 999;
 } 
+
+div.input > button.copybtn svg {
+  height: 1.4em !important;
+  width: 1.4em !important;
+}
+
+/* terminal formatting */
+.terminal-code pre {
+  color:#ebebeb !important;
+  margin-bottom: 0;
+}
+
+
