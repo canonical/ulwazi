@@ -326,6 +326,7 @@ myst_enable_extensions = {
 #       - youtube-links
 
 extensions = [
+    "sphinx_terminal",
     "sphinxcontrib.cairosvgconverter",
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
@@ -337,7 +338,6 @@ extensions = [
     "sphinxcontrib.jquery",
     "sphinx_tabs.tabs",
     "sphinx_design",
-    "sphinx_terminal"
 ]
 
 # Excludes files or directories from processing

@@ -302,6 +302,7 @@ dd p {
   copy-button formatting
 */
 
+
 button.copybtn,
 button.copybtn:hover {
   background: none;
@@ -313,6 +314,7 @@ button.copybtn:hover {
   background: none;
   background-color: transparent !important;
 }
+  
 
 // Disable tooltip for copy buttons only
 .copybtn.o-tooltip--left[data-tooltip]::before,
@@ -324,4 +326,4 @@ button.copybtn:hover {
 .input button.copybtn{
   background-color: transparent !important;
   z-index: 999;
-}
+} 
