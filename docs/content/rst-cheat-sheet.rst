@@ -135,6 +135,18 @@ Python:
        with open("./reuse/substitutions.yaml", "r") as fd:
            myst_substitutions = yaml.safe_load(fd.read())
 
+Terminal:
+
+.. terminal::
+  :copy:
+  :user: ubuntu
+  :host: vm
+
+  command number one
+
+  output line one
+  output line two
+
 .. _a_section_target:
 
 Links
