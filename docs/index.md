@@ -57,9 +57,8 @@ Subsections inherit the same spacing and typography tokens.
 And a return to the higher-level section.
 
 ```{rst-class} heading-test-scss
-```
-
 This is a test about SCSS propagation.
+```
 
 ```{toctree}
 :hidden:
