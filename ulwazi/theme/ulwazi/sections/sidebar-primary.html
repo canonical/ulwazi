@@ -1,5 +1,14 @@
 {%- macro sidebar() %}
-    <div class="sphinxsidebarwrapper">
+    <nav class="p-side-navigation--raw-html is-sticky" id="drawer" aria-label="Table of contents">
+      <div class="u-hide--large p-strip is-shallow">
+        <div class="u-fixed-width">
+          <button class="p-side-navigation__toggle js-drawer-toggle" aria-controls="drawer">
+            Toggle side navigation
+          </button>
+        </div>
+      </div>
+
+      <div class="p-side-navigation__overlay js-drawer-toggle" aria-controls="drawer"></div>
         {%- block sidebarlogo %}
         {%- if logo_url %}
         <p class="logo"><a href="{{ pathto(root_doc)|e }}">
@@ -10,8 +19,10 @@
     {%- for sidebartemplate in sidebars %}
     {%- include sidebartemplate %}
     {%- endfor %}
+    </nav>
 {%- endmacro %}
 
 {%- include "components/toggle-sidebar-primary.html" %}
-{%- block sidebar %}{{ sidebar() }}{% endblock %}
-
+<aside class="l-docs__sidebar">
+  {%- block sidebar %}{{ sidebar() }}{% endblock %}
+</aside>

@@ -1,3 +1,17 @@
+<!--
+  Information about the page content itself, such as the edit button and edit timestamp.
+  Currently, this is a placeholder for future development.
+  Ideally, we'd reflow this under the title
+  -->
 {%- block htmltitle %}
-<title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+<div class="row">
+  <div class="col-12">
+      {% trans last_updated=last_updated|e -%}
+      <p class="p-text--small u-align--right">Last updated on {{ last_updated }}</p>
+      {%- endtrans -%}
+      <p class="p-text--small u-align--right">
+        <a href="https://github.com/canonical/vanilla-framework/issues/new/choose">Report an issue with this page</a>
+      </p>
+  </div>
+</div>
 {%- endblock %}

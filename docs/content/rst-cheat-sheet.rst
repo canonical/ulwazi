@@ -1,6 +1,6 @@
 :orphan:
 .. |br| raw:: html
-  
+
    <br />
 
 .. vale off
@@ -180,6 +180,9 @@ Lists
       - Item
    #. Sub-step 2
 
+Definition lists
+~~~~~~~~~~~~~~~~
+
 Term 1:
   Definition
 Term 2:
@@ -188,8 +191,9 @@ Term 2:
 Tables
 ------
 
-rST supports four table implementations: grid, list, CSV, and simple. Grid and simple tables can also use 
-the table directive or the  rst-class directive to provide more options.
+rST supports four table implementations: grid, list, CSV, and simple. Grid and simple
+tables can also use the table directive or the  rst-class directive to provide more
+options.
 
 Grid tables
 ~~~~~~~~~~~
@@ -308,7 +312,7 @@ List table, right aligned:
 
 CSV tables
 ~~~~~~~~~~
-     
+
 CSV table, default aligned:
 
 .. csv-table::
@@ -336,8 +340,8 @@ Simple table, default aligned (no alignment options):
 ======== ========
 Header 1 Header 2
 ======== ========
-[1,1]    [1,2]   
-[1,2]    [2,2] 
+[1,1]    [1,2]
+[1,2]    [2,2]
 ======== ========
 
 Simple with table directive, default aligned:
@@ -348,8 +352,8 @@ Simple with table directive, default aligned:
   ======== ========
   Header 1 Header 2
   ======== ========
-  [1,1]    [1,2]   
-  [1,2]    [2,2] 
+  [1,1]    [1,2]
+  [1,2]    [2,2]
   ======== ========
 
 Simple with table directive, right aligned:
@@ -361,30 +365,30 @@ Simple with table directive, right aligned:
   ======== ========
   Header 1 Header 2
   ======== ========
-  [1,1]    [1,2]   
-  [1,2]    [2,2] 
+  [1,1]    [1,2]
+  [1,2]    [2,2]
   ======== ========
 
 Simple table with rst-class directive, default aligned:
 
 .. rst-class:: align-default
-  
+
   ======== ========
   Header 1 Header 2
   ======== ========
-  [1,1]    [1,2]   
-  [1,2]    [2,2] 
+  [1,1]    [1,2]
+  [1,2]    [2,2]
   ======== ========
 
 Simple table with rst-class directive, right aligned:
 
 .. rst-class:: align-right
-  
+
   ======== ========
   Header 1 Header 2
   ======== ========
-  [1,1]    [1,2]   
-  [1,2]    [2,2] 
+  [1,1]    [1,2]
+  [1,2]    [2,2]
   ======== ========
 
 
@@ -405,14 +409,22 @@ Notes
 
 Images
 ------
+Use ``.. image::`` for simple images without captions.
 
 .. image:: https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png
+
+Use ``.. figure::`` to include a caption, and to reference the image in text.
 
 .. figure:: https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png
    :width: 100px
    :alt: Alt text
 
    Figure caption
+
+Images can be inserted in-line |logo| via a substitution.
+
+.. |logo| image:: https://assets.ubuntu.com/v1/fdd161e2-canonical_logo_16.png
+
 
 Reuse
 -----
@@ -425,18 +437,28 @@ Reuse
    :start-after: [include_start]
    :end-before: [include_end]
 
+Tabs
+----
+
+Sphinx-design tabs
+~~~~~~~~~~~~~~~~~~
+
 .. Tabs
 .. ----
 
-.. .. tab-set::
+.. tab-set::
 
-..    .. tab-item:: Tab 1
+    .. tab-item:: Tab 1
 
-..       Content Tab 1
+        Content for tab 1
 
-..    .. tab-item:: Tab 2
+    .. tab-item:: Tab 2
 
-..       Content Tab 2
+        Content for tab 2
+
+    .. tab-item:: Tab 3
+
+        Content for tab 3
 
 
 Glossary

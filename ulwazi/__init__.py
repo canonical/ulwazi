@@ -1,10 +1,13 @@
+import importlib.util
 from os import path
 from pathlib import Path
-import importlib.util
 from typing import Any, Dict
+
 import sphinx.application
-from .navigation import get_navigation_tree
 from bs4 import BeautifulSoup
+
+from .navigation import get_navigation_tree
+from .tabs import convert_tabs
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
@@ -50,6 +53,7 @@ def config_inited(app, config):  # noqa: ANN401
         "js/dropdown.js",
         # "js/main.js"
         "js/product_menu.js",
+        "js/vanilla-tabs.js",
         "js/nav-toggle.js",
         "js/search.js",
     ]
@@ -110,12 +114,36 @@ def apply_heading_classes(body_html: str) -> str:
 
     return str(soup)
 
+def apply_list_classes(body_html: str) -> str:
+    """Add custom CSS classes to list items in the generated body HTML."""
+    if not body_html:
+        return body_html
+
+    LIST_STYLES = {
+        "ul": "p-list--unordered",
+        "ol": "p-list--ordered",
+        "li": "p-list__item",
+        "ul.simple": "p-list--unordered p-list--simple",
+        "ol.simple": "p-list--ordered p-list--simple",
+
+    }
+
+    soup = BeautifulSoup(body_html, "html.parser")
+    for tag_name, class_name in LIST_STYLES.items():
+        for tag in soup.find_all(tag_name):
+            existing_classes = tag.get("class", [])
+            if class_name not in existing_classes:
+                existing_classes.append(class_name)
+            tag["class"] = existing_classes
+
+    return str(soup)
+
 def apply_admonition_classes(body_html:str) -> str:
     """Convert admonition classes to notifications in the generated body HTML"""
     if not body_html:
         return body_html
 
-    soup = BeautifulSoup(body_html, "html.parser")     
+    soup = BeautifulSoup(body_html, "html.parser")
 
     admonitions = soup.find_all(class_="admonition")
     generic = soup.find_all(class_="admonition-generic-admonition")
@@ -273,7 +301,6 @@ def _html_page_context(
     context: Dict[str, Any],
     doctree: Any,
 ) -> None:
-   
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(context)
 
@@ -287,5 +314,7 @@ def _html_page_context(
     # Modify the body of the content
     if "body" in context:
         context["body"] = apply_heading_classes(context["body"])
+        context["body"] = apply_list_classes(context["body"])
         context["body"] = apply_admonition_classes(context["body"])
         context["body"] = modify_inline_code(context["body"])
+        context["body"] = convert_tabs(context["body"])

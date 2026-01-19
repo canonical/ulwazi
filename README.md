@@ -1,4 +1,4 @@
-# Ulwazi
+# Ulwazi Sphinx theme
 
 Ulwazi, Xhosa for information, is a work-in-progress Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
 
@@ -54,7 +54,7 @@ The theme files are located in the `ulwazi` folder:
 * `__init__.py` -- initialization script for the theme.
 * `navigation.py` -- modifies the global TOC navigation tree
 * `theme/ulwazi/` -- contains the theme files
-  * theme.conf -- theme configuration file
+  * theme.toml -- theme configuration file
   * static -- static content to be used by the theme without processing
   * other files -- HTML templates for Sphinx using Jinja templating engine
 

@@ -9,7 +9,6 @@ body {
 }
 
 /* All the flexbox magic! */
-body,
 .sb-announcement,
 .sb-content,
 .sb-main,
@@ -24,7 +23,6 @@ body,
 }
 
 /* These order things vertically */
-body,
 .sb-main,
 .sb-article-container {
   flex-direction: column;
@@ -126,6 +124,10 @@ article {
 }
 #sb-sidebar-toggle--secondary:checked ~ .sb-container .sb-sidebar-secondary {
   right: 0;
+}
+
+.sb-container {
+  margin-top: 8px;
 }
 
 /* Full-width mode */

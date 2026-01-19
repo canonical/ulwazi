@@ -11,7 +11,7 @@
     padding: 0.25rem 1rem 0.25rem 1.5rem;
     text-decoration: none;
     box-sizing: border-box;
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: 550;
     line-height: 1.5rem;
 }
@@ -26,12 +26,12 @@ li[class*=' toctree'], li[class^='toctree'] {
     padding-left: 0;
 }
 
-/* Collapsible element icon */
-.icon {
+/* Collapsible element icon (scoped to side navigation only) */
+.p-side-navigation__list .icon {
     --readthedocs-font-size: 0.725rem;
     --readthedocs-flyout-header-font-size: 0.845rem;
     --readthedocs-flyout-font-size: 0.725rem;
-    
+
     display: inline-block;
     width: 24px;
     height: 24px;
@@ -48,16 +48,16 @@ li[class*=' toctree'], li[class^='toctree'] {
     top: 6px;
 }
 
-.icon:hover {
+.p-side-navigation__list .icon:hover {
     background-color: var(--background-hover-color);
 }
 
-/* .icon.current {
+/* .p-side-navigation__list .icon.current {
     transform: rotate(90deg);
 } */
 
-/* SVG image styling for chevron icon */
-.svg {
+/* SVG image styling for chevron icon (scoped to side navigation only) */
+.p-side-navigation__list .svg {
     display: inline-block;
     width: 24px;
     height: 24px;
@@ -98,12 +98,13 @@ li[class*=' toctree'], li[class^='toctree'] {
 .toctree-checkbox ~ ul {
     display: none;
 }
-  
+
 .toctree-checkbox:checked ~ ul {
     display: block;
 }
-  
-.toctree-checkbox:checked ~ label .icon svg {
+
+/* Rotate icon when expanded (scoped to side navigation only) */
+.p-side-navigation__list .toctree-checkbox:checked ~ label .icon svg {
     transform: rotate(90deg);
 }
 
@@ -141,8 +142,12 @@ li[class*=' toctree'], li[class^='toctree'] {
     top: -5px;
 }
 
-/* Adjust position of icon inside a label inside a NavMenu item */
-.p-side-navigation__item > label i {
+/* Adjust position of icon inside a label inside a NavMenu item (scoped) */
+.p-side-navigation__list .p-side-navigation__item > label i {
     position: relative;
     top: 6px;
+}
+
+.p-side-navigation--raw-html li > a {
+    display: inline-flex;
 }

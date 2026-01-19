@@ -1,1 +1,17 @@
-{% include "localtoc.html" %}
+<div class="l-docs__meta">
+    <div class="l-docs__sticky-container">
+        <aside class="p-table-of-contents">
+            <div class="p-table-of-contents__section">
+                <div class="p-toc-feedback-block">
+                    {% include "sections/feedback.html" %}
+                </div>
+                <h2 class="p-table-of-contents__header">On this page</h2>
+                <nav class="p-table-of-contents__nav" aria-label="Table of contents">
+                    <ul class="p-table-of-contents__list p-list">
+                        {% include "localtoc.html" %}
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+    </div>
+</div>

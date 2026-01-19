@@ -1,49 +1,33 @@
 {% macro nav_logo() %}
-<div class="p-navigation__banner">
-  <div class="p-navigation__tagged-logo">
-    <a class="p-navigation__link" href= "{{ logo_link_URL }}">
-      <div class="p-navigation__logo-tag">        
-        <img class="p-navigation__logo-icon" src="{{ logo_img_URL }}" alt="Company logo">
-      </div>
-      <span class="p-navigation__logo-title"> {{ logo_title }}</span>
-    </a>
-  </div>
-  <ul class="p-navigation__items">
-    <!-- <li class="p-navigation__item">
-      <button class="js-search-button p-navigation__link--search-toggle">
-        <span class="p-navigation__search-label">Search</span>
-      </button>
-    </li> -->
-    <li class="p-navigation__item">
-      <button class="js-menu-button p-navigation__link">Menu</button>
-    </li>
-  </ul>
+<div class="p-navigation__tagged-logo">
+  <a class="p-navigation__link" href="#">
+    <div class="p-navigation__logo-tag">
+      <img class="p-navigation__logo-icon" src="https://assets.ubuntu.com/v1/82818827-CoF_white.svg" alt="">
+    </div>
+  <span class="p-navigation__logo-title">{{ logo_title }}</span>
+  </a>
 </div>
+<a href="#navigation" class="p-navigation__toggle--open" title="menu">Menu</a>
+<a href="#navigation-closed" class="p-navigation__toggle--close" title="close menu">Close menu</a>
 {% endmacro %}
 
 {% macro nav_items() %}
-<nav class="p-navigation__nav" aria-label="Main">
   <ul class="p-navigation__items">
     <li class="p-navigation__item">
-      <a class="p-navigation__link" href="https://{{ product_page }}">Product</a>
+      <a class="p-navigation__link" href="https://{{ product_page }}">{{ project }}</a>
     </li>
 
     {% if link1_name and link1_URL %}
-
     <li class="p-navigation__item">
       <a class="p-navigation__link" href="{{ link1_URL }}">{{ link1_name }}</a>
     </li>
-
     {% endif %}
-    {% if link2_name and link2_URL %}
 
+    {% if link2_name and link2_URL %}
     <li class="p-navigation__item">
       <a class="p-navigation__link" href="{{ link2_URL }}">{{ link2_name }}</a>
     </li>
-
     {% endif %}
-
-
     <li class="p-navigation__item--dropdown-toggle" id="link-2">
       <a href="#link-2-menu" aria-controls="link-2-menu" class="p-navigation__link">Resources</a>
       <ul class="p-navigation__dropdown" id="link-2-menu" aria-hidden="true">
@@ -73,27 +57,22 @@
       </ul>
     </li>
   </ul>
-</nav>
 {% endmacro %}
 
-
-<header id="navigation" class="p-navigation is-secondary is-dark">
-
-  {% if is_docs %}
+<header id="navigation" class="p-navigation is-dark">
+  <a href="#content" class="p-link--skip">Jump to main content</a>
   <div class="l-docs__subgrid">
     <div class="l-docs__sidebar">
-      {{ nav_logo() }}
+      <div class="p-navigation__banner">
+        {{ nav_logo() }}
+      </div>
     </div>
     <div class="l-docs__main">
       <div class="p-navigation__row u-fixed-width">
-        {{ nav_items() }}
+        <nav class="p-navigation__nav" aria-label="Main">
+          {{ nav_items() }}
+        </nav>
       </div>
     </div>
   </div>
-  {% else %}
-  <div class="p-navigation__row--25-75">
-    {{ nav_logo() }}
-    {{ nav_items() }}
-  </div>
-  {% endif %}
 </header>
