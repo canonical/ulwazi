@@ -135,17 +135,26 @@ Python:
        with open("./reuse/substitutions.yaml", "r") as fd:
            myst_substitutions = yaml.safe_load(fd.read())
 
-Terminal:
+
+Terminal blocks
+-----
+
+Terminal blocks are useful when specific emphasis is needed, such as the user name or location the command should be ran from, or the command output.
 
 .. terminal::
   :copy:
   :user: ubuntu
   :host: vm
 
-  command number one
+  make run
+  
+  [sphinx-autobuild] Starting initial build
+  [sphinx-autobuild] > python -m sphinx build -b dirhtml . _build -c . -d .sphinx/.doctrees -j auto
+  build succeeded.
+  The HTML pages are in _build.
+  [sphinx-autobuild] Serving on http://127.0.0.1:8000
+  [sphinx-autobuild] Waiting to detect changes...
 
-  output line one
-  output line two
 
 .. _a_section_target:
 

@@ -12169,6 +12169,11 @@ div.input > button.copybtn svg {
   margin-bottom: 0;
 }
 
+div.terminal {
+  margin-bottom: 1.5em;
+}
+
+/* Copybutton for terminals needs white icon rather than defualt black */
 div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }
