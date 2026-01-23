@@ -137,7 +137,7 @@ Python:
 
 
 Terminal blocks
------
+---------------
 
 Terminal blocks are useful when specific emphasis is needed, such as the user name or location the command should be ran from, or the command output.
 
