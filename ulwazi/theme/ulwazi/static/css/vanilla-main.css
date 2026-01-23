@@ -12138,9 +12138,9 @@ dd p {
 .p-search-box .p-search-box__button {
   background-color: #e95420 !important;
   border-left: none !important;
-}
-.p-search-box .p-search-box__button .p-icon--search {
-  filter: brightness(0) invert(1);
+  color: white !important;
+  font-weight: 500;
+  padding: 0 0.75rem;
 }
 .p-search-box .p-search-box__button:hover {
   background-color: rgb(194.7836734694, 64.6367346939, 19.2163265306) !important;

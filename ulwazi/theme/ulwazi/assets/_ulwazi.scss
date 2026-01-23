@@ -305,10 +305,9 @@ dd p {
 .p-search-box .p-search-box__button {
   background-color: #e95420 !important;
   border-left: none !important;
-  
-  .p-icon--search {
-    filter: brightness(0) invert(1); // Makes the icon white
-  }
+  color: white !important;
+  font-weight: 500;
+  padding: 0 0.75rem;
   
   &:hover {
     background-color: darken(#e95420, 10%) !important;
