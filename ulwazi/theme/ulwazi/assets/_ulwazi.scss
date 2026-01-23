@@ -348,3 +348,17 @@ div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }
 
+//  Custom search box button styling.
+
+.p-search-box .p-search-box__button {
+  background-color: #e95420 !important;
+  border-left: none !important;
+  
+  .p-icon--search {
+    filter: brightness(0) invert(1); // Makes the icon white
+  }
+  
+  &:hover {
+    background-color: darken(#e95420, 10%) !important;
+  }
+}
