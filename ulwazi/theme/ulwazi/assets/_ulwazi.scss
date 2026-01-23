@@ -297,3 +297,20 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 dd p {
     margin-bottom: 0;
 }
+
+/*
+  Custom search box button styling.
+*/
+
+.p-search-box .p-search-box__button {
+  background-color: #e95420 !important;
+  border-left: none !important;
+  
+  .p-icon--search {
+    filter: brightness(0) invert(1); // Makes the icon white
+  }
+  
+  &:hover {
+    background-color: darken(#e95420, 10%) !important;
+  }
+}
