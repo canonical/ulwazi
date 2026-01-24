@@ -12132,6 +12132,52 @@ dd p {
   margin-bottom: 0;
 }
 
+/*
+  copy-button formatting
+*/
+button.copybtn,
+button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.highlight button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
+}
+
+.copybtn.o-tooltip--left[data-tooltip]::before,
+.copybtn.o-tooltip--left[data-tooltip]::after {
+  content: none !important;
+  display: none !important;
+}
+
+.input button.copybtn {
+  background-color: transparent !important;
+  z-index: 999;
+}
+
+div.input > button.copybtn svg {
+  height: 1.4em !important;
+  width: 1.4em !important;
+}
+
+/* terminal formatting */
+.terminal-code pre {
+  color: #ebebeb !important;
+  margin-bottom: 0;
+}
+
+div.terminal {
+  margin-bottom: 1.5em;
+}
+
+/* Copybutton for terminals needs white icon rather than defualt black */
+div.terminal > div.input > button.copybtn svg {
+  color: #f8f8f8 !important;
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);
