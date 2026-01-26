@@ -7,6 +7,8 @@
 
 .. _cheat-sheet:
 
+.. _rst_ref:
+
 ReStructuredText cheat sheet
 ============================
 
