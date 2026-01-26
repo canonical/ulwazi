@@ -12614,6 +12614,23 @@ p {
 .p-side-navigation__link {
   padding-top: 0;
   padding-bottom: 0;
+  padding-left: 0;
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 1.5rem;
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 3rem;
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 4.5rem;
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 6rem;
 }
 
 .p-side-navigation__item .nav-item {

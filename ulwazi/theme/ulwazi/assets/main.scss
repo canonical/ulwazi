@@ -94,6 +94,24 @@ p {
 .p-side-navigation__link {
   padding-top: 0;
   padding-bottom: 0;
+  padding-left: 0; // Override vanilla's 1.5rem for the top level
+}
+
+// Add incremental padding for each nesting level
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 1.5rem; // Level 2
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 3rem; // Level 3
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 4.5rem; // Level 4
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 6rem; // Level 5
 }
 
 .p-side-navigation__item .nav-item {
