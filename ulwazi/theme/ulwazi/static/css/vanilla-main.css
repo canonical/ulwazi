@@ -12611,4 +12611,18 @@ p {
   margin: 0;
 }
 
+.p-side-navigation__link {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.p-side-navigation__item .nav-item {
+  min-height: 32px;
+}
+
+.p-table-of-contents__list .p-table-of-contents__link {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /*# sourceMappingURL=vanilla-main.css.map */
