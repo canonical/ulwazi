@@ -138,3 +138,12 @@ $nav-offset-left: 0.5rem;
 .p-top__link {
   font-size: 14px !important;
 }
+
+/* Compacting list elements */
+.p-list--unordered .p-list__item,
+.p-list--unordered .p-list__item:not(.task-list-item) p,
+.p-list--ordered .p-list__item,
+.p-list--ordered .p-list__item:not(.task-list-item) p {
+  padding-top: 0;
+  padding-bottom: 0;
+}
