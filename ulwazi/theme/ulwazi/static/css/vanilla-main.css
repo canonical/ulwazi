@@ -12651,4 +12651,8 @@ p {
   white-space: normal; /* allow multi-line labels */
 }
 
+.p-top__link {
+  font-size: 14px !important;
+}
+
 /*# sourceMappingURL=vanilla-main.css.map */
