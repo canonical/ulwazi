@@ -91,34 +91,46 @@ p {
   margin: 0;
 }
 
+// Navigation offset constant
+$nav-offset-left: 0.5rem;
+
 .p-side-navigation__link {
   padding-top: 0;
   padding-bottom: 0;
-  padding-left: 0; // Override vanilla's 1.5rem for the top level
+  padding-left: $nav-offset-left; // Override vanilla's 1.5rem for the top level
 }
 
 // Add incremental padding for each nesting level
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 1.5rem; // Level 2
+  padding-left: calc(1.5rem + $nav-offset-left); // Level 2
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 3rem; // Level 3
+  padding-left: calc(3rem + $nav-offset-left); // Level 3
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 4.5rem; // Level 4
+  padding-left: calc(4.5rem + $nav-offset-left); // Level 4
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 6rem; // Level 5
+  padding-left: calc(6rem + $nav-offset-left); // Level 5
 }
 
-.p-side-navigation__item .nav-item {
+.p-side-navigation__item .nav-item, .p-side-navigation__item .p-side-navigation__link {
   min-height: 32px;
 }
 
 .p-table-of-contents__list .p-table-of-contents__link {
   padding-top: 0;
   padding-bottom: 0;
+}
+
+/* Vertically center menu text inside the highlighted row (works with wrapping) */
+.p-side-navigation__item > .nav-item > a.p-side-navigation__link {
+  display: flex;
+  align-items: center;
+  height: auto;        /* in case a fixed height is causing the offset */
+  min-height: 32px;    /* keeps single-line items nicely sized */
+  white-space: normal; /* allow multi-line labels */
 }

@@ -12614,32 +12614,41 @@ p {
 .p-side-navigation__link {
   padding-top: 0;
   padding-bottom: 0;
-  padding-left: 0;
+  padding-left: 0.5rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 1.5rem;
+  padding-left: 2rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 3rem;
+  padding-left: 3.5rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 4.5rem;
+  padding-left: 5rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 6rem;
+  padding-left: 6.5rem;
 }
 
-.p-side-navigation__item .nav-item {
+.p-side-navigation__item .nav-item, .p-side-navigation__item .p-side-navigation__link {
   min-height: 32px;
 }
 
 .p-table-of-contents__list .p-table-of-contents__link {
   padding-top: 0;
   padding-bottom: 0;
+}
+
+/* Vertically center menu text inside the highlighted row (works with wrapping) */
+.p-side-navigation__item > .nav-item > a.p-side-navigation__link {
+  display: flex;
+  align-items: center;
+  height: auto; /* in case a fixed height is causing the offset */
+  min-height: 32px; /* keeps single-line items nicely sized */
+  white-space: normal; /* allow multi-line labels */
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */
