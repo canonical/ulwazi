@@ -9,6 +9,7 @@ myst:
                          ```"
 ---
 
+(myst-ref)=
 # Markdown/MyST cheat sheet
 
 This file contains the syntax for commonly used Markdown and MyST markup.
