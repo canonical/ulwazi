@@ -12671,8 +12671,8 @@ p {
 
 /* Admonitions  */
 .p-notification__title {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */
