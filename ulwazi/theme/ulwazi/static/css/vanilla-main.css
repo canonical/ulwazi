@@ -12664,4 +12664,15 @@ p {
   padding-bottom: 0;
 }
 
+/* Code-blocks font size fix */
+.terminal-code pre, pre, code, kbd, samp {
+  font-size: 14px !important;
+}
+
+/* Admonitions  */
+.p-notification__title {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 /*# sourceMappingURL=vanilla-main.css.map */

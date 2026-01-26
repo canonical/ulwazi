@@ -147,3 +147,8 @@ $nav-offset-left: 0.5rem;
   padding-top: 0;
   padding-bottom: 0;
 }
+
+/* Code-blocks font size fix */
+.terminal-code pre, pre, code, kbd, samp {
+  font-size: 14px !important;
+}
