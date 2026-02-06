@@ -13,7 +13,10 @@ It provides both generic Vanilla styling and Canonical-specific theming for docu
 
 ### Setup
 
-Install Node dependencies:
+Prefer Makefile targets (no editable install needed).
+`make run` creates the virtualenv and installs Python deps from requirements.
+
+Install Node dependencies (only if you need to compile SCSS):
 
 ```bash
 yarn install
@@ -41,6 +44,8 @@ make fclean
 
 - Default: http://127.0.0.1:8000
 - Override: `make run SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080`
+
+**Node.js**: required only for SCSS compilation via `make vanilla-main` (uses npm).
 
 ## Project Structure
 
