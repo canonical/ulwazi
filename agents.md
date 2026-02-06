@@ -94,6 +94,12 @@ make install      # Build and install theme package
 make test         # Run all tests
 ```
 
+Available tests:
+
+- **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
+- **test_pdf_generation.py**: Verifies PDF generation produces expected output file
+- **scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright
+
 ### Cleaning
 
 ```bash
@@ -120,7 +126,6 @@ make vanilla-main # Compile SCSS to CSS
 ### Content Changes
 
 - Sample docs in [docs/content/](docs/content/) auto-rebuild with `make run`
-- No rebuild needed for content-only changes
 
 ### Dependency Changes
 
@@ -164,8 +169,22 @@ make vanilla-main # Compile SCSS to CSS
 ## Testing Locations
 
 - **Sample docs**: [docs/](docs/) - comprehensive test content
+- **Cheatsheet pages**: [docs/content/rst-cheat-sheet.rst](docs/content/rst-cheat-sheet.rst) and [docs/content/myst-cheat-sheet.md](docs/content/myst-cheat-sheet.md) - comprehensive examples of all supported blocks (admonitions, code blocks, tables, etc.). Use these to verify theme rendering. When adding new features, update both cheatsheets with equivalent examples in similar structure.
 - **Test scripts**: [tests/](tests/) - validation and PDF generation tests
 - **Built output**: [docs/_build/](docs/_build/) - inspect generated HTML
+
+## Syntax
+
+Sample docs use MyST Markdown syntax most of the time, with specific pages, like RST cheat sheet, using reStructuredText.
+
+### Formatting Conventions
+
+When editing documentation or markdown files:
+
+- Make sure there is a blank line after headings before content
+- Make sure there is a blank line before lists (bullet or numbered)
+- Use MyST Markdown for new content unless RST-specific features required
+- Keep examples in cheat sheets structurally parallel between MyST and RST versions
 
 ## External Resources
 
