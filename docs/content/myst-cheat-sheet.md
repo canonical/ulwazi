@@ -312,7 +312,7 @@ A very long note:
 
 Yesterday a small test note woke up inside a freshly built docs site and immediately panicked—everything around it was perfectly aligned, which felt suspicious. It cleared its throat (quietly, to avoid reflow) and announced, “I am here to provide guidance.” Then it realized it didn’t have any guidance, only a strong sense of responsibility and a slightly wobbly border radius.
 
-Determined to become useful, the note set off to find Meaning™. It asked a heading for directions, but the heading just pointed dramatically at the table of contents. It consulted a code block, which replied in monospace: ¯\_(ツ)_/¯. Finally it met an escaped character who whispered, “Be careful out there—one wrong backslash and you’ll be someone else entirely.”
+Determined to become useful, the note set off to find Meaning™. It asked a heading for directions, but the heading just pointed dramatically at the table of contents. It consulted a code block, which replied in monospace: `¯\_(ツ)_/¯`. Finally it met an escaped character who whispered, “Be careful out there—one wrong backslash and you’ll be someone else entirely.”
 
 In the end, the note returned home and did what notes do best: it sat politely in the margin and made the page look organized. “Maybe,” it thought, “my purpose isn’t to change the world—maybe it’s to prove the styling works and the spacing is consistent.” And honestly, that’s a noble calling. The note smiled, stayed readable at every viewport width, and lived happily ever after—until the next rebuild.
 ```
