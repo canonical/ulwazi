@@ -12665,7 +12665,11 @@ p {
 }
 
 /* Code-blocks font size fix */
-.terminal-code pre, pre, code, kbd, samp {
+.terminal-code pre,
+pre,
+code:not(h1 code):not(h2 code):not(h3 code):not(h4 code):not(h5 code):not(h6 code),
+kbd:not(h1 kbd):not(h2 kbd):not(h3 kbd):not(h4 kbd):not(h5 kbd):not(h6 kbd),
+samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 samp) {
   font-size: 14px !important;
 }
 

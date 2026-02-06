@@ -36,7 +36,7 @@ Also see the [MyST documentation](https://myst-parser.readthedocs.io/en/latest/i
 - *Italic*
 - **Bold**
 
-## Code blocks
+## Code blocks, `font test`
 
 Start a code block:
 
