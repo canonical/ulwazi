@@ -1,20 +1,38 @@
 [project]
 name = "ulwazi"
-version = "0.1"
+version = "0.2"
+description = 'Ulwazi theme for Sphinx documentation projects'
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "GPL-3.0-only"}
+authors = [
+    {name = "Canonical Ltd.", email = "webteam@canonical.com"}
+]
+keywords = ["sphinx", "theme", "documentation", "vanilla", "canonical"]
+
 dependencies = [
     "sphinx",
     "sphinx-basic-ng",
     "sphinxcontrib-jquery",
     "beautifulsoup4",
 ]
-description = 'Ulwazi theme for Sphinx documentation projects'
-readme = "README.md"
+
+[project.optional-dependencies]
+dev = [
+    "requests",  # For product_menu_gen.py utility
+]
+
+[project.urls]
+Homepage = "https://canonical-ulwazi.readthedocs-hosted.com/"
+Documentation = "https://canonical-ulwazi.readthedocs-hosted.com/"
+Repository = "https://github.com/canonical/ulwazi"
+Issues = "https://github.com/canonical/ulwazi/issues"
 
 classifiers = [
     'Framework :: Sphinx',
     'Framework :: Sphinx :: Theme',
-    'Development Status :: 1 - Planning',
-    'License :: OSI Approved :: GNU General Public License (GPL)',
+    'Development Status :: 4 - Beta',
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Environment :: Console',
     'Environment :: Web Environment',
     'Programming Language :: Python :: 3',
