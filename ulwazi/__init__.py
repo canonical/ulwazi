@@ -150,7 +150,7 @@ def apply_admonition_classes(body_html:str) -> str:
     for admonition in admonitions:
         print("Full admonition !!")
         print(admonition)
-        child_tags = admonition.findChildren()
+        child_tags = admonition.find_all(recursive=False)
         div_tag = soup.new_tag('div')
         title = 0
         message = soup.new_tag("div",attrs={"class":"p-notification__message"})
