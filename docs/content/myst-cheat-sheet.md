@@ -317,6 +317,12 @@ Determined to become useful, the note set off to find Meaning™. It asked a hea
 In the end, the note returned home and did what notes do best: it sat politely in the margin and made the page look organized. “Maybe,” it thought, “my purpose isn’t to change the world—maybe it’s to prove the styling works and the spacing is consistent.” And honestly, that’s a noble calling. The note smiled, stayed readable at every viewport width, and lived happily ever after—until the next rebuild.
 ```
 
+```{note}
+A weird note that once broke:
+
+While there are many other tools and/or approaches for creating diagrams in visualizations in your documentation (e.g. [C4 model], [Dia], [PlantUML], [Structurizr], etc), we only provide support for `sphinxcontrib-mermaid` in the starter pack. 
+```
+
 ```{tip}
 A tip.
 ```
@@ -392,8 +398,6 @@ Content Tab 3
 
 ````
 
-
-
 ## Glossary
 
 ```{glossary}
@@ -409,7 +413,6 @@ some term
 - ```{versionadded} X.Y
 - {abbr}`API (Application Programming Interface)`
 
-----
 
 <!-- ## Custom extensions
 
@@ -449,3 +452,10 @@ A link to a YouTube video:
 ```{youtube} https://www.youtube.com/watch?v=iMLiK1fX4I0
    :title: Demo
 ``` -->
+
+% LINKS
+
+[C4 model]: https://c4model.com/
+[Dia]: http://dia-installer.de/
+[PlantUML]: https://plantuml.com/
+[Structurizr]: https://structurizr.com/
