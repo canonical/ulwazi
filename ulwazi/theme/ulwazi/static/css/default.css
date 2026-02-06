@@ -68,3 +68,7 @@ p.caption {
 a.headerlink {
     color: transparent;
 }
+
+.p-notification__message {
+    margin-right: 8px !important;
+}
