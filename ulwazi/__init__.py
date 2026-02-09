@@ -148,10 +148,10 @@ def apply_admonition_classes(body_html:str) -> str:
     generic = soup.find_all(class_="admonition-generic-admonition")
 
     for admonition in admonitions:
-        child_tags = admonition.findChildren()
+        child_tags = admonition.find_all(recursive=False)
         div_tag = soup.new_tag('div')
         title = 0
-        message = soup.new_tag("p",attrs={"class":"p-notification__message"})
+        message = soup.new_tag("div",attrs={"class":"p-notification__message"})
         div_id = admonition.get('id')
         for child in child_tags:
             if child.get("class") == ["admonition-title"]:
