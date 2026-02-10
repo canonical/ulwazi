@@ -459,3 +459,9 @@ A link to a YouTube video:
 [Dia]: http://dia-installer.de/
 [PlantUML]: https://plantuml.com/
 [Structurizr]: https://structurizr.com/
+
+```{toctree}
+:hidden:
+
+code-title
+```
