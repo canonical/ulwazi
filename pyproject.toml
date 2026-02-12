@@ -10,6 +10,22 @@ authors = [
 ]
 keywords = ["sphinx", "theme", "documentation", "vanilla", "canonical"]
 
+classifiers = [
+    'Framework :: Sphinx',
+    'Framework :: Sphinx :: Theme',
+    'Development Status :: 4 - Beta',
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'Environment :: Console',
+    'Environment :: Web Environment',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Topic :: Documentation',
+    'Topic :: Software Development :: Documentation',
+]
+
 dependencies = [
     "sphinx",
     "sphinx-basic-ng",
@@ -27,22 +43,6 @@ Homepage = "https://canonical-ulwazi.readthedocs-hosted.com/"
 Documentation = "https://canonical-ulwazi.readthedocs-hosted.com/"
 Repository = "https://github.com/canonical/ulwazi"
 Issues = "https://github.com/canonical/ulwazi/issues"
-
-classifiers = [
-    'Framework :: Sphinx',
-    'Framework :: Sphinx :: Theme',
-    'Development Status :: 4 - Beta',
-    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-    'Environment :: Console',
-    'Environment :: Web Environment',
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
-    'Topic :: Documentation',
-    'Topic :: Software Development :: Documentation',
-]
 
 [build-system]
 requires = [
