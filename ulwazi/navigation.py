@@ -6,6 +6,17 @@ import copy
 from bs4 import BeautifulSoup, Tag
 
 
+def _strip_code_tags_from_element(element: Tag) -> None:
+    """Remove code-related tags from an element, keeping only their text content."""
+    for tag_name in ["code", "pre", "kbd", "samp"]:
+        for tag in element.find_all(tag_name):
+            tag.unwrap()
+    
+    # Also remove span tags with code-related classes
+    for span in element.find_all("span", class_=["pre", "docutils", "literal", "notranslate"]):
+        span.unwrap()
+
+
 def _get_navigation_expand_image(soup: BeautifulSoup, href: str = "#", is_active: bool = False) -> Tag:
     icon_down = soup.new_tag("i", attrs={"class": "p-icon--chevron-down"})
     icon_up = soup.new_tag("i", attrs={"class": "p-icon--chevron-up"})
@@ -41,6 +52,10 @@ def get_navigation_tree(toctree_html: str) -> str:
     # We add a proper style for each <a> in the globaltoc
     for element in soup.find_all("a", recursive=True):
         element["class"].append("p-side-navigation__link")
+    
+    # Strip code-related tags from all anchor elements
+    for element in soup.find_all("a", recursive=True):
+        _strip_code_tags_from_element(element)
 
     toctree_checkbox_count = 0
     last_element_with_current = None
