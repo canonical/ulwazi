@@ -85,7 +85,7 @@ YAML:
        post_create_environment:
        - pip install sphinx build
        - python -m build
-       - pip install dist/ulwazi-0.1.tar.gz
+       - pip install dist/ulwazi-0.2.tar.gz
        post_checkout:
        - git fetch --unshallow || true
 
