@@ -1,4 +1,5 @@
 {# Sphinx sidebar template: quick search box. #}
+{%- if builder != "singlehtml" %}
 <search class="l-docs__main" id="searchbox" style="display: none" role="search">
   <!-- <h3 id="searchlabel">{{ _('Quick search') }}</h3> -->
     <div class="row">
@@ -10,3 +11,4 @@
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
+{%- endif %}
