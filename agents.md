@@ -146,6 +146,30 @@ make vanilla-main # Compile SCSS to CSS
 - Override templates in [ulwazi/theme/ulwazi/](ulwazi/theme/ulwazi/)
 - Modify `_html_page_context` function in [ulwazi/__init__.py](ulwazi/__init__.py) for pre-theme processing
 
+## Troubleshooting & Debugging
+
+### Common Issues
+
+**Port already in use**: Kill existing process with `pkill -f sphinx-autobuild` or `pgrep -af sphinx-autobuild` to find PID
+
+**Stuck build process**: Run `pkill -f sphinx-autobuild && sleep 1 && make clean && make run`
+
+**Theme changes not showing**: Theme modifications require `make rebuild` (not just `make run`)
+
+**Dependency conflicts after git pull**: Run `make fclean && make run` to rebuild venv completely
+
+### Finding Errors
+
+- Build warnings: [docs/.sphinx/warnings.txt](docs/.sphinx/warnings.txt)
+- Build output: Check terminal output from `make run` or `make html`
+- Check if server is running: `pgrep -af sphinx-autobuild`
+
+### Process Management
+
+- Kill background server: `Ctrl+C` in terminal or `pkill -f sphinx-autobuild`
+- Check server status: `pgrep -af sphinx-autobuild`
+- Server not responding: Kill process, run `make clean`, then `make run`
+
 ## Code Conventions
 
 ### Python
@@ -166,6 +190,16 @@ make vanilla-main # Compile SCSS to CSS
 - [Vanilla Framework](https://vanillaframework.io/) for base styles
 - SCSS source in [ulwazi/theme/ulwazi/assets/](ulwazi/theme/ulwazi/assets/)
 - Compiled CSS in [ulwazi/theme/ulwazi/static/](ulwazi/theme/ulwazi/static/)
+
+### JavaScript & Assets
+
+- Static files: [ulwazi/theme/ulwazi/static/](ulwazi/theme/ulwazi/static/) - CSS, JS, images
+- Key JS modules in [ulwazi/theme/ulwazi/static/js/](ulwazi/theme/ulwazi/static/js/):
+  - `vanilla-tabs.js` - Tab component behavior
+  - `search-breadcrumbs.js` - Search page navigation breadcrumbs
+  - `header-nav.js`, `nav-toggle.js` - Navigation and sidebar toggles
+  - `product_menu.js` - Canonical product menu
+- Tabs processing: `convert_tabs()` in [ulwazi/tabs.py](ulwazi/tabs.py) transforms HTML for tab components
 
 ## Important Notes
 
