@@ -1,5 +1,5 @@
 /**
- * Adds breadcrumb navigation to Sphinx search results
+ * Adds breadcrumb navigation to Sphinx search results using Vanilla Framework
  * This extends the default searchtools.js functionality
  */
 
@@ -7,22 +7,22 @@
   'use strict';
 
   /**
-   * Generate breadcrumb HTML from navigation path
+   * Generate breadcrumb HTML from navigation path using Vanilla Framework styles
    * @param {string} docName - The document name (e.g., "content/myst-cheat-sheet")
    * @param {string} title - The page title
    * @returns {HTMLElement|null} - The breadcrumb element or null
    */
   function createBreadcrumb(docName, title) {
     const breadcrumbNav = document.createElement('nav');
-    breadcrumbNav.className = 'search-result-breadcrumb';
-    breadcrumbNav.setAttribute('aria-label', 'Result location');
+    breadcrumbNav.className = 'p-breadcrumbs';
+    breadcrumbNav.setAttribute('aria-label', 'Breadcrumbs');
 
     const breadcrumbList = document.createElement('ol');
-    breadcrumbList.className = 'search-breadcrumb-list';
+    breadcrumbList.className = 'p-breadcrumbs__items';
 
     // Always add home link first
     const homeLi = document.createElement('li');
-    homeLi.className = 'search-breadcrumb-item';
+    homeLi.className = 'p-breadcrumbs__item';
     const homeLink = document.createElement('a');
     homeLink.href = '../index.html';
     homeLink.textContent = 'Home';
@@ -36,7 +36,7 @@
       // Add each item from the navigation path
       navPath.forEach((item, index) => {
         const li = document.createElement('li');
-        li.className = 'search-breadcrumb-item';
+        li.className = 'p-breadcrumbs__item';
         
         const link = document.createElement('a');
         link.href = '../' + item.link;
@@ -53,7 +53,7 @@
         for (let i = 0; i < parts.length - 1; i++) {
           const part = parts[i];
           const li = document.createElement('li');
-          li.className = 'search-breadcrumb-item';
+          li.className = 'p-breadcrumbs__item';
           
           const link = document.createElement('a');
           const partPath = parts.slice(0, i + 1).join('/');
@@ -65,13 +65,6 @@
         }
       }
     }
-
-    // Add final separator after the last breadcrumb item
-    const separatorLi = document.createElement('li');
-    separatorLi.className = 'search-breadcrumb-item search-breadcrumb-separator-final';
-    separatorLi.textContent = '›';
-    separatorLi.setAttribute('aria-hidden', 'true');
-    breadcrumbList.appendChild(separatorLi);
 
     breadcrumbNav.appendChild(breadcrumbList);
     return breadcrumbNav;
@@ -185,12 +178,11 @@
       originalPerformSearch.call(this, query);
       
       // After search completes, modify the results
-      // Use multiple checks with increasing delays to catch all results
       const addBreadcrumbsToResults = () => {
         const results = document.querySelectorAll('#search-results ul.search > li');
         results.forEach(listItem => {
           // Check if breadcrumb already added
-          if (listItem.querySelector('.search-result-breadcrumb')) {
+          if (listItem.querySelector('.p-breadcrumbs')) {
             return;
           }
           
