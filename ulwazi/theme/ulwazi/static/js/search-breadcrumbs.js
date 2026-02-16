@@ -66,6 +66,13 @@
       }
     }
 
+    // Add final separator after the last breadcrumb item
+    const separatorLi = document.createElement('li');
+    separatorLi.className = 'search-breadcrumb-item search-breadcrumb-separator-final';
+    separatorLi.textContent = '›';
+    separatorLi.setAttribute('aria-hidden', 'true');
+    breadcrumbList.appendChild(separatorLi);
+
     breadcrumbNav.appendChild(breadcrumbList);
     return breadcrumbNav;
   }

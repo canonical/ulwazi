@@ -59,6 +59,29 @@
   user-select: none;
 }
 
+/* Style for the final separator that leads to the page title */
+.search-breadcrumb-separator-final {
+  color: #999;
+  font-size: 0.8rem;
+  user-select: none;
+  margin-left: 0.35rem;
+}
+
+/* Remove the ::after separator from the item before the final separator */
+.search-breadcrumb-separator-final::after {
+  content: none;
+}
+
+/* Remove the ::after separator from the item immediately before the final separator */
+.search-breadcrumb-item:nth-last-child(2):has(+ .search-breadcrumb-separator-final)::after {
+  content: none;
+}
+
+/* Fallback for browsers that don't support :has() - target using list context */
+.search-breadcrumb-list:has(.search-breadcrumb-separator-final) .search-breadcrumb-item:nth-last-child(2)::after {
+  content: none;
+}
+
 .search-breadcrumb-item a {
   color: #0066cc;
   text-decoration: none;
