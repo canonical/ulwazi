@@ -14,7 +14,7 @@ def test_scss_styles_propagation():
 
     target = soup.find("p", class_="heading-test-scss")
     assert target is not None, "Expected <p class='heading-test-scss'> not found"
-    assert "This is a test about scss propagation" in target.text, \
+    assert "This is a test about SCSS propagation." in target.text, \
         "Expected text not found inside <p class='heading-test-scss'>"
 
 def test_rendered_color():

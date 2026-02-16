@@ -1,4 +1,5 @@
 {# Sphinx sidebar template: quick search box. #}
+{%- if builder != "singlehtml" %}
 <search class="l-docs__main" id="searchbox" style="display: none" role="search"></search>
   <form class="p-search-box" action="{{ pathto('search') }}" method="get">
     <label class="u-off-screen" for="search">Search keywords</label>
@@ -7,3 +8,4 @@
     <button type="submit" class="p-search-box__button"><i class="p-icon--search">Search</i></button>
   </form>
 </search>
+{%- endif %}

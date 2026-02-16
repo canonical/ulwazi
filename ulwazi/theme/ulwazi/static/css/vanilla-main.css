@@ -12132,6 +12132,52 @@ dd p {
   margin-bottom: 0;
 }
 
+/*
+  copy-button formatting
+*/
+button.copybtn,
+button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.highlight button.copybtn:hover {
+  background: none;
+  background-color: transparent !important;
+}
+
+.copybtn.o-tooltip--left[data-tooltip]::before,
+.copybtn.o-tooltip--left[data-tooltip]::after {
+  content: none !important;
+  display: none !important;
+}
+
+.input button.copybtn {
+  background-color: transparent !important;
+  z-index: 999;
+}
+
+div.input > button.copybtn svg {
+  height: 1.4em !important;
+  width: 1.4em !important;
+}
+
+/* terminal formatting */
+.terminal-code pre {
+  color: #ebebeb !important;
+  margin-bottom: 0;
+}
+
+div.terminal {
+  margin-bottom: 1.5em;
+}
+
+/* Copybutton for terminals needs white icon rather than defualt black */
+div.terminal > div.input > button.copybtn svg {
+  color: #f8f8f8 !important;
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);
@@ -12563,6 +12609,74 @@ p {
   padding-top: 1.24px;
   padding-bottom: 14.76px;
   margin: 0;
+}
+
+.p-side-navigation__link {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0.5rem;
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 2rem;
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 3.5rem;
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 5rem;
+}
+
+.p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
+  padding-left: 6.5rem;
+}
+
+.p-side-navigation__item .nav-item, .p-side-navigation__item .p-side-navigation__link {
+  min-height: 32px;
+}
+
+.p-table-of-contents__list .p-table-of-contents__link {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Vertically center menu text inside the highlighted row (works with wrapping) */
+.p-side-navigation__item > .nav-item > a.p-side-navigation__link {
+  display: flex;
+  align-items: center;
+  height: auto; /* in case a fixed height is causing the offset */
+  min-height: 32px; /* keeps single-line items nicely sized */
+  white-space: normal; /* allow multi-line labels */
+}
+
+.p-top__link {
+  font-size: 14px !important;
+}
+
+/* Compacting list elements */
+.p-list--unordered .p-list__item,
+.p-list--unordered .p-list__item:not(.task-list-item) p,
+.p-list--ordered .p-list__item,
+.p-list--ordered .p-list__item:not(.task-list-item) p {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Code-blocks font size fix */
+.terminal-code pre,
+pre,
+code:not(h1 code):not(h2 code):not(h3 code):not(h4 code):not(h5 code):not(h6 code),
+kbd:not(h1 kbd):not(h2 kbd):not(h3 kbd):not(h4 kbd):not(h5 kbd):not(h6 kbd),
+samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 samp) {
+  font-size: 14px !important;
+}
+
+/* Admonitions  */
+.p-notification__title {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */

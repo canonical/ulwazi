@@ -303,6 +303,7 @@ linkcheck_retries = 3
 myst_enable_extensions = {
     "colon_fence",
     "deflist",
+    "substitution",
     "tasklist"
 }
 
@@ -326,6 +327,7 @@ myst_enable_extensions = {
 #       - youtube-links
 
 extensions = [
+    "sphinx_terminal",
     "sphinxcontrib.cairosvgconverter",
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
@@ -336,7 +338,7 @@ extensions = [
     "myst_parser",
     "sphinxcontrib.jquery",
     "sphinx_tabs.tabs",
-    "sphinx_design"
+    "sphinx_design",
 ]
 
 # Excludes files or directories from processing
@@ -418,9 +420,7 @@ if os.path.exists("./reuse/substitutions.yaml"):
 
 # Add configuration for intersphinx mapping
 
-intersphinx_mapping = {
-    'starter-pack': ('https://canonical-example-product-documentation.readthedocs-hosted.com/en/latest', None)
-}
+intersphinx_mapping = {}
 
 # PDF
 

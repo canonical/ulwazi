@@ -13,6 +13,7 @@ Test content.
    test7_admonitionsMD
    test_sphinx_tabs_myst
    test_sphinx_tabs
+   test-code-headings
 
 
 
