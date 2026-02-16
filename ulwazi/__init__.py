@@ -56,6 +56,7 @@ def config_inited(app, config):  # noqa: ANN401
         "js/vanilla-tabs.js",
         "js/nav-toggle.js",
         "js/search.js",
+        "js/search-breadcrumbs.js",
     ]
 
     values_and_defaults = [
@@ -294,6 +295,71 @@ def truncate_local_toc(toc: str, max_depth: int = None) -> str:
         trim_ul(toc_html, 1)
     return str(toc_html)
 
+def _build_breadcrumb_map(app: sphinx.application.Sphinx, context: Dict[str, Any]) -> Dict[str, list]:
+    """Build a mapping of docnames to their navigation breadcrumb paths."""
+    import json
+    breadcrumb_map = {}
+    
+    def process_list_items(items, parent_path=None):
+        """Recursively process list items to extract navigation hierarchy."""
+        if parent_path is None:
+            parent_path = []
+        
+        for li in items:
+            # Find the link in this list item
+            link = li.find("a", class_="reference internal")
+            if link:
+                href = link.get("href", "")
+                title = link.get_text(strip=True)
+                
+                # Extract docname from href (handle dirhtml format)
+                # First remove leading ../
+                docname = href
+                while docname.startswith("../"):
+                    docname = docname[3:]
+                # Remove trailing / or .html
+                if docname.endswith("/"):
+                    docname = docname[:-1]
+                if docname.endswith(".html"):
+                    docname = docname[:-5]
+                
+                if docname:
+                    # Store the breadcrumb path for this doc (not including itself)
+                    breadcrumb_map[docname] = list(parent_path)
+                    
+                    # Check for nested items
+                    nested_ul = li.find("ul")
+                    if nested_ul:
+                        nested_items = nested_ul.find_all("li", recursive=False)
+                        if nested_items:
+                            # Add current item to path for children
+                            new_path = parent_path + [{"title": title, "link": href}]
+                            process_list_items(nested_items, new_path)
+    
+    # Get the global toctree
+    if "toctree" in context:
+        try:
+            toctree = context["toctree"]
+            toctree_html = toctree(
+                collapse=False,
+                titles_only=False,
+                includehidden=True,
+                maxdepth=-1,
+            )
+            
+            if toctree_html:
+                soup = BeautifulSoup(toctree_html, "html.parser")
+                # Find all top-level list items
+                top_level_ul = soup.find("ul")
+                if top_level_ul:
+                    top_items = top_level_ul.find_all("li", recursive=False)
+                    process_list_items(top_items)
+        except Exception as e:
+            # If toctree generation fails, return empty map
+            pass
+    
+    return json.dumps(breadcrumb_map)
+
 def _html_page_context(
     app: sphinx.application.Sphinx,
     pagename: str,
@@ -310,6 +376,10 @@ def _html_page_context(
             context["toc"],
             getattr(app.config, "localtoc_max_depth", None)
         )
+    
+    # Build navigation breadcrumb mapping for search
+    if pagename == "search":
+        context["search_breadcrumb_map"] = _build_breadcrumb_map(app, context)
     
     # Modify the body of the content
     if "body" in context:

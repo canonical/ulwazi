@@ -26,6 +26,69 @@
   text-decoration: underline;
 }
 
+/* Breadcrumb styling for search results */
+.search-result-breadcrumb {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+  display: block;
+}
+
+.search-breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+}
+
+.search-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Add separator after each breadcrumb item except the last */
+.search-breadcrumb-item:not(:last-child)::after {
+  content: " › ";
+  margin: 0 0.35rem;
+  color: #999;
+  user-select: none;
+}
+
+.search-breadcrumb-item a {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.2s ease;
+}
+
+.search-breadcrumb-item a:hover {
+  color: #004999;
+  text-decoration: underline;
+}
+
+/* Style for current page (non-linked) */
+.search-breadcrumb-item.search-breadcrumb-current {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.search-breadcrumb-separator {
+  margin: 0 0.25rem;
+  color: #999;
+  user-select: none;
+}
+
+/* Heading reference within search result title */
+.search-result-heading {
+  font-weight: normal;
+  opacity: 0.7;
+}
+
 /* Snippet styling */
 #search-results .context {
   margin: 0.35rem 0 0;
