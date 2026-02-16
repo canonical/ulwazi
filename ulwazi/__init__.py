@@ -312,6 +312,9 @@ def _build_breadcrumb_map(app: sphinx.application.Sphinx, context: Dict[str, Any
                 href = link.get("href", "")
                 title = link.get_text(strip=True)
                 
+                # Check if this is a section link (contains #)
+                is_section_link = "#" in href
+                
                 # Extract docname from href (handle dirhtml format)
                 # First remove leading ../
                 docname = href
@@ -323,16 +326,27 @@ def _build_breadcrumb_map(app: sphinx.application.Sphinx, context: Dict[str, Any
                 if docname.endswith(".html"):
                     docname = docname[:-5]
                 
-                if docname:
+                # For section links, strip the anchor to get the base page
+                if is_section_link and "#" in docname:
+                    docname = docname.split("#")[0]
+                
+                # Only store breadcrumbs for actual pages (not section links)
+                if docname and not is_section_link:
                     # Store the breadcrumb path for this doc (not including itself)
                     breadcrumb_map[docname] = list(parent_path)
-                    
-                    # Check for nested items
-                    nested_ul = li.find("ul")
-                    if nested_ul:
-                        nested_items = nested_ul.find_all("li", recursive=False)
-                        if nested_items:
-                            # Add current item to path for children
+                
+                # Check for nested items
+                nested_ul = li.find("ul")
+                if nested_ul:
+                    nested_items = nested_ul.find_all("li", recursive=False)
+                    if nested_items:
+                        # Only add to path if it's a page link (not a section)
+                        if is_section_link:
+                            # For section links, continue with the same parent path
+                            # (don't add sections to breadcrumb trail)
+                            process_list_items(nested_items, parent_path)
+                        else:
+                            # For page links, add to the path for children
                             new_path = parent_path + [{"title": title, "link": href}]
                             process_list_items(nested_items, new_path)
     

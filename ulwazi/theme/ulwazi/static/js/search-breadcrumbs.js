@@ -66,12 +66,6 @@
       }
     }
 
-    // Add the current page title (not as a link)
-    const pageLi = document.createElement('li');
-    pageLi.className = 'search-breadcrumb-item search-breadcrumb-current';
-    pageLi.textContent = title;
-    breadcrumbList.appendChild(pageLi);
-
     breadcrumbNav.appendChild(breadcrumbList);
     return breadcrumbNav;
   }
@@ -184,7 +178,8 @@
       originalPerformSearch.call(this, query);
       
       // After search completes, modify the results
-      setTimeout(() => {
+      // Use multiple checks with increasing delays to catch all results
+      const addBreadcrumbsToResults = () => {
         const results = document.querySelectorAll('#search-results ul.search > li');
         results.forEach(listItem => {
           // Check if breadcrumb already added
@@ -210,7 +205,12 @@
             listItem.insertBefore(breadcrumb, link);
           }
         });
-      }, 10);
+      };
+      
+      // Try multiple times to catch all results as they're rendered
+      setTimeout(addBreadcrumbsToResults, 10);
+      setTimeout(addBreadcrumbsToResults, 100);
+      setTimeout(addBreadcrumbsToResults, 300);
     };
   }
 
