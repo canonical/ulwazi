@@ -1,8 +1,8 @@
 {% macro nav_logo() %}
 <div class="p-navigation__tagged-logo">
-  <a class="p-navigation__link" href="#">
+  <a class="p-navigation__link" href="{{ logo_link_URL }}">
     <div class="p-navigation__logo-tag">
-      <img class="p-navigation__logo-icon" src="https://assets.ubuntu.com/v1/82818827-CoF_white.svg" alt="">
+      <img class="p-navigation__logo-icon" src="{{ logo_img_URL }}" alt="">
     </div>
   <span class="p-navigation__logo-title">{{ logo_title }}</span>
   </a>

@@ -71,7 +71,7 @@ copyright = f"{datetime.date.today().year}"
 # NOTE: The Open Graph Protocol (OGP) enhances page display in a social graph
 #       and is used by social media platforms; see https://ogp.me/
 
-ogp_site_url = "https://canonical-starter-pack.readthedocs-hosted.com/"
+ogp_site_url = "https://canonical-ulwazi.readthedocs-hosted.com/"
 
 
 # Preview name of the documentation website
@@ -107,7 +107,7 @@ html_context = {
     # TODO: If there's no such website,
     #       remove the {{ product_page }} link from the page header template
     #       (usually .sphinx/_templates/header.html; also, see README.rst).
-    "product_page": "documentation.ubuntu.com",
+    "product_page": "pypi.org/project/ulwazi/",
     # Product tag image; the orange part of your logo, shown in the page header
     #
     # TODO: To add a tag image, uncomment and update as needed.
@@ -184,7 +184,7 @@ html_context = {
     
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
-    "logo_link_URL": "https://documentation.ubuntu.com",
+    "logo_link_URL": ogp_site_url,
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Canonical",
 
