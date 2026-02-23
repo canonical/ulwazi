@@ -184,7 +184,7 @@ html_context = {
     
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
-    "logo_link_URL": ogp_site_url,
+    "logo_link_URL": "/",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Canonical",
 
