@@ -92,8 +92,8 @@ def get_nav_menu(page: BeautifulSoup) -> str:
     # Apply grid alignment transformation
     apply_grid_alignment(header, page)
     
-    # Wrap in outer header with id="product-menu-header"
-    wrapper = page.new_tag("header", id="product-menu-header")
+    # Wrap in outer header with id="product-menu-header" and class="product-menu"
+    wrapper = page.new_tag("header", id="product-menu-header", **{"class": "product-menu"})
     wrapper.append(header)
     
     return wrapper.prettify()
