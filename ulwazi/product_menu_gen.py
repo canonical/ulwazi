@@ -118,6 +118,7 @@ def prefix_local_links(soup, base_url="https://canonical.com") -> BeautifulSoup:
         "img": "src",
         "iframe": "src",
         "source": "src",
+        "form": "action",
     }
 
     for tag, attr in link_attributes.items():

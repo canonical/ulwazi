@@ -3,7 +3,9 @@ const initNavigationSliding = () => {
   const productNavigation = document.querySelector('.product-menu');
   const secondaryNavigation = document.querySelector('.is-secondary');
   const toggles = document.querySelectorAll('.p-navigation__nav .p-navigation__link[aria-controls]:not(.js-back-button)');
-  const searchButtons = document.querySelectorAll('.js-search-button');
+  
+  // Only select search buttons within the product menu
+  const searchButtons = productNavigation ? productNavigation.querySelectorAll('.js-search-button') : [];
   const menuButton = document.querySelector('.js-menu-button');
   const dropdownNavLists = document.querySelectorAll('.js-dropdown-nav-list');
   const topNavList = [...dropdownNavLists].filter((list) => !list.parentNode.closest('.js-dropdown-nav-list'))[0];
@@ -41,6 +43,11 @@ const initNavigationSliding = () => {
 
     if (productNavigation) {
       productNavigation.classList.remove('has-search-open');
+      // Also remove from the inner navigation element
+      const innerNav = productNavigation.querySelector('.p-navigation--reduced');
+      if (innerNav) {
+        innerNav.classList.remove('has-search-open');
+      }
     }
     document.removeEventListener('keyup', keyPressHandler);
   };
@@ -269,11 +276,14 @@ const initNavigationSliding = () => {
       }
     };
 
+    // Only attach toggle handler to search toggle buttons, not form buttons
     searchButtons.forEach((searchButton) => {
-      searchButton.addEventListener('click', toggleSearch);
+      if (searchButton.classList.contains('p-navigation__link--search-toggle')) {
+        searchButton.addEventListener('click', toggleSearch);
+      }
     });
 
-    const overlay = document.querySelector('.p-navigation__search-overlay');
+    const overlay = productNavigation.querySelector('.p-navigation__search-overlay');
     if (overlay) {
       overlay.addEventListener('click', closeAllDropdowns);
     }
@@ -285,13 +295,17 @@ const initNavigationSliding = () => {
       if (!searchInput && secondaryNavigation) {
         searchInput = secondaryNavigation.querySelector('.p-search-box__input');
       }
-      const buttons = document.querySelectorAll('.js-search-button');
 
-      buttons.forEach((searchButton) => {
+      searchButtons.forEach((searchButton) => {
         searchButton.setAttribute('aria-pressed', true);
       });
 
       productNavigation.classList.add('has-search-open');
+      // Also add to the inner navigation element for CSS to work
+      const innerNav = productNavigation.querySelector('.p-navigation--reduced');
+      if (innerNav) {
+        innerNav.classList.add('has-search-open');
+      }
       if (searchInput) {
         searchInput.focus();
       }
