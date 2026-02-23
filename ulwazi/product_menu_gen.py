@@ -20,7 +20,11 @@ def fetch_and_parse(url: str) -> BeautifulSoup:
         return None
 
 def get_nav_menu(page: BeautifulSoup) -> str:
-    return page.find("header", id="navigation").prettify()
+    header = page.find("header", id="navigation")
+    # Change the id to avoid conflicts with the theme's main navigation
+    if header:
+        header["id"] = "product-navigation"
+    return header.prettify()
 
 def save2file(content:str) -> None:
     filename = PRODUCT_MENU_DIRECTORY.strip("/") + "/" + PRODUCT_MENU_FILENAME

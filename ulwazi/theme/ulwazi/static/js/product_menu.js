@@ -145,6 +145,11 @@ const initNavigationSliding = () => {
   };
 
   const setFocusable = (target) => {
+    // Guard against undefined target
+    if (!target) {
+      return;
+    }
+    
     dropdownNavLists.forEach(function (list) {
       if (list != topNavList) {
         const elements = list.querySelectorAll('ul > li > a, ul > li > button');
