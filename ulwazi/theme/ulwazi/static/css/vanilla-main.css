@@ -11970,6 +11970,15 @@ body {
     flex-direction: column;
   }
 }
+/*
+  Keep navigation items on a single line with text truncation.
+  Specific to the main header navigation structure.
+*/
+.l-docs__main .p-navigation__nav .p-navigation__items {
+  flex-wrap: nowrap !important;
+  white-space: nowrap;
+}
+
 @media screen and (min-width: calc(1036px + 15rem)) {
   .l-docs {
     grid-template-areas: ".      header  header header .     " ".      sidebar title  meta   .     " ".      sidebar main   meta   .     " "footer footer  footer footer footer" !important;
