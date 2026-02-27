@@ -27,7 +27,6 @@ These are the goals we plan to work on in the next cycle:
 
 * [ ] The theme is widely used for Canonical's own documentation
 * [ ] There is an established feedback process and technical support/maintenance
-* [ ] The theme is ready to be used outside Canonical (without Canonical branding)
 * [ ] Design system consistency and visual refinement are improved
 * [ ] The theme has accessibility checks
 * [ ] The theme supports all recommended Sphinx extensions
