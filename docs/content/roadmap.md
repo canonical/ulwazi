@@ -12,11 +12,11 @@ Priorities may shift as we learn from adoption and feedback.
 These are the goals we are working on in this cycle:
 
 * [x] The theme is published as a Python package
-* [x] Contributors’ (developer) documentation is available
+* [x] Developer documentation for contributors is available
 * [ ] The theme is validated with code tests
 * [ ] The theme is stable enough for wide internal adoption
 * [ ] The theme is ready to be used with Starter Pack
-* [ ] Early adopters’ (user) documentation is available
+* [ ] User documentation for early adopters is available
 * [ ] Plan for switching to Ulwazi as the default theme for the Starter Pack
 * [ ] The theme repository is public and ready for external contributions
 * [ ] Initial public-theme experience (brand-neutral usage) is supported
