@@ -2,7 +2,7 @@
 
 Ulwazi is under active development.
 This roadmap shows the current direction of travel and the major milestones
-we want to reach over the next ~12 months.
+we want to reach over the next by end of year 2026.
 
 This is a living document for the internal team and all contributors.
 Priorities may shift as we learn from adoption and feedback.
