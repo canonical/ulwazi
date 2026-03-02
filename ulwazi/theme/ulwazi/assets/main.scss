@@ -162,3 +162,11 @@ samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 sam
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
 }
+
+/* Definitions*/
+dt {
+  font-weight: 550;
+  line-height: $font-line-height-p;
+  font-size: $font-size-p;
+  line-height: 20px;
+}

@@ -12688,4 +12688,12 @@ samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 sam
   padding-bottom: 0.5rem !important;
 }
 
+/* Definitions*/
+dt {
+  font-weight: 550;
+  line-height: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 20px;
+}
+
 /*# sourceMappingURL=vanilla-main.css.map */

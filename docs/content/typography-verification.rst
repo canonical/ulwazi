@@ -1,11 +1,9 @@
-:orphan:
 
-.. vale off
 
 Typography Verification
 ========================
 
-.. vale on
+This is paragraph text under H1. Font should be: weight 400, size 0.875rem (14px), line-height 1.25rem (20px).
 
 This document verifies that all RST components follow the typography specifications defined in ``_vanilla-settings.scss``:
 
@@ -17,10 +15,6 @@ This document verifies that all RST components follow the typography specificati
 - **H6**: weight 400, size 1.125rem (18px), line-height 1.5rem (24px)
 - **P**: weight 400, size 0.875rem (14px), line-height 1.25rem (20px)
 
-H1 Heading Level
-================
-
-This is paragraph text under H1. Font should be: weight 400, size 0.875rem (14px), line-height 1.25rem (20px).
 
 H2 Heading Level
 ----------------
@@ -42,12 +36,6 @@ H5 Heading Level
 
 This is paragraph text under H5. Font should be: weight 400, size 0.875rem (14px), line-height 1.25rem (20px).
 
-H2 with H2 Variant
-------------------
-
-:h2:`This is H2 heading without TOC entry`
-
-This paragraph follows an H2 variant.
 
 Inline Formatting Verification
 -------------------------------
@@ -57,7 +45,7 @@ Typography should remain consistent with inline formatting:
 - :guilabel:`UI element` in paragraph text
 - ``code`` in paragraph text
 - :file:`file path` in paragraph text
-- :command:`command` in paragraph text
+- :command:`Ctrl + C` in paragraph text
 - :kbd:`Key` in paragraph text
 - *Italic* in paragraph text
 - **Bold** in paragraph text
@@ -215,17 +203,21 @@ Verification Checklist
 
 When reviewing this page in the browser:
 
-1. **Inspect H1** - Should be weight 500, size 32px, line-height 40px
-2. **Inspect H2** - Should be weight 300, size 32px, line-height 40px
-3. **Inspect H3** - Should be weight 500, size 24px, line-height 32px
-4. **Inspect H4** - Should be weight 300, size 24px, line-height 32px
-5. **Inspect H5** - Should be weight 600, size 18px, line-height 24px
-6. **Inspect H6** - Should be weight 400, size 18px, line-height 24px
-7. **Inspect paragraphs** - Should be weight 400, size 14px, line-height 20px
-8. **Inspect code blocks** - Should use Ubuntu Mono font family
-9. **Inspect inline code** - Should use Ubuntu Mono font family
-10. **Inspect all admonitions** - Paragraph text should maintain base typography
-11. **Inspect table cells** - Should maintain paragraph typography
-12. **Inspect list items** - Should maintain paragraph typography
-13. **Inspect definition lists** - Should maintain paragraph typography
-14. **Inspect tab content** - Should maintain paragraph typography
+.. raw:: html
+
+   <ul style="list-style-type: none; padding-left: 0;">
+     <li><input type="checkbox"> <strong>Inspect H1</strong> - Should be weight 500, size 32px, line-height 40px</li>
+     <li><input type="checkbox"> <strong>Inspect H2</strong> - Should be weight 300, size 32px, line-height 40px</li>
+     <li><input type="checkbox"> <strong>Inspect H3</strong> - Should be weight 500, size 24px, line-height 32px</li>
+     <li><input type="checkbox"> <strong>Inspect H4</strong> - Should be weight 300, size 24px, line-height 32px</li>
+     <li><input type="checkbox"> <strong>Inspect H5</strong> - Should be weight 600, size 18px, line-height 24px</li>
+     <li><input type="checkbox"> <strong>Inspect H6</strong> - Should be weight 400, size 18px, line-height 24px</li>
+     <li><input type="checkbox"> <strong>Inspect paragraphs</strong> - Should be weight 400, size 14px, line-height 20px</li>
+     <li><input type="checkbox"> <strong>Inspect code blocks</strong> - Should use Ubuntu Mono font family</li>
+     <li><input type="checkbox"> <strong>Inspect inline code</strong> - Should use Ubuntu Mono font family</li>
+     <li><input type="checkbox"> <strong>Inspect all admonitions</strong> - Paragraph text should maintain base typography</li>
+     <li><input type="checkbox"> <strong>Inspect table cells</strong> - Should maintain paragraph typography</li>
+     <li><input type="checkbox"> <strong>Inspect list items</strong> - Should maintain paragraph typography</li>
+     <li><input type="checkbox"> <strong>Inspect definition lists</strong> - Should maintain paragraph typography</li>
+     <li><input type="checkbox"> <strong>Inspect tab content</strong> - Should maintain paragraph typography</li>
+   </ul>
