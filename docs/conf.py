@@ -24,7 +24,7 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "The Ulwazi theme sample"
+project = "The Ulwazi theme sample - some very long phrase here to test the wrapping of the title in the header"
 author = "Canonical Ltd."
 
 
@@ -71,7 +71,7 @@ copyright = f"{datetime.date.today().year}"
 # NOTE: The Open Graph Protocol (OGP) enhances page display in a social graph
 #       and is used by social media platforms; see https://ogp.me/
 
-ogp_site_url = "https://canonical-starter-pack.readthedocs-hosted.com/"
+ogp_site_url = "https://canonical-ulwazi.readthedocs-hosted.com/"
 
 
 # Preview name of the documentation website
@@ -196,7 +196,7 @@ html_context = {
     
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
-    "logo_link_URL": "https://documentation.ubuntu.com",
+    "logo_link_URL": "/",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Canonical",
 

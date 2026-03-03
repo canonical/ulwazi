@@ -224,7 +224,7 @@ test: npm-install test-install
 	@. $(VENV); tox
 
 product-menu:
-	@echo "Running all tests with tox..."
+	@echo "Updating the product menu..."
 	python3 ulwazi/product_menu_gen.py
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

@@ -113,6 +113,16 @@ body {
   }
 }
 
+/*
+  Keep navigation items on a single line with text truncation.
+  Specific to the main header navigation structure.
+*/
+
+.l-docs__main .p-navigation__nav .p-navigation__items {
+  flex-wrap: nowrap !important;
+  white-space: nowrap;
+}
+
 // We can't access private variables, so we have to recreate the vars from layouts_docs.
 $l-documentation-sidebar-width: 15rem;
 $breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sidebar-width);
