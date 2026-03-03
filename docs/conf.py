@@ -116,7 +116,6 @@ product_page = "documentation.ubuntu.com"
 html_context = {
     # Product page URL; can be different from product docs URL
     #
-    #
     # TODO: If there's no such website,
     #       remove the {{ product_page }} link from the page header template
     #       (usually .sphinx/_templates/header.html; also, see README.rst).
