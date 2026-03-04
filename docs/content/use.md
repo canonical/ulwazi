@@ -143,7 +143,7 @@ html_context = {
 
 #### Add `project` and `author` inheritance
 
-Add these entries so the theme can display the project name and author without duplicating them:
+Add these entries to `html_context` so the theme can reuse the existing `project` and `author` values already defined in `conf.py`.
 
 ```python
     "project": project,
