@@ -35,16 +35,11 @@ ulwazi
 
 The key addition is the last line: `ulwazi`. This installs the theme from PyPI.
 
-## 2. Update `.readthedocs.yaml`
-
-No changes to `.readthedocs.yaml` are required for a standard installation from PyPI — Read the Docs
-will install `ulwazi` from your `requirements.txt` automatically.
-
-## 3. Update `conf.py`
+## 2. Update `conf.py`
 
 This is the most significant part of the migration. Follow the steps below.
 
-### 3.1. Set the theme
+### Set the theme
 
 Add or update the `html_theme` setting:
 
@@ -52,24 +47,10 @@ Add or update the `html_theme` setting:
 html_theme = "ulwazi"
 ```
 
-### 3.2. Remove the `canonical_sphinx` extension
+### Remove the `canonical_sphinx` extension
 
 In the `extensions` list, replace `"canonical_sphinx"` with the individual extensions that Ulwazi
 and its companion packages need:
-
-**Before:**
-
-```python
-extensions = [
-    "canonical_sphinx",
-    "sphinxcontrib.cairosvgconverter",
-    "sphinx_last_updated_by_git",
-    "sphinx.ext.intersphinx",
-    "sphinx_sitemap",
-]
-```
-
-**After:**
 
 ```python
 extensions = [
@@ -89,7 +70,7 @@ Feel free to add any other extensions that your documentation might need.
 Sometimes, the best way to figure out what they are is to build the docs and
 see the error message for something missing.
 
-### 3.3. Extract top-level variables for `html_context`
+### Extract top-level variables for `html_context`
 
 Before the `html_context` dictionary, add three new top-level variables.
 These are referenced inside `html_context` and make it easier for users to configure
@@ -117,33 +98,38 @@ product_page = "your-product.example.com"
 Replace the placeholder values with your actual repository URL,
 file extension (`.md` or `.rst`), and product page URL.
 
-### 3.4. Update `html_context`
+### Update `html_context`
 
 The `html_context` dictionary needs several additions and updates.
 For the full diff of a real migration, see the
 [Charmed Apache Kafka PR](https://github.com/canonical/kafka-operator/pull/444/files#diff-85933aa74a2d66c3e4dcdf7a9ad8397f5a7971080d34ef1108296a7c6b69e7e3).
+
+All changes in this section are added inside the `html_context` dictionary:
+
+```{code-block} python
+:caption: html_context dictionary
+
+html_context = {
+
+}
+```
 
 #### Use the new variables
 
 Replace the hardcoded strings with the variables you defined in step 3.3:
 
 ```python
-html_context = {
     "product_page": product_page,      # was: "your-product.example.com"
-    ...
     "github_url": github_repo,         # was: "https://github.com/your-org/your-repo"
-    ...
     "license": {
         "name": "Apache-2.0",          # TODO: set your license
         "url": github_repo + "/blob/main/LICENSE",
     },
-    ...
-}
 ```
 
 #### Add `project` and `author` inheritance
 
-Add these entries to `html_context` so the theme can reuse the existing `project` and `author` values already defined in `conf.py`.
+Update these entries so the theme can reuse the existing `project` and `author` values already defined in `conf.py`.
 
 ```python
     "project": project,
@@ -152,7 +138,7 @@ Add these entries to `html_context` so the theme can reuse the existing `project
 
 #### Add feedback, source extension, and default URL entries
 
-Add the following entries inside `html_context`:
+Adjust the feedback and source code parameters:
 
 ```python
     "feedback": True,
@@ -181,6 +167,8 @@ Uncomment and fill in `link1` and `link2` if you want links in the top navigatio
 
 #### Add product menu and logo entries
 
+Add the product menu (uncomment if you want the top thin line product menu) and main logo:
+
 ```python
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
@@ -192,6 +180,8 @@ Uncomment and fill in `link1` and `link2` if you want links in the top navigatio
 ```
 
 #### Add footer configuration
+
+Add footer parameters:
 
 ```python
     # TODO: Customize the footer.
@@ -207,7 +197,11 @@ Uncomment and fill in `link1` and `link2` if you want links in the top navigatio
     }
 ```
 
-### 3.5. Add syntax highlighting settings
+### Add syntax highlighting settings
+
+```{warning}
+This and following parameters are no longer key-values inside `html_context`.
+```
 
 Add these settings after the extensions list:
 
@@ -216,7 +210,7 @@ highlight_language = "none"  # default
 pygments_style = "autumn"    # see https://pygments.org/styles for more
 ```
 
-### 3.6. Add sitemap settings
+### Add sitemap settings
 
 Add the `sitemap_show_lastmod` setting to your sitemap section:
 
@@ -224,7 +218,7 @@ Add the `sitemap_show_lastmod` setting to your sitemap section:
 sitemap_show_lastmod = True
 ```
 
-### 3.7. Configure PDF generation
+### Configure PDF generation
 
 If you need a PDF version of your docs, add the following at the end of `conf.py`:
 
@@ -234,17 +228,9 @@ set_modern_pdf_config = True
 
 Don't forget to add an extension for PDF generation, for example: `sphinx_modern_pdf_style`.
 
-### 3.8. Update the `copyright` format
+### Update the `copyright` format
 
-The Ulwazi theme expects a plain year string rather than the older `CC-BY-SA` format.
-
-**Before:**
-
-```python
-copyright = "%s CC-BY-SA, %s" % (datetime.date.today().year, author)
-```
-
-**After:**
+The Ulwazi theme expects a plain year string rather than the older `CC-BY-SA` format:
 
 ```python
 copyright = f"{datetime.date.today().year}"
@@ -259,3 +245,8 @@ in the Ulwazi repository as
 [`default-conf.py`](https://github.com/canonical/ulwazi/blob/main/docs/default-conf.py).
 Copy it as the starting point for a new documentation set,
 or use it as a checklist when migrating an existing one.
+
+## Migration example
+
+For a real-world example of this migration, see the
+[Charmed Apache Kafka documentation PR](https://github.com/canonical/kafka-operator/pull/444/files).
