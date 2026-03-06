@@ -1,0 +1,17 @@
+/*
+This file provides a style for the MyST task list structure,
+which comes from the `tasklist` MyST extension.
+
+The point is to render the list with no bullets, just checkboxes.
+
+This is consistent with the way that GitHub renders them.
+*/
+
+li.task-list-item {
+    list-style-type: none;
+}
+
+input[type=checkbox].task-list-item-checkbox {
+    margin: 0 .2em .25em -1.25em;
+    vertical-align: middle;
+}

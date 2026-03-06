@@ -14,9 +14,11 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
+from urllib.parse import urlparse
 
 import bs4
 import pytest
@@ -50,3 +52,12 @@ def test_hello_integration(example_project):
 
     shutil.rmtree(example_project)  # Delete copied source
 
+    for tag in soup.find_all(["link", "script", "img"]):
+        attr = "href" if tag.name == "link" else "src"
+        url = str(tag.get(attr))
+
+        if url and not url.startswith(("http", "data:", "#")):
+            parsed_url = urlparse(url)
+            clean_path = parsed_url.path
+            asset_path = build_dir.parents[1] / ".test_output" / clean_path
+            assert os.path.exists(asset_path), f"Missing asset: {asset_path}"

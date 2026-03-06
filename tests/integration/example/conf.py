@@ -233,72 +233,11 @@ html_baseurl = "https://canonical-starter-pack.readthedocs-hosted.com/"
 # URL scheme. Add language and version scheme elements.
 # When configured with RTD variables, check for RTD environment so manual runs succeed:
 
-if "READTHEDOCS_VERSION" in os.environ:
-    version = os.environ["READTHEDOCS_VERSION"]
-    sitemap_url_scheme = "{version}{link}"
-else:
-    sitemap_url_scheme = "MANUAL/{link}"
-
-# Include `lastmod` dates in the sitemap:
-
-sitemap_show_lastmod = True
-
 #######################
 # Template and asset locations
 #######################
 
 html_theme = "ulwazi"
-html_static_path = ["_static"]
-templates_path = ["_templates"]
-
-
-#############
-# Redirects #
-#############
-
-# To set up redirects: https://documatt.gitlab.io/sphinx-reredirects/usage.html
-# For example: 'explanation/old-name.html': '../how-to/prettify.html',
-
-# To set up redirects in the Read the Docs project dashboard:
-# https://docs.readthedocs.io/en/stable/guides/redirects.html
-
-# NOTE: If undefined, set to None, or empty,
-#       the sphinx_reredirects extension will be disabled.
-
-redirects = {}
-
-
-###########################
-# Link checker exceptions #
-###########################
-
-# A regex list of URLs that are ignored by 'make linkcheck'
-#
-# TODO: Remove or adjust the ACME entry after you update the contributing guide
-
-linkcheck_ignore = [
-    "http://127.0.0.1:8000",
-    "https://github.com/canonical/ACME/*"
-    ]
-
-
-# A regex list of URLs where anchors are ignored by 'make linkcheck'
-
-linkcheck_anchors_ignore_for_url = [r"https://github\.com/.*"]
-
-# give linkcheck multiple tries on failure
-# linkcheck_timeout = 30
-linkcheck_retries = 3
-
-########################
-# Configuration extras #
-########################
-
-# Custom MyST syntax extensions; see
-# https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
-#
-# NOTE: By default, the following MyST extensions are enabled:
-#       substitution, deflist, linkify
 
 myst_enable_extensions = {
     "colon_fence",
@@ -307,36 +246,13 @@ myst_enable_extensions = {
     "tasklist"
 }
 
-
-# Custom Sphinx extensions; see
-# https://www.sphinx-doc.org/en/master/usage/extensions/index.html
-
-# NOTE: The canonical_sphinx extension is required for the starter pack.
-#       It automatically enables the following extensions:
-#       - custom-rst-roles
-#       - myst_parser
-#       - notfound.extension
-#       - related-links
-#       - sphinx_copybutton
-#       - sphinx_design
-#       - sphinx_reredirects
-#       - sphinx_tabs.tabs
-#       - sphinxcontrib.jquery
-#       - sphinxext.opengraph
-#       - terminal-output
-#       - youtube-links
-
 extensions = [
-    "sphinx_terminal",
-    "sphinxcontrib.cairosvgconverter",
-    "sphinx_last_updated_by_git",
-    "sphinx.ext.intersphinx",
-    "sphinx_sitemap",
     "ulwazi",
-    "sphinx_modern_pdf_style",
     "canonical_sphinx_config",
-    "myst_parser",
     "sphinxcontrib.jquery",
+    "sphinx_modern_pdf_style",
+    "sphinx_terminal",
+    "myst_parser",
     "sphinx_tabs.tabs",
     "sphinx_design",
 ]
