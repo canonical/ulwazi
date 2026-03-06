@@ -91,6 +91,8 @@ default_source_extension = ".md"
 
 # TODO: Change to your product website URL,
 #       dropping the 'https://' prefix, e.g. 'ubuntu.com/lxd'.
+#       If there is no such website - set to '/' or remove the {{ product_page }}
+#       link from the page header template.
 
 product_page = "your-product.example.com"
 ```
