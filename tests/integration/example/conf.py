@@ -1,5 +1,6 @@
 import datetime
 import os
+
 import yaml
 
 # Configuration for the Sphinx documentation builder.
@@ -112,13 +113,13 @@ html_context = {
     #
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
-    # 
+    #
     # Inherit project name
-    "project": project, 
+    "project": project,
     # Inherit the author value
     "author": author,
     # Licensing information
-    # 
+    #
     # TODO: Change your product's license name and a link to its file.
     # For the name, we recommend using the standard shorthand identifier from
     # https://spdx.org/licenses
@@ -163,31 +164,26 @@ html_context = {
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
     "display_contributors": False,
-
-    # Required for feedback button    
+    # Required for feedback button
     "feedback": True,
     "github_issues": "enabled",
     "default_source_extension": ".md",
     "default_edit_url": "https://github.com/canonical/ulwazi/edit/main/docs/index.rst",
     "default_view_url": "https://github.com/canonical/ulwazi/blob/main/docs/index.rst",
-
     # Horizontal Nav Menu
     "company": "Canonical",
     "link1_URL": "https://snapcraft.io/",
     "link1_name": "First optional link",
     "link2_URL": "https://snapcraft.io/",
     "link2_name": "Second optional link",
-
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
     "add_product_menu": True,
-    
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "/",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Canonical",
-
     # TODO: Customize the footer.
     "footer": {
         # Whether to add the product name as the first entry.
@@ -197,8 +193,8 @@ html_context = {
         # List your footer entries. Accepts HTML tags.
         "entries": [
             '<a class="js-revoke-cookie-manager" href="#tracker-settings">Manage your tracker settings</a>',
-        ]
-    }
+        ],
+    },
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a
@@ -239,12 +235,7 @@ html_baseurl = "https://canonical-starter-pack.readthedocs-hosted.com/"
 
 html_theme = "ulwazi"
 
-myst_enable_extensions = {
-    "colon_fence",
-    "deflist",
-    "substitution",
-    "tasklist"
-}
+myst_enable_extensions = {"colon_fence", "deflist", "substitution", "tasklist"}
 
 extensions = [
     "ulwazi",
@@ -259,12 +250,7 @@ extensions = [
 
 # Excludes files or directories from processing
 
-exclude_patterns = [
-    "doc-cheat-sheet*",
-    "_build", 
-    "Thumbs.db", 
-    ".DS_Store"
-]
+exclude_patterns = ["doc-cheat-sheet*", "_build", "Thumbs.db", ".DS_Store"]
 
 # Adds custom CSS files, located under 'html_static_path'
 
@@ -278,8 +264,8 @@ exclude_patterns = [
 
 # Syntax highlighting settings
 
-highlight_language = "none" # default
-pygments_style = "autumn" # see https://pygments.org/styles for more
+highlight_language = "none"  # default
+pygments_style = "autumn"  # see https://pygments.org/styles for more
 
 # Specifies a reST snippet to be appended to each .rst file
 
@@ -329,7 +315,7 @@ if "discourse_prefix" not in html_context and "discourse" in html_context:
 # Workaround for substitutions.yaml
 
 if os.path.exists("./reuse/substitutions.yaml"):
-    with open("./reuse/substitutions.yaml", "r") as fd:
+    with open("./reuse/substitutions.yaml") as fd:
         myst_substitutions = yaml.safe_load(fd.read())
 
 # Add configuration for intersphinx mapping

@@ -1,4 +1,8 @@
-from bs4 import BeautifulSoup
+from contextlib import suppress
+
+from bs4 import BeautifulSoup, Tag
+from bs4.element import AttributeValueList
+
 
 def convert_tabs(body_html: str) -> str:
     """Convert sphinx-tabs markup to vanilla theme classes and structure."""
@@ -6,12 +10,9 @@ def convert_tabs(body_html: str) -> str:
         return body_html
 
     soup = BeautifulSoup(body_html, "html.parser")
-    from bs4 import Tag
 
     # 1. Update sphinx-tabs docutils container to include p-tabs
     for tab_container in soup.find_all("div", class_="sphinx-tabs"):
-        if not isinstance(tab_container, Tag):
-            continue
         classes = tab_container.get("class")
         class_list = list(classes) if classes else []
         if "p-tabs" not in class_list:
@@ -34,8 +35,6 @@ def convert_tabs(body_html: str) -> str:
 
     # 2. Update tablist div to p-tabs__list
     for tablist in soup.find_all("div", attrs={"role": "tablist"}):
-        if not isinstance(tablist, Tag):
-            continue
         tablist_classes = tablist.get("class")
         class_list = list(tablist_classes) if tablist_classes else []
         if "closeable" in class_list:
@@ -46,8 +45,6 @@ def convert_tabs(body_html: str) -> str:
 
     # 3. Update tab buttons to p-tabs__link
     for tab_button in soup.find_all("button"):
-        if not isinstance(tab_button, Tag):
-            continue
         btn_classes = tab_button.get("class")
         class_list = list(btn_classes) if btn_classes else []
         if "sphinx-tabs-tab" in class_list:
@@ -80,9 +77,8 @@ def convert_tabs(body_html: str) -> str:
                 tab_button["data-sync-id"] = "tab"
 
     # 4. Update sphinx-tabs-panel to p-tabs__item (for panels)
+    panel: Tag | None
     for panel in soup.find_all(class_="sphinx-tabs-panel"):
-        if not isinstance(panel, Tag):
-            continue
         panel_classes = panel.get("class")
         class_list = list(panel_classes) if panel_classes else []
         if "sphinx-tabs-panel" in class_list:
@@ -93,9 +89,6 @@ def convert_tabs(body_html: str) -> str:
 
     # 5+. Convert sphinx-design `sd-tab-set` blocks into Vanilla tabs structure
     for sd_index, sd_container in enumerate(soup.find_all("div", class_="sd-tab-set")):
-        if not isinstance(sd_container, Tag):
-            continue
-
         # ensure container is marked as p-tabs
         existing = sd_container.get("class")
         existing_list = list(existing) if existing else []
@@ -104,9 +97,9 @@ def convert_tabs(body_html: str) -> str:
         sd_container["class"] = " ".join(existing_list)
 
         # collect radios, labels and panels (in the order they appear)
-        inputs = [i for i in sd_container.find_all("input", type="radio") if isinstance(i, Tag)]
-        labels = [l for l in sd_container.find_all("label", class_="sd-tab-label") if isinstance(l, Tag)]
-        panels = [p for p in sd_container.find_all("div", class_="sd-tab-content") if isinstance(p, Tag)]
+        inputs = sd_container.find_all("input", type="radio")
+        labels = sd_container.find_all("label", class_="sd-tab-label")
+        panels = sd_container.find_all("div", class_="sd-tab-content")
 
         # find or create the tablist (insert before first panel)
         tablist = sd_container.find("div", attrs={"role": "tablist"})
@@ -115,7 +108,9 @@ def convert_tabs(body_html: str) -> str:
             tablist["role"] = "tablist"
             tablist["class"] = "p-tabs__list"
             # insert tablist as first child of sd_container
-            first_child = next((c for c in sd_container.contents if isinstance(c, Tag)), None)
+            first_child = next(
+                (c for c in sd_container.contents if isinstance(c, Tag)), None
+            )
             if first_child:
                 first_child.insert_before(tablist)
             else:
@@ -142,28 +137,37 @@ def convert_tabs(body_html: str) -> str:
             # the vanilla-style numeric pattern (e.g. panel-0-0-0)
             base_id = f"0-{sd_index}-{idx}"
             button_id = f"tab-{base_id}"
-            panel_id = f"panel-{base_id}"
+            panel_id: str | AttributeValueList | None = f"panel-{base_id}"
 
             # create the tab button
             btn = soup.new_tag("button")
             btn["class"] = "p-tabs__link"
             btn["role"] = "tab"
             btn["id"] = button_id
-            btn["aria-controls"] = panel_id
+            btn["aria-controls"] = str(panel_id)
 
             # selected state: prefer checked input, otherwise first index
             selected = False
-            if inp and inp.has_attr("checked"):
-                selected = True
-            elif not any(i.has_attr("checked") for i in inputs) and idx == 0:
+            if (
+                inp
+                and inp.has_attr("checked")
+                or not any(i.has_attr("checked") for i in inputs)
+                and idx == 0
+            ):
                 selected = True
 
             btn["aria-selected"] = "true" if selected else "false"
             btn["tabindex"] = "0" if selected else "-1"
 
             # label text and sync value
-            text = lbl.get_text(strip=True) if lbl else (inp.get("value") if (inp and inp.get("value")) else f"Tab {idx+1}")
-            btn.string = text
+            text = (
+                lbl.get_text(strip=True)
+                if lbl
+                else (
+                    inp.get("value") if (inp and inp.get("value")) else f"Tab {idx + 1}"
+                )
+            )
+            btn.string = str(text)
             # Use a normalized sync value for robust matching
             sync_text = str(text) if text is not None else ""
             sync_value = sync_text.strip().lower().replace(" ", "-")
@@ -191,7 +195,7 @@ def convert_tabs(body_html: str) -> str:
                 sd_container.append(panel_tag)
 
             # set panel attributes
-            panel_tag["id"] = panel_id
+            panel_tag["id"] = panel_id if panel_id else ""
             panel_tag["role"] = "tabpanel"
             panel_tag["aria-labelledby"] = button_id
             panel_tag["tabindex"] = "0"
@@ -207,10 +211,8 @@ def convert_tabs(body_html: str) -> str:
             p_list = list(p_classes) if p_classes else []
             # remove sphinx-design specific class which may hide content
             if "sd-tab-content" in p_list:
-                try:
+                with suppress(ValueError):
                     p_list.remove("sd-tab-content")
-                except ValueError:
-                    pass
             # ensure vanilla panel class present
             if "p-tabs__item" not in p_list:
                 p_list.append("p-tabs__item")
@@ -224,13 +226,11 @@ def convert_tabs(body_html: str) -> str:
     # Final synchronization pass: ensure each p-tabs container has panels
     # correctly linked to their tab buttons and visible state set.
     for container in soup.find_all(class_="p-tabs"):
-        if not isinstance(container, Tag):
-            continue
         # find all tab buttons in this container
         tablist = container.find("div", attrs={"role": "tablist"})
-        buttons = []
-        if tablist and isinstance(tablist, Tag):
-            buttons = [b for b in tablist.find_all(attrs={"role": "tab"}) if isinstance(b, Tag)]
+        buttons: list[Tag] = []
+        if tablist:
+            buttons = tablist.find_all(attrs={"role": "tab"})
 
         for btn in buttons:
             btn_id = btn.get("id")
@@ -239,7 +239,7 @@ def convert_tabs(body_html: str) -> str:
             if not panel_id or not isinstance(panel_id, str):
                 continue
             panel = soup.find(id=panel_id)
-            if panel is None or not isinstance(panel, Tag):
+            if panel is None:
                 continue
 
             # ensure panel is linked back to the button
@@ -250,10 +250,8 @@ def convert_tabs(body_html: str) -> str:
             p_classes = panel.get("class")
             p_list = list(p_classes) if p_classes else []
             if "sd-tab-content" in p_list:
-                try:
+                with suppress(ValueError):
                     p_list.remove("sd-tab-content")
-                except ValueError:
-                    pass
             if "p-tabs__item" not in p_list:
                 p_list.append("p-tabs__item")
             panel["class"] = " ".join(p_list)
@@ -267,7 +265,11 @@ def convert_tabs(body_html: str) -> str:
                 style = panel.get("style")
                 if isinstance(style, str) and "display:" in style:
                     # remove any display properties
-                    parts = [p.strip() for p in style.split(";") if p.strip() and not p.strip().startswith("display:")]
+                    parts = [
+                        p.strip()
+                        for p in style.split(";")
+                        if p.strip() and not p.strip().startswith("display:")
+                    ]
                     if parts:
                         panel["style"] = "; ".join(parts)
                     elif panel.has_attr("style"):
@@ -276,4 +278,3 @@ def convert_tabs(body_html: str) -> str:
                 panel["hidden"] = "true"
 
     return str(soup)
-

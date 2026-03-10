@@ -1,9 +1,10 @@
 """Generate the navigation tree from Sphinx's toctree function's output."""
 
 import functools
-import copy
+from typing import cast
 
 from bs4 import BeautifulSoup, Tag
+from bs4.element import AttributeValueList, PageElement
 
 
 def _strip_code_tags_from_element(element: Tag) -> None:
@@ -11,13 +12,15 @@ def _strip_code_tags_from_element(element: Tag) -> None:
     for tag_name in ["code", "pre", "kbd", "samp"]:
         for tag in element.find_all(tag_name):
             tag.unwrap()
-    
+
     # Also remove span tags with code-related classes
-    for span in element.find_all("span", class_=["pre", "docutils", "literal", "notranslate"]):
+    for span in element.find_all(
+        "span", class_=["pre", "docutils", "literal", "notranslate"]
+    ):
         span.unwrap()
 
 
-def _get_navigation_expand_image(soup: BeautifulSoup, href: str = "#", is_active: bool = False) -> Tag:
+def _get_navigation_expand_image(soup: BeautifulSoup) -> Tag:
     icon_down = soup.new_tag("i", attrs={"class": "p-icon--chevron-down"})
     icon_up = soup.new_tag("i", attrs={"class": "p-icon--chevron-up"})
     container = soup.new_tag("span")
@@ -26,7 +29,7 @@ def _get_navigation_expand_image(soup: BeautifulSoup, href: str = "#", is_active
     return container
 
 
-@functools.lru_cache(maxsize=None)
+@functools.cache
 def get_navigation_tree(toctree_html: str) -> str:
     """Modify the given navigation tree, with furo-specific elements.
 
@@ -40,19 +43,16 @@ def get_navigation_tree(toctree_html: str) -> str:
 
     # We add a proper style for each <ul> in the globaltoc
     for element in soup.find_all("ul", recursive=True):
-        # classes = element.get("class", [])
-        # element["class"] = classes + ["p-side-navigation__list"]
         element["class"] = "p-side-navigation__list"
-    
+
     # We add a proper style for each <li> in the globaltoc
     for element in soup.find_all("li", recursive=True):
-        # element["class"] = "p-side-navigation__item"
-        element["class"].append("p-side-navigation__item")
+        cast(AttributeValueList, element["class"]).append("p-side-navigation__item")
 
     # We add a proper style for each <a> in the globaltoc
     for element in soup.find_all("a", recursive=True):
-        element["class"].append("p-side-navigation__link")
-    
+        cast(AttributeValueList, element["class"]).append("p-side-navigation__link")
+
     # Strip code-related tags from all anchor elements
     for element in soup.find_all("a", recursive=True):
         _strip_code_tags_from_element(element)
@@ -61,14 +61,19 @@ def get_navigation_tree(toctree_html: str) -> str:
     last_element_with_current = None
 
     for element in soup.find_all("li", recursive=True):
-        classes = element.get("class", [])
+        classes = (
+            cast(AttributeValueList, element.get("class"))
+            if element.get("class") is not None
+            else AttributeValueList()
+        )
         if "current" in classes:
             last_element_with_current = element
 
         has_children = bool(element.find("ul"))
 
         if has_children:
-            element["class"] = classes + ["has-children"]
+            classes.append("has-children")
+            element["class"] = classes
 
             toctree_checkbox_count += 1
             checkbox_name = f"toctree-checkbox-{toctree_checkbox_count}"
@@ -77,7 +82,7 @@ def get_navigation_tree(toctree_html: str) -> str:
                 "input",
                 attrs={
                     "type": "checkbox",
-                    "class": ["toctree-checkbox"],
+                    "class": "toctree-checkbox",
                     "id": checkbox_name,
                     "name": checkbox_name,
                     "role": "switch",
@@ -86,22 +91,17 @@ def get_navigation_tree(toctree_html: str) -> str:
             if "current" in classes:
                 checkbox.attrs["checked"] = ""
 
-            a_item = element.find("a")
-            href = a_item.attrs.get("href", "#") if a_item else "#"
-
-            # Pass is_active to icon generator
-            icon = _get_navigation_expand_image(soup, href=href, is_active="current" in classes)
+            a_item: Tag | None = element.find("a")
 
             label = soup.new_tag("label")
             label.attrs["for"] = checkbox_name
-            label.append(_get_navigation_expand_image(soup, href=href, is_active="current" in classes))
+            label.append(_get_navigation_expand_image(soup))
 
             # Create nav-item div and append a, label, checkbox
-            nav_item_div = soup.new_tag("div", attrs={
-                "class": "nav-item",
-                "data-checkbox": checkbox_name
-            })
-            nav_item_div.append(a_item)
+            nav_item_div = soup.new_tag(
+                "div", attrs={"class": "nav-item", "data-checkbox": checkbox_name}
+            )
+            nav_item_div.append(cast(PageElement, a_item))
             nav_item_div.append(checkbox)  # <-- checkbox before label
             nav_item_div.append(label)
 
@@ -115,8 +115,13 @@ def get_navigation_tree(toctree_html: str) -> str:
             children_ul = element.find("ul")
             if children_ul and "current" not in classes:
                 for child_li in children_ul.find_all("li", recursive=False):
-                    child_li["class"] = child_li.get("class", []) + ["hidden"]
-
+                    child_li_classes = (
+                        cast(AttributeValueList, child_li.get("class"))
+                        if child_li.get("class") is not None
+                        else AttributeValueList()
+                    )
+                    child_li_classes.append("hidden")
+                    child_li["class"] = child_li_classes
         else:
             # For leaf li, wrap the <a> in .nav-item
             a_item = element.find("a")
@@ -128,7 +133,11 @@ def get_navigation_tree(toctree_html: str) -> str:
                 element.insert(0, nav_item_div)
 
     if last_element_with_current is not None:
-        last_element_with_current["class"].append("current-page")
-        last_element_with_current["class"].append('aria-current="page"')
+        cast(AttributeValueList, last_element_with_current["class"]).append(
+            "current-page"
+        )
+        cast(AttributeValueList, last_element_with_current["class"]).append(
+            'aria-current="page"'
+        )
 
     return str(soup)

@@ -34,7 +34,7 @@ lint = [
     "mypy>=1.16.0",
 ]
 types = [
-
+    "types-requests>=2.32.4.20260107",
 ]
 dev = [
     "canonical-sphinx-config @ git+https://github.com/Canonical/canonical-sphinx-config.git@main",
