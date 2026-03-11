@@ -1,17 +1,35 @@
+# This file is part of Ulwazi.
+#
+# Copyright 2026 Canonical Ltd.
+#
+# This program is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License version 3, as published by the Free
+# Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranties of MERCHANTABILITY, SATISFACTORY
+# QUALITY, or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+# License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""Connect the extension to Sphinx and shim some Vanilla styling."""
+
 import importlib.util
 from pathlib import Path
 from typing import Any, cast
 
+from docutils import nodes
 from sphinx.util.typing import ExtensionMetadata
 from sphinx.application import Sphinx
-import sphinx.application
 from sphinx.config import Config
 from bs4 import BeautifulSoup, Tag
 from bs4.element import AttributeValueList
 
 
-from .navigation import get_navigation_tree
-from .tabs import convert_tabs
+from ulwazi.navigation import get_navigation_tree
+from ulwazi.tabs import convert_tabs
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
@@ -27,7 +45,12 @@ except ImportError:
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
-    """Lorem ipsum."""
+    """Connect the extension's core components to Sphinx.
+
+    :param app: The Sphinx application instance
+
+    :returns: The extension's metadata
+    """
     app.add_html_theme("ulwazi", str(Path(__file__).parent / "theme/ulwazi"))
     app.add_config_value("localtoc_max_depth", None, "html")
     app.connect(  # pyright: ignore [reportUnknownMemberType]
@@ -44,7 +67,11 @@ def setup(app: Sphinx) -> ExtensionMetadata:
 
 
 def config_inited(app: Sphinx, config: Config) -> None:
-    """Read user-provided values and setup defaults."""
+    """Read user-provided values and set up defaults.
+
+    :param app: The Sphinx application instance
+    :param config: The Sphinx build configuration
+    """
     html_context = config.html_context
 
     required_packages = [
@@ -160,7 +187,7 @@ def apply_list_classes(body_html: str) -> str:
 
 
 def apply_admonition_classes(body_html: str) -> str:
-    """Convert admonition classes to notifications in the generated body HTML"""
+    """Convert admonition classes to notifications in the generated body HTML."""
     if not body_html:
         return body_html
 
@@ -240,7 +267,7 @@ def modify_inline_code(body_html: str) -> str:
 
 
 def modify_local_toc(toc: str) -> str:
-    """Modify localtoc to apply Vanilla Framework styles"""
+    """Modify localtoc to apply Vanilla Framework styles."""
     if not toc:
         return toc
 
@@ -283,14 +310,14 @@ def modify_local_toc(toc: str) -> str:
     return str(toc_html)
 
 
-def truncate_local_toc(toc: str, max_depth: int) -> str:
+def truncate_local_toc(toc: str, max_depth: int = -1) -> str:
     """Limit the number of nested levels if localtoc_max_depth is set in conf.py."""
     if not toc:
         return toc
 
     toc_html = BeautifulSoup(toc, "html.parser")
 
-    if max_depth is not -1:
+    if max_depth != -1:
 
         def trim_ul(ul: Tag, depth: int = 1) -> None:
             if depth >= max_depth:
@@ -312,11 +339,11 @@ def truncate_local_toc(toc: str, max_depth: int) -> str:
 
 
 def _html_page_context(
-    app: sphinx.application.Sphinx,
-    pagename: str,
-    templatename: str,
+    app: Sphinx,
+    _pagename: str,
+    _templatename: str,
     context: dict[str, Any],
-    doctree: Any,
+    _doctree: nodes.document | None,
 ) -> None:
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(context)

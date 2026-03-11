@@ -1,3 +1,21 @@
+# This file is part of Ulwazi.
+#
+# Copyright 2026 Canonical Ltd.
+#
+# This program is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License version 3, as published by the Free
+# Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranties of MERCHANTABILITY, SATISFACTORY
+# QUALITY, or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+# License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""Utilities for building the navigation menu."""
+
 import logging
 import sys
 from pathlib import Path
@@ -7,8 +25,8 @@ import requests
 from bs4 import BeautifulSoup, Tag
 
 PRODUCT_MENU_PARSING_URL = "https://canonical.com/data"
-PRODUCT_MENU_FILENAME = "product_menu_copy.html"
 PRODUCT_MENU_DIRECTORY = "ulwazi/theme/ulwazi/components/"
+PRODUCT_MENU_FILENAME = "product_menu_copy.html"
 NAVMENU_LINE_THRESHOLD = 100
 
 logging.basicConfig(
@@ -18,6 +36,14 @@ logger = logging.getLogger(__name__)
 
 
 def fetch_and_parse(url: str) -> BeautifulSoup | None:
+    """Fetch and parse markup from a given URL.
+
+    :param url: The remote source to pull the markup from.
+
+    :returns: The parsed markup on success. Else, none.
+
+    :raises RequestException: For bad reponses from the URL request.
+    """
     try:
         response = requests.get(url, timeout=30)
         response.raise_for_status()  # Raise an error for bad responses (4xx and 5xx)
@@ -99,6 +125,12 @@ def apply_grid_alignment(header: Tag, page: BeautifulSoup) -> None:
 
 
 def get_nav_menu(page: BeautifulSoup) -> str:
+    """Extract and process a page's navigation menu.
+
+    :param page: The page to extract the nav menu from.
+
+    :returns: The page navigation, wrapped in a custom header tag.
+    """
     header = page.find("header", id="navigation")
 
     if not header:
@@ -121,7 +153,11 @@ def get_nav_menu(page: BeautifulSoup) -> str:
 
 
 def save2file(content: str) -> None:
-    filename = PRODUCT_MENU_DIRECTORY.strip("/") + "/" + PRODUCT_MENU_FILENAME
+    """Write the product menu HTML to a file.
+
+    :param content: The string to write to write to the product menu copy.
+    """
+    filename = f"{PRODUCT_MENU_DIRECTORY.strip('/')}/{PRODUCT_MENU_FILENAME}"
     Path.mkdir(Path(filename).parent, exist_ok=True, parents=True)
     with Path(filename).open("w", encoding="utf-8") as file:
         file.write(content)

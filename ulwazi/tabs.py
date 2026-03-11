@@ -1,10 +1,28 @@
+# This file is part of Ulwazi.
+#
+# Copyright 2026 Canonical Ltd.
+#
+# This program is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License version 3, as published by the Free
+# Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranties of MERCHANTABILITY, SATISFACTORY
+# QUALITY, or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+# License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""Styles and structures sphinx-tabs in accordance with Vanilla."""
+
 from contextlib import suppress
 
 from bs4 import BeautifulSoup, Tag
 from bs4.element import AttributeValueList
 
 
-def convert_tabs(body_html: str) -> str:
+def convert_tabs(body_html: str) -> str:  # noqa: PLR0912, PLR0915
     """Convert sphinx-tabs markup to vanilla theme classes and structure."""
     if not body_html:
         return body_html

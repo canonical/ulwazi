@@ -1,5 +1,5 @@
 import datetime
-import os
+from pathlib import Path
 
 import yaml
 
@@ -208,13 +208,6 @@ html_context = {
 # 'source_edit_link': 'https://github.com/canonical/sphinx-docs-starter-pack',
 # }
 
-# Project slug; see https://meta.discourse.org/t/what-is-category-slug/87897
-#
-# TODO: If your documentation is hosted on https://docs.ubuntu.com/,
-#       uncomment and update as needed.
-
-# slug = ''
-
 # Limit the number of levels for Table of contents
 localtoc_max_depth = 3
 
@@ -252,16 +245,6 @@ extensions = [
 
 exclude_patterns = ["doc-cheat-sheet*", "_build", "Thumbs.db", ".DS_Store"]
 
-# Adds custom CSS files, located under 'html_static_path'
-
-# html_css_files = []
-
-
-# Adds custom JavaScript files, located under 'html_static_path'
-
-# html_js_files = []
-
-
 # Syntax highlighting settings
 
 highlight_language = "none"  # default
@@ -271,30 +254,6 @@ pygments_style = "autumn"  # see https://pygments.org/styles for more
 
 rst_epilog = """
 """
-
-# Feedback button at the top; enabled by default
-#
-# TODO: To disable the button, uncomment this.
-
-# disable_feedback_button = True
-
-
-# Your manpage URL
-#
-# TODO: To enable manpage links, uncomment and replace {codename} with required
-#       release, preferably an LTS release (e.g. noble). Do *not* substitute
-#       {section} or {page}; these will be replaced by sphinx at build time
-#
-# NOTE: If set, adding ':manpage:' to an .rst file
-#       adds a link to the corresponding man section at the bottom of the page.
-
-# manpages_url = 'https://manpages.ubuntu.com/manpages/{codename}/en/' + \
-#     'man{section}/{page}.{section}.html'
-
-
-# Specifies a reST snippet to be prepended to each .rst file
-# This defines a :center: role that centers table cell content.
-# This defines a :h2: role that styles content for use with PDF generation.
 
 rst_prolog = """
 .. role:: center
@@ -310,18 +269,13 @@ rst_prolog = """
 # Workaround for https://github.com/canonical/canonical-sphinx/issues/34
 
 if "discourse_prefix" not in html_context and "discourse" in html_context:
-    html_context["discourse_prefix"] = html_context["discourse"] + "/t/"
+    html_context["discourse_prefix"] = f"{html_context['discourse']}/t/"
 
 # Workaround for substitutions.yaml
 
-if os.path.exists("./reuse/substitutions.yaml"):
-    with open("./reuse/substitutions.yaml") as fd:
+if Path("./reuse/substitutions.yaml").exists():
+    with Path("./reuse/substitutions.yaml").open() as fd:
         myst_substitutions = yaml.safe_load(fd.read())
 
-# Add configuration for intersphinx mapping
-
-intersphinx_mapping = {}
-
 # PDF
-
 set_modern_pdf_config = True

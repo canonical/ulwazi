@@ -1,4 +1,4 @@
-# This file is part of ulwazi.
+# This file is part of Ulwazi.
 #
 # Copyright 2026 Canonical Ltd.
 #
@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -61,7 +60,7 @@ def test_hello_integration(example_project):
             parsed_url = urlparse(url)
             clean_path = parsed_url.path
             asset_path = build_dir.parents[1] / ".test_output" / clean_path
-            assert os.path.exists(asset_path), f"Missing asset: {asset_path}"
+            assert Path(asset_path).exists(), f"Missing asset: {asset_path}"
 
     # Test SCSS styles propagation
     target = soup.find("p", class_="heading-test-scss")
@@ -69,31 +68,3 @@ def test_hello_integration(example_project):
     assert "This is a test about SCSS propagation." in target.text, (
         "Expected text not found inside <p class='heading-test-scss'>"
     )
-
-
-# INDEX_PATH = "docs/_build/index.html"
-# EXPECTED_COLOR = ("rgb(128, 0, 128)", "purple")
-
-# def test_rendered_color():
-#     index_path = os.path.abspath("docs/_build/index.html")
-#     assert os.path.exists(index_path), f"index.html not found in {index_path}"
-#     with sync_playwright() as p:
-#         browser = p.chromium.launch()
-#         assert browser, "Failed to launch Chromium browser"
-#         page = browser.new_page()
-#         assert page, "Failed to create a new browser page"
-#         page.goto(f"file://{index_path}")
-#         assert page.content(), "Page failed to load content"
-
-#         # Check if element exists
-#         assert page.query_selector("p.heading-test-scss"), "Element <p class='heading-test-scss'> not found"
-
-#         color = page.eval_on_selector(
-#             "p.heading-test-scss", "el => window.getComputedStyle(el).color"
-#         )
-#         assert color is not None, "Failed to retrieve computed color from element"
-
-#         print(f"[DEBUG] Computed color: {color}")
-#         assert color in EXPECTED_COLOR, f"Color is not correct (check SCSS properties propagation): {color}"
-
-#         browser.close()

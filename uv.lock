@@ -1007,6 +1007,24 @@ wheels = [
 ]
 
 [[package]]
+name = "types-docutils"
+version = "0.22.3.20260223"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/80/33/92c0129283363e3b3ba270bf6a2b7d077d949d2f90afc4abaf6e73578563/types_docutils-0.22.3.20260223.tar.gz", hash = "sha256:e90e868da82df615ea2217cf36dff31f09660daa15fc0f956af53f89c1364501", size = 57230, upload-time = "2026-02-23T04:11:21.806Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ba/c7/a4ae6a75d5b07d63089d5c04d450a0de4a5d48ffcb84b95659b22d3885fe/types_docutils-0.22.3.20260223-py3-none-any.whl", hash = "sha256:cc2d6b7560a28e351903db0989091474aa619ad287843a018324baee9c4d9a8f", size = 91969, upload-time = "2026-02-23T04:11:20.966Z" },
+]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.20250915"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7e/69/3c51b36d04da19b92f9e815be12753125bd8bc247ba0470a982e6979e71c/types_pyyaml-6.0.12.20250915.tar.gz", hash = "sha256:0f8b54a528c303f0e6f7165687dd33fafa81c807fcac23f632b63aa624ced1d3", size = 17522, upload-time = "2025-09-15T03:01:00.728Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bd/e0/1eed384f02555dde685fff1a1ac805c1c7dcb6dd019c916fe659b1c1f9ec/types_pyyaml-6.0.12.20250915-py3-none-any.whl", hash = "sha256:e7d4d9e064e89a3b3cae120b4990cd370874d2bf12fa5f46c97018dd5d3c9ab6", size = 20338, upload-time = "2025-09-15T03:00:59.218Z" },
+]
+
+[[package]]
 name = "types-requests"
 version = "2.32.4.20260107"
 source = { registry = "https://pypi.org/simple" }
@@ -1053,6 +1071,8 @@ lint = [
     { name = "mypy" },
 ]
 types = [
+    { name = "types-docutils" },
+    { name = "types-pyyaml" },
     { name = "types-requests" },
 ]
 
@@ -1076,7 +1096,11 @@ dev = [
     { name = "sphinx-terminal", specifier = ">=1.0.3" },
 ]
 lint = [{ name = "mypy", specifier = ">=1.16.0" }]
-types = [{ name = "types-requests", specifier = ">=2.32.4.20260107" }]
+types = [
+    { name = "types-docutils", specifier = ">=0.22.3.20260223" },
+    { name = "types-pyyaml", specifier = ">=6.0.12.20250915" },
+    { name = "types-requests", specifier = ">=2.32.4.20260107" },
+]
 
 [[package]]
 name = "urllib3"
