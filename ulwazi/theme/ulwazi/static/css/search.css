@@ -8,7 +8,7 @@
 #search-results ul.search > li {
   margin: 0;
   padding: 0.9rem 0;
-  border-top: 1px solid rgba(0,0,0,0.12); /* divider */
+  border-top: 1px solid rgba(0, 0, 0, 0.12); /* divider */
 }
 
 #search-results ul.search > li:first-child {

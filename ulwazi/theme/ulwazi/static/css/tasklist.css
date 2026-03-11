@@ -8,10 +8,10 @@ This is consistent with the way that GitHub renders them.
 */
 
 li.task-list-item {
-    list-style-type: none;
+  list-style-type: none;
 }
 
-input[type=checkbox].task-list-item-checkbox {
-    margin: 0 .2em .25em -1.25em;
-    vertical-align: middle;
+input[type="checkbox"].task-list-item-checkbox {
+  margin: 0 0.2em 0.25em -1.25em;
+  vertical-align: middle;
 }

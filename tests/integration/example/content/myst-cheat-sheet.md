@@ -1,15 +1,16 @@
 ---
 orphan: true
 myst:
-    substitutions:
-      reuse_key: "This is **included** text."
-      advanced_reuse_key: "This is a substitution that includes a code block:
-                         ```
-                         code block
-                         ```"
+  substitutions:
+    reuse_key: "This is **included** text."
+    advanced_reuse_key: "This is a substitution that includes a code block:
+      ```
+      code block
+      ```"
 ---
 
 (myst-ref)=
+
 # Markdown/MyST cheat sheet
 
 This file contains the syntax for commonly used Markdown and MyST markup.
@@ -33,7 +34,7 @@ Also see the [MyST documentation](https://myst-parser.readthedocs.io/en/latest/i
 - `code`
 - {command}`command`
 - {kbd}`Key`
-- *Italic*
+- _Italic_
 - **Bold**
 
 ## Code blocks, `font test`
@@ -74,11 +75,11 @@ build:
     python: "3.11"
   jobs:
     post_create_environment:
-    - pip install sphinx build
-    - python -m build
-    - pip install dist/ulwazi-0.2.tar.gz
+      - pip install sphinx build
+      - python -m build
+      - pip install dist/ulwazi-0.2.tar.gz
     post_checkout:
-    - git fetch --unshallow || true
+      - git fetch --unshallow || true
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
@@ -88,12 +89,12 @@ sphinx:
 
 # If using Sphinx, optionally build your docs in additional formats such as PDF
 formats:
-- pdf
+  - pdf
 
 # Optionally declare the Python requirements required to build your docs
 python:
   install:
-  - requirements: requirements.txt
+    - requirements: requirements.txt
 ```
 
 Shell:
@@ -149,6 +150,7 @@ The HTML pages are in _build.
 ```
 
 (a_section_target_myst)=
+
 ## Links
 
 - [Canonical website](https://canonical.com/)
@@ -172,7 +174,7 @@ Use the following syntax::
 
 1. Step 1
    - Item 1
-      * Sub-item
+     - Sub-item
    - Item 2
      1. Sub-step 1
      1. Sub-step 2
@@ -193,11 +195,11 @@ Term 2
 
 - [ ] Unchecked.
 
-    Continuation.
+  Continuation.
 
 - [x] Checked.
 
-    Continuation.
+  Continuation.
 
 ## Tables
 
@@ -207,33 +209,34 @@ MyST Markdown supports three main types of tables: Grid, List, and CSV. Grid tab
 
 Small grid table, default aligned:
 
-| Header 1                           | Header 2 |
-|------------------------------------|----------|
-| [1,1]<br>Second paragraph          |  [1,2]   |
-| [2,1]                              |  [2,2]   |
+| Header 1                  | Header 2 |
+| ------------------------- | -------- |
+| [1,1]<br>Second paragraph | [1,2]    |
+| [2,1]                     | [2,2]    |
 
 Small grid table, right aligned:
 
-| Header 1                           | Header 2 |
-|-----------------------------------:|---------:|
-| [1,1]<br>Second paragraph          |  [1,2]   |
-| [2,1]                              |  [2,2]   |
+|                  Header 1 | Header 2 |
+| ------------------------: | -------: |
+| [1,1]<br>Second paragraph |    [1,2] |
+|                     [2,1] |    [2,2] |
 
 Wide grid table, default aligned:
 
-| Header 1                   | Header 2   |     Header 3  | Header 4  | Header 5   | Header 6    | Header 7  | Header 8  | Header 9   |
-|----------------------------|------------|---------------|-----------|------------|-------------|-----------|-----------|------------|
-| [1,1]<br>Second paragraph  | [1,2]      |   [1,3]       | [1,4]     | [1,5]      | [1,6]       | [1,7]     | [1,8]     | [1,9]      |
-| [2,1]                      | [2,2]      |   [2,3]       | [2,4]     | [2,5]      | [2,6]       | [2,7]     | [2,8]     | [2,9]      |
+| Header 1                  | Header 2 | Header 3 | Header 4 | Header 5 | Header 6 | Header 7 | Header 8 | Header 9 |
+| ------------------------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
+| [1,1]<br>Second paragraph | [1,2]    | [1,3]    | [1,4]    | [1,5]    | [1,6]    | [1,7]    | [1,8]    | [1,9]    |
+| [2,1]                     | [2,2]    | [2,3]    | [2,4]    | [2,5]    | [2,6]    | [2,7]    | [2,8]    | [2,9]    |
 
 Grid table with table directive, default aligned:
 
 :::{table}
 
-  | Header 1                           | Header 2 |
-  |------------------------------------|----------|
-  | [1,1]<br>Second paragraph          | [1,2]    |
-  | [2,1]                              | [2,2]    |
+| Header 1                  | Header 2 |
+| ------------------------- | -------- |
+| [1,1]<br>Second paragraph | [1,2]    |
+| [2,1]                     | [2,2]    |
+
 :::
 
 Grid table with table directive, right aligned:
@@ -241,10 +244,11 @@ Grid table with table directive, right aligned:
 :::{table}
 :align: right
 
-  | Header 1                           | Header 2 |
-  |------------------------------------|----------|
-  | [1,1]<br>Second paragraph          | [1,2]    |
-  | [2,1]                              | [2,2]    |
+| Header 1                  | Header 2 |
+| ------------------------- | -------- |
+| [1,1]<br>Second paragraph | [1,2]    |
+| [2,1]                     | [2,2]    |
+
 :::
 
 ### List tables
@@ -286,7 +290,7 @@ CSV table, default aligned:
 
 :::{csv-table}
 :header: >
-:  "Header 1", "Header 2"
+: "Header 1", "Header 2"
 "[1,1]", "[1,2]"
 "[2,1]", "[2,2]"
 :::
@@ -296,7 +300,7 @@ CSV table, right aligned:
 :::{csv-table}
 :align: right
 :header: >
-:  "Header 1", "Header 2"
+: "Header 1", "Header 2"
 "[1,1]", "[1,2]"
 "[2,1]", "[2,2]"
 :::
@@ -320,7 +324,7 @@ In the end, the note returned home and did what notes do best: it sat politely i
 ```{note}
 A weird note that once broke:
 
-While there are many other tools and/or approaches for creating diagrams in visualizations in your documentation (e.g. [C4 model], [Dia], [PlantUML], [Structurizr], etc), we only provide support for `sphinxcontrib-mermaid` in the starter pack. 
+While there are many other tools and/or approaches for creating diagrams in visualizations in your documentation (e.g. [C4 model], [Dia], [PlantUML], [Structurizr], etc), we only provide support for `sphinxcontrib-mermaid` in the starter pack.
 ```
 
 ```{tip}
@@ -373,9 +377,7 @@ Keys can be defined at the top of a file, or in a `myst_substitutions` option in
 
 ## Tabs
 
-
 ### Sphinx-design tabs
-
 
 ````{tab-set}
 
@@ -411,8 +413,10 @@ some term
 ## More useful markup
 
 - ```{versionadded} X.Y
-- {abbr}`API (Application Programming Interface)`
 
+  ```
+
+- {abbr}`API (Application Programming Interface)`
 
 <!-- ## Custom extensions
 

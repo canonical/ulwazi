@@ -3,16 +3,16 @@
 /* Make ToC to stick to the upper edge of the screen when scrolling down */
 
 .sb-content {
-  align-items: flex-start;   /* don't stretch children */
+  align-items: flex-start; /* don't stretch children */
 }
 
 .sb-sidebar-secondary {
-  flex: 0 0 auto;            /* don’t grow/shrink like the article */
+  flex: 0 0 auto; /* don’t grow/shrink like the article */
 }
 
 .sb-sidebar-secondary.is-sticky {
   position: sticky;
-  top: 0;                    /* offset for a sticky header */
-  align-self: flex-start;    /* allow sticky inside flex */
-  height: fit-content;       /* shrink-wrap content */
+  top: 0; /* offset for a sticky header */
+  align-self: flex-start; /* allow sticky inside flex */
+  height: fit-content; /* shrink-wrap content */
 }

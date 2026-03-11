@@ -22,7 +22,7 @@ jobs:
 
       - name: Build SCSS
         run: make vanilla-main
-      
+
       - name: Build HTML
         run: make html
 

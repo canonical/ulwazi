@@ -23,7 +23,7 @@
   font-weight: $font-weight-h1;
   font-size: $font-size-h1;
   line-height: $font-line-height-h1;
-} 
+}
 
 .p-heading--2 {
   font-weight: $font-weight-h2;
@@ -125,7 +125,9 @@ body {
 
 // We can't access private variables, so we have to recreate the vars from layouts_docs.
 $l-documentation-sidebar-width: 15rem;
-$breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sidebar-width);
+$breakpoint-full-screen-layout: calc(
+  $breakpoint-large + $l-documentation-sidebar-width
+);
 
 // This is flimsy and over-reliant on `!important`. If Vanilla's docs layout remains unextendable, we should re-implement it from scratch.
 @media screen and (min-width: $breakpoint-full-screen-layout) {
@@ -135,16 +137,13 @@ $breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sideba
       ".      header  header header .     "
       ".      sidebar title  meta   .     "
       ".      sidebar main   meta   .     "
-      "footer footer  footer footer footer"
-      !important;
+      "footer footer  footer footer footer" !important;
     // Main width is a magic number; recalculate and adjust later.
     grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
   }
 
   .l-docs__subgrid {
-    grid-template-areas:
-      ".      sidebar main   meta   .     "
-      !important;
+    grid-template-areas: ".      sidebar main   meta   .     " !important;
     grid-template-columns: 1fr 15rem 47rem 15rem 1fr !important;
   }
 }
@@ -171,9 +170,8 @@ readthedocs-docdiff {
   align-items: center;
 }
 
-.p-table-of-contents__list ul{
+.p-table-of-contents__list ul {
   padding-left: 0rem;
-
 }
 
 .p-table-of-contents__link {
@@ -264,27 +262,30 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
   Table alignments.
 */
 
-.text-right{
+.text-right {
   text-align: right;
 }
 
-.text-center{
+.text-center {
   text-align: center;
 }
 
-.text-left{
+.text-left {
   text-align: left;
 }
 
-.align-right td, .align-right th{
+.align-right td,
+.align-right th {
   text-align: right;
 }
 
-.align-center td, .align-center th{
+.align-center td,
+.align-center th {
   text-align: center;
 }
 
-.align-left td, .align-left th{
+.align-left td,
+.align-left th {
   text-align: left;
 }
 
@@ -292,7 +293,7 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
   Canary class.
 */
 
-.heading-test-scss{
+.heading-test-scss {
   color: purple;
 }
 
@@ -305,13 +306,12 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
 }
 
 dd p {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 /*
   copy-button formatting
 */
-
 
 button.copybtn,
 button.copybtn:hover {
@@ -324,7 +324,6 @@ button.copybtn:hover {
   background: none;
   background-color: transparent !important;
 }
-  
 
 // Disable tooltip for copy buttons only
 .copybtn.o-tooltip--left[data-tooltip]::before,
@@ -333,10 +332,10 @@ button.copybtn:hover {
   display: none !important;
 }
 
-.input button.copybtn{
+.input button.copybtn {
   background-color: transparent !important;
   z-index: 999;
-} 
+}
 
 div.input > button.copybtn svg {
   height: 1.4em !important;
@@ -345,7 +344,7 @@ div.input > button.copybtn svg {
 
 /* terminal formatting */
 .terminal-code pre {
-  color:#ebebeb !important;
+  color: #ebebeb !important;
   margin-bottom: 0;
 }
 
@@ -353,8 +352,7 @@ div.terminal {
   margin-bottom: 1.5em;
 }
 
-/* Copybutton for terminals needs white icon rather than defualt black */
+/* Copybutton for terminals needs white icon rather than default black */
 div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }
-

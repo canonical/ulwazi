@@ -9,7 +9,7 @@ Prerequisites
 
 Install `npm <https://docs.npmjs.com/downloading-and-installing-node-js-and-npm>`_
 and `Yarn <https://yarnpkg.com/>`_:
-  
+
 .. code-block:: shell
 
    sudo apt install npm
@@ -69,7 +69,7 @@ making any changes to the SCSS files it consists of:
 Theme files layout
 ------------------
 
-The following list contatins some of the most important files and folders to focus on
+The following list contains some of the most important files and folders to focus on
 for contributing to this theme:
 
 - ``ulwazi/__init__.py``  -- Theme initialization and core hooks

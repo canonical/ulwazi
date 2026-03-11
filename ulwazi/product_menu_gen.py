@@ -42,7 +42,7 @@ def fetch_and_parse(url: str) -> BeautifulSoup | None:
 
     :returns: The parsed markup on success. Else, none.
 
-    :raises RequestException: For bad reponses from the URL request.
+    :raises RequestException: For bad responses from the URL request.
     """
     try:
         response = requests.get(url, timeout=30)

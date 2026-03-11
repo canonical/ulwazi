@@ -106,7 +106,6 @@ svg:not(:root) {
   overflow: hidden;
 }
 
-
 .p-toc-feedback-block {
   display: block;
   margin-bottom: var(--pst-spacing-m, 1rem);

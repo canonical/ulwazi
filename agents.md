@@ -5,8 +5,8 @@
 Ulwazi is a Sphinx theme based on Canonical's [Vanilla Framework](https://vanillaframework.io/).
 It provides both generic Vanilla styling and Canonical-specific theming for documentation projects.
 
-**Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript  
-**License**: GPL-3.0  
+**Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript
+**License**: GPL-3.0
 **Python**: >=`3.8` (`3.11` is recommended)
 
 ## Common Tasks
@@ -123,7 +123,7 @@ tests/                       # Test scripts
 - **[pyproject.toml](pyproject.toml)**: Package metadata, dependencies, build config
 - **[Makefile](Makefile)**: Build automation and common tasks
 - **[requirements.txt](requirements.txt)**: Development dependencies
-- **[ulwazi/__init__.py](ulwazi/__init__.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
+- **[ulwazi/**init**.py](ulwazi/**init**.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
 - **[ulwazi/theme/ulwazi/layout.html](ulwazi/theme/ulwazi/layout.html)**: Base page layout template
 
 ## Development Workflow
@@ -146,7 +146,7 @@ tests/                       # Test scripts
 ### HTML Modifications
 
 - Override templates in [ulwazi/theme/ulwazi/](ulwazi/theme/ulwazi/)
-- Modify `_html_page_context` function in [ulwazi/__init__.py](ulwazi/__init__.py) for pre-theme processing
+- Modify `_html_page_context` function in [ulwazi/**init**.py](ulwazi/__init__.py) for pre-theme processing
 
 ### Testing
 
@@ -213,7 +213,7 @@ make tests
 - **Sample docs**: [docs/](docs/) - comprehensive test content
 - **Cheatsheet pages**: [docs/content/rst-cheat-sheet.rst](docs/content/rst-cheat-sheet.rst) and [docs/content/myst-cheat-sheet.md](docs/content/myst-cheat-sheet.md) - comprehensive examples of all supported blocks (admonitions, code blocks, tables, etc.). Use these to verify theme rendering. When adding new features, update both cheatsheets with equivalent examples in similar structure.
 - **Test scripts**: [tests/](tests/) - validation and PDF generation tests
-- **Built output**: [docs/_build/](docs/_build/) - inspect generated HTML
+- **Built output**: [docs/\_build/](docs/_build/) - inspect generated HTML
 
 ## Syntax
 

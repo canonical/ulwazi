@@ -18,7 +18,6 @@ Content for Tab 3
 
 ````
 
-
 ## Synced tabs
 
 This is example 1:

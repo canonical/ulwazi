@@ -1,55 +1,56 @@
 /* Define colors */
 :root {
-    --primary-text-color: rgb(17, 17, 17);
-    --background-hover-color: rgb(242, 242, 242);
-    --hidden-element-color: rgb(255, 255, 255);
+  --primary-text-color: rgb(17, 17, 17);
+  --background-hover-color: rgb(242, 242, 242);
+  --hidden-element-color: rgb(255, 255, 255);
 }
 
 /* Navigation menu Heading */
 .p-side-navigation__heading {
-    display: flex;
-    padding: 0.25rem 1rem 0.25rem 1.5rem;
-    text-decoration: none;
-    box-sizing: border-box;
-    font-size: 0.875rem;
-    font-weight: 550;
-    line-height: 1.5rem;
+  display: flex;
+  padding: 0.25rem 1rem 0.25rem 1.5rem;
+  text-decoration: none;
+  box-sizing: border-box;
+  font-size: 0.875rem;
+  font-weight: 550;
+  line-height: 1.5rem;
 }
 
 /* All the toctree styles (default styles from Sphinx) are nullified */
-li[class*=' toctree'], li[class^='toctree'] {
-    all: unset;
+li[class*=" toctree"],
+li[class^="toctree"] {
+  all: unset;
 }
 
 /* Unordered List */
 .p-side-navigation__list {
-    padding-left: 0;
+  padding-left: 0;
 }
 
 /* Collapsible element icon (scoped to side navigation only) */
 .p-side-navigation__list .icon {
-    --readthedocs-font-size: 0.725rem;
-    --readthedocs-flyout-header-font-size: 0.845rem;
-    --readthedocs-flyout-font-size: 0.725rem;
+  --readthedocs-font-size: 0.725rem;
+  --readthedocs-flyout-header-font-size: 0.845rem;
+  --readthedocs-flyout-font-size: 0.725rem;
 
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    margin-left: -5px;
-    color: var(--primary-text-color);
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.15;
-    cursor: pointer;
-    user-select: none;
-    -webkit-text-size-adjust: 100%;
-    scrollbar-color: rgb(135, 135, 135) transparent;
-    position: relative;
-    top: 6px;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-left: -5px;
+  color: var(--primary-text-color);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.15;
+  cursor: pointer;
+  user-select: none;
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: rgb(135, 135, 135) transparent;
+  position: relative;
+  top: 6px;
 }
 
 .p-side-navigation__list .icon:hover {
-    background-color: var(--background-hover-color);
+  background-color: var(--background-hover-color);
 }
 
 /* .p-side-navigation__list .icon.current {
@@ -58,96 +59,96 @@ li[class*=' toctree'], li[class^='toctree'] {
 
 /* SVG image styling for chevron icon (scoped to side navigation only) */
 .p-side-navigation__list .svg {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    color: var(--primary-text-color);
-    margin: 0;
-    padding: 0;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  color: var(--primary-text-color);
+  margin: 0;
+  padding: 0;
 }
 
 /* Visually Hidden Elements */
 .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-    background: var(--hidden-element-color);
-    display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  background: var(--hidden-element-color);
+  display: none;
 }
 
 /* Checkbox is used for expanded state storage */
 .toctree-checkbox {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-    background: var(--hidden-element-color);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  background: var(--hidden-element-color);
 }
 
 .toctree-checkbox ~ ul {
-    display: none;
+  display: none;
 }
 
 .toctree-checkbox:checked ~ ul {
-    display: block;
+  display: block;
 }
 
 /* Rotate icon when expanded (scoped to side navigation only) */
 .p-side-navigation__list .toctree-checkbox:checked ~ label .icon svg {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 /* Nav menu item content */
 .p-side-navigation__item-content {
-    display: flex;
-    flex-flow: row;
-    align-items: center;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
 }
 
 /* NavMenu item link */
 .p-side-navigation__item-content a {
-    flex-grow: 1;
-    white-space: nowrap;
+  flex-grow: 1;
+  white-space: nowrap;
 }
 
 /* NavMenu item link with hover effect */
 .p-side-navigation__item-content a:hover {
-    background-color: var(--background-hover-color);
+  background-color: var(--background-hover-color);
 }
 
 /* Wrap only the <a>, <input>, and <label> in a flex container */
 .p-side-navigation__item > a,
 .p-side-navigation__item > input,
 .p-side-navigation__item > label {
-    display: inline-flex;
-    align-items: bottom;
-    gap: 5px;
-    white-space: nowrap;
+  display: inline-flex;
+  align-items: bottom;
+  gap: 5px;
+  white-space: nowrap;
 }
 
 /* Adjust position of NavMenu items */
 .p-side-navigation__item {
-    position: relative;
-    top: -5px;
+  position: relative;
+  top: -5px;
 }
 
 /* Adjust position of icon inside a label inside a NavMenu item (scoped) */
 .p-side-navigation__list .p-side-navigation__item > label i {
-    position: relative;
-    top: 6px;
+  position: relative;
+  top: 6px;
 }
 
 .p-side-navigation--raw-html li > a {
-    display: inline-flex;
+  display: inline-flex;
 }

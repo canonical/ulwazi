@@ -89,7 +89,7 @@ namespaces = false
 
 [tool.codespell]
 ignore-words-list = "buildd,crate,keyserver,comandos,ro,dedent,dedented"
-skip = ".tox,.git,build,.*_cache,__pycache__,*.tar,*.snap,*.png,./node_modules,.direnv,.venv,venv,.vscode"
+skip = ".tox,.git,build,.*_cache,__pycache__,*.tar,*.snap,*.png,./node_modules,.direnv,.venv,venv,.vscode,ulwazi/theme/ulwazi/static/css/*,"
 quiet-level = 3
 check-filenames = true
 
@@ -151,7 +151,10 @@ strict = false
 line-length = 88
 target-version = "py310"
 src = ["ulwazi", "tests"]
-extend-exclude = ["*/_version.py"]
+exclude = [
+    "*/_version.py",
+    "tests/integration/example/*",
+]
 
 [tool.ruff.format]
 docstring-code-format = true
