@@ -11867,6 +11867,10 @@ ol.u-text-max-width,
   rendered. Has access to Vanilla's global classes and variables.
 */
 /*
+  Set consistent base font size across all displays.
+  This prevents rem units from scaling differently on 4K displays.
+*/
+/*
   Utility classes.
 */
 .hidden {
@@ -12014,13 +12018,13 @@ readthedocs-docdiff {
 }
 
 .p-table-of-contents__link {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .nav-item a {
   width: 100%;
-  font-size: 14px;
-  line-height: 24px !important;
+  font-size: 0.875rem;
+  line-height: 1.5rem !important;
 }
 
 .nav-item label {
@@ -12578,7 +12582,7 @@ p > [class*=p-icon] {
 .p-heading--1 {
   font-weight: 500;
   font-size: 2rem;
-  line-height: 40px;
+  line-height: 2.5rem;
   padding-top: 0.62px;
   padding-bottom: 6px;
   margin: 0;
@@ -12587,7 +12591,7 @@ p > [class*=p-icon] {
 .p-heading--2 {
   font-weight: 300;
   font-size: 2rem;
-  line-height: 40px;
+  line-height: 2.5rem;
   padding-top: 0.62px;
   padding-bottom: 7.38px;
   margin: 0;
@@ -12596,7 +12600,7 @@ p > [class*=p-icon] {
 .p-heading--3 {
   font-weight: 500;
   font-size: 1.5rem;
-  line-height: 32px;
+  line-height: 2rem;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
   margin: 0;
@@ -12605,7 +12609,7 @@ p > [class*=p-icon] {
 .p-heading--4 {
   font-weight: 300;
   font-size: 1.5rem;
-  line-height: 32px;
+  line-height: 2rem;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
   margin: 0;
@@ -12614,7 +12618,7 @@ p > [class*=p-icon] {
 p {
   font-weight: 400;
   font-size: 0.875rem;
-  line-height: 20px;
+  line-height: 1.25rem;
   padding-top: 1.24px;
   padding-bottom: 14.76px;
   margin: 0;
@@ -12661,7 +12665,7 @@ p {
 }
 
 .p-top__link {
-  font-size: 14px !important;
+  font-size: 0.875rem !important;
 }
 
 /* Compacting list elements */
@@ -12679,7 +12683,7 @@ pre,
 code:not(h1 code):not(h2 code):not(h3 code):not(h4 code):not(h5 code):not(h6 code),
 kbd:not(h1 kbd):not(h2 kbd):not(h3 kbd):not(h4 kbd):not(h5 kbd):not(h6 kbd),
 samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 samp) {
-  font-size: 14px !important;
+  font-size: 0.875rem !important;
 }
 
 /* Admonitions  */
@@ -12691,9 +12695,8 @@ samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 sam
 /* Definitions*/
 dt {
   font-weight: 550;
-  line-height: 1.25rem;
   font-size: 0.875rem;
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 /*# sourceMappingURL=vanilla-main.css.map */

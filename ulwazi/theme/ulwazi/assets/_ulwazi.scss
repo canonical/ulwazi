@@ -185,14 +185,14 @@ readthedocs-docdiff {
 }
 
 .p-table-of-contents__link {
-  font-size: 14px;
+  font-size: $font-size-p;
 }
 
 // Navigation link styles
 .nav-item a {
   width: 100%;
-  font-size: 14px;
-  line-height: 24px !important;
+  font-size: $font-size-p;
+  line-height: 1.5rem !important;
 }
 // arrow label styles
 .nav-item label {

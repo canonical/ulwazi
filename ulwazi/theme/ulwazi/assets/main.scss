@@ -52,7 +52,7 @@
 .p-heading--1 {
   font-weight: $font-weight-h1;
   font-size: $font-size-h1;
-  line-height: 40px;
+  line-height: $font-line-height-h1;
   padding-top: 0.62px;
   padding-bottom: 6px;
   margin: 0;
@@ -61,7 +61,7 @@
 .p-heading--2 {
   font-weight: $font-weight-h2;
   font-size: $font-size-h2;
-  line-height: 40px;
+  line-height: $font-line-height-h2;
   padding-top: 0.62px;
   padding-bottom: 7.38px;
   margin: 0;
@@ -69,7 +69,7 @@
 .p-heading--3 {
   font-weight: $font-weight-h3;
   font-size: $font-size-h3;
-  line-height: 32px;
+  line-height: $font-line-height-h3;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
   margin: 0;
@@ -77,7 +77,7 @@
 .p-heading--4 {
   font-weight: $font-weight-h4;
   font-size: $font-size-h4;
-  line-height: 32px;
+  line-height: $font-line-height-h4;
   padding-top: 7.5px;
   padding-bottom: 8.49px;
   margin: 0;
@@ -85,7 +85,7 @@
 p {
   font-weight: $font-weight-p;
   font-size: $font-size-p;
-  line-height: 20px;
+  line-height: $font-line-height-p;
   padding-top: 1.24px;
   padding-bottom: 14.76px;
   margin: 0;
@@ -136,7 +136,7 @@ $nav-offset-left: 0.5rem;
 }
 
 .p-top__link {
-  font-size: 14px !important;
+  font-size: $font-size-p !important;
 }
 
 /* Compacting list elements */
@@ -154,7 +154,7 @@ pre,
 code:not(h1 code):not(h2 code):not(h3 code):not(h4 code):not(h5 code):not(h6 code), 
 kbd:not(h1 kbd):not(h2 kbd):not(h3 kbd):not(h4 kbd):not(h5 kbd):not(h6 kbd), 
 samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 samp) {
-  font-size: 14px !important;
+  font-size: $font-size-p !important;
 }
 
 /* Admonitions  */
@@ -166,7 +166,6 @@ samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 sam
 /* Definitions*/
 dt {
   font-weight: 550;
-  line-height: $font-line-height-p;
   font-size: $font-size-p;
-  line-height: 20px;
+  line-height: $font-line-height-p;
 }
