@@ -4,6 +4,14 @@
 */
 
 /*
+  Set consistent base font size across all displays.
+  This prevents rem units from scaling differently on 4K displays.
+*/
+// html {
+//   font-size: 16px;
+// }
+
+/*
   Utility classes.
 */
 

@@ -1,9 +1,33 @@
-
-
-Typography Verification
+Typography verification
 ========================
 
 This is paragraph text under H1. Font should be: weight 400, size 0.875rem (14px), line-height 1.25rem (20px).
+
+Testing Setup
+-------------
+
+**Important**: This typography verification should be tested at 1K screen resolution (1920x1080 pixels).
+
+To set your browser viewport to 1K resolution using Developer Tools:
+
+**Chrome**:
+
+1. Press ``F12`` or ``Ctrl+Shift+I`` (``Cmd+Option+I`` on Mac) to open DevTools
+2. Click the **Toggle device toolbar** icon (or press ``Ctrl+Shift+M`` / ``Cmd+Shift+M``)
+3. In the device toolbar, select **Responsive** from the dropdown
+4. Set dimensions to **1920 x 1080**
+5. Ensure zoom is set to **100%**
+
+**Firefox**:
+
+1. Press ``F12`` or ``Ctrl+Shift+I`` (``Cmd+Option+I`` on Mac) to open DevTools
+2. Click the **Responsive Design Mode** icon (or press ``Ctrl+Shift+M`` / ``Cmd+Option+M``)
+3. Set dimensions to **1920 x 1080**
+4. Ensure zoom is set to **100%**
+
+
+Typography Specifications
+--------------------------
 
 This document verifies that all RST components follow the typography specifications defined in ``_vanilla-settings.scss``:
 
@@ -19,22 +43,22 @@ This document verifies that all RST components follow the typography specificati
 H2 Heading Level
 ----------------
 
-This is paragraph text under H2. Font should be: weight 400, size 0.875rem (14px), line-height 1.25rem (20px).
+This is paragraph text under H2. Font should be: weight 300, size 2rem (32px), line-height 2.5rem (40px).
 
 H3 Heading Level
 ~~~~~~~~~~~~~~~~
 
-This is paragraph text under H3. Font should be: weight 400, size 0.875rem (14px), line-height 1.25rem (20px).
+This is paragraph text under H3. Font should be: weight 500, size 1.5rem (24px), line-height 2rem (32px).
 
 H4 Heading Level
 ^^^^^^^^^^^^^^^^
 
-This is paragraph text under H4. Font should be: weight 400, size 0.875rem (14px), line-height 1.25rem (20px).
+This is paragraph text under H4. Font should be: weight 300, size 1.5rem (24px), line-height 2rem (32px).
 
 H5 Heading Level
 ................
 
-This is paragraph text under H5. Font should be: weight 400, size 0.875rem (14px), line-height 1.25rem (20px).
+This is paragraph text under H5. Font should be: weight 600, size 1.125rem (18px), line-height 1.5rem (24px).
 
 
 Inline Formatting Verification

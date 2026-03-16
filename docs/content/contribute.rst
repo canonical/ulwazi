@@ -106,4 +106,4 @@ All contributions are welcome: bug reports, feature requests, and pull requests.
 
    rst-cheat-sheet.rst
    myst-cheat-sheet.md
-   typography-verification.rst
+   
