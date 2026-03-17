@@ -4,6 +4,14 @@
 */
 
 /*
+  Set consistent base font size across all displays.
+  This prevents rem units from scaling differently on 4K displays.
+*/
+// html {
+//   font-size: 16px;
+// }
+
+/*
   Utility classes.
 */
 
@@ -177,14 +185,14 @@ readthedocs-docdiff {
 }
 
 .p-table-of-contents__link {
-  font-size: 14px;
+  font-size: $font-size-p;
 }
 
 // Navigation link styles
 .nav-item a {
   width: 100%;
-  font-size: 14px;
-  line-height: 24px !important;
+  font-size: $font-size-p;
+  line-height: 1.5rem !important;
 }
 // arrow label styles
 .nav-item label {
@@ -358,3 +366,33 @@ div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }
 
+.guilabel {
+  background-color: #ddeeff80;
+  border: 1px solid #bedaf580;
+  border-radius: 0.5em;
+  color: var(--vf-color-text-default);
+  font-size: 0.9em;
+  padding: 0 0.3em;
+}
+
+kbd:not(.compound) {
+  background-color: var(--vf-color-background-alt);
+  border: 1px solid var(--vf-color-border-default);
+  border-radius: 0.2rem;
+  box-shadow: 0 0.0625rem 0 rgba(0, 0, 0, 0.2), inset 0 0 0 0.125rem var(--vf-color-background-default);
+  color: var(--vf-color-text-default);
+  display: inline-block;
+  font-size: $font-size-p;
+  margin: 0 0.2rem;
+  padding: 0 0.2rem;
+  vertical-align: middle;
+}
+
+kbd.compound {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
