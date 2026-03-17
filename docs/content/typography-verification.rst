@@ -69,8 +69,8 @@ Typography should remain consistent with inline formatting:
 - :guilabel:`UI element` in paragraph text
 - ``code`` in paragraph text
 - :file:`file path` in paragraph text
-- :command:`Ctrl + C` in paragraph text
-- :kbd:`Key` in paragraph text
+- :command:`sudo apt update` in paragraph text
+- :kbd:`Ctrl+C` in paragraph text
 - *Italic* in paragraph text
 - **Bold** in paragraph text
 

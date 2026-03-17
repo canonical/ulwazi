@@ -12191,6 +12191,37 @@ div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }
 
+.guilabel {
+  background-color: rgba(221, 238, 255, 0.5019607843);
+  border: 1px solid rgba(190, 218, 245, 0.5019607843);
+  border-radius: 0.5em;
+  color: var(--vf-color-text-default);
+  font-size: 0.9em;
+  padding: 0 0.3em;
+}
+
+kbd:not(.compound) {
+  background-color: var(--vf-color-background-alt);
+  border: 1px solid var(--vf-color-border-default);
+  border-radius: 0.2rem;
+  box-shadow: 0 0.0625rem 0 rgba(0, 0, 0, 0.2), inset 0 0 0 0.125rem var(--vf-color-background-default);
+  color: var(--vf-color-text-default);
+  display: inline-block;
+  font-size: 0.875rem;
+  margin: 0 0.2rem;
+  padding: 0 0.2rem;
+  vertical-align: middle;
+}
+
+kbd.compound {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);
