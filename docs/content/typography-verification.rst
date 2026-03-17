@@ -39,26 +39,87 @@ This document verifies that all RST components follow the typography specificati
 - **H6**: weight 400, size 1.125rem (18px), line-height 1.5rem (24px)
 - **P**: weight 400, size 0.875rem (14px), line-height 1.25rem (20px)
 
+The table below shows the **actual computed values** at the current viewport width and updates as you resize the window:
+
+.. raw:: html
+
+   <table id="live-typography-table">
+     <thead>
+       <tr>
+         <th>Element</th>
+         <th>Font size</th>
+         <th>Font weight</th>
+         <th>Line height</th>
+       </tr>
+     </thead>
+     <tbody id="live-typography-tbody">
+       <tr><td colspan="4"><em>Loading…</em></td></tr>
+     </tbody>
+   </table>
+   <script>
+   (function () {
+     var targets = [
+       { label: 'H1', selector: 'h1' },
+       { label: 'H2', selector: 'h2' },
+       { label: 'H3', selector: 'h3' },
+       { label: 'H4', selector: 'h4' },
+       { label: 'H5', selector: 'h5' },
+       { label: 'H6', selector: 'h6' },
+       { label: 'P',  selector: 'p'  },
+     ];
+
+     function update() {
+       var tbody = document.getElementById('live-typography-tbody');
+       if (!tbody) return;
+       var root = document.querySelector('article') || document.body;
+       var rows = targets.map(function (t) {
+         var el = root.querySelector(t.selector);
+         if (!el) return '<tr><td>' + t.label + '</td><td colspan="3"><em>not found</em></td></tr>';
+         var cs = window.getComputedStyle(el);
+         return '<tr>'
+           + '<td>' + t.label + '</td>'
+           + '<td>' + cs.fontSize + '</td>'
+           + '<td>' + cs.fontWeight + '</td>'
+           + '<td>' + cs.lineHeight + '</td>'
+           + '</tr>';
+       });
+       tbody.innerHTML = rows.join('');
+     }
+
+     if (document.readyState === 'loading') {
+       document.addEventListener('DOMContentLoaded', update);
+     } else {
+       update();
+     }
+     window.addEventListener('resize', update);
+   }());
+   </script>
+
 
 H2 Heading Level
 ----------------
 
-This is paragraph text under H2. Font should be: weight 300, size 2rem (32px), line-height 2.5rem (40px).
+This is paragraph text under H2. Heading font should be: weight 300, size 2rem (32px), line-height 2.5rem (40px).
 
 H3 Heading Level
 ~~~~~~~~~~~~~~~~
 
-This is paragraph text under H3. Font should be: weight 500, size 1.5rem (24px), line-height 2rem (32px).
+This is paragraph text under H3. Heading font should be: weight 500, size 1.5rem (24px), line-height 2rem (32px).
 
 H4 Heading Level
 ^^^^^^^^^^^^^^^^
 
-This is paragraph text under H4. Font should be: weight 300, size 1.5rem (24px), line-height 2rem (32px).
+This is paragraph text under H4. Heading font should be: weight 300, size 1.5rem (24px), line-height 2rem (32px).
 
 H5 Heading Level
 ................
 
-This is paragraph text under H5. Font should be: weight 600, size 1.125rem (18px), line-height 1.5rem (24px).
+This is paragraph text under H5. Heading font should be: weight 600, size 1.125rem (18px), line-height 1.5rem (24px).
+
+H6 Heading Level
+""""""""""""""""
+
+This is paragraph text under H6. Heading font should be: weight 400, size 1.125rem (18px), line-height 1.5rem (24px).
 
 
 Inline Formatting Verification
