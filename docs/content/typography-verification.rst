@@ -1,7 +1,7 @@
 Typography verification
 ========================
 
-This is paragraph text under H1. Font should be: weight 500, size 2rem (32px), line-height 2.5rem (40px).
+This is paragraph text under H1. Heading font should be: weight 500, size 2rem (32px), line-height 2.5rem (40px).
 
 Testing Setup
 -------------
