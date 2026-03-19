@@ -5,8 +5,8 @@
 Ulwazi is a Sphinx theme based on Canonical's [Vanilla Framework](https://vanillaframework.io/).
 It provides both generic Vanilla styling and Canonical-specific theming for documentation projects.
 
-**Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript  
-**License**: GPL-3.0  
+**Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript
+**License**: GPL-3.0
 **Python**: >=`3.8` (`3.11` is recommended)
 
 ## Common Tasks
@@ -16,20 +16,20 @@ It provides both generic Vanilla styling and Canonical-specific theming for docu
 Build theme and docs:
 
 ```bash
-make html
+make docs-html
 ```
 
 Build theme and docs, and then run a local web server
 (auto-rebuilds on content changes) to serve them:
 
 ```bash
-make run
+make docs
 ```
 
 The web server will continue to run and publish the docs on `http://127.0.0.1:8000` by default.
-To override: `make run SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080`
+To override: `make docs SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080`
 
-To access the web pages served by web server, you'll need to keep the `make run` command running
+To access the web pages served by web server, you'll need to keep the `make docs` command running
 and use a different terminal.
 
 When all testing is done, don't forget to terminate the command serving the sample docs
@@ -53,7 +53,7 @@ Available tests:
 Clean (delete) the built sample documentation content:
 
 ```bash
-make clean-doc
+make docs-clean
 ```
 
 Clean the built docs and theme files:
@@ -62,13 +62,7 @@ Clean the built docs and theme files:
 make clean
 ```
 
-Clean everything including venv:
-
-```bash
-make fclean
-```
-
-Rebuild theme and docs (combination of `clean` and `run`):
+Rebuild theme and docs (combination of `clean` and `docs`):
 
 ```bash
 make rebuild
@@ -77,14 +71,14 @@ make rebuild
 ### Styling
 
 ```bash
-make npm-install  # Install Vanilla Framework modules
+make install-npm  # Install Vanilla Framework modules
 make vanilla-main # Compile SCSS to CSS
 ```
 
 ### Quick start
 
 Prefer Makefile targets.
-The `make run` command creates the virtualenv and installs Python deps from requirements.
+The `make docs` command creates the virtualenv and installs Python deps from requirements.
 
 Install Node dependencies (only if you need to compile SCSS):
 
@@ -123,7 +117,7 @@ tests/                       # Test scripts
 - **[pyproject.toml](pyproject.toml)**: Package metadata, dependencies, build config
 - **[Makefile](Makefile)**: Build automation and common tasks
 - **[requirements.txt](requirements.txt)**: Development dependencies
-- **[ulwazi/__init__.py](ulwazi/__init__.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
+- **[ulwazi/**init**.py](ulwazi/**init**.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
 - **[ulwazi/theme/ulwazi/layout.html](ulwazi/theme/ulwazi/layout.html)**: Base page layout template
 
 ## Development Workflow
@@ -136,24 +130,24 @@ tests/                       # Test scripts
 
 ### Content Changes
 
-- Sample docs in [docs/content/](docs/content/) auto-rebuilds with `make run`
+- Sample docs in [docs/content/](docs/content/) auto-rebuilds with `make docs`
 
 ### Dependency Changes
 
 - Update [requirements.txt](requirements.txt) and [pyproject.toml](pyproject.toml)
-- Run `make fclean` then `make run` to rebuild venv
+- Run `make clean` then `make docs` to rebuild venv
 
 ### HTML Modifications
 
 - Override templates in [ulwazi/theme/ulwazi/](ulwazi/theme/ulwazi/)
-- Modify `_html_page_context` function in [ulwazi/__init__.py](ulwazi/__init__.py) for pre-theme processing
+- Modify `_html_page_context` function in [ulwazi/**init**.py](ulwazi/__init__.py) for pre-theme processing
 
 ### Testing
 
 Clean up the old files:
 
 ```bash
-make fclean
+make clean
 ```
 
 Update the Vanilla Framework styles:
@@ -165,18 +159,18 @@ make vanilla-main
 Build and serve the theme and the sample docs:
 
 ```bash
-make run
+make docs
 ```
 
 While the last command is running, access the default address in
 another terminal to check the results manually.
 
-When all testing is done, make sure to terminate the `make run` command in the original terminal.
+When all testing is done, make sure to terminate the `make docs` command in the original terminal.
 
 Run automatic tests to avoid regression:
 
 ```bash
-make tests
+make test
 ```
 
 ## Code Conventions
@@ -205,7 +199,7 @@ make tests
 - **Virtual Environment**: Located at `.venv/`, managed automatically by Make
 - **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
 - **Node Modules**: Required for Vanilla Framework compilation
-- **Auto-rebuild**: `make run` watches content changes but NOT theme changes
+- **Auto-rebuild**: `make docs` watches content changes but NOT theme changes
 - **Dependencies**: Core deps in [pyproject.toml](pyproject.toml), dev deps in [requirements.txt](requirements.txt)
 
 ## Testing Locations
@@ -213,7 +207,7 @@ make tests
 - **Sample docs**: [docs/](docs/) - comprehensive test content
 - **Cheatsheet pages**: [docs/content/rst-cheat-sheet.rst](docs/content/rst-cheat-sheet.rst) and [docs/content/myst-cheat-sheet.md](docs/content/myst-cheat-sheet.md) - comprehensive examples of all supported blocks (admonitions, code blocks, tables, etc.). Use these to verify theme rendering. When adding new features, update both cheatsheets with equivalent examples in similar structure.
 - **Test scripts**: [tests/](tests/) - validation and PDF generation tests
-- **Built output**: [docs/_build/](docs/_build/) - inspect generated HTML
+- **Built output**: [docs/\_build/](docs/_build/) - inspect generated HTML
 
 ## Syntax
 
