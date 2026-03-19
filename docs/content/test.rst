@@ -14,6 +14,7 @@ Test content.
    test_sphinx_tabs_myst
    test_sphinx_tabs
    test-code-headings
+   typography-verification.rst
 
 
 
