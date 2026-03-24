@@ -3,9 +3,9 @@
 <search class="l-docs__main" id="searchbox" style="display: none" role="search"></search>
   <form class="p-search-box" action="{{ pathto('search') }}" method="get">
     <label class="u-off-screen" for="search">Search keywords</label>
-    <input type="search" id="search" class="p-search-box__input" name="q" placeholder="Search keywords" required="" autocomplete="on">
+    <input type="search" id="search" class="p-search-box__input" name="q" placeholder="Search keywords" required="" autocomplete="on" autocorrect="off" autocapitalize="off" spellcheck="false" aria-labelledby="searchbutton">
     <button type="reset" class="p-search-box__reset"><i class="p-icon--close">Close</i></button>
-    <button type="submit" class="p-search-box__button"><i class="p-icon--search">Search</i></button>
+    <button type="submit" class="p-search-box__button" id="searchbutton"><i class="p-icon--search">Search</i></button>
   </form>
 </search>
 {%- endif %}

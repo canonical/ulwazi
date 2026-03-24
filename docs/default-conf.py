@@ -24,14 +24,14 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "The Ulwazi theme sample - some very long phrase here to test the wrapping of the title in the header"
+project = "The Product name"
 author = "Canonical Ltd."
 
 
 # Sidebar documentation title; best kept reasonably short
 #
 # TODO: To include a version number, add it here (hardcoded or automated).
-version = "beta"
+# version = "beta"
 
 
 # TODO: To disable the title, set to an empty string.
@@ -71,7 +71,7 @@ copyright = f"{datetime.date.today().year}"
 # NOTE: The Open Graph Protocol (OGP) enhances page display in a social graph
 #       and is used by social media platforms; see https://ogp.me/
 
-ogp_site_url = "https://canonical-ulwazi.readthedocs-hosted.com/"
+ogp_site_url = "https://canonical-starter-pack.readthedocs-hosted.com/"
 
 
 # Preview name of the documentation website
@@ -187,18 +187,18 @@ html_context = {
 
     # Horizontal Nav Menu
     "company": "Canonical",
-    "link1_URL": "https://snapcraft.io/",
-    "link1_name": "First optional link",
-    "link2_URL": "https://snapcraft.io/",
-    "link2_name": "Second optional link",
+    # "link1_URL": "https://canonical-starter-pack.readthedocs-hosted.com/",
+    # "link1_name": "First optional link",
+    # "link2_URL": "https://canonical-starter-pack.readthedocs-hosted.com/",
+    # "link2_name": "Second optional link",
 
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
-    "add_product_menu": True,
+    # "add_product_menu": True,
     
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
-    "logo_link_URL": "/",
+    "logo_link_URL": "https://documentation.ubuntu.com",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Canonical",
 

@@ -4,6 +4,14 @@
 */
 
 /*
+  Set consistent base font size across all displays.
+  This prevents rem units from scaling differently on 4K displays.
+*/
+// html {
+//   font-size: 16px;
+// }
+
+/*
   Utility classes.
 */
 
@@ -113,6 +121,16 @@ body {
   }
 }
 
+/*
+  Keep navigation items on a single line with text truncation.
+  Specific to the main header navigation structure.
+*/
+
+.l-docs__main .p-navigation__nav .p-navigation__items {
+  flex-wrap: nowrap !important;
+  white-space: nowrap;
+}
+
 // We can't access private variables, so we have to recreate the vars from layouts_docs.
 $l-documentation-sidebar-width: 15rem;
 $breakpoint-full-screen-layout: calc($breakpoint-large + $l-documentation-sidebar-width);
@@ -167,14 +185,14 @@ readthedocs-docdiff {
 }
 
 .p-table-of-contents__link {
-  font-size: 14px;
+  font-size: $font-size-p;
 }
 
 // Navigation link styles
 .nav-item a {
   width: 100%;
-  font-size: 14px;
-  line-height: 24px !important;
+  font-size: $font-size-p;
+  line-height: 1.5rem !important;
 }
 // arrow label styles
 .nav-item label {
@@ -361,4 +379,33 @@ div.terminal > div.input > button.copybtn svg {
   &:hover {
     background-color: darken(#e95420, 10%) !important;
   }
+.guilabel {
+  background-color: #ddeeff80;
+  border: 1px solid #bedaf580;
+  border-radius: 0.5em;
+  color: var(--vf-color-text-default);
+  font-size: 0.9em;
+  padding: 0 0.3em;
+}
+
+kbd:not(.compound) {
+  background-color: var(--vf-color-background-alt);
+  border: 1px solid var(--vf-color-border-default);
+  border-radius: 0.2rem;
+  box-shadow: 0 0.0625rem 0 rgba(0, 0, 0, 0.2), inset 0 0 0 0.125rem var(--vf-color-background-default);
+  color: var(--vf-color-text-default);
+  display: inline-block;
+  font-size: $font-size-p;
+  margin: 0 0.2rem;
+  padding: 0 0.2rem;
+  vertical-align: middle;
+}
+
+kbd.compound {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
 }

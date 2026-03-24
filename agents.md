@@ -9,29 +9,57 @@ It provides both generic Vanilla styling and Canonical-specific theming for docu
 **License**: GPL-3.0  
 **Python**: >=`3.8` (`3.11` is recommended)
 
-## Quick Start
+## Common Tasks
 
-### Setup
+### Building
 
-Prefer Makefile targets (no editable install needed).
-`make run` creates the virtualenv and installs Python deps from requirements.
-
-Install Node dependencies (only if you need to compile SCSS):
+Build theme and docs:
 
 ```bash
-yarn install
+make html
 ```
 
-Build theme and run dev server (auto-rebuilds on content changes):
+Build theme and docs, and then run a local web server
+(auto-rebuilds on content changes) to serve them:
 
 ```bash
 make run
 ```
 
-Full rebuild (cleans + rebuilds theme and docs):
+The web server will continue to run and publish the docs on `http://127.0.0.1:8000` by default.
+To override: `make run SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080`
+
+To access the web pages served by web server, you'll need to keep the `make run` command running
+and use a different terminal.
+
+When all testing is done, don't forget to terminate the command serving the sample docs
+to free up the address for publishing it next time. To terminate the command, use `CTRL+C`
+in its terminal.
+
+### Testing
 
 ```bash
-make rebuild
+make test         # Run all tests
+```
+
+Available tests:
+
+- **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
+- **test_pdf_generation.py**: Verifies PDF generation produces expected output file
+- **scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright
+
+### Cleaning
+
+Clean (delete) the built sample documentation content:
+
+```bash
+make clean-doc
+```
+
+Clean the built docs and theme files:
+
+```bash
+make clean
 ```
 
 Clean everything including venv:
@@ -40,10 +68,29 @@ Clean everything including venv:
 make fclean
 ```
 
-### Development Server
+Rebuild theme and docs (combination of `clean` and `run`):
 
-- Default: http://127.0.0.1:8000
-- Override: `make run SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080`
+```bash
+make rebuild
+```
+
+### Styling
+
+```bash
+make npm-install  # Install Vanilla Framework modules
+make vanilla-main # Compile SCSS to CSS
+```
+
+### Quick start
+
+Prefer Makefile targets.
+The `make run` command creates the virtualenv and installs Python deps from requirements.
+
+Install Node dependencies (only if you need to compile SCSS):
+
+```bash
+yarn install
+```
 
 **Node.js**: required only for SCSS compilation via `make vanilla-main` (uses npm).
 
@@ -79,51 +126,6 @@ tests/                       # Test scripts
 - **[ulwazi/__init__.py](ulwazi/__init__.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
 - **[ulwazi/theme/ulwazi/layout.html](ulwazi/theme/ulwazi/layout.html)**: Base page layout template
 
-## Common Tasks
-
-### Building
-
-```bash
-make install      # Initial setup
-make html         # Setup and build sample docs (no serve)
-make run          # Setup, build, and serve sample docs
-```
-
-The `make run` command keeps running, serving docs via local web browser,
-accessible via `http://127.0.0.1:8000`. It also tracks changes to content and rebuilds if any changes are detected.
-If there are any doubts to whether it updated the build, you can terminate it, run the cleaning, and then build/run again.
-
-If you want to check the web pages served by this command, make sure to keep it running in parallel to your checks.
-
-After you checked the build, make sure to terminate the command with `Ctrl+C` to avoid blocking the IP address and port.
-
-### Testing
-
-There are some basic tests available. To run test:
-
-```bash
-make test         # Run all tests
-```
-
-Available tests:
-
-- **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
-- **test_pdf_generation.py**: Verifies PDF generation produces expected output file
-- **scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright
-
-### Cleaning
-
-```bash
-make clean        # Clean theme files and build environment, including previously built pages
-```
-
-### Styling
-
-```bash
-make npm-install  # Install Vanilla Framework modules
-make vanilla-main # Compile SCSS to CSS
-```
-
 ## Development Workflow
 
 ### Theme Changes
@@ -134,11 +136,11 @@ make vanilla-main # Compile SCSS to CSS
 
 ### Content Changes
 
-- Sample docs in [docs/content/](docs/content/) auto-rebuild with `make run`
+- Sample docs in [docs/content/](docs/content/) auto-rebuilds with `make run`
 
 ### Dependency Changes
 
-- Update [requirements.txt](requirements.txt) or [pyproject.toml](pyproject.toml)
+- Update [requirements.txt](requirements.txt) and [pyproject.toml](pyproject.toml)
 - Run `make fclean` then `make run` to rebuild venv
 
 ### HTML Modifications
@@ -146,29 +148,36 @@ make vanilla-main # Compile SCSS to CSS
 - Override templates in [ulwazi/theme/ulwazi/](ulwazi/theme/ulwazi/)
 - Modify `_html_page_context` function in [ulwazi/__init__.py](ulwazi/__init__.py) for pre-theme processing
 
-## Troubleshooting & Debugging
+### Testing
 
-### Common Issues
+Clean up the old files:
 
-**Port already in use**: Kill existing process with `pkill -f sphinx-autobuild` or `pgrep -af sphinx-autobuild` to find PID
+```bash
+make fclean
+```
 
-**Stuck build process**: Run `pkill -f sphinx-autobuild && sleep 1 && make clean && make run`
+Update the Vanilla Framework styles:
 
-**Theme changes not showing**: Theme modifications require `make rebuild` (not just `make run`)
+```bash
+make vanilla-main
+```
 
-**Dependency conflicts after git pull**: Run `make fclean && make run` to rebuild venv completely
+Build and serve the theme and the sample docs:
 
-### Finding Errors
+```bash
+make run
+```
 
-- Build warnings: [docs/.sphinx/warnings.txt](docs/.sphinx/warnings.txt)
-- Build output: Check terminal output from `make run` or `make html`
-- Check if server is running: `pgrep -af sphinx-autobuild`
+While the last command is running, access the default address in
+another terminal to check the results manually.
 
-### Process Management
+When all testing is done, make sure to terminate the `make run` command in the original terminal.
 
-- Kill background server: `Ctrl+C` in terminal or `pkill -f sphinx-autobuild`
-- Check server status: `pgrep -af sphinx-autobuild`
-- Server not responding: Kill process, run `make clean`, then `make run`
+Run automatic tests to avoid regression:
+
+```bash
+make tests
+```
 
 ## Code Conventions
 
@@ -190,16 +199,6 @@ make vanilla-main # Compile SCSS to CSS
 - [Vanilla Framework](https://vanillaframework.io/) for base styles
 - SCSS source in [ulwazi/theme/ulwazi/assets/](ulwazi/theme/ulwazi/assets/)
 - Compiled CSS in [ulwazi/theme/ulwazi/static/](ulwazi/theme/ulwazi/static/)
-
-### JavaScript & Assets
-
-- Static files: [ulwazi/theme/ulwazi/static/](ulwazi/theme/ulwazi/static/) - CSS, JS, images
-- Key JS modules in [ulwazi/theme/ulwazi/static/js/](ulwazi/theme/ulwazi/static/js/):
-  - `vanilla-tabs.js` - Tab component behavior
-  - `search-breadcrumbs.js` - Search page navigation breadcrumbs
-  - `header-nav.js`, `nav-toggle.js` - Navigation and sidebar toggles
-  - `product_menu.js` - Canonical product menu
-- Tabs processing: `convert_tabs()` in [ulwazi/tabs.py](ulwazi/tabs.py) transforms HTML for tab components
 
 ## Important Notes
 
@@ -226,7 +225,7 @@ When editing documentation or markdown files:
 
 - Make sure there is a blank line after headings before content
 - Make sure there is a blank line before lists (bullet or numbered)
-- Use MyST Markdown for new content unless RST-specific features required
+- Use MyST Markdown for new content unless RST-specific features are required
 - Keep examples in cheat sheets structurally parallel between MyST and RST versions
 
 ## External Resources
