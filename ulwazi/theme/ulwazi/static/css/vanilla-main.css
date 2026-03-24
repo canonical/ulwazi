@@ -12176,7 +12176,7 @@ div.terminal {
 /* Copybutton for terminals needs white icon rather than defualt black */
 div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
-  Custom search box button styling.
+}
 
 .p-search-box .p-search-box__button {
   background-color: #e95420 !important;
