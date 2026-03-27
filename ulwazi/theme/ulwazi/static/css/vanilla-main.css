@@ -12218,6 +12218,10 @@ div.terminal > div.input > button.copybtn svg {
   padding-left: 0.5rem !important;
 }
 
+.p-search-box__reset {
+  margin: 0 0 1.5px 0 !important;
+}
+
 .guilabel {
   background-color: rgba(221, 238, 255, 0.5019607843);
   border: 1px solid rgba(190, 218, 245, 0.5019607843);
