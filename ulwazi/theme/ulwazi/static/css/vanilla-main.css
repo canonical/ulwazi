@@ -12191,15 +12191,31 @@ div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }
 
+.l-docs__sidebar .p-search-box {
+  margin-top: 0.5rem;
+}
+
 .p-search-box .p-search-box__button {
   background-color: #e95420 !important;
   border-left: none !important;
+  height: calc(2rem - 1.5px) !important;
+  margin: 0 0 1.5px 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 .p-search-box .p-search-box__button .p-icon--search {
   filter: brightness(0) invert(1);
 }
 .p-search-box .p-search-box__button:hover {
   background-color: rgb(194.7836734694, 64.6367346939, 19.2163265306) !important;
+}
+
+.p-search-box__input {
+  font-size: 0.875rem !important;
+  padding-top: calc(0.25rem - 1.5px) !important;
+  padding-bottom: calc(0.25rem - 1.5px) !important;
+  padding-left: 0.5rem !important;
 }
 
 .guilabel {
@@ -12231,6 +12247,10 @@ kbd.compound {
   display: inline;
   margin: 0;
   padding: 0;
+}
+
+.p-navigation__banner {
+  padding-left: 0;
 }
 
 [class*="--dark"] [class*=p-icon--],
