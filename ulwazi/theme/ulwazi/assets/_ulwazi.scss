@@ -435,3 +435,73 @@ kbd.compound {
 .p-navigation__banner {
   padding-left: 0;
 }
+
+/*
+  Feedback section.
+*/
+
+// Orange button variant for the "Give feedback" call-to-action.
+// Inherits base styles from p-button--positive.
+.p-button--orange {
+  $orange: #e95420;
+
+  background-color: $orange;
+  border-color: $orange;
+  color: #fff;
+  font-size: $font-size-p;
+  font-weight: bold;
+
+  &:visited {
+    color: #fff;
+  }
+
+  &:hover {
+    background-color: adjust-color($orange, $lightness: -10%);
+    border-color: adjust-color($orange, $lightness: -10%);
+  }
+
+  &:active,
+  &[aria-pressed=true],
+  &[aria-selected=true],
+  &[aria-expanded=true] {
+    background-color: adjust-color($orange, $lightness: -15%);
+    border-color: adjust-color($orange, $lightness: -15%);
+    transition-duration: 0s;
+  }
+
+  &:disabled,
+  &.is-disabled {
+    background-color: $orange;
+    border-color: $orange;
+  }
+
+  &:focus-visible {
+    outline: 0.1875rem solid adjust-color($orange, $lightness: -20%);
+    outline-offset: -0.1875rem;
+  }
+}
+
+// Icon links (edit / view-source) aligned next to the Give feedback button.
+.content-icon-container {
+  gap: 0.5rem; // uniform spacing: button→icon and icon→icon are equal
+
+  // Neutralise Vanilla's default button margins so gap alone controls spacing.
+  .p-button--positive {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+
+  .edit-this-page,
+  .view-source {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+
+    a.p-icon--edit,
+    a.p-icon--show {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+}

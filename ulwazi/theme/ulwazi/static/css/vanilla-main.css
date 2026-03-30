@@ -12257,6 +12257,59 @@ kbd.compound {
   padding-left: 0;
 }
 
+/*
+  Feedback section.
+*/
+.p-button--orange {
+  background-color: #e95420;
+  border-color: #e95420;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+.p-button--orange:visited {
+  color: #fff;
+}
+.p-button--orange:hover {
+  background-color: rgb(194.7836734694, 64.6367346939, 19.2163265306);
+  border-color: rgb(194.7836734694, 64.6367346939, 19.2163265306);
+}
+.p-button--orange:active, .p-button--orange[aria-pressed=true], .p-button--orange[aria-selected=true], .p-button--orange[aria-expanded=true] {
+  background-color: rgb(171.5734693878, 56.9346938776, 16.9265306122);
+  border-color: rgb(171.5734693878, 56.9346938776, 16.9265306122);
+  transition-duration: 0s;
+}
+.p-button--orange:disabled, .p-button--orange.is-disabled {
+  background-color: #e95420;
+  border-color: #e95420;
+}
+.p-button--orange:focus-visible {
+  outline: 0.1875rem solid rgb(148.3632653061, 49.2326530612, 14.6367346939);
+  outline-offset: -0.1875rem;
+}
+
+.content-icon-container {
+  gap: 0.5rem;
+}
+.content-icon-container .p-button--positive {
+  margin-bottom: 0;
+  margin-right: 0;
+}
+.content-icon-container .edit-this-page,
+.content-icon-container .view-source {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+}
+.content-icon-container .edit-this-page a.p-icon--edit,
+.content-icon-container .edit-this-page a.p-icon--show,
+.content-icon-container .view-source a.p-icon--edit,
+.content-icon-container .view-source a.p-icon--show {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);
