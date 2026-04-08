@@ -12137,7 +12137,7 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
   margin-bottom: 0;
 }
 
-.p-list__item p {
+.p-list__item pre {
   margin-bottom: 0;
 }
 
