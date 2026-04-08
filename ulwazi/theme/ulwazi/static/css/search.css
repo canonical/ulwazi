@@ -119,6 +119,13 @@
   line-height: 1.4;
 }
 
+/* Keyword highlighting in search results */
+#search-results span.highlighted {
+  background-color: #fef3b5;
+  border-radius: 2px;
+  padding: 0.05em 0.15em;
+}
+
 /* Optional: indent sections */
 #search-results li.kind-text {
   padding-left: 1rem;
