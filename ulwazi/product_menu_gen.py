@@ -89,6 +89,9 @@ def get_nav_menu(page: BeautifulSoup) -> str:
     # Change the id to avoid conflicts with the theme's main navigation
     header["id"] = "product-navigation"
     
+    # Remove built-in search elements
+    remove_search(header)
+
     # Apply grid alignment transformation
     apply_grid_alignment(header, page)
     
@@ -97,6 +100,19 @@ def get_nav_menu(page: BeautifulSoup) -> str:
     wrapper.append(header)
     
     return wrapper.prettify()
+
+def remove_search(nav) -> None:
+    """Remove the built-in search buttons and search field from the product nav menu."""
+    # Remove mobile and desktop search toggle buttons by ID
+    for btn_id in ("js-search-button-mobile", "js-search-button-desktop"):
+        btn = nav.find(id=btn_id)
+        if btn:
+            btn.decompose()
+
+    # Remove the search field container
+    search_div = nav.find("div", class_="p-navigation__search")
+    if search_div:
+        search_div.decompose()
 
 def save2file(content:str) -> None:
     filename = PRODUCT_MENU_DIRECTORY.strip("/") + "/" + PRODUCT_MENU_FILENAME
