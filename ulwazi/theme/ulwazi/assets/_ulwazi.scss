@@ -308,7 +308,7 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
   margin-bottom: 0;
 }
 
-.p-list__item p {
+.p-list__item pre {
   margin-bottom: 0;
 }
 
@@ -366,6 +366,41 @@ div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }
 
+//  Custom search box styling
+
+// Nudge sidebar search box down to optically align with the main content heading.
+.l-docs__sidebar .p-search-box {
+  margin-top: 0.5rem;
+}
+
+.p-search-box .p-search-box__button {
+  background-color: #e95420 !important;
+  border-left: none !important;
+  height: calc(2rem - 1.5px) !important;
+  margin: 0 0 1.5px 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  .p-icon--search {
+    filter: brightness(0) invert(1); // Makes the icon white
+  }
+  
+  &:hover {
+    background-color: darken(#e95420, 10%) !important;
+  }
+}
+
+.p-search-box__input {
+  font-size: 0.875rem !important;
+  padding-top: calc(0.25rem - 1.5px) !important;
+  padding-bottom: calc(0.25rem - 1.5px) !important;
+  padding-left: 0.5rem !important;
+}
+
+.p-search-box__reset {
+  margin: 0 0 1.5px 0 !important;
+}
+
 .guilabel {
   background-color: #ddeeff80;
   border: 1px solid #bedaf580;
@@ -395,4 +430,78 @@ kbd.compound {
   display: inline;
   margin: 0;
   padding: 0;
+}
+
+.p-navigation__banner {
+  padding-left: 0;
+}
+
+/*
+  Feedback section.
+*/
+
+// Orange button variant for the "Give feedback" call-to-action.
+// Inherits base styles from p-button--positive.
+.p-button--orange {
+  $orange: #e95420;
+
+  background-color: $orange;
+  border-color: $orange;
+  color: #fff;
+  font-size: $font-size-p;
+  font-weight: bold;
+
+  &:visited {
+    color: #fff;
+  }
+
+  &:hover {
+    background-color: adjust-color($orange, $lightness: -10%);
+    border-color: adjust-color($orange, $lightness: -10%);
+  }
+
+  &:active,
+  &[aria-pressed=true],
+  &[aria-selected=true],
+  &[aria-expanded=true] {
+    background-color: adjust-color($orange, $lightness: -15%);
+    border-color: adjust-color($orange, $lightness: -15%);
+    transition-duration: 0s;
+  }
+
+  &:disabled,
+  &.is-disabled {
+    background-color: $orange;
+    border-color: $orange;
+  }
+
+  &:focus-visible {
+    outline: 0.1875rem solid adjust-color($orange, $lightness: -20%);
+    outline-offset: -0.1875rem;
+  }
+}
+
+// Icon links (edit / view-source) aligned next to the Give feedback button.
+.content-icon-container {
+  gap: 0.5rem; // uniform spacing: button→icon and icon→icon are equal
+
+  // Neutralise Vanilla's default button margins so gap alone controls spacing.
+  .p-button--positive {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+
+  .edit-this-page,
+  .view-source {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+
+    a.p-icon--edit,
+    a.p-icon--show {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
 }
