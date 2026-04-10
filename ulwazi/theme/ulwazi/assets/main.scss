@@ -13,6 +13,8 @@
 // Icons
 // @import 'patterns_icons';
 @include vf-p-icons;
+@include vf-p-icon-highlight-on;
+@include vf-p-icon-highlight-off;
 
 // include common styles shared by all icons
 @include vf-p-icons-common;
@@ -20,6 +22,8 @@
 // include only the icons that we use
 @include vf-p-icon-edit;
 @include vf-p-icon-show;
+@include vf-p-icon-highlight-on;
+@include vf-p-icon-highlight-off;
 
 // Custom styles
 

@@ -57,6 +57,7 @@ def config_inited(app, config):  # noqa: ANN401
         "js/nav-toggle.js",
         "js/search.js",
         "js/search-breadcrumbs.js",
+        "js/theme-toggle.js",
     ]
 
     values_and_defaults = [
