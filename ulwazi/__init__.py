@@ -20,28 +20,28 @@ import importlib.util
 from pathlib import Path
 from typing import Any, cast
 
-from docutils import nodes
-from sphinx.util.typing import ExtensionMetadata
-from sphinx.application import Sphinx
-from sphinx.config import Config
 from bs4 import BeautifulSoup, Tag
 from bs4.element import AttributeValueList
-
+from docutils import nodes
+from sphinx.application import Sphinx
+from sphinx.config import Config
+from sphinx.util.typing import ExtensionMetadata
 
 from ulwazi.navigation import get_navigation_tree
 from ulwazi.tabs import convert_tabs
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
-try:
-    from ._version import __version__
-except ImportError:
-    from importlib.metadata import version, PackageNotFoundError
+# Uncomment when we add build tooling
+# try:
+#     from ._version import __version__
+# except ImportError:
+#     from importlib.metadata import PackageNotFoundError, version
 
-    try:
-        __version__ = version("hello_ext")
-    except PackageNotFoundError:
-        __version__ = "dev"
+#     try:
+#         __version__ = version("ulwazi")
+#     except PackageNotFoundError:
+#         __version__ = "dev"
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
@@ -60,7 +60,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.connect("html-page-context", _html_page_context)  # pyright: ignore [reportUnknownMemberType]
 
     return {
-        "version": __version__,
+        "version": "0.5.1",
         "parallel_read_safe": True,
         "parallel_write_safe": True,
     }
@@ -93,6 +93,8 @@ def config_inited(app: Sphinx, config: Config) -> None:
         "js/product_menu.js",
         "js/vanilla-tabs.js",
         "js/nav-toggle.js",
+        "js/search.js",
+        "js/search-breadcrumbs.js",
     ]
 
     values_and_defaults = [
@@ -338,9 +340,90 @@ def truncate_local_toc(toc: str, max_depth: int = -1) -> str:
     return str(toc_html)
 
 
+def _build_breadcrumb_map(app: Sphinx, context: dict[str, Any]) -> str:
+    """Build a mapping of docnames to their navigation breadcrumb paths."""
+    import json
+
+    breadcrumb_map = {}
+
+    def process_list_items(items, parent_path=None):
+        """Recursively process list items to extract navigation hierarchy."""
+        if parent_path is None:
+            parent_path = []
+
+        for li in items:
+            # Find the link in this list item
+            link = li.find("a", class_="reference internal")
+            if link:
+                href = link.get("href", "")
+                title = link.get_text(strip=True)
+
+                # Check if this is a section link (contains #)
+                is_section_link = "#" in href
+
+                # Extract docname from href (handle dirhtml format)
+                # First remove leading ../
+                docname = href
+                while docname.startswith("../"):
+                    docname = docname[3:]
+                # Remove trailing / or .html
+                if docname.endswith("/"):
+                    docname = docname[:-1]
+                if docname.endswith(".html"):
+                    docname = docname[:-5]
+
+                # For section links, strip the anchor to get the base page
+                if is_section_link and "#" in docname:
+                    docname = docname.split("#")[0]
+
+                # Only store breadcrumbs for actual pages (not section links)
+                if docname and not is_section_link:
+                    # Store the breadcrumb path for this doc (not including itself)
+                    breadcrumb_map[docname] = list(parent_path)
+
+                # Check for nested items
+                nested_ul = li.find("ul")
+                if nested_ul:
+                    nested_items = nested_ul.find_all("li", recursive=False)
+                    if nested_items:
+                        # Only add to path if it's a page link (not a section)
+                        if is_section_link:
+                            # For section links, continue with the same parent path
+                            # (don't add sections to breadcrumb trail)
+                            process_list_items(nested_items, parent_path)
+                        else:
+                            # For page links, add to the path for children
+                            new_path = parent_path + [{"title": title, "link": href}]
+                            process_list_items(nested_items, new_path)
+
+    # Get the global toctree
+    if "toctree" in context:
+        try:
+            toctree = context["toctree"]
+            toctree_html = toctree(
+                collapse=False,
+                titles_only=False,
+                includehidden=True,
+                maxdepth=-1,
+            )
+
+            if toctree_html:
+                soup = BeautifulSoup(toctree_html, "html.parser")
+                # Find all top-level list items
+                top_level_ul = soup.find("ul")
+                if top_level_ul:
+                    top_items = top_level_ul.find_all("li", recursive=False)
+                    process_list_items(top_items)
+        except Exception as e:
+            # If toctree generation fails, return empty map
+            pass
+
+    return json.dumps(breadcrumb_map)
+
+
 def _html_page_context(
     app: Sphinx,
-    _pagename: str,
+    pagename: str,
     _templatename: str,
     context: dict[str, Any],
     _doctree: nodes.document | None,
@@ -353,6 +436,10 @@ def _html_page_context(
         context["toc"] = truncate_local_toc(
             context["toc"], getattr(app.config, "localtoc_max_depth", -1)
         )
+
+    # Build navigation breadcrumb mapping for search
+    if pagename == "search":
+        context["search_breadcrumb_map"] = _build_breadcrumb_map(app, context)
 
     # Modify the body of the content
     if "body" in context:

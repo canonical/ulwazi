@@ -101,7 +101,7 @@ ogp_image = "https://assets.ubuntu.com/v1/253da317-image-document-ubuntudocs.svg
 # TODO: Adjust to point to the repository where your documentation source files
 # are stored.
 
-github_repo = "https://github.com/canonical/sphinx-docs-starter-pack"
+github_repo = "https://github.com/canonical/ulwazi"
 
 # TODO: Select the default syntax for docs source files.
 # This is for a fallback view/edit source code buttons.
@@ -148,7 +148,7 @@ html_context = {
     #
     # NOTE: If set, adding ':discourse: 123' to an .rst file
     #       will add a link to Discourse topic 123 at the bottom of the page.
-    "discourse": "https://discourse.ubuntu.com",
+    "discourse": "https://discourse.canonical.com/",
     # Your Mattermost channel URL
     #
     # TODO: Change to your Mattermost channel URL or leave empty.

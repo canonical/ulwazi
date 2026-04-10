@@ -112,9 +112,9 @@ svg:not(:root) {
   margin-bottom: var(--pst-spacing-m, 1rem);
 }
 
-/* Local TOC fixes for vertical slider */
+/* Local TOC: delete vertical slider */
 
-.l-docs__sticky-container {
+/* .l-docs__sticky-container {
   position: static !important;
   height: auto !important;
   overflow: visible !important;
@@ -123,7 +123,7 @@ svg:not(:root) {
 .p-table-of-contents {
   max-height: none !important;
   overflow-y: visible !important;
-}
+} */
 
 .p-toc-feedback-block .content-icon-container {
   display: flex;

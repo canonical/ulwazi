@@ -6,6 +6,12 @@
     <script src="{{ pathto('_static/searchtools.js', 1) }}"></script>
     <script src="{{ pathto('_static/language_data.js', 1) }}"></script>
     <script src="{{ pathto('searchindex.js', 1) }}"></script>
+    {% if search_breadcrumb_map -%}
+    <script>
+      window.SEARCH_BREADCRUMB_MAP = {{ search_breadcrumb_map|safe }};
+    </script>
+    {%- endif %}
+    <script src="{{ pathto('_static/js/search-breadcrumbs.js', 1) }}"></script>
   {%- endblock body_javascript %}
 {%- endblock regular_scripts-%}
 
