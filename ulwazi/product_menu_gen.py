@@ -49,7 +49,7 @@ def fetch_and_parse(url: str) -> BeautifulSoup | None:
         response.raise_for_status()  # Raise an error for bad responses (4xx and 5xx)
         return BeautifulSoup(response.text, "html.parser")
     except requests.exceptions.RequestException:
-        logger.exception(f"Error fetching the URL")
+        logger.exception("Error fetching the URL")
         return None
 
 
