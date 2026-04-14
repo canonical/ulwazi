@@ -24,7 +24,7 @@ def setup(app):
     app.connect("html-page-context", _html_page_context)
 
     return {
-        "version": "0.3",
+        "version": "0.4",
         "parallel_read_safe": True,
         "parallel_write_safe": True,
     }
