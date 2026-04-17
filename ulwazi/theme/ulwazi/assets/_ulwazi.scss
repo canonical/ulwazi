@@ -332,6 +332,14 @@ button.copybtn:hover {
   background: none;
   background-color: transparent !important;
 }
+
+// Ensure code blocks use theme code colors.
+.highlight,
+.highlight pre,
+pre {
+  background-color: var(--vf-color-background-code);
+  color: var(--vf-color-text-default);
+}
   
 
 // Disable tooltip for copy buttons only

@@ -12160,6 +12160,12 @@ button.copybtn:hover {
   background-color: transparent !important;
 }
 
+.highlight,
+.highlight pre {
+  background-color: var(--vf-color-background-code);
+  color: var(--vf-color-text-default);
+}
+
 .copybtn.o-tooltip--left[data-tooltip]::before,
 .copybtn.o-tooltip--left[data-tooltip]::after {
   content: none !important;
