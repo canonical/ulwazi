@@ -12188,6 +12188,13 @@ div.input > button.copybtn svg {
   margin-bottom: 0;
 }
 
+.terminal .input code,
+.terminal .command code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
 div.terminal {
   margin-bottom: 1.5em;
 }

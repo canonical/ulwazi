@@ -335,8 +335,7 @@ button.copybtn:hover {
 
 // Ensure code blocks use theme code colors.
 .highlight,
-.highlight pre,
-pre {
+.highlight pre {
   background-color: var(--vf-color-background-code);
   color: var(--vf-color-text-default);
 }
@@ -363,6 +362,14 @@ div.input > button.copybtn svg {
 .terminal-code pre {
   color:#ebebeb !important;
   margin-bottom: 0;
+}
+
+// Match terminal command styling to the terminal block
+.terminal .input code,
+.terminal .command code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
 }
 
 div.terminal {
