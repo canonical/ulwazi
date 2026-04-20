@@ -28,7 +28,7 @@ Setup
 
    .. code-block:: shell
 
-      make docs-run
+      make docs
 
    This sets up a virtual environment, installs dependencies, builds the theme, and serves documentation locally.
 
@@ -38,7 +38,7 @@ outside of the docs content:
 .. code-block:: shell
 
     make clean
-    make docs-run
+    make docs
 
 This does a clean build, which may be necessary after changes to the theme files.
 

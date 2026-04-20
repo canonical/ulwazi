@@ -1,4 +1,6 @@
 import os
+import subprocess
+import sys
 
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
@@ -23,6 +25,10 @@ def test_scss_styles_propagation():
 def test_rendered_color():
     index_path = os.path.abspath("docs/_build/index.html")
     assert os.path.exists(index_path), f"index.html not found in {index_path}"
+    subprocess.run(
+        [sys.executable, "-m", "playwright", "install", "chromium"],
+        check=True,
+    )
     with sync_playwright() as p:
         browser = p.chromium.launch()
         assert browser, "Failed to launch Chromium browser"

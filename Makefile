@@ -48,6 +48,7 @@ endif
 .PHONY: install-lint-build-deps
 install-lint-build-deps:
 
+# Overrides specific to Ulwazi
 vanilla-main: install-npm
 	echo "Compiling SCSS to CSS..."
 
@@ -59,10 +60,24 @@ vanilla-main: install-npm
 
 	@echo "SCSS compilation complete!"
 
-.PHONY: rebuild
-rebuild: clean docs-run
-
 .PHONY: product-menu
 product-menu:
 	@echo "Updating the product menu..."
 	python3 ulwazi/product_menu_gen.py
+
+# Override tests to build HTML and PDF output as a prerequisite.
+# These should be removed when the docs are built programmatically in the tests.
+.PHONY: test
+test: docs-html docs-pdf
+	uv run pytest
+
+.PHONY: test-fast
+test-fast: docs-html
+	uv run pytest -m 'not slow'
+
+.PHONY: test-slow
+test-slow: docs-html docs-pdf
+	uv run pytest -m 'slow'
+
+.PHONY: rebuild
+rebuild: clean docs

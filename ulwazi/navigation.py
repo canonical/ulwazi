@@ -1,7 +1,7 @@
 """Generate the navigation tree from Sphinx's toctree function's output."""
 
-import functools
 import copy
+import functools
 
 from bs4 import BeautifulSoup, Tag
 
@@ -11,13 +11,17 @@ def _strip_code_tags_from_element(element: Tag) -> None:
     for tag_name in ["code", "pre", "kbd", "samp"]:
         for tag in element.find_all(tag_name):
             tag.unwrap()
-    
+
     # Also remove span tags with code-related classes
-    for span in element.find_all("span", class_=["pre", "docutils", "literal", "notranslate"]):
+    for span in element.find_all(
+        "span", class_=["pre", "docutils", "literal", "notranslate"]
+    ):
         span.unwrap()
 
 
-def _get_navigation_expand_image(soup: BeautifulSoup, href: str = "#", is_active: bool = False) -> Tag:
+def _get_navigation_expand_image(
+    soup: BeautifulSoup, href: str = "#", is_active: bool = False
+) -> Tag:
     icon_down = soup.new_tag("i", attrs={"class": "p-icon--chevron-down"})
     icon_up = soup.new_tag("i", attrs={"class": "p-icon--chevron-up"})
     container = soup.new_tag("span")
@@ -26,7 +30,7 @@ def _get_navigation_expand_image(soup: BeautifulSoup, href: str = "#", is_active
     return container
 
 
-@functools.lru_cache(maxsize=None)
+@functools.cache
 def get_navigation_tree(toctree_html: str) -> str:
     """Modify the given navigation tree, with furo-specific elements.
 
@@ -43,7 +47,7 @@ def get_navigation_tree(toctree_html: str) -> str:
         # classes = element.get("class", [])
         # element["class"] = classes + ["p-side-navigation__list"]
         element["class"] = "p-side-navigation__list"
-    
+
     # We add a proper style for each <li> in the globaltoc
     for element in soup.find_all("li", recursive=True):
         # element["class"] = "p-side-navigation__item"
@@ -52,7 +56,7 @@ def get_navigation_tree(toctree_html: str) -> str:
     # We add a proper style for each <a> in the globaltoc
     for element in soup.find_all("a", recursive=True):
         element["class"].append("p-side-navigation__link")
-    
+
     # Strip code-related tags from all anchor elements
     for element in soup.find_all("a", recursive=True):
         _strip_code_tags_from_element(element)
@@ -90,17 +94,22 @@ def get_navigation_tree(toctree_html: str) -> str:
             href = a_item.attrs.get("href", "#") if a_item else "#"
 
             # Pass is_active to icon generator
-            icon = _get_navigation_expand_image(soup, href=href, is_active="current" in classes)
+            icon = _get_navigation_expand_image(
+                soup, href=href, is_active="current" in classes
+            )
 
             label = soup.new_tag("label")
             label.attrs["for"] = checkbox_name
-            label.append(_get_navigation_expand_image(soup, href=href, is_active="current" in classes))
+            label.append(
+                _get_navigation_expand_image(
+                    soup, href=href, is_active="current" in classes
+                )
+            )
 
             # Create nav-item div and append a, label, checkbox
-            nav_item_div = soup.new_tag("div", attrs={
-                "class": "nav-item",
-                "data-checkbox": checkbox_name
-            })
+            nav_item_div = soup.new_tag(
+                "div", attrs={"class": "nav-item", "data-checkbox": checkbox_name}
+            )
             nav_item_div.append(a_item)
             nav_item_div.append(checkbox)  # <-- checkbox before label
             nav_item_div.append(label)
