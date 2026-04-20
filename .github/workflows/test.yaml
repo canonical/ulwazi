@@ -23,8 +23,8 @@ jobs:
       - name: Build SCSS
         run: make vanilla-main
 
-      - name: Build HTML
-        run: make docs-html
+      # - name: Build HTML
+      #   run: make docs-html
 
       - name: Build PDF
         run: make docs-pdf
