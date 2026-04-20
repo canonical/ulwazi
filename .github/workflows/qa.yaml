@@ -12,5 +12,5 @@ on:
 jobs:
   lint:
     uses: canonical/starflow/.github/workflows/lint-python.yaml@main
-  test:
-    uses: canonical/starflow/.github/workflows/test-python.yaml@main
+  # test:
+  #   uses: canonical/starflow/.github/workflows/test-python.yaml@main

@@ -50,6 +50,7 @@ install-lint-build-deps:
 
 # Overrides specific to Ulwazi
 vanilla-main: install-npm
+	npm install
 	echo "Compiling SCSS to CSS..."
 
 	@echo "Using local sass..."
@@ -68,7 +69,7 @@ product-menu:
 # Override tests to build HTML and PDF output as a prerequisite.
 # These should be removed when the docs are built programmatically in the tests.
 .PHONY: test
-test: docs-html docs-pdf
+test: docs-html docs-pdf-prep-force docs-pdf
 	uv run pytest
 
 .PHONY: test-fast
@@ -76,7 +77,7 @@ test-fast: docs-html
 	uv run pytest -m 'not slow'
 
 .PHONY: test-slow
-test-slow: docs-html docs-pdf
+test-slow: docs-html docs-pdf-prep-force docs-pdf
 	uv run pytest -m 'slow'
 
 .PHONY: test-coverage
