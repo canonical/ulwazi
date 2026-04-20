@@ -13,23 +13,21 @@
     {%- set view_url = default_view_url -%}
     <!-- Warning: lacking parameters in conf.py: guthub_url or pagename -->
   {%- endif -%}
-  <div class="github-issue-link-container">
-    <a class="muted-link github-issue-link"
-       href="{{ github_url }}/issues/new?title=docs%3A+TYPE+YOUR+QUESTION+HERE&amp;body=*Please describe the question or issue you're facing with {{ project }} documentation.*%0A%0A%0A%0A%0A---%0A*Reported+from%3A+{{ pagename }}"
-       target="_blank">Give feedback</a>
-  </div>
+  <a href="{{ github_url }}/issues/new?title=docs%3A+TYPE+YOUR+QUESTION+HERE&amp;body=*Please describe the question or issue you're facing with {{ project }} documentation.*%0A%0A%0A%0A%0A---%0A*Reported+from%3A+{{ pagename }}"
+       target="_blank" class="p-button--positive p-button--orange">Give feedback</a>
+
   <div class="edit-this-page muted-link">
-    <a class="p-icon--edit" 
+    <a class="p-icon--edit"
        href="{{ edit_url }}"
-       title="Contribute to this page"></a>
-       <span class="visually-hidden">Contribute to this page</span>
+       title="Contribute to this page">
+      <span class="visually-hidden">Contribute to this page</span>
     </a>
   </div>
   <div class="view-source muted-link">
-    <a class="p-icon--show" 
+    <a class="p-icon--show"
        href="{{ view_url }}"
-       title="View page source code"></a>
-       <span class="visually-hidden">View page source code</span>
+       title="View page source code">
+      <span class="visually-hidden">View page source code</span>
     </a>
   </div>
   <!-- <div class="theme-toggle-container theme-toggle-content">
