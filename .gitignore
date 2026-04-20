@@ -5,6 +5,7 @@ dist/
 docs/_build
 node_modules/
 /.vscode
+**/_version.py
 
 .coverage
 coverage.xml
