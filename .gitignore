@@ -4,5 +4,9 @@ dist/
 .venv/
 docs/_build
 node_modules/
-*.lock
 /.vscode
+**/_version.py
+
+.coverage
+coverage.xml
+results/coverage.xml

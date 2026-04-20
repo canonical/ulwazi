@@ -12,27 +12,19 @@ a Vanilla Framework-based theme built for Canonical’s
 The included Makefile builds the theme and a sample documentation set so you can inspect
 changes quickly.
 
-To build and serve the sample documentation:
+To build the sample documentation:
 
 ```shell
-make run
+make docs
 ```
 
-This sets up a virtual environment, installs dependencies, builds the theme, builds the documentation,
-and serves it locally. Content edits rebuild automatically; theme edits usually require
-a full rebuild:
+This sets up a virtual environment, installs dependencies, builds the theme, builds the
+documentation, and serves it locally. Content edits rebuild automatically; changes to
+the theme or dependencies usually require a full rebuild:
 
 ```shell
-make rebuild
-```
-
-The `make rebuild` command runs `make clean` before `make run`.
-
-If you change dependencies (for example, if you add a new Sphinx extension to
-`docs/requirements.txt`), you should rebuild the virtual environment:
-
-```shell
-make fclean
+make clean
+make docs
 ```
 
 ## Contribute

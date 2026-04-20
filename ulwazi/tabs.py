@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 
+
 def convert_tabs(body_html: str) -> str:
     """Convert sphinx-tabs markup to vanilla theme classes and structure."""
     if not body_html:
@@ -104,9 +105,21 @@ def convert_tabs(body_html: str) -> str:
         sd_container["class"] = " ".join(existing_list)
 
         # collect radios, labels and panels (in the order they appear)
-        inputs = [i for i in sd_container.find_all("input", type="radio") if isinstance(i, Tag)]
-        labels = [l for l in sd_container.find_all("label", class_="sd-tab-label") if isinstance(l, Tag)]
-        panels = [p for p in sd_container.find_all("div", class_="sd-tab-content") if isinstance(p, Tag)]
+        inputs = [
+            i
+            for i in sd_container.find_all("input", type="radio")
+            if isinstance(i, Tag)
+        ]
+        labels = [
+            l
+            for l in sd_container.find_all("label", class_="sd-tab-label")
+            if isinstance(l, Tag)
+        ]
+        panels = [
+            p
+            for p in sd_container.find_all("div", class_="sd-tab-content")
+            if isinstance(p, Tag)
+        ]
 
         # find or create the tablist (insert before first panel)
         tablist = sd_container.find("div", attrs={"role": "tablist"})
@@ -115,7 +128,9 @@ def convert_tabs(body_html: str) -> str:
             tablist["role"] = "tablist"
             tablist["class"] = "p-tabs__list"
             # insert tablist as first child of sd_container
-            first_child = next((c for c in sd_container.contents if isinstance(c, Tag)), None)
+            first_child = next(
+                (c for c in sd_container.contents if isinstance(c, Tag)), None
+            )
             if first_child:
                 first_child.insert_before(tablist)
             else:
@@ -153,16 +168,25 @@ def convert_tabs(body_html: str) -> str:
 
             # selected state: prefer checked input, otherwise first index
             selected = False
-            if inp and inp.has_attr("checked"):
-                selected = True
-            elif not any(i.has_attr("checked") for i in inputs) and idx == 0:
+            if (
+                inp
+                and inp.has_attr("checked")
+                or not any(i.has_attr("checked") for i in inputs)
+                and idx == 0
+            ):
                 selected = True
 
             btn["aria-selected"] = "true" if selected else "false"
             btn["tabindex"] = "0" if selected else "-1"
 
             # label text and sync value
-            text = lbl.get_text(strip=True) if lbl else (inp.get("value") if (inp and inp.get("value")) else f"Tab {idx+1}")
+            text = (
+                lbl.get_text(strip=True)
+                if lbl
+                else (
+                    inp.get("value") if (inp and inp.get("value")) else f"Tab {idx + 1}"
+                )
+            )
             btn.string = text
             # Use a normalized sync value for robust matching
             sync_text = str(text) if text is not None else ""
@@ -230,7 +254,9 @@ def convert_tabs(body_html: str) -> str:
         tablist = container.find("div", attrs={"role": "tablist"})
         buttons = []
         if tablist and isinstance(tablist, Tag):
-            buttons = [b for b in tablist.find_all(attrs={"role": "tab"}) if isinstance(b, Tag)]
+            buttons = [
+                b for b in tablist.find_all(attrs={"role": "tab"}) if isinstance(b, Tag)
+            ]
 
         for btn in buttons:
             btn_id = btn.get("id")
@@ -267,7 +293,11 @@ def convert_tabs(body_html: str) -> str:
                 style = panel.get("style")
                 if isinstance(style, str) and "display:" in style:
                     # remove any display properties
-                    parts = [p.strip() for p in style.split(";") if p.strip() and not p.strip().startswith("display:")]
+                    parts = [
+                        p.strip()
+                        for p in style.split(";")
+                        if p.strip() and not p.strip().startswith("display:")
+                    ]
                     if parts:
                         panel["style"] = "; ".join(parts)
                     elif panel.has_attr("style"):
@@ -276,4 +306,3 @@ def convert_tabs(body_html: str) -> str:
                 panel["hidden"] = "true"
 
     return str(soup)
-

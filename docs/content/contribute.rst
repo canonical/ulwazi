@@ -9,7 +9,7 @@ Prerequisites
 
 Install `npm <https://docs.npmjs.com/downloading-and-installing-node-js-and-npm>`_
 and `Yarn <https://yarnpkg.com/>`_:
-  
+
 .. code-block:: shell
 
    sudo apt install npm
@@ -28,7 +28,7 @@ Setup
 
    .. code-block:: shell
 
-      make run
+      make docs
 
    This sets up a virtual environment, installs dependencies, builds the theme, and serves documentation locally.
 
@@ -37,7 +37,8 @@ outside of the docs content:
 
 .. code-block:: shell
 
-   make rebuild
+    make clean
+    make docs
 
 This does a clean build, which may be necessary after changes to the theme files.
 

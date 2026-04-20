@@ -1,4 +1,4 @@
-name: Run make test
+name: Run tests
 
 on:
   push:
@@ -18,16 +18,16 @@ jobs:
           fetch-depth: 0
 
       - name: Install PDF dependencies
-        run: sudo make pdf-prep-force
+        run: sudo make docs-pdf-prep-force
 
       - name: Build SCSS
         run: make vanilla-main
-      
+
       - name: Build HTML
-        run: make html
+        run: make docs-html
 
       - name: Build PDF
-        run: make pdf
+        run: make docs-pdf
 
       - name: Run tests
         run: make test
