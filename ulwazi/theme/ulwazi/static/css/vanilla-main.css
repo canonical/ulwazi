@@ -12327,6 +12327,10 @@ body.is-dark .p-navigation {
   background-color: var(--vf-color-background-alt);
 }
 
+body.is-dark .p-strip.is-dark {
+  background-color: var(--vf-color-background-alt);
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);

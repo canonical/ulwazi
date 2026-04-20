@@ -524,3 +524,7 @@ kbd.compound {
 body.is-dark .p-navigation {
   background-color: var(--vf-color-background-alt);
 }
+
+body.is-dark .p-strip.is-dark {
+  background-color: var(--vf-color-background-alt);
+}
