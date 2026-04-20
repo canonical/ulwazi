@@ -1208,7 +1208,7 @@ hr.u-no-margin--bottom {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.3);
+  --vf-color-background-code: #404040;
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -5483,7 +5483,7 @@ form + [class*=p-button] {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.3);
+  --vf-color-background-code: #404040;
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -9767,7 +9767,7 @@ h1.p-stepped-list__title + .p-stepped-list__content {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.3);
+  --vf-color-background-code: #404040;
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -9871,7 +9871,7 @@ h1.p-stepped-list__title + .p-stepped-list__content {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.3);
+  --vf-color-background-code: #404040;
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -10420,7 +10420,7 @@ table th[aria-sort]:hover {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.3);
+  --vf-color-background-code: #404040;
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -10518,7 +10518,7 @@ body.is-light .p-tooltip__message, body.is-paper .p-tooltip__message, .p-tooltip
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.3);
+  --vf-color-background-code: #404040;
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -12339,7 +12339,7 @@ body.is-dark .p-navigation {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.3);
+  --vf-color-background-code: #404040;
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -12617,7 +12617,7 @@ p > [class*=p-icon] {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.3);
+  --vf-color-background-code: #404040;
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
