@@ -68,15 +68,15 @@ product-menu:
 # Override tests to build HTML and PDF output as a prerequisite.
 # These should be removed when the docs are built programmatically in the tests.
 .PHONY: test
-test: docs-html docs-pdf
+test: setup-tests docs-html docs-pdf
 	uv run pytest
 
 .PHONY: test-fast
-test-fast: docs-html
+test-fast: setup-tests docs-html
 	uv run pytest -m 'not slow'
 
 .PHONY: test-slow
-test-slow: docs-html docs-pdf
+test-slow: setup-tests docs-html docs-pdf
 	uv run pytest -m 'slow'
 
 .PHONY: rebuild
