@@ -5,3 +5,7 @@ dist/
 docs/_build
 node_modules/
 /.vscode
+
+.coverage
+coverage.xml
+results/coverage.xml
