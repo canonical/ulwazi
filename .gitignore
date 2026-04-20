@@ -4,5 +4,4 @@ dist/
 .venv/
 docs/_build
 node_modules/
-*.lock
 /.vscode
