@@ -117,6 +117,7 @@ lint-md: pymarkdownlnt-install
 
 vale-install: install
 	@. $(DOCS_VENV); test -f $(VALE_CONFIG) || python3 $(SPHINX_DIR)/get_vale_conf.py
+	@ mkdir -p $(SPHINX_DIR)/styles
 	@echo '.Name=="Canonical.400-Enforce-inclusive-terms"' > $(SPHINX_DIR)/styles/woke.filter
 	@echo '.Level=="error" and .Name!="Canonical.500-Repeated-words" and .Name!="Canonical.000-US-spellcheck"' > $(SPHINX_DIR)/styles/error.filter
 	@echo '.Name=="Canonical.000-US-spellcheck"' > $(SPHINX_DIR)/styles/spelling.filter
