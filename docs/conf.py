@@ -339,7 +339,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
     "ulwazi",
-    "sphinx_modern_pdf_style",
+    # "sphinx_modern_pdf_style",
     "canonical_sphinx_config",
     "myst_parser",
     "sphinxcontrib.jquery",
@@ -424,5 +424,4 @@ if os.path.exists("./reuse/substitutions.yaml"):
 intersphinx_mapping = {}
 
 # PDF
-
-set_modern_pdf_config = True
+# set_modern_pdf_config = True
