@@ -268,6 +268,7 @@ docs: docs-install  ## Render the documentation to disk
 # run that after the parent docs setup.
 .PHONY: docs-install
 docs-install: setup-docs  ##- Set up documentation packages
+	chmod -R u+w .venv || true
 	$(MAKE) -C docs vale-install --no-print-directory
 
 # Alias for `setup-docs`
