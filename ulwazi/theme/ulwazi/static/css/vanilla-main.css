@@ -12323,6 +12323,10 @@ kbd.compound {
   height: 1rem;
 }
 
+body.is-dark .p-navigation {
+  background-color: var(--vf-color-background-alt);
+}
+
 [class*="--dark"] [class*=p-icon--],
 [class*=p-icon--].is-light {
   --vf-theme-light: var(--vf-FLAG-OFF);

@@ -520,3 +520,7 @@ kbd.compound {
     }
   }
 }
+
+body.is-dark .p-navigation {
+  background-color: var(--vf-color-background-alt);
+}
