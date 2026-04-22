@@ -95,6 +95,7 @@ def config_inited(app: Sphinx, config: Config) -> None:
         "js/nav-toggle.js",
         "js/search.js",
         "js/search-breadcrumbs.js",
+        "js/theme-toggle.js",
     ]
 
     values_and_defaults = [

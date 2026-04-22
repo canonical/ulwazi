@@ -332,6 +332,13 @@ button.copybtn:hover {
   background: none;
   background-color: transparent !important;
 }
+
+// Ensure code blocks use theme code colors.
+.highlight,
+.highlight pre {
+  background-color: var(--vf-color-background-code);
+  color: var(--vf-color-text-default);
+}
   
 
 // Disable tooltip for copy buttons only
@@ -355,6 +362,14 @@ div.input > button.copybtn svg {
 .terminal-code pre {
   color:#ebebeb !important;
   margin-bottom: 0;
+}
+
+// Match terminal command styling to the terminal block
+.terminal .input code,
+.terminal .command code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
 }
 
 div.terminal {
@@ -504,4 +519,12 @@ kbd.compound {
       height: 1rem;
     }
   }
+}
+
+body.is-dark .p-navigation {
+  background-color: var(--vf-color-background-alt);
+}
+
+body.is-dark .p-strip.is-dark {
+  background-color: var(--vf-color-background-alt);
 }

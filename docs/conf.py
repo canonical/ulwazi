@@ -377,7 +377,8 @@ exclude_patterns = [
 # Syntax highlighting settings
 
 highlight_language = "none" # default
-pygments_style = "autumn" # see https://pygments.org/styles for more
+pygments_style = "autumn"
+pygments_dark_style = "github-dark" # see https://pygments.org/styles for more
 
 # Specifies a reST snippet to be appended to each .rst file
 
