@@ -67,6 +67,7 @@
   {% block body_javascript -%}
   {% for js in script_files -%}
     {{ js_tag(js) }}
+  <script src="{{ pathto('_static/js/theme-toggle.js', 1) }}"></script>
   {% endfor -%}
   {%- endblock body_javascript -%}
 </body>

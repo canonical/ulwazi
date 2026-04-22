@@ -85,10 +85,10 @@ a.muted-link {
   display: flex;
 }
 
-.theme-toggle {
+button.theme-toggle {
   display: flex;
   cursor: pointer;
-  background: transparent;
+  background-color: transparent;
   border: none;
   padding: 0;
 }
