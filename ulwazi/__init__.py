@@ -133,6 +133,8 @@ def apply_list_classes(body_html: str) -> str:
     soup = BeautifulSoup(body_html, "html.parser")
     for tag_name, class_name in LIST_STYLES.items():
         for tag in soup.find_all(tag_name):
+            if tag.find_parent(class_="toctree-wrapper"):
+                continue
             existing_classes = tag.get("class", [])
             if class_name not in existing_classes:
                 existing_classes.append(class_name)
