@@ -200,7 +200,7 @@ html_context = {
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "/",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
-    "logo_title": "Canonical",
+    "logo_title": "Ulwazi",
 
     # TODO: Customize the footer.
     "footer": {
