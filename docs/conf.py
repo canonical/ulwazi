@@ -353,6 +353,7 @@ extensions = [
     "sphinxcontrib.jquery",
     "sphinx_tabs.tabs",
     "sphinx_design",
+    "sphinx_search.extension",
 ]
 
 # Excludes files or directories from processing
