@@ -17,7 +17,7 @@
 }
 
 /* All the toctree styles (default styles from Sphinx) are nullified */
-li[class*=' toctree'], li[class^='toctree'] {
+#drawer li[class*=' toctree'], #drawer li[class^='toctree'] {
     all: unset;
 }
 
