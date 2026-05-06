@@ -103,6 +103,14 @@ ogp_image = "https://assets.ubuntu.com/v1/253da317-image-document-ubuntudocs.svg
 
 github_repo = "https://github.com/canonical/ulwazi"
 
+# TODO: Change if your default branch is not 'main'.
+repo_default_branch = "main"
+
+# Determine the source branch for GitHub links (view/edit source, license, etc.)
+# On Read the Docs, use the actual git branch/tag being built;
+# fall back to the default branch for local builds.
+source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER", repo_default_branch)
+
 # TODO: Select the default syntax for docs source files.
 # This is for a fallback view/edit source code buttons.
 
@@ -140,7 +148,7 @@ html_context = {
     # the product's home page or in its GitHub project.
     "license": {
         "name": "LGPL-3.0-only",
-        "url": github_repo + "/blob/main/LICENSE",
+        "url": github_repo + "/blob/" + source_branch + "/LICENSE",
     },
     # Your Discourse instance URL
     #
@@ -165,9 +173,7 @@ html_context = {
     #       and creating GitHub issues are added at the bottom of each page.
     "github_url": github_repo,
     # Docs branch in the repo; used in links for viewing the source files
-    #
-    # TODO: To customise the branch, uncomment and update as needed.
-    "repo_default_branch": "main",
+    "repo_branch": source_branch,
     # Docs location in the repo; used in links for viewing the source files
     #
     # TODO: To customise the directory, uncomment and update as needed.
@@ -182,8 +188,8 @@ html_context = {
     "feedback": True,
     "github_issues": "enabled",
     "default_source_extension": default_source_extension,
-    "default_edit_url": github_repo + "/edit/main/docs/index" + default_source_extension,
-    "default_view_url": github_repo + "/blob/main/docs/index" + default_source_extension,
+    "default_edit_url": github_repo + "/edit/" + source_branch + "/docs/index" + default_source_extension,
+    "default_view_url": github_repo + "/blob/" + source_branch + "/docs/index" + default_source_extension,
 
     # Horizontal Nav Menu
     "company": "Canonical",
