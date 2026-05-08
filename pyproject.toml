@@ -1,6 +1,6 @@
 [project]
 name = "ulwazi"
-version = "0.4"
+version = "0.5"
 description = 'Ulwazi theme for Sphinx documentation projects'
 readme = "README.md"
 requires-python = ">=3.8"
