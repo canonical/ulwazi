@@ -60,7 +60,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.connect("html-page-context", _html_page_context)  # pyright: ignore [reportUnknownMemberType]
 
     return {
-        "version": "0.5",
+        "version": "0.5.1",
         "parallel_read_safe": True,
         "parallel_write_safe": True,
     }
