@@ -5,8 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const applyTheme = (themeClass) => { //themeClass can be "is-light", "is-dark"
     body.classList.remove("is-light", "is-dark");
+    document.documentElement.classList.remove("is-light", "is-dark");
     if (themeClass) {
       body.classList.add(themeClass);
+      document.documentElement.classList.add(themeClass);
     }
     if (toggleButton) {
       toggleButton.setAttribute("aria-pressed", themeClass === "is-dark" ? "true" : "false"); //For accessibility
