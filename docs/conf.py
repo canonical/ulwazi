@@ -210,7 +210,7 @@ html_context = {
         "license": True,
         # List your footer entries. Accepts HTML tags.
         "entries": [
-            '<a href="" class="js-revoke-cookie-manager muted-link">Manage your tracker settings</a>',
+            '<a href="#tracker-settings" class="js-revoke-cookie-manager muted-link">Manage your tracker settings</a>',
         ]
     }
 }
