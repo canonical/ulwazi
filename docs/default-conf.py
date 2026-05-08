@@ -174,7 +174,6 @@ html_context = {
     "github_url": github_repo,
     # Docs branch in the repo; used in links for viewing the source files
     #
-    # TODO: To customise the branch, uncomment and update as needed.
     "repo_branch": source_branch,
     # Docs location in the repo; used in links for viewing the source files
     #
