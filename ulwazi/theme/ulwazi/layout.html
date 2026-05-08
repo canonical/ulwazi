@@ -57,6 +57,15 @@
   {%- endblock head_stylesheets -%}
 
   {% block head_javascript %}
+  <script>
+    // Apply saved theme early to prevent flash of wrong theme on page load.
+    (function () {
+      var theme = localStorage.getItem("ulwazi-theme");
+      if (theme === "is-dark" || theme === "is-light") {
+        document.documentElement.classList.add(theme);
+      }
+    })();
+  </script>
   {% endblock %}
   {% block head_extra %}{% endblock %}
 </head>
@@ -67,7 +76,6 @@
   {% block body_javascript -%}
   {% for js in script_files -%}
     {{ js_tag(js) }}
-  <script src="{{ pathto('_static/js/theme-toggle.js', 1) }}"></script>
   {% endfor -%}
   {%- endblock body_javascript -%}
 </body>

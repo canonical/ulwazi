@@ -5,8 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const applyTheme = (themeClass) => { //themeClass can be "is-light", "is-dark"
     body.classList.remove("is-light", "is-dark");
+    document.documentElement.classList.remove("is-light", "is-dark");
     if (themeClass) {
       body.classList.add(themeClass);
+      document.documentElement.classList.add(themeClass);
     }
     if (toggleButton) {
       toggleButton.setAttribute("aria-pressed", themeClass === "is-dark" ? "true" : "false"); //For accessibility
@@ -16,8 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem(STORAGE_KEY);
   if (savedTheme === "is-light" || savedTheme === "is-dark") {
     applyTheme(savedTheme);
-  } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    applyTheme("is-dark");
   } else {
     applyTheme("is-light");
   }
