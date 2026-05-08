@@ -18,8 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem(STORAGE_KEY);
   if (savedTheme === "is-light" || savedTheme === "is-dark") {
     applyTheme(savedTheme);
-  } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    applyTheme("is-dark");
   } else {
     applyTheme("is-light");
   }
