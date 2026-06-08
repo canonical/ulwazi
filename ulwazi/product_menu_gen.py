@@ -154,6 +154,28 @@ def get_nav_menu(page: BeautifulSoup) -> str:
 
     return wrapper.prettify()
 
+def remove_search(nav: Tag) -> None:
+    """Remove the built-in search buttons and search field from the product nav menu."""
+    # Remove mobile and desktop search toggle buttons by ID
+    for btn_id in ("js-search-button-mobile", "js-search-button-desktop"):
+        btn = nav.find(id=btn_id)
+        if btn:
+            btn.decompose()
+
+    # Remove the search field container
+    search_div = nav.find("div", class_="p-navigation__search")
+    if search_div:
+        search_div.decompose()
+
+def save2file(content: str) -> None:
+    """Write the product menu HTML to a file.
+
+    :param content: The string to write to write to the product menu copy.
+    """
+    filename = f"{PRODUCT_MENU_DIRECTORY.strip('/')}/{PRODUCT_MENU_FILENAME}"
+    Path.mkdir(Path(filename).parent, exist_ok=True, parents=True)
+    with Path(filename).open("w", encoding="utf-8") as file:
+        file.write(content)
 
 def remove_search(nav: Tag) -> None:
     """Remove the built-in search buttons and search field from the product nav menu."""
