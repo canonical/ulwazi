@@ -17,6 +17,8 @@
 """Connect the extension to Sphinx and shim some Vanilla styling."""
 
 import importlib.util
+import json
+import logging
 from pathlib import Path
 from typing import Any, cast
 
@@ -26,22 +28,10 @@ from docutils import nodes
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.util.typing import ExtensionMetadata
-
 from ulwazi.navigation import get_navigation_tree
 from ulwazi.tabs import convert_tabs
 
 THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
-
-# Uncomment when we add build tooling
-# try:
-#     from ._version import __version__
-# except ImportError:
-#     from importlib.metadata import PackageNotFoundError, version
-
-#     try:
-#         __version__ = version("ulwazi")
-#     except PackageNotFoundError:
-#         __version__ = "dev"
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
@@ -343,13 +333,13 @@ def truncate_local_toc(toc: str, max_depth: int = -1) -> str:
     return str(toc_html)
 
 
-def _build_breadcrumb_map(app: Sphinx, context: dict[str, Any]) -> str:
+def _build_breadcrumb_map(_app: Sphinx, context: dict[str, Any]) -> str:
     """Build a mapping of docnames to their navigation breadcrumb paths."""
-    import json
-
     breadcrumb_map = {}
 
-    def process_list_items(items, parent_path=None):
+    def process_list_items(
+        items: list[Tag], parent_path: list[dict[str, str]] | None = None
+    ) -> None:
         """Recursively process list items to extract navigation hierarchy."""
         if parent_path is None:
             parent_path = []
@@ -358,7 +348,7 @@ def _build_breadcrumb_map(app: Sphinx, context: dict[str, Any]) -> str:
             # Find the link in this list item
             link = li.find("a", class_="reference internal")
             if link:
-                href = link.get("href", "")
+                href = cast(str, link.get("href", ""))
                 title = link.get_text(strip=True)
 
                 # Check if this is a section link (contains #)
@@ -396,7 +386,7 @@ def _build_breadcrumb_map(app: Sphinx, context: dict[str, Any]) -> str:
                             process_list_items(nested_items, parent_path)
                         else:
                             # For page links, add to the path for children
-                            new_path = parent_path + [{"title": title, "link": href}]
+                            new_path = [*parent_path, {"title": title, "link": href}]
                             process_list_items(nested_items, new_path)
 
     # Get the global toctree
@@ -417,9 +407,8 @@ def _build_breadcrumb_map(app: Sphinx, context: dict[str, Any]) -> str:
                 if top_level_ul:
                     top_items = top_level_ul.find_all("li", recursive=False)
                     process_list_items(top_items)
-        except Exception as e:
-            # If toctree generation fails, return empty map
-            pass
+        except Exception:
+            logging.exception("toctree generation failed")
 
     return json.dumps(breadcrumb_map)
 

@@ -155,7 +155,7 @@ def get_nav_menu(page: BeautifulSoup) -> str:
     return wrapper.prettify()
 
 
-def remove_search(nav) -> None:
+def remove_search(nav: Tag) -> None:
     """Remove the built-in search buttons and search field from the product nav menu."""
     # Remove mobile and desktop search toggle buttons by ID
     for btn_id in ("js-search-button-mobile", "js-search-button-desktop"):
