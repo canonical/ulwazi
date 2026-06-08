@@ -2,7 +2,7 @@
 
 This site previews the Ulwazi Sphinx theme:
 a Vanilla Framework-based theme built for Canonical’s
-[Starter Pack](https://github.com/canonical/starter-pack).
+[Sphinx stack](https://github.com/canonical/sphinx-stack).
 
 - Want to help? See {doc}`content/contribute`.
 - Want to use it? Start with [Use Ulwazi in your documentation](https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/).
