@@ -9,3 +9,4 @@ node_modules/
 docs/_dev/.doctrees/
 .*_cache/
 htmlcov/
+**/_version.py

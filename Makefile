@@ -1,22 +1,7 @@
-PROJECT=starcraft
-# Define when more than the main package tree requires coverage
-# like is the case for snapcraft (snapcraft and snapcraft_legacy):
-# COVERAGE_SOURCE="starcraft"
 UV_TEST_GROUPS := "--group=dev"
 UV_DOCS_GROUPS := "--group=docs"
 UV_LINT_GROUPS := "--group=lint" "--group=types" $(UV_DOCS_GROUPS)
 UV_TICS_GROUPS := "--group=tics"
-
-# If you have dev dependencies that depend on your distro version, uncomment these:
-# ifneq ($(wildcard /etc/os-release),)
-# include /etc/os-release
-# endif
-# ifdef VERSION_CODENAME
-# UV_TEST_GROUPS += "--group=dev-$(VERSION_CODENAME)"
-# UV_DOCS_GROUPS += "--group=dev-$(VERSION_CODENAME)"
-# UV_LINT_GROUPS += "--group=dev-$(VERSION_CODENAME)"
-# UV_TICS_GROUPS += "--group=dev-$(VERSION_CODENAME)"
-# endif
 
 include common.mk
 
@@ -25,7 +10,6 @@ format: format-ruff format-codespell format-prettier format-pre-commit  ## Run a
 
 .PHONY: lint
 lint: lint-ruff lint-codespell lint-mypy lint-prettier lint-pyright lint-shellcheck lint-twine  ## Run all linters
-
 
 .PHONY: pack
 pack: pack-pip  ## Build all packages
@@ -53,7 +37,9 @@ else
 	sudo $(APT) install $(APT_PACKAGES)
 endif
 
-vanilla-main: npm-install
+# Overrides specific to Ulwazi
+vanilla-main: install-npm
+	npm install
 	echo "Compiling SCSS to CSS..."
 
 	@echo "Using local sass..."
@@ -64,8 +50,38 @@ vanilla-main: npm-install
 
 	@echo "SCSS compilation complete!"
 
-rebuild: docs-clean docs-run
-
+.PHONY: product-menu
 product-menu:
 	@echo "Updating the product menu..."
 	python3 ulwazi/product_menu_gen.py
+
+# Override tests to build HTML and PDF output as a prerequisite.
+# These should be removed when the docs are built programmatically in the tests.
+.PHONY: test
+test: docs-html docs-pdf-prep-force docs-pdf
+	uv run pytest
+
+.PHONY: test-fast
+test-fast: docs-html
+	uv run pytest -m 'not slow'
+
+.PHONY: test-slow
+test-slow: docs-html docs-pdf-prep-force docs-pdf
+	uv run pytest -m 'slow'
+
+.PHONY: test-coverage
+test-coverage: docs-html docs-pdf ## Generate coverage report
+ifeq ($(COVERAGE_SOURCE),)
+	uv run coverage run --source $(PROJECT),tests -m pytest
+else
+	uv run coverage run --source $(COVERAGE_SOURCE),tests -m pytest
+endif
+	uv run coverage xml -o results/coverage.xml
+	# for backwards compatibility
+	# https://github.com/canonical/starflow/blob/3447d302cb7883cbb966ce0ec7e5b3dfd4bb3019/.github/workflows/test-python.yaml#L109
+	cp results/coverage.xml coverage.xml
+	uv run coverage report -m
+	uv run coverage html
+
+.PHONY: rebuild
+rebuild: clean docs

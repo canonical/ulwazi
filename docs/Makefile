@@ -10,7 +10,6 @@ SPHINX_OPTS      ?= -c . -d $(DEV_DIR)/.doctrees -j auto
 SPHINX_BUILD     ?= $(DOCS_VENVDIR)/bin/sphinx-build
 SPHINX_HOST      ?= 127.0.0.1
 SPHINX_PORT      ?= 8000
-SPHINX_AUTOBUILD_OPTS ?= -D=llms_txt_enabled=0
 DOCS_VENVDIR     ?= .venv
 DOCS_VENV        ?= $(DOCS_VENVDIR)/bin/activate
 DOCS_SOURCEDIR   ?= .
@@ -54,32 +53,13 @@ full-help: $(DOCS_VENVDIR)
 	@echo "\n\033[1;31mNOTE: This help texts shows unsupported targets!\033[0m"
 	@echo "Run 'make help' to see supported targets."
 
-# If requirements are updated, venv should be rebuilt and timestamped.
-$(DOCS_VENVDIR):
-	@echo "... setting up virtualenv"
-	python3 -m venv $(DOCS_VENVDIR) || { echo "You must install python3-venv before you can build the documentation."; exit 1; }
-	. $(DOCS_VENV); pip install $(PIPOPTS) --require-virtualenv \
-	    --upgrade -r requirements.txt \
-            --log $(DOCS_VENVDIR)/pip_install.log
-	@test ! -f $(DOCS_VENVDIR)/pip_list.txt || \
-            mv $(DOCS_VENVDIR)/pip_list.txt $(DOCS_VENVDIR)/pip_list.txt.bak
-	@. $(DOCS_VENV); pip list --local --format=freeze > $(DOCS_VENVDIR)/pip_list.txt
-	@touch $(DOCS_VENVDIR)
-
-pa11y-install:
-	@command -v $(PA11Y_CMD) >/dev/null || { \
-			echo "Installing \"pa11y\" from npm..."; echo; \
-			mkdir -p $(DEV_DIR)/node_modules/ ; \
-			npm install --prefix $(DEV_DIR) pa11y; \
-		}
-
 pymarkdownlnt-install: install
 	@. $(DOCS_VENV); test -d $(DOCS_VENVDIR)/lib/python*/site-packages/pymarkdown || pip install pymarkdownlnt==0.9.35
 
 install: $(DOCS_VENVDIR)
 
 run: install
-	. $(DOCS_VENV); $(DOCS_VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS) $(SPHINX_AUTOBUILD_OPTS)
+	. $(DOCS_VENV); $(DOCS_VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)
 
 # Does not depend on $(DOCS_BUILDDIR) to rebuild properly at every run.
 html: install
@@ -105,9 +85,6 @@ clean-doc:
 linkcheck: install
 	. $(DOCS_VENV) ; $(SPHINX_BUILD) -b linkcheck -q "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS) || { grep --color -F "[broken]" "$(DOCS_BUILDDIR)/output.txt"; exit 1; }
 	exit 0
-
-pa11y: pa11y-install html
-	find $(DOCS_BUILDDIR) -name *.html -print0 | xargs -n 1 -0 $(PA11Y_CMD)
 
 # Without --return-code-scheme explicit, pymarkdownlnt returns 1 for multiple scenarios
 # By using the explicit scheme, it only returns 1 when no files are found,
@@ -181,9 +158,6 @@ pdf: pdf-prep
 	@echo
 	@echo "Output can be found in ./$(DOCS_BUILDDIR)"
 	@echo
-
-update: install
-	@. $(DOCS_VENV); _dev/update_sp.py
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINX_OPTS).
