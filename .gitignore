@@ -7,3 +7,4 @@ node_modules/
 *.lock
 /.vscode
 docs/_dev/.doctrees/
+.*_cache/
