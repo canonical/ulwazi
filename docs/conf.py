@@ -1,5 +1,8 @@
 import datetime
 import os
+import sys
+from pathlib import Path
+
 import yaml
 
 # Configuration for the Sphinx documentation builder.
@@ -134,13 +137,13 @@ html_context = {
     #
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
-    # 
+    #
     # Inherit project name
-    "project": project, 
+    "project": project,
     # Inherit the author value
     "author": author,
     # Licensing information
-    # 
+    #
     # TODO: Change your product's license name and a link to its file.
     # For the name, we recommend using the standard shorthand identifier from
     # https://spdx.org/licenses
@@ -183,31 +186,26 @@ html_context = {
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
     "display_contributors": False,
-
-    # Required for feedback button    
+    # Required for feedback button
     "feedback": True,
     "github_issues": "enabled",
     "default_source_extension": default_source_extension,
-    "default_edit_url": github_repo + "/edit/" + source_branch + "/docs/index" + default_source_extension,
-    "default_view_url": github_repo + "/blob/" + source_branch + "/docs/index" + default_source_extension,
-
+    "default_edit_url": f"{github_repo}/edit/{source_branch}/docs/index{default_source_extension}",
+    "default_view_url": f"{github_repo}/blob/{source_branch}/docs/index{default_source_extension}",
     # Horizontal Nav Menu
     "company": "Canonical",
     "link1_URL": "https://snapcraft.io/",
     "link1_name": "First optional link",
     "link2_URL": "https://snapcraft.io/",
     "link2_name": "Second optional link",
-
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
     "add_product_menu": True,
-    
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "/",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Ulwazi",
-
     # TODO: Customize the footer.
     "footer": {
         # Whether to add the product name as the first entry.
@@ -217,8 +215,8 @@ html_context = {
         # List your footer entries. Accepts HTML tags.
         "entries": [
             '<a href="#tracker-settings" class="js-revoke-cookie-manager muted-link">Manage your tracker settings</a>',
-        ]
-    }
+        ],
+    },
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a
@@ -296,10 +294,7 @@ redirects = {}
 #
 # TODO: Remove or adjust the ACME entry after you update the contributing guide
 
-linkcheck_ignore = [
-    "http://127.0.0.1:8000",
-    "https://github.com/canonical/ACME/*"
-    ]
+linkcheck_ignore = ["http://127.0.0.1:8000", "https://github.com/canonical/ACME/*"]
 
 
 # A regex list of URLs where anchors are ignored by 'make linkcheck'
@@ -320,12 +315,7 @@ linkcheck_retries = 3
 # NOTE: By default, the following MyST extensions are enabled:
 #       substitution, deflist, linkify
 
-myst_enable_extensions = {
-    "colon_fence",
-    "deflist",
-    "substitution",
-    "tasklist"
-}
+myst_enable_extensions = {"colon_fence", "deflist", "substitution", "tasklist"}
 
 
 # Custom Sphinx extensions; see
@@ -346,6 +336,9 @@ myst_enable_extensions = {
 #       - terminal-output
 #       - youtube-links
 
+ext_source = Path(__file__).parents[1].resolve()
+sys.path.insert(0, str(ext_source.absolute()))
+
 extensions = [
     "sphinx_terminal",
     "sphinxcontrib.cairosvgconverter",
@@ -363,12 +356,7 @@ extensions = [
 
 # Excludes files or directories from processing
 
-exclude_patterns = [
-    "doc-cheat-sheet*",
-    "_build", 
-    "Thumbs.db", 
-    ".DS_Store"
-]
+exclude_patterns = ["doc-cheat-sheet*", ".venv*", "_build", "Thumbs.db", ".DS_Store"]
 
 # Adds custom CSS files, located under 'html_static_path'
 
@@ -382,9 +370,9 @@ html_js_files = ["https://assets.ubuntu.com/v1/287a5e8f-bundle.js"]
 
 # Syntax highlighting settings
 
-highlight_language = "none" # default
+highlight_language = "none"  # default
 pygments_style = "autumn"
-pygments_dark_style = "github-dark" # see https://pygments.org/styles for more
+pygments_dark_style = "github-dark"  # see https://pygments.org/styles for more
 
 # Specifies a reST snippet to be appended to each .rst file
 
@@ -431,7 +419,7 @@ rst_prolog = """
 # Workaround for https://github.com/canonical/canonical-sphinx/issues/34
 
 if "discourse_prefix" not in html_context and "discourse" in html_context:
-    html_context["discourse_prefix"] = html_context["discourse"] + "/t/"
+    html_context["discourse_prefix"] = f"{html_context['discourse']}/t/"
 
 # Workaround for substitutions.yaml
 
