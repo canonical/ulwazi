@@ -58,8 +58,11 @@ product-menu:
 
 # Override tests to build HTML and PDF output as a prerequisite.
 # These should be removed when the docs are built programmatically in the tests.
-.PHONY: test
-test: test-fast
+
+# Don't test PDF generation by default
+.PHONY: test-fast
+test: docs-html
+	uv run pytest -m 'not slow'
 
 .PHONY: test-fast
 test-fast: docs-html
