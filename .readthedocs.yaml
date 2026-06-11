@@ -5,39 +5,30 @@
 # Required
 version: 2
 
-# Set the version of Python and other tools you might need
-build:
-  os: ubuntu-22.04
-  tools:
-    python: "3.11"
-  jobs:
-    post_create_environment:
-    - pip install sphinx build
-    - python -m build
-    - pip install dist/ulwazi-*.tar.gz
-    post_checkout:
-    - git fetch --unshallow || true
-    # Cancel building pull requests when there aren't changed in the docs directory.
-    # If there are no changes (git diff exits with 0) we force the command to return with 183.
-    # This is a special exit code on Read the Docs that will cancel the build immediately.
-    # https://docs.readthedocs.io/en/stable/build-customization.html#cancel-build-based-on-a-condition
-    # - |
-    #   if [ "$READTHEDOCS_VERSION_TYPE" = "external" ] && git diff --quiet origin/main -- 'docs/' '.readthedocs.yaml';
-    #   then
-    #     exit 183;
-    #   fi
-
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
   builder: dirhtml
   configuration: docs/conf.py
   fail_on_warning: true
 
-# If using Sphinx, optionally build your docs in additional formats such as PDF
-formats:
-- pdf
+build:
+  os: ubuntu-24.04
+  tools:
+    python: "3.12"
+  jobs:
+    post_checkout:
+      - git fetch --tags --unshallow # Also fetch tags
+    post_system_dependencies:
+      - asdf plugin add uv
+      - asdf install uv latest
+      - asdf global uv latest
+    create_environment:
+      - uv venv "${READTHEDOCS_VIRTUALENV_PATH}"
+    install:
+      - make setup-docs DOCS_VENVDIR="${READTHEDOCS_VIRTUALENV_PATH}" UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}"
+    build:
+      html:
+        - make docs DOCS_VENVDIR="${READTHEDOCS_VIRTUALENV_PATH}" UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" DOCS_BUILDDIR="$READTHEDOCS_OUTPUT/html/"
 
-# Optionally declare the Python requirements required to build your docs
-python:
-  install:
-  - requirements: requirements.txt
+formats:
+  - pdf
