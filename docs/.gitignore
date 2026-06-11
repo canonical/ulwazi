@@ -9,7 +9,7 @@ _dev/update/
 _dev/node_modules/
 
 # Vale
-_dev/styles/
+_dev/styles/*
 _dev/vale.ini
 
 # Build outputs
