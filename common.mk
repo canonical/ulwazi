@@ -7,7 +7,6 @@ SOURCES=$(wildcard *.py) $(PROJECT) tests
 # docs Makefile.
 export DOCS_BUILDDIR ?= _build
 export DOCS_VENVDIR ?= ../.venv
-export VALE_DIR ?= $(DOCS_VENVDIR)/lib/python*/site-packages/vale
 
 ifneq ($(OS),Windows_NT)
 	OS := $(shell uname)
@@ -241,13 +240,11 @@ test-find-slow:  ##- Identify slow tests. Set cutoff time in seconds with SLOW_C
 # replace it.
 .PHONY: docs
 docs: docs-install  ## Render the documentation to disk
-	$(MAKE) -C docs run --no-print-directory
+	$(MAKE) -C docs html --no-print-directory
 
-# Override for `install` target in docs project. We still need the Vale setup, so we
-# run that after the parent docs setup.
+# Override for `install` target in docs project.
 .PHONY: docs-install
 docs-install: setup-docs  ##- Set up documentation packages
-	$(MAKE) -C docs vale-install --no-print-directory
 
 # Alias for `setup-docs`
 .PHONY: docs-setup
