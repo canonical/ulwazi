@@ -145,9 +145,9 @@ pdf-prep: install
         "Please be aware these packages will be installed to your system") && exit 1 ; done
 
 pdf-prep-force:
-	apt-get update
-	apt-get upgrade -y
-	apt-get install --no-install-recommends -y $(DOCS_PDFPACKAGES) \
+	sudo apt-get update
+	sudo apt-get upgrade -y
+	sudo apt-get install --no-install-recommends -y $(DOCS_PDFPACKAGES) \
 
 pdf: pdf-prep
 	@. $(DOCS_VENV); $(SPHINX_BUILD) -M latexpdf "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)
