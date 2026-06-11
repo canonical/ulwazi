@@ -4,7 +4,6 @@ dist/
 .venv/
 docs/_build
 node_modules/
-*.lock
 /.vscode
 docs/_dev/.doctrees/
 docs/_dev/styles/
