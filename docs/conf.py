@@ -27,7 +27,7 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "The Ulwazi theme sample - some very long phrase here to test the wrapping of the title in the header"
+project = "The Ulwazi theme sample"
 author = "Canonical Ltd."
 
 

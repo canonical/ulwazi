@@ -28,7 +28,7 @@ endif
 
 # Used for installing build dependencies in CI.
 .PHONY: install-build-deps
-install-build-deps: install-lint-build-deps
+install-build-deps:
 ifeq ($(APT_PACKAGES),)
 else ifeq ($(shell which apt-get),)
 	$(warning Cannot install build dependencies without apt.)
@@ -58,13 +58,13 @@ product-menu:
 # Override tests to build HTML and PDF output as a prerequisite.
 # These should be removed when the docs are built programmatically in the tests.
 .PHONY: test
-test: docs-html docs-pdf-prep-force docs-pdf
-	uv run pytest
+test: test-fast
 
 .PHONY: test-fast
 test-fast: docs-html
 	uv run pytest -m 'not slow'
 
+# Includes PDF build
 .PHONY: test-slow
 test-slow: docs-html docs-pdf-prep-force docs-pdf
 	uv run pytest -m 'slow'

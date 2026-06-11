@@ -70,8 +70,7 @@ setup-lint: _setup-lint  ##- Set up a linting-only environment
 	uv sync $(UV_LINT_GROUPS)
 
 .PHONY: _setup-lint
-_setup-lint: install-uv install-shellcheck install-pyright install-lint-build-deps install-actionlint
-
+_setup-lint: install-uv install-shellcheck install-pyright
 .PHONY: setup-tests
 setup-tests: _setup-tests ##- Set up a testing environment without linters
 	uv sync $(UV_TEST_GROUPS)
