@@ -60,7 +60,7 @@ product-menu:
 # These should be removed when the docs are built programmatically in the tests.
 
 # Don't test PDF generation by default
-.PHONY: test-fast
+.PHONY: test
 test: docs-html
 	uv run pytest -m 'not slow'
 
