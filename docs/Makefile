@@ -107,6 +107,7 @@ lint-md: pymarkdownlnt-install
 	exit $$status;
 
 vale-install: install
+	@mkdir -p $(DEV_DIR)/styles
 	@. $(DOCS_VENV); test -f $(VALE_CONFIG) || python3 $(DEV_DIR)/get_vale_conf.py
 	@echo '.Name=="Canonical.400-Enforce-inclusive-terms"' > $(DEV_DIR)/styles/woke.filter
 	@echo '.Level=="error" and .Name!="Canonical.500-Repeated-words" and .Name!="Canonical.000-US-spellcheck"' > $(DEV_DIR)/styles/error.filter
