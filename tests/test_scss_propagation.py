@@ -1,4 +1,3 @@
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -14,7 +13,7 @@ EXPECTED_COLOR = ("rgb(128, 0, 128)", "purple")
 def test_scss_styles_propagation():
     assert Path(INDEX_PATH).exists(), f"index.html not found in {INDEX_PATH}"
 
-    with open(INDEX_PATH, encoding="utf-8") as f:
+    with Path(INDEX_PATH, encoding="utf-8").open() as f:
         soup = BeautifulSoup(f, "lxml")
 
     target = soup.find("p", class_="heading-test-scss")

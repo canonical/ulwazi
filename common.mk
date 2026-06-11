@@ -143,7 +143,7 @@ ifneq ($(CI),)
 endif
 
 .PHONY: lint-mypy
-lint-mypy:  ##- Check types with mypy
+lint-mypy: setup-lint ##- Check types with mypy
 ifneq ($(CI),)
 	@echo ::group::$@
 endif
