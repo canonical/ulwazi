@@ -1475,10 +1475,14 @@ wheels = [
 [[package]]
 name = "sphinx-modern-pdf-style"
 version = "0.1.3"
-source = { git = "https://github.com/jahn-junior/sphinx-modern-pdf-style.git?rev=work%2Ffix-permissions#949de0aa17c7969eb86d7101c337fa678b3e124c" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyyaml" },
     { name = "sphinx" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/76/4a/f49f544359c4fefa48b2661fa13ad5a12a72062477a3cf34c090a93561c7/sphinx_modern_pdf_style-0.1.3.tar.gz", hash = "sha256:aa8e2e5ebe520c84a26715308d1df81fd2034f411154ae022861b806cc4c46bc", size = 903879, upload-time = "2025-07-18T02:14:52.702Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f8/2f/6a98dbe9ea664018b8e0b103b062c4133605fdff37b30fdafe1e2c3431c8/sphinx_modern_pdf_style-0.1.3-py3-none-any.whl", hash = "sha256:7f5a437f5b4a39fcde04d62fae2e41bad18e52f2b92163eca42a2ce9a1005d3e", size = 887748, upload-time = "2025-07-18T02:14:50.59Z" },
 ]
 
 [[package]]
@@ -1792,7 +1796,7 @@ docs = [
     { name = "sphinx-basic-ng", specifier = ">=1.0.0b2" },
     { name = "sphinx-design", specifier = ">=0.6.1" },
     { name = "sphinx-last-updated-by-git", specifier = ">=0.3.8" },
-    { name = "sphinx-modern-pdf-style", git = "https://github.com/jahn-junior/sphinx-modern-pdf-style.git?rev=work%2Ffix-permissions" },
+    { name = "sphinx-modern-pdf-style", specifier = ">=0.1.3" },
     { name = "sphinx-sitemap", specifier = ">=2.9.0" },
     { name = "sphinx-tabs", specifier = ">=3.5.0" },
     { name = "sphinx-terminal", specifier = "~=1.0.1" },
