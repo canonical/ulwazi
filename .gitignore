@@ -8,6 +8,7 @@ node_modules/
 /.vscode
 docs/_dev/.doctrees/
 docs/_dev/styles/
+docs/_dev/vale.ini
 .*_cache/
 htmlcov/
 **/_version.py
