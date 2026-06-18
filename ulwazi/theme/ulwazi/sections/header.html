@@ -75,5 +75,16 @@
         </nav>
       </div>
     </div>
+    {%- if builder != "singlehtml" %}
+    <div class="l-docs__meta u-nav-search-meta">
+      <form class="p-navigation__search" action="{{ pathto('search') }}" method="get">
+        <label class="u-off-screen" for="nav-search">Search</label>
+        <input type="search" id="nav-search" class="p-navigation__search-input" name="q" placeholder="Search" required="" autocomplete="on" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button type="submit" class="p-navigation__search-button">
+          <i class="p-icon--search is-light">Search</i>
+        </button>
+      </form>
+    </div>
+    {%- endif %}
   </div>
 </header>

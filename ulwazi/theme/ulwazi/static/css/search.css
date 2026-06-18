@@ -130,3 +130,67 @@
 #search-results li.kind-text {
   padding-left: 1rem;
 }
+
+/* Navigation search in header meta column (aligned with feedback block) */
+.u-nav-search-meta {
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+
+.p-navigation__search {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.p-navigation__search-input {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 2px 0 0 2px;
+  color: #fff;
+  font-size: 0.875rem;
+  padding: 0.3rem 0.5rem;
+  flex: 1;
+  min-width: 0;
+  height: 2rem;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.p-navigation__search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.p-navigation__search-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.8);
+  width: 12rem;
+}
+
+.p-navigation__search-button {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-left: none;
+  border-radius: 0 2px 2px 0;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  height: 2rem;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.p-navigation__search-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Hide search input on small screens, show only button */
+@media (max-width: 767px) {
+  .u-nav-search-meta {
+    display: none;
+  }
+}

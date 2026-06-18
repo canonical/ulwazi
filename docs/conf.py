@@ -24,7 +24,7 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "The Ulwazi theme sample - some very long phrase here to test the wrapping of the title in the header"
+project = "Ulwazi"
 author = "Canonical Ltd."
 
 
@@ -193,14 +193,14 @@ html_context = {
 
     # Horizontal Nav Menu
     "company": "Canonical",
-    "link1_URL": "https://snapcraft.io/",
-    "link1_name": "First optional link",
-    "link2_URL": "https://snapcraft.io/",
-    "link2_name": "Second optional link",
+    # "link1_URL": "https://snapcraft.io/",
+    # "link1_name": "First optional link",
+    # "link2_URL": "https://snapcraft.io/",
+    # "link2_name": "Second optional link",
 
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
-    "add_product_menu": True,
+    "add_product_menu": False,
     
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown

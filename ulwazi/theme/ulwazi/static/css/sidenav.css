@@ -5,6 +5,13 @@
     --hidden-element-color: rgb(255, 255, 255);
 }
 
+/* Extra top padding on left sidebar for visual spacing */
+aside.l-docs__sidebar {
+    padding-top: 0.5rem;
+}
+
+
+
 /* Navigation menu Heading */
 .p-side-navigation__heading {
     display: flex;
