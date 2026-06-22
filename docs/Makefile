@@ -10,7 +10,7 @@ SPHINX_OPTS      ?= -c . -d $(DEV_DIR)/.doctrees -j auto
 SPHINX_BUILD     ?= $(DOCS_VENVDIR)/bin/sphinx-build
 SPHINX_HOST      ?= 127.0.0.1
 SPHINX_PORT      ?= 8000
-DOCS_VENVDIR     ?= .venv
+DOCS_VENVDIR     ?= ../.venv
 DOCS_VENV        ?= $(DOCS_VENVDIR)/bin/activate
 DOCS_SOURCEDIR   ?= .
 DOCS_BUILDDIR    ?= _build
@@ -56,7 +56,8 @@ full-help: $(DOCS_VENVDIR)
 pymarkdownlnt-install: install
 	@. $(DOCS_VENV); test -d $(DOCS_VENVDIR)/lib/python*/site-packages/pymarkdown || pip install pymarkdownlnt==0.9.35
 
-install: $(DOCS_VENVDIR)
+install:
+	@$(MAKE) -C .. docs-install --no-print-directory
 
 run: install
 	. $(DOCS_VENV); $(DOCS_VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)

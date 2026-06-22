@@ -6,7 +6,6 @@ SOURCES=$(wildcard *.py) $(PROJECT) tests
 # Env vars for the docs Starter Pack. They must be exported so make can pass them to the
 # docs Makefile.
 export DOCS_BUILDDIR ?= _build
-export DOCS_VENVDIR ?= ../.venv
 
 ifneq ($(OS),Windows_NT)
 	OS := $(shell uname)
