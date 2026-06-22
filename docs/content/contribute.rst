@@ -44,7 +44,7 @@ This does a clean build, which may be necessary after changes to the theme files
 Reset the environment
 *********************
 
-Some changes to the environment (for example, if you add a new extension to ``docs/requirements.txt``)
+Some changes to the environment (for example, if you add a new package to ``pyproject.toml``)
 may require a complete reset by deleting the virtual environment. To reset the virtual environment:
 
 1. Delete the ``.venv`` folder manually or run:

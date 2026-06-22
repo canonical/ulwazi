@@ -133,7 +133,7 @@ tests/                       # Test scripts
 
 ### Dependency Changes
 
-- Update [requirements.txt](requirements.txt) and [pyproject.toml](pyproject.toml)
+- Update [pyproject.toml](pyproject.toml)
 - Run `make clean` then `make docs-run` to rebuild venv
 
 ### HTML Modifications
