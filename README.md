@@ -33,6 +33,12 @@ To build the sample documentation using the theme, run:
 make docs
 ```
 
+To build the sample documentation in an interactive preview, run:
+
+```shell
+make run
+```
+
 This command set ups a virtual environment, installs dependencies, builds theme, then documentation in this repo, and serves the result via local web server.
 
 The resulted environment tracks changes in sample content and rebuilds the local website automatically.
