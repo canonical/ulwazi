@@ -205,31 +205,31 @@ ifneq ($(CI),)
 	@echo ::endgroup::
 endif
 
-.PHONY: test
-test:  ## Run all tests
-	uv run pytest
+# .PHONY: test
+# test:  ## Run all tests
+# 	uv run pytest
 
-.PHONY: test-fast
-test-fast:  ##- Run fast tests
-	uv run pytest -m 'not slow'
+# .PHONY: test-fast
+# test-fast:  ##- Run fast tests
+# 	uv run pytest -m 'not slow'
 
-.PHONY: test-slow
-test-slow:  ##- Run slow tests
-	uv run pytest -m 'slow'
+# .PHONY: test-slow
+# test-slow:  ##- Run slow tests
+# 	uv run pytest -m 'slow'
 
-.PHONY: test-coverage
-test-coverage:  ## Generate coverage report
-ifeq ($(COVERAGE_SOURCE),)
-	uv run coverage run --source $(PROJECT),tests -m pytest
-else
-	uv run coverage run --source $(COVERAGE_SOURCE),tests -m pytest
-endif
-	uv run coverage xml -o results/coverage.xml
-	# for backwards compatibility
-	# https://github.com/canonical/starflow/blob/3447d302cb7883cbb966ce0ec7e5b3dfd4bb3019/.github/workflows/test-python.yaml#L109
-	cp results/coverage.xml coverage.xml
-	uv run coverage report -m
-	uv run coverage html
+# .PHONY: test-coverage
+# test-coverage:  ## Generate coverage report
+# ifeq ($(COVERAGE_SOURCE),)
+# 	uv run coverage run --source $(PROJECT),tests -m pytest
+# else
+# 	uv run coverage run --source $(COVERAGE_SOURCE),tests -m pytest
+# endif
+# 	uv run coverage xml -o results/coverage.xml
+# 	# for backwards compatibility
+# 	# https://github.com/canonical/starflow/blob/3447d302cb7883cbb966ce0ec7e5b3dfd4bb3019/.github/workflows/test-python.yaml#L109
+# 	cp results/coverage.xml coverage.xml
+# 	uv run coverage report -m
+# 	uv run coverage html
 
 .PHONY: test-find-slow
 test-find-slow:  ##- Identify slow tests. Set cutoff time in seconds with SLOW_CUTOFF_TIME

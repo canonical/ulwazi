@@ -38,7 +38,7 @@ else
 	sudo $(APT) install $(APT_PACKAGES)
 endif
 
-# Overrides specific to Ulwazi
+# Ulwazi-specific targets
 vanilla-main: install-npm
 	npm install
 	echo "Compiling SCSS to CSS..."
@@ -56,10 +56,11 @@ product-menu:
 	@echo "Updating the product menu..."
 	python3 ulwazi/product_menu_gen.py
 
+.PHONY: rebuild
+rebuild: clean docs
+
 # Override tests to build HTML and PDF output as a prerequisite.
 # These should be removed when the docs are built programmatically in the tests.
-
-# Don't test PDF generation by default
 .PHONY: test
 test: docs-html
 	uv run pytest -m 'not slow'
@@ -86,6 +87,3 @@ endif
 	cp results/coverage.xml coverage.xml
 	uv run coverage report -m
 	uv run coverage html
-
-.PHONY: rebuild
-rebuild: clean docs
