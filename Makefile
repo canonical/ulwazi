@@ -59,6 +59,10 @@ product-menu:
 .PHONY: rebuild
 rebuild: clean docs
 
+.PHONY: run
+run:
+	$(MAKE) -C docs run
+
 # Override tests to build HTML and PDF output as a prerequisite.
 # These should be removed when the docs are built programmatically in the tests.
 .PHONY: test

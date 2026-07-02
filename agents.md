@@ -23,13 +23,13 @@ Build theme and docs, and then run a local web server
 (auto-rebuilds on content changes) to serve them:
 
 ```bash
-make docs-run
+make run
 ```
 
 The web server will continue to run and publish the docs on `http://127.0.0.1:8000` by default.
-To override: `make docs-run SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080`
+To override: `make run SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080`
 
-To access the web pages served by web server, you'll need to keep the `make docs-run` command running
+To access the web pages served by web server, you'll need to keep the `make run` command running
 and use a different terminal.
 
 When all testing is done, don't forget to terminate the command serving the sample docs
@@ -129,12 +129,12 @@ tests/                       # Test scripts
 
 ### Content Changes
 
-- Sample docs in [docs/content/](docs/content/) auto-rebuilds with `make docs-run`
+- Sample docs in [docs/content/](docs/content/) auto-rebuilds with `make run`
 
 ### Dependency Changes
 
 - Update [pyproject.toml](pyproject.toml)
-- Run `make clean` then `make docs-run` to rebuild venv
+- Run `make clean` then `make run` to rebuild venv
 
 ### HTML Modifications
 
@@ -158,13 +158,13 @@ make vanilla-main
 Build and serve the theme and the sample docs:
 
 ```bash
-make docs-run
+make run
 ```
 
 While the last command is running, access the default address in
 another terminal to check the results manually.
 
-When all testing is done, make sure to terminate the `make docs-run` command in the original terminal.
+When all testing is done, make sure to terminate the `make run` command in the original terminal.
 
 Run tests to avoid regression:
 
@@ -198,7 +198,7 @@ make test
 - **Virtual Environment**: Located at `.venv/`, managed automatically by Make
 - **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
 - **Node Modules**: Required for Vanilla Framework compilation
-- **Auto-rebuild**: `make docs-run` watches content changes but NOT theme changes
+- **Auto-rebuild**: `make run` watches content changes but NOT theme changes
 
 ## Testing Locations
 
