@@ -33,51 +33,39 @@ export UV_FROZEN := true
 
 .PHONY: help
 help: ## Show this help.
-	@printf "\e[1m%-30s\e[0m | \e[1m%s\e[0m\n" "Target" "Description"
-	printf "\e[2m%-30s + %-41s\e[0m\n" "------------------------------" "------------------------------------------------"
-	egrep '^[^:]+\: [^#]*##' $$(echo $(MAKEFILE_LIST) | tac --separator=' ') | sed -e 's/:[^#]*/ /' | sort -V | awk -F '[: ]*' \
-	'{
-		if ($$2 == "##")
-		{
-			$$1=sprintf(" %-28s", $$1);
-			$$2=" | ";
-			print $$0;
-		}
-		else
-		{
-			$$1=sprintf("  └ %-25s", $$1);
-			$$2=" | ";
-			$$3=sprintf(" └ %s", $$3);
-			print $$0;
-		}
-	}' | uniq
+	@printf "\033[1m%-30s\033[0m | \033[1m%s\033[0m\n" "Target" "Description"
+	@printf "\033[2m%-30s + %-41s\033[0m\n" "------------------------------" "------------------------------------------------"
+	@cat $$(echo $(MAKEFILE_LIST) | tac --separator=' ' 2>/dev/null || echo $(MAKEFILE_LIST)) | grep -E '^[^[:space:]][^:]*\:[^#]*##' | \
+	sed -e 's/:[^#]*/ /' | sort -V | \
+	awk -F '[: ]+' '{ if ($$2 == "##") { $$1=sprintf(" %-28s", $$1); $$2=" | "; print $$0; } else { $$1=sprintf("  └ %-25s", $$1); $$2=" | "; $$3=sprintf(" └ %s", $$3); print $$0; } }' | \
+	uniq
 
 .PHONY: install
 install: install-uv _setup-docs _setup-lint _setup-tests setup-precommit install-build-deps  ## Set up a development environment
 	uv sync $(UV_TEST_GROUPS) $(UV_LINT_GROUPS) $(UV_DOCS_GROUPS)
 
 .PHONY: setup-docs
-setup-docs: _setup-docs  ##- Set up the documentation environment
+setup-docs: _setup-docs
 	uv sync --no-dev $(UV_DOCS_GROUPS)
 
 .PHONY: _setup-docs
 _setup-docs: install-uv
 
 .PHONY: setup-lint
-setup-lint: _setup-lint  ##- Set up a linting-only environment
+setup-lint: _setup-lint
 	uv sync $(UV_LINT_GROUPS)
 
 .PHONY: _setup-lint
 _setup-lint: install-uv install-shellcheck install-pyright
 .PHONY: setup-tests
-setup-tests: _setup-tests ##- Set up a testing environment without linters
+setup-tests: _setup-tests
 	uv sync $(UV_TEST_GROUPS)
 
 .PHONY: _setup-tests
 _setup-tests: install-uv install-build-deps
 
 .PHONY: setup-tics
-setup-tics: install-uv install-build-deps ##- Set up a testing environment for Tiobe TICS
+setup-tics: install-uv install-build-deps
 	uv venv
 	uv sync $(UV_TEST_GROUPS) $(UV_LINT_GROUPS) $(UV_TICS_GROUPS)
 ifneq ($(CI),)
@@ -85,7 +73,7 @@ ifneq ($(CI),)
 endif
 
 .PHONY: setup-precommit
-setup-precommit: install-uv  ##- Set up pre-commit hooks in this repository.
+setup-precommit: install-uv
 ifeq ($(shell which pre-commit),)
 	uv tool run pre-commit install
 else
@@ -205,20 +193,24 @@ ifneq ($(CI),)
 	@echo ::endgroup::
 endif
 
+# Commented out to suppress override warnings while Ulwazi tests are being actively
+# developed. Uncomment this block and replace the second `#` character in target
+# descriptions when the overrides are no longer necessary.
+
 # .PHONY: test
-# test:  ## Run all tests
+# test:  # Run all tests
 # 	uv run pytest
 
 # .PHONY: test-fast
-# test-fast:  ##- Run fast tests
+# test-fast:  #- Run fast tests
 # 	uv run pytest -m 'not slow'
 
 # .PHONY: test-slow
-# test-slow:  ##- Run slow tests
+# test-slow:  #- Run slow tests
 # 	uv run pytest -m 'slow'
 
 # .PHONY: test-coverage
-# test-coverage:  ## Generate coverage report
+# test-coverage:  # Generate coverage report
 # ifeq ($(COVERAGE_SOURCE),)
 # 	uv run coverage run --source $(PROJECT),tests -m pytest
 # else
@@ -232,7 +224,7 @@ endif
 # 	uv run coverage html
 
 .PHONY: test-find-slow
-test-find-slow:  ##- Identify slow tests. Set cutoff time in seconds with SLOW_CUTOFF_TIME
+test-find-slow:
 	uv run pytest --durations 0 --durations-min $(SLOW_CUTOFF_TIME)
 
 # Alias for `html` target in docs project. We want to use our own `.venv`, so we

@@ -39,7 +39,7 @@ else
 endif
 
 # Ulwazi-specific targets
-vanilla-main: install-npm
+vanilla-main: install-npm  ## Install Vanilla and compile CSS
 	npm install
 	echo "Compiling SCSS to CSS..."
 
@@ -52,34 +52,33 @@ vanilla-main: install-npm
 	@echo "SCSS compilation complete!"
 
 .PHONY: product-menu
-product-menu:
+product-menu:  ## Update the product menu
 	@echo "Updating the product menu..."
 	python3 ulwazi/product_menu_gen.py
 
 .PHONY: rebuild
-rebuild: clean docs
+rebuild: clean docs  ## Clean the environment and rebuild the docs
 
 .PHONY: run
-run:
+run:  ## Launch an interactive preview of the docs
 	$(MAKE) -C docs run
 
 # Override tests to build HTML and PDF output as a prerequisite.
 # These should be removed when the docs are built programmatically in the tests.
 .PHONY: test
-test: docs-html
+test: docs-html  ## Run all tests (excluding PDF builds)
 	uv run pytest -m 'not slow'
 
 .PHONY: test-fast
 test-fast: docs-html
 	uv run pytest -m 'not slow'
 
-# Includes PDF build
 .PHONY: test-slow
-test-slow: docs-html docs-pdf-prep-force docs-pdf
+test-slow: docs-html docs-pdf-prep-force docs-pdf   ##- Run all tests (including PDF builds)
 	uv run pytest -m 'slow'
 
 .PHONY: test-coverage
-test-coverage: docs-html docs-pdf ## Generate coverage report
+test-coverage: docs-html docs-pdf ##- Run tests and generate coverage report
 ifeq ($(COVERAGE_SOURCE),)
 	uv run coverage run --source $(PROJECT),tests -m pytest
 else
