@@ -7,4 +7,8 @@ node_modules/
 /.vscode
 .*_cache/
 htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+results/
 **/_version.py

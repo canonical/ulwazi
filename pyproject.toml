@@ -120,6 +120,7 @@ testpaths = "tests"
 pythonpath = "tests"
 xfail_strict = true
 markers = ["slow: slow tests"]
+addopts = "-v --tb=short -rA"
 
 [tool.coverage.run]
 branch = true
