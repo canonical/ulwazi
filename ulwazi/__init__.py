@@ -28,10 +28,9 @@ from docutils import nodes
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.util.typing import ExtensionMetadata
+
 from ulwazi.navigation import get_navigation_tree
 from ulwazi.tabs import convert_tabs
-
-THEME_PATH = (Path(__file__).parent / "theme" / "ulwazi").resolve()
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
