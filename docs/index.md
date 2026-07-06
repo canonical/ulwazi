@@ -12,7 +12,13 @@ a Vanilla Framework-based theme built for Canonical’s
 The included Makefile builds the theme and a sample documentation set so you can inspect
 changes quickly.
 
-To build and serve the sample documentation:
+To build the sample documentation:
+
+```shell
+make docs
+```
+
+To build the sample documentation in an interactive preview, run:
 
 ```shell
 make run
@@ -26,13 +32,13 @@ a full rebuild:
 make rebuild
 ```
 
-The `make rebuild` command runs `make clean` before `make run`.
+The `make rebuild` command runs `make clean` before `make docs`.
 
-If you change dependencies (for example, if you add a new Sphinx extension to
-`docs/requirements.txt`), you should rebuild the virtual environment:
+If you change dependencies (for example, if you add a new package to
+`pyproject.toml`), you should rebuild the virtual environment:
 
 ```shell
-make fclean
+make clean
 ```
 
 ## Contribute

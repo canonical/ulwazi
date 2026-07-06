@@ -9,7 +9,7 @@ Prerequisites
 
 Install `npm <https://docs.npmjs.com/downloading-and-installing-node-js-and-npm>`_
 and `Yarn <https://yarnpkg.com/>`_:
-  
+
 .. code-block:: shell
 
    sudo apt install npm
@@ -24,13 +24,13 @@ Setup
 
       yarn install
 
-2. Build and serve the sample documentation with the theme:
+2. Build the sample documentation with the theme:
 
    .. code-block:: shell
 
-      make run
+      make docs
 
-   This sets up a virtual environment, installs dependencies, builds the theme, and serves documentation locally.
+   This sets up a virtual environment, installs dependencies, and builds the sample docs.
 
 You can rebuild the theme manually, which is especially useful if you make significant theme changes
 outside of the docs content:
@@ -44,17 +44,16 @@ This does a clean build, which may be necessary after changes to the theme files
 Reset the environment
 *********************
 
-Some changes to the environment (for example, if you add a new extension to ``docs/requirements.txt``)
-may require a complete reset by deleting the virtual environment.
-To reset the virtual environment:
+Some changes to the environment (for example, if you add a new package to ``pyproject.toml``)
+may require a complete reset by deleting the virtual environment. To reset the virtual environment:
 
 1. Delete the ``.venv`` folder manually or run:
 
    .. code-block:: shell
 
-      make fclean
+      make clean
 
-2. Build the documentation from scratch with ``build run``.
+2. Build the documentation from scratch with ``build docs``.
 
 Rebuild CSS
 ***********

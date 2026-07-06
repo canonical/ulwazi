@@ -5,8 +5,8 @@
 Ulwazi is a Sphinx theme based on Canonical's [Vanilla Framework](https://vanillaframework.io/).
 It provides both generic Vanilla styling and Canonical-specific theming for documentation projects.
 
-**Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript  
-**License**: GPL-3.0  
+**Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript
+**License**: GPL-3.0
 **Python**: >=`3.8` (`3.11` is recommended)
 
 ## Common Tasks
@@ -16,7 +16,7 @@ It provides both generic Vanilla styling and Canonical-specific theming for docu
 Build theme and docs:
 
 ```bash
-make html
+make docs
 ```
 
 Build theme and docs, and then run a local web server
@@ -46,14 +46,14 @@ Available tests:
 
 - **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file
-- **scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright
+- **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright
 
 ### Cleaning
 
 Clean (delete) the built sample documentation content:
 
 ```bash
-make clean-doc
+make docs-clean
 ```
 
 Clean the built docs and theme files:
@@ -62,13 +62,7 @@ Clean the built docs and theme files:
 make clean
 ```
 
-Clean everything including venv:
-
-```bash
-make fclean
-```
-
-Rebuild theme and docs (combination of `clean` and `run`):
+Rebuild theme and docs (combination of `clean` and `docs`):
 
 ```bash
 make rebuild
@@ -84,7 +78,7 @@ make vanilla-main # Compile SCSS to CSS
 ### Quick start
 
 Prefer Makefile targets.
-The `make run` command creates the virtualenv and installs Python deps from requirements.
+The `make docs` command creates the virtualenv and installs Python deps.
 
 Install Node dependencies (only if you need to compile SCSS):
 
@@ -122,8 +116,7 @@ tests/                       # Test scripts
 
 - **[pyproject.toml](pyproject.toml)**: Package metadata, dependencies, build config
 - **[Makefile](Makefile)**: Build automation and common tasks
-- **[requirements.txt](requirements.txt)**: Development dependencies
-- **[ulwazi/__init__.py](ulwazi/__init__.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
+- **[ulwazi/**init**.py](ulwazi/**init**.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
 - **[ulwazi/theme/ulwazi/layout.html](ulwazi/theme/ulwazi/layout.html)**: Base page layout template
 
 ## Development Workflow
@@ -140,20 +133,20 @@ tests/                       # Test scripts
 
 ### Dependency Changes
 
-- Update [requirements.txt](requirements.txt) and [pyproject.toml](pyproject.toml)
-- Run `make fclean` then `make run` to rebuild venv
+- Update [pyproject.toml](pyproject.toml)
+- Run `make clean` then `make run` to rebuild venv
 
 ### HTML Modifications
 
 - Override templates in [ulwazi/theme/ulwazi/](ulwazi/theme/ulwazi/)
-- Modify `_html_page_context` function in [ulwazi/__init__.py](ulwazi/__init__.py) for pre-theme processing
+- Modify `_html_page_context` function in [ulwazi/**init**.py](ulwazi/__init__.py) for pre-theme processing
 
 ### Testing
 
 Clean up the old files:
 
 ```bash
-make fclean
+make clean
 ```
 
 Update the Vanilla Framework styles:
@@ -173,10 +166,10 @@ another terminal to check the results manually.
 
 When all testing is done, make sure to terminate the `make run` command in the original terminal.
 
-Run automatic tests to avoid regression:
+Run tests to avoid regression:
 
 ```bash
-make tests
+make test
 ```
 
 ## Code Conventions
@@ -206,14 +199,13 @@ make tests
 - **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
 - **Node Modules**: Required for Vanilla Framework compilation
 - **Auto-rebuild**: `make run` watches content changes but NOT theme changes
-- **Dependencies**: Core deps in [pyproject.toml](pyproject.toml), dev deps in [requirements.txt](requirements.txt)
 
 ## Testing Locations
 
 - **Sample docs**: [docs/](docs/) - comprehensive test content
 - **Cheatsheet pages**: [docs/content/rst-cheat-sheet.rst](docs/content/rst-cheat-sheet.rst) and [docs/content/myst-cheat-sheet.md](docs/content/myst-cheat-sheet.md) - comprehensive examples of all supported blocks (admonitions, code blocks, tables, etc.). Use these to verify theme rendering. When adding new features, update both cheatsheets with equivalent examples in similar structure.
 - **Test scripts**: [tests/](tests/) - validation and PDF generation tests
-- **Built output**: [docs/_build/](docs/_build/) - inspect generated HTML
+- **Built output**: [docs/\_build/](docs/_build/) - inspect generated HTML
 
 ## Syntax
 

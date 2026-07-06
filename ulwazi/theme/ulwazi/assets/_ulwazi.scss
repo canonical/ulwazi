@@ -31,7 +31,7 @@
   font-weight: $font-weight-h1;
   font-size: $font-size-h1;
   line-height: $font-line-height-h1;
-} 
+}
 
 .p-heading--2 {
   font-weight: $font-weight-h2;
@@ -339,7 +339,7 @@ button.copybtn:hover {
   background-color: var(--vf-color-background-code);
   color: var(--vf-color-text-default);
 }
-  
+
 
 // Disable tooltip for copy buttons only
 .copybtn.o-tooltip--left[data-tooltip]::before,
@@ -351,7 +351,7 @@ button.copybtn:hover {
 .input button.copybtn{
   background-color: transparent !important;
   z-index: 999;
-} 
+}
 
 div.input > button.copybtn svg {
   height: 1.4em !important;
@@ -376,7 +376,7 @@ div.terminal {
   margin-bottom: 1.5em;
 }
 
-/* Copybutton for terminals needs white icon rather than defualt black */
+/* Copybutton for terminals needs white icon rather than default black */
 div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }
@@ -399,7 +399,7 @@ div.terminal > div.input > button.copybtn svg {
   .p-icon--search {
     filter: brightness(0) invert(1); // Makes the icon white
   }
-  
+
   &:hover {
     background-color: darken(#e95420, 10%) !important;
   }

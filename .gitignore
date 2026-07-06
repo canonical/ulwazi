@@ -4,5 +4,11 @@ dist/
 .venv/
 docs/_build
 node_modules/
-*.lock
 /.vscode
+.*_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+results/
+**/_version.py
