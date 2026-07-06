@@ -248,7 +248,7 @@ def convert_tabs(body_html: str) -> str:  # noqa: PLR0912, PLR0915
         tablist = container.find("div", attrs={"role": "tablist"})
         buttons: list[Tag] = []
         if tablist:
-            buttons = tablist.find_all(attrs={"role": "tab"})
+            buttons = tablist.find_all(attrs={"role": "tab"})  # type: ignore[call-overload]
 
         for btn in buttons:
             btn_id = btn.get("id")

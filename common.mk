@@ -17,7 +17,7 @@ else
 endif
 
 PRETTIER=npm exec --package=prettier@3.6.0 -- prettier --log-level warn # renovate: datasource=npm
-PRETTIER_FILES="**/*.{yaml,yml,json,json5,css,md}"
+PRETTIER_FILES="**/*.{yaml,yml,json,json5,css,md}" "!docs/**" "!ulwazi/theme/ulwazi/static/**"
 
 # Cutoff (in seconds) before a test is considered slow by pytest
 SLOW_CUTOFF_TIME ?= 1
