@@ -2,7 +2,7 @@
 
 This page describes the vision for testing the Ulwazi Sphinx theme.
 It defines **what** we test, **why** we test it, and **how** the tests are
-organised — so that every contributor understands the goals and can help move
+organised -- so that every contributor understands the goals and can help move
 towards them.
 
 This is a target to aim for, not a detailed implementation plan.
@@ -37,9 +37,9 @@ development:
 
 Tests are split into two tiers using pytest markers:
 
-- **Fast tests** (`not slow`) — run on every change. They build HTML and check
+- **Fast tests** (`not slow`) -- run on every change. They build HTML and check
   structure, assets, and Python logic.
-- **Slow tests** (`slow`) — run regularly or on demand. They include PDF
+- **Slow tests** (`slow`) -- run regularly or on demand. They include PDF
   generation and browser-based visual checks that need extra system
   dependencies or take longer to complete.
 
@@ -49,27 +49,27 @@ The tests are organised into the following categories, ordered from the
 earliest stage at which a problem can be detected to the most comprehensive
 checks:
 
-1. **Build process tests** — verify the build pipeline completes successfully.
-2. **Smoke tests** — quick high-level checks for obvious breakage.
-3. **Asset and structural validation** — ensure all referenced assets exist and
+1. **Build process tests** -- verify the build pipeline completes successfully.
+2. **Smoke tests** -- quick high-level checks for obvious breakage.
+3. **Asset and structural validation** -- ensure all referenced assets exist and
    the HTML structure is sound.
-4. **Feature and regression tests** — verify every major theme feature renders
+4. **Feature and regression tests** -- verify every major theme feature renders
    correctly.
-5. **Extension compatibility tests** — ensure the theme works with all default
+5. **Extension compatibility tests** -- ensure the theme works with all default
    Sphinx Stack extensions.
-6. **Responsive and cross-browser tests** — verify layout across screen sizes
+6. **Responsive and cross-browser tests** -- verify layout across screen sizes
    and browsers.
-7. **Python version and environment compatibility** — ensure the theme works
+7. **Python version and environment compatibility** -- ensure the theme works
    across supported environments.
-8. **Accessibility checks** — ensure the theme meets accessibility standards.
+8. **Accessibility checks** -- ensure the theme meets accessibility standards.
 
 ### 1. Build process tests
 
 **Goal:** Ensure the theme and the sample documentation build successfully and
 reproducibly.
 
-These tests verify that the build pipeline — SCSS compilation, theme package
-installation, and Sphinx invocation — completes without errors and produces the
+These tests verify that the build pipeline -- SCSS compilation, theme package
+installation, and Sphinx invocation -- completes without errors and produces the
 expected output files.
 
 What to check:
@@ -120,20 +120,20 @@ check the built HTML for the expected structure and classes.
 
 Main features to cover:
 
-- **Admonitions** — every admonition type maps to the correct Vanilla
+- **Admonitions** -- every admonition type maps to the correct Vanilla
   notification class.
-- **Code blocks** — syntax highlighting, copy buttons, and inline code styling.
-- **Headings** — heading levels, heading classes, and headings that contain
+- **Code blocks** -- syntax highlighting, copy buttons, and inline code styling.
+- **Headings** -- heading levels, heading classes, and headings that contain
   inline code.
-- **Tables of contents** — global navigation tree, local (on-page) TOC, and TOC
+- **Tables of contents** -- global navigation tree, local (on-page) TOC, and TOC
   depth truncation.
-- **Tabs** — `sphinx-tabs` rendering and synced tabs.
-- **Typography** — paragraph text, headings, lists, and blockquotes match the
+- **Tabs** -- `sphinx-tabs` rendering and synced tabs.
+- **Typography** -- paragraph text, headings, lists, and blockquotes match the
   Vanilla Framework design tokens.
-- **Breadcrumbs** — breadcrumb navigation reflects the page hierarchy.
-- **Search** — the search page loads and returns results.
-- **404 page** — the not-found page renders with theme styling.
-- **SCSS propagation** — custom SCSS classes reach the rendered HTML with the
+- **Breadcrumbs** -- breadcrumb navigation reflects the page hierarchy.
+- **Search** -- the search page loads and returns results.
+- **404 page** -- the not-found page renders with theme styling.
+- **SCSS propagation** -- custom SCSS classes reach the rendered HTML with the
   expected computed styles.
 
 ### 5. Extension compatibility tests
@@ -160,15 +160,15 @@ layout, computed styles, and interactive behaviour.
 
 What to check:
 
-- **Mobile** (375 px width) — navigation collapses, content reflows, no
+- **Mobile** (375 px width) -- navigation collapses, content reflows, no
   horizontal scroll.
-- **Tablet** (768 px) — layout adjusts correctly, side navigation behaves.
-- **Desktop** (1280 px) — full layout with side navigation and local TOC.
-- **Large desktop** (1920 px) — typography and spacing match the design
+- **Tablet** (768 px) -- layout adjusts correctly, side navigation behaves.
+- **Desktop** (1280 px) -- full layout with side navigation and local TOC.
+- **Large desktop** (1920 px) -- typography and spacing match the design
   specification.
-- **Theme toggle** — light/dark mode toggle works and persists.
-- **Keyboard navigation** — focus styles are visible and logical.
-- **Cross-browser** — run key visual checks in Chromium and Firefox.
+- **Theme toggle** -- light/dark mode toggle works and persists.
+- **Keyboard navigation** -- focus styles are visible and logical.
+- **Cross-browser** -- run key visual checks in Chromium and Firefox.
 
 ### 7. Python version and environment compatibility
 
@@ -208,10 +208,10 @@ What to check:
 
 Tests can be run at three levels, depending on what you need to check:
 
-- **Automatic tests** — fast checks that run on every change.
-- **Full test suite** — includes slow tests like PDF generation and browser
+- **Automatic tests** -- fast checks that run on every change.
+- **Full test suite** -- includes slow tests like PDF generation and browser
   checks.
-- **Manual visual review** — a local preview for hands-on inspection.
+- **Manual visual review** -- a local preview for hands-on inspection.
 
 ### Automatic tests (on every change)
 
@@ -219,9 +219,10 @@ Fast tests run automatically on every push and pull request through GitHub
 Actions. They build the HTML output and run all non-slow pytest tests.
 
 ```shell
-make test          # Build HTML and run fast tests
-make test-fast     # Same as above, explicit alias
+make test
 ```
+
+The `make test-fast` command is an explicit alias for `make test`.
 
 These tests are designed to complete in under a few minutes and require no
 extra system dependencies beyond the standard uv environment.
@@ -234,13 +235,13 @@ checks. These require additional system packages (LaTeX, Playwright browsers).
 To run only the slow tests:
 
 ```shell
-make test-slow     # Build HTML and PDF, run slow tests
+make test-slow
 ```
 
 To run all tests (fast and slow) together with a coverage report:
 
 ```shell
-make test-coverage # Run all tests and generate coverage report
+make test-coverage
 ```
 
 The coverage report is written to `results/coverage.xml` and an HTML version is
@@ -252,7 +253,7 @@ Automated tests catch regressions, but a manual review is still valuable for
 visual polish. Use the local preview server to inspect changes:
 
 ```shell
-make run           # Build and serve the docs with auto-rebuild
+make run
 ```
 
 Then open `http://127.0.0.1:8000` in a browser and check the sample pages,
