@@ -6,8 +6,8 @@ Ulwazi is a Sphinx theme based on Canonical's [Vanilla Framework](https://vanill
 It provides both generic Vanilla styling and Canonical-specific theming for documentation projects.
 
 **Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript
-**License**: GPL-3.0
-**Python**: >=`3.8` (`3.11` is recommended)
+**License**: GPL-3.0-only
+**Python**: >=`3.10` (managed by [uv](https://docs.astral.sh/uv/))
 
 ## Common Tasks
 
@@ -39,14 +39,17 @@ in its terminal.
 ### Testing
 
 ```bash
-make test         # Run all tests
+make test          # Run all tests (excluding PDF builds)
+make test-fast     # Run fast tests (excluding PDF builds)
+make test-slow     # Run all tests (including PDF builds)
+make test-coverage # Run tests and generate coverage report
 ```
 
 Available tests:
 
 - **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
-- **test_pdf_generation.py**: Verifies PDF generation produces expected output file
-- **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright
+- **test_pdf_generation.py**: Verifies PDF generation produces expected output file (slow test)
+- **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright (color check is a slow test)
 
 ### Cleaning
 
@@ -56,7 +59,7 @@ Clean (delete) the built sample documentation content:
 make docs-clean
 ```
 
-Clean the built docs and theme files:
+Clean the built docs and theme files (also removes the `.venv` virtual environment):
 
 ```bash
 make clean
@@ -71,19 +74,18 @@ make rebuild
 ### Styling
 
 ```bash
-make npm-install  # Install Vanilla Framework modules
-make vanilla-main # Compile SCSS to CSS
+make vanilla-main  # Install npm dependencies and compile SCSS to CSS
 ```
 
 ### Quick start
 
 Prefer Makefile targets.
-The `make docs` command creates the virtualenv and installs Python deps.
+The `make docs` command uses [uv](https://docs.astral.sh/uv/) to create the virtual environment and install Python dependencies.
 
-Install Node dependencies (only if you need to compile SCSS):
+Install Node dependencies (only required for SCSS compilation via `make vanilla-main`):
 
 ```bash
-yarn install
+npm install
 ```
 
 **Node.js**: required only for SCSS compilation via `make vanilla-main` (uses npm).
@@ -134,7 +136,7 @@ tests/                       # Test scripts
 ### Dependency Changes
 
 - Update [pyproject.toml](pyproject.toml)
-- Run `make clean` then `make run` to rebuild venv
+- Run `make clean` then `make run` to rebuild the uv virtual environment
 
 ### HTML Modifications
 
@@ -195,7 +197,7 @@ make test
 
 ## Important Notes
 
-- **Virtual Environment**: Located at `.venv/`, managed automatically by Make
+- **Virtual Environment**: Located at `.venv/`, managed automatically by [uv](https://docs.astral.sh/uv/) through Make targets
 - **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
 - **Node Modules**: Required for Vanilla Framework compilation
 - **Auto-rebuild**: `make run` watches content changes but NOT theme changes
