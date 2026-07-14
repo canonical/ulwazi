@@ -31,7 +31,6 @@
 .. _Sphinx documentation starter pack repository: https://github.com/canonical/starter-pack
 .. _Sphinx documentation starter pack documentation: https://canonical-starter-pack.readthedocs-hosted.com/
 .. _`Sphinx extensions`: https://www.sphinx-doc.org/en/master/usage/extensions/index.html
-.. _Sphinx tabs: https://sphinx-tabs.readthedocs.io/en/latest/
 .. _tables: https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#table-directives
 .. _toctree: https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-toctree
 .. _Vale: https://vale.sh/

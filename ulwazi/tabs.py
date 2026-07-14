@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Styles and structures sphinx-tabs in accordance with Vanilla."""
+"""Styles and structures sphinx-design tabs in accordance with Vanilla."""
 
 from contextlib import suppress
 
@@ -23,89 +23,13 @@ from bs4.element import AttributeValueList
 
 
 def convert_tabs(body_html: str) -> str:  # noqa: PLR0912, PLR0915
-    """Convert sphinx-tabs markup to vanilla theme classes and structure."""
+    """Convert sphinx-design markup to vanilla theme classes and structure."""
     if not body_html:
         return body_html
 
     soup = BeautifulSoup(body_html, "html.parser")
 
-    # 1. Update sphinx-tabs docutils container to include p-tabs
-    for tab_container in soup.find_all("div", class_="sphinx-tabs"):
-        classes = tab_container.get("class")
-        class_list = list(classes) if classes else []
-        if "p-tabs" not in class_list:
-            class_list.append("p-tabs")
-        tab_container["class"] = " ".join(class_list)
-
-        # Find the tablist
-        tablist = tab_container.find("div", attrs={"role": "tablist"})
-        if tablist:
-            # Get all tab buttons
-            tab_buttons = tablist.find_all("button", class_="p-tabs__link")
-            # Remove all buttons from tablist
-            for btn in tab_buttons:
-                btn.extract()
-            # Wrap each button in a div.p-tabs__item and re-add
-            for btn in tab_buttons:
-                item_div = soup.new_tag("div", attrs={"class": "p-tabs__item"})
-                item_div.append(btn)
-                tablist.append(item_div)
-
-    # 2. Update tablist div to p-tabs__list
-    for tablist in soup.find_all("div", attrs={"role": "tablist"}):
-        tablist_classes = tablist.get("class")
-        class_list = list(tablist_classes) if tablist_classes else []
-        if "closeable" in class_list:
-            class_list.remove("closeable")
-        if "p-tabs__list" not in class_list:
-            class_list.append("p-tabs__list")
-        tablist["class"] = " ".join(class_list)
-
-    # 3. Update tab buttons to p-tabs__link
-    for tab_button in soup.find_all("button"):
-        btn_classes = tab_button.get("class")
-        class_list = list(btn_classes) if btn_classes else []
-        if "sphinx-tabs-tab" in class_list:
-            class_list.remove("sphinx-tabs-tab")
-        if "p-tabs__link" not in class_list:
-            class_list.append("p-tabs__link")
-        tab_button["class"] = " ".join(class_list)
-        tab_button["role"] = "tab"
-
-        # Add sync attributes for sphinx-tabs
-        tab_text = tab_button.get_text(strip=True)
-        sync_value = str(tab_text).strip().lower().replace(" ", "-") if tab_text else ""
-        tab_button["data-sync-value"] = sync_value
-        # If a group or sync id is present, add as data-sync-id
-        sync_id = tab_button.get("data-sync-id")
-        if not sync_id:
-            # Try to infer from parent or attributes
-            parent = tab_button.find_parent("div", class_="sphinx-tabs")
-            found = False
-            if parent:
-                # Sphinx-tabs may use data-group or data-sync attributes
-                for attr in ["data-group", "data-sync"]:
-                    val = parent.get(attr)
-                    if val:
-                        tab_button["data-sync-id"] = val
-                        found = True
-                        break
-            if not found:
-                # Always set a default sync-id for sphinx-tabs
-                tab_button["data-sync-id"] = "tab"
-
-    # 4. Update sphinx-tabs-panel to p-tabs__item (for panels)
-    panel: Tag | None
-    for panel in soup.find_all(class_="sphinx-tabs-panel"):
-        panel_classes = panel.get("class")
-        class_list = list(panel_classes) if panel_classes else []
-        if "sphinx-tabs-panel" in class_list:
-            class_list.remove("sphinx-tabs-panel")
-        if "p-tabs__item" not in class_list:
-            class_list.append("p-tabs__item")
-        panel["class"] = " ".join(class_list)
-
-    # 5+. Convert sphinx-design `sd-tab-set` blocks into Vanilla tabs structure
+    # 1. Convert sphinx-design `sd-tab-set` blocks into Vanilla tabs structure
     for sd_index, sd_container in enumerate(soup.find_all("div", class_="sd-tab-set")):
         # ensure container is marked as p-tabs
         existing = sd_container.get("class")
