@@ -12166,6 +12166,11 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+.p-tabs > .p-tabs__item[role=tabpanel] {
+  min-width: 0;
+  width: 100%;
+}
+
 .copybtn.o-tooltip--left[data-tooltip]::before,
 .copybtn.o-tooltip--left[data-tooltip]::after {
   content: none !important;
@@ -12199,7 +12204,7 @@ div.terminal {
   margin-bottom: 1.5em;
 }
 
-/* Copybutton for terminals needs white icon rather than defualt black */
+/* Copybutton for terminals needs white icon rather than default black */
 div.terminal > div.input > button.copybtn svg {
   color: #f8f8f8 !important;
 }

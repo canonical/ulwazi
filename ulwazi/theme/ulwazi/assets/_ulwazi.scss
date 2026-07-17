@@ -340,6 +340,13 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+// Let tab panels shrink to the tab set so wide content scrolls inside its
+// own container instead of being clipped by .p-tabs.
+.p-tabs > .p-tabs__item[role="tabpanel"] {
+  min-width: 0;
+  width: 100%;
+}
+
 
 // Disable tooltip for copy buttons only
 .copybtn.o-tooltip--left[data-tooltip]::before,

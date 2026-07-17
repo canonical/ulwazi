@@ -396,6 +396,13 @@ Content Tab 2
 Content Tab 3
 ```
 
+:::{tab-item} Long code
+
+```yaml
+path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
+```
+:::
+
 ````
 
 ## Glossary

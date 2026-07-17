@@ -497,6 +497,12 @@ Sphinx-design tabs
 
         Content for tab 3
 
+    .. tab-item:: Long code
+
+        .. code-block:: yaml
+
+            path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
+
 
 Glossary
 --------
