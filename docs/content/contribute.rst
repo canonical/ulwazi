@@ -68,7 +68,7 @@ Theme files layout
 ------------------
 
 The following list contains some of the most important files and folders to focus on
-for contributing to this theme:
+when contributing to this theme:
 
 - ``ulwazi/__init__.py``  -- Theme initialization and core hooks
 - ``ulwazi/navigation.py``  -- Manages the global TOC navigation tree

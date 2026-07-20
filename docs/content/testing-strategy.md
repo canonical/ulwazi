@@ -2,7 +2,7 @@
 
 This page describes the vision for testing the Ulwazi Sphinx theme.
 It defines **what** we test, **why** we test it, and **how** the tests are
-organised -- so that every contributor understands the goals and can help move
+organised, so that every contributor understands the goals and can help move
 towards them.
 
 This is a target to aim for, not a detailed implementation plan.
@@ -16,7 +16,7 @@ aligns with the goals in the [roadmap](roadmap.md).
 - **Fast feedback by default.** Every change should be validated by a fast,
   automatic test suite. Expensive checks run on a schedule or on demand.
 - **Readable for non-engineers.** Tests are written and documented so that
-  Technical Authors and designers can understand what is being checked and why.
+  technical authors and designers can understand what is being checked and why.
 - **Layered checks.** We combine build-time checks, structural HTML validation,
   visual regression, and browser-level testing so that problems are caught at
   the earliest stage where they can be detected.
