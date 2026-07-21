@@ -149,7 +149,7 @@ Terminal blocks are useful when specific emphasis is needed, such as the user na
   :host: vm
 
   make run
-  
+
   [sphinx-autobuild] Starting initial build
   [sphinx-autobuild] > python -m sphinx build -b dirhtml . _build -c . -d .sphinx/.doctrees -j auto
   build succeeded.
@@ -477,8 +477,10 @@ Reuse
 Tabs
 ----
 
-Sphinx-design tabs
-~~~~~~~~~~~~~~~~~~
+Ulwazi supports the sphinx-design extension for tabs.
+Support for the sphinx-tabs extension has been
+`dropped <https://documentation.ubuntu.com/sphinx-stack/latest/reference/rst-syntax/#tabs>`_.
+
 
 .. Tabs
 .. ----

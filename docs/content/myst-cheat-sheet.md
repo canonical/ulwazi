@@ -373,8 +373,9 @@ Keys can be defined at the top of a file, or in a `myst_substitutions` option in
 
 ## Tabs
 
+Ulwazi supports the sphinx-design extension for tabs.
+**Support for the sphinx-tabs extension has been [dropped](https://documentation.ubuntu.com/sphinx-stack/latest/reference/myst-syntax/#tabs).**
 
-### Sphinx-design tabs
 
 
 ````{tab-set}
