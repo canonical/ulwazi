@@ -1,0 +1,11 @@
+name: ulwazi-libs
+base: ubuntu@24.04
+
+slots:
+  sphinx:
+    interface: tunnel
+    endpoint: 8000
+
+plugs:
+  ssh-agent:
+    interface: ssh-agent
