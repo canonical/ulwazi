@@ -24,7 +24,7 @@ To build the sample documentation in an interactive preview, run:
 make run
 ```
 
-This sets up a virtual environment, installs dependencies, builds the theme, builds the documentation,
+This uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, builds the documentation,
 and serves it locally. Content edits rebuild automatically; theme edits usually require
 a full rebuild:
 

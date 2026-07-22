@@ -7,13 +7,11 @@ This guide will help you get started with building, testing, and developing the 
 Prerequisites
 -------------
 
-Install `npm <https://docs.npmjs.com/downloading-and-installing-node-js-and-npm>`_
-and `Yarn <https://yarnpkg.com/>`_:
+Install `npm <https://docs.npmjs.com/downloading-and-installing-node-js-and-npm>`_:
 
 .. code-block:: shell
 
    sudo apt install npm
-   sudo npm install -g corepack
 
 Setup
 -----
@@ -22,7 +20,7 @@ Setup
 
    .. code-block:: shell
 
-      yarn install
+      npm install
 
 2. Build the sample documentation with the theme:
 
@@ -30,7 +28,8 @@ Setup
 
       make docs
 
-   This sets up a virtual environment, installs dependencies, and builds the sample docs.
+   This uses `uv <https://docs.astral.sh/uv/>`_ to set up a virtual environment,
+   installs dependencies, and builds the sample docs.
 
 You can rebuild the theme manually, which is especially useful if you make significant theme changes
 outside of the docs content:
@@ -53,7 +52,7 @@ may require a complete reset by deleting the virtual environment. To reset the v
 
       make clean
 
-2. Build the documentation from scratch with ``build docs``.
+2. Build the documentation from scratch with ``make docs``.
 
 Rebuild CSS
 ***********
@@ -68,8 +67,8 @@ making any changes to the SCSS files it consists of:
 Theme files layout
 ------------------
 
-The following list contatins some of the most important files and folders to focus on
-for contributing to this theme:
+The following list contains some of the most important files and folders to focus on
+when contributing to this theme:
 
 - ``ulwazi/__init__.py``  -- Theme initialization and core hooks
 - ``ulwazi/navigation.py``  -- Manages the global TOC navigation tree
@@ -82,7 +81,7 @@ for contributing to this theme:
 Other files of interest for development:
 
 - ``ulwazi/product_menu_gen.py`` -- Product menu generation logic
-- ``ulwazi/tests/``              -- Automated tests for the theme
+- ``tests/``                       -- Automated tests for the theme
 
 HTML customization
 ------------------
@@ -106,3 +105,4 @@ All contributions are welcome: bug reports, feature requests, and pull requests.
    rst-cheat-sheet.rst
    myst-cheat-sheet.md
    roadmap.md
+   testing-strategy.md
