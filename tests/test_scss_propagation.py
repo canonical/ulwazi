@@ -58,6 +58,7 @@ def test_rendered_color():
 
         browser.close()
 
+
 @pytest.mark.slow
 def test_ordered_list_marker_matches_text_size():
     typography_path = Path(TYPOGRAPHY_PATH).resolve()
@@ -83,7 +84,7 @@ def test_ordered_list_marker_matches_text_size():
         )
 
         marker_size = page.eval_on_selector(
-               li_selector, "el => window.getComputedStyle(el, '::marker').fontSize"
+            li_selector, "el => window.getComputedStyle(el, '::marker').fontSize"
         )
 
         text_selector = f"{li_selector} > p"
@@ -92,7 +93,7 @@ def test_ordered_list_marker_matches_text_size():
         )
 
         text_size = page.eval_on_selector(
-               text_selector, "el => window.getComputedStyle(el).fontSize"
+            text_selector, "el => window.getComputedStyle(el).fontSize"
         )
 
         assert marker_size == text_size, (
@@ -101,4 +102,3 @@ def test_ordered_list_marker_matches_text_size():
         )
 
         browser.close()
-
