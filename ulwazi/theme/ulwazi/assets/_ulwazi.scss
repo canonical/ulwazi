@@ -340,6 +340,12 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+// Preserve vertical rhythm when a notification immediately follows a code
+// block. Sphinx code wrappers have no bottom margin.
+div[class*="highlight-"] + [class^="p-notification"] {
+  margin-top: 1.5rem;
+}
+
 // Let tab panels shrink to the tab set so wide content scrolls inside its
 // own container instead of being clipped by .p-tabs.
 .p-tabs > .p-tabs__item[role="tabpanel"] {
