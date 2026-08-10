@@ -265,3 +265,31 @@ Then open `http://127.0.0.1:8000` in a browser and check the sample pages,
 especially the [MyST cheat sheet](myst-cheat-sheet.md) and the
 [RST cheat sheet](rst-cheat-sheet.rst), which exercise the full range of
 supported syntax.
+
+## Test requirements checklist
+
+The sections above explain each area of testing in detail. If you are adding or
+reviewing a single test, this checklist is the short version -- it summarises
+what a good test in this project looks like:
+
+- [ ] It catches a **real regression** that a user would notice, rather than
+      only adding coverage.
+- [ ] It belongs to one of the test categories described in this document.
+- [ ] It is listed in the theme's documentation, so that readers can see what is
+      covered without reading the test code.
+- [ ] Its code carries enough comments to explain **what** is checked and
+      **why**, so a technical author or designer can follow it.
+- [ ] It is accompanied by the sample content it needs, where such content does
+      not already exist.
+- [ ] It lives in the `tests/` directory of the theme repository.
+- [ ] It is marked `slow` if it needs extra system dependencies (e.g., LaTeX,
+      Playwright) or takes long to run; otherwise it stays in the fast
+      tier.
+- [ ] It uses the right tool for the layer: Beautiful Soup for HTML structure,
+      Playwright for rendered appearance and interaction.
+- [ ] If it tests output processed by the theme's Python code (for example, the
+      navigation menu), it builds the documentation from within the test by
+      calling Sphinx directly through its Python API, instead of reading files
+      left behind by `make docs`. This allows the coverage report to detect
+      which parts of the theme's Python code the test runs. Tests that check
+      only styling, layout, or PDF output do not need this.
