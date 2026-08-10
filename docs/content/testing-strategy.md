@@ -61,7 +61,9 @@ checks:
    screen sizes and browsers.
 7. **Python version and environment compatibility** -- ensure the theme is
    compatible with supported environments.
-8. **Accessibility checks** -- ensure the theme meets accessibility standards.
+8. **Code quality checks** -- verify that code and documentation meet style and
+   spelling standards.
+9. **Accessibility checks** -- ensure the theme meets accessibility standards.
 
 ### 1. Build process tests
 
@@ -192,7 +194,27 @@ What to check:
   (`make lint-uv-lockfile`).
 - Confirm the theme installs cleanly into a fresh virtual environment.
 
-### 8. Accessibility checks
+### 8. Code quality checks
+
+**Goal:** Ensure that code and documentation meet the project's style and spelling
+standards.
+
+These checks are not functional tests -- they do not run the theme or build
+documentation -- but they catch inconsistencies early and keep the codebase
+maintainable. They can run automatically in CI through `make lint`.
+
+What to check:
+
+- **Python linting and formatting** -- `ruff check` and `ruff format --diff`
+  (`make lint-ruff`).
+- **Type checking** -- `mypy` and `pyright` (`make lint-mypy`, `make lint-pyright`).
+- **Spelling in code** -- `codespell` (`make lint-codespell`).
+- **Shell script linting** -- `shellcheck` (`make lint-shellcheck`).
+- **Package metadata** -- `twine check` (`make lint-twine`).
+- **Formatting of non-Python files** -- `prettier --check` (`make lint-prettier`).
+- **Lock file in sync** -- `uv lock --check` (`make lint-uv-lockfile`).
+
+### 9. Accessibility checks
 
 **Goal:** Ensure the theme meets accessibility standards so that documentation is
 usable by everyone.
