@@ -85,9 +85,9 @@ make test-coverage     # Run tests and generate coverage report
 The available tests are:
 
 - **test_site_validation.py** — validates built HTML for broken assets (missing CSS, JS, images)
-- **test_pdf_generation.py** — verifies PDF generation produces the expected output file *(slow)*
-- **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright *(partially slow)*
-- **test_python_versions.py** — builds the theme and sample docs on every supported Python version *(slow)*
+- **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
+- **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
 
 See the [Tests documentation](https://canonical-ulwazi.readthedocs-hosted.com/content/tests/) for more details on the test suite.
 
