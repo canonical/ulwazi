@@ -1,0 +1,59 @@
+# Python version compatibility tests
+#
+# Monthly scheduled run of the Python version compatibility tests
+# (PR #124 testing-strategy category #7).
+#
+# Why monthly: each job provisions a Python interpreter, installs the full
+# ``docs`` dependency group into a fresh venv, and builds the sample docs.
+# That is slow and expensive, so it runs on a schedule rather than on every
+# push. Use the ``workflow_dispatch`` trigger to run it on demand (for
+# example, on a pull request that touches ``requires-python`` or the
+# dependency groups).
+#
+# Why a matrix here vs pytest-xdist locally: GitHub Actions gives us free
+# parallelism across versions via the matrix, with one runner per version and
+# clean, isolated logs. Locally, ``make test-python-versions`` uses
+# pytest-xdist (``-n auto``) to parallelise the same parametrized test.
+#
+# The version list below mirrors ``SUPPORTED_PYTHON_VERSIONS`` in
+# ``tests/test_python_versions.py``. Keep the two in sync.
+
+name: Python version compatibility
+
+on:
+  schedule:
+    # 03:00 UTC on the 15th of every month ("deep night").
+    - cron: "0 3 15 * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Must match SUPPORTED_PYTHON_VERSIONS in tests/test_python_versions.py.
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Full history is required: setuptools_scm derives the version
+          # from git tags, and sphinx_last_updated_by_git reads commit times.
+          fetch-depth: 0
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          # libcairo2-dev is needed by cairocffi, which is imported by
+          # sphinxcontrib.cairosvgconverter (enabled in docs/conf.py).
+          sudo apt-get install -y libcairo2-dev
+
+      # Install uv via the repo's own Makefile target (common.mk:install-uv).
+      - name: Install uv
+        run: make install-uv
+
+      - name: Run Python version compatibility test
+        run: |
+          uv run --frozen pytest -m slow tests/test_python_versions.py -k "${{ matrix.python-version }}"

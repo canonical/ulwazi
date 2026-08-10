@@ -15,4 +15,5 @@ More advanced tests:
 :maxdepth: 1
 
 SEO and metadata <seo-metadata>
+Python versions <python-versions>
 ```

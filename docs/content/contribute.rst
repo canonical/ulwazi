@@ -81,7 +81,23 @@ when contributing to this theme:
 Other files of interest for development:
 
 - ``ulwazi/product_menu_gen.py`` -- Product menu generation logic
-- ``tests/``                       -- Automated tests for the theme
+- ``tests/``                     -- Automated tests for the theme
+
+Running tests
+-------------
+
+The test suite is split into fast and slow tests. See the
+`Tests documentation <https://canonical-ulwazi.readthedocs-hosted.com/content/tests/>`_
+for details on each test.
+
+.. code-block:: shell
+
+   make test              # Run fast tests only
+   make test-fast         # Same as 'make test'
+   make test-slow         # Run slow tests only (PDF builds, browser checks)
+   make test-all          # Run all tests (fast and slow)
+   make test-python-versions  # Build on every supported Python version (slow)
+   make test-coverage     # Run tests and generate coverage report
 
 HTML customization
 ------------------

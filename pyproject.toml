@@ -44,6 +44,10 @@ dev = [
     "lxml>=6.0.2",
     "playwright>=1.61.0",
     "pytest>=9.0.2",
+    # pytest-xdist enables parallel test execution via `-n auto`.
+    # Used by `make test-python-versions` to run the per-Python-version
+    # build tests concurrently. See tests/test_python_versions.py.
+    "pytest-xdist>=3.6.0",
 ]
 docs = [
     "canonical-sphinx-config @ git+https://github.com/canonical/canonical-sphinx-config.git@main",
