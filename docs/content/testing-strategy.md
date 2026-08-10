@@ -31,7 +31,7 @@ development:
 | [uv](https://docs.astral.sh/uv/) | Manages the Python virtual environment, dependencies, and test groups. All test commands run through `uv run`. |
 | [pytest](https://docs.pytest.org/) | The test runner. Tests live in the `tests/` directory and are discovered automatically. |
 | [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) | Parses built HTML so we can assert on structure and content without a browser. |
-| [Playwright](https://playwright.dev/python/) | Launches a real browser to check rendered appearance, computed styles, and responsive behaviour. |
+| [Playwright](https://playwright.dev/python/) | Launches a real browser to check rendered appearance, computed styles, and responsive layout behaviour. |
 | [coverage.py](https://coverage.readthedocs.io/) | Measures which parts of the theme's Python code are exercised by the tests. To track the theme functions that Sphinx calls during a build, tests invoke Sphinx through its Python API rather than relying on a pre-built output directory. |
 | GitHub Actions | Runs the automatic test suite on every push and pull request. |
 
@@ -57,8 +57,8 @@ checks:
    correctly.
 5. **Extension compatibility tests** -- ensure the theme is compatible with
    the extensions documented as supported, including the Sphinx Stack defaults.
-6. **Responsive and cross-browser tests** -- verify layout across screen sizes
-   and browsers.
+6. **Responsive layout and cross-browser tests** -- verify layout across
+   screen sizes and browsers.
 7. **Python version and environment compatibility** -- ensure the theme is
    compatible with supported environments.
 8. **Accessibility checks** -- ensure the theme meets accessibility standards.
@@ -155,7 +155,7 @@ and an associated test that checks the rendered result.
 For the current list of default extensions, see the
 [Sphinx Stack documentation](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/).
 
-### 6. Responsive and cross-browser tests
+### 6. Responsive layout and cross-browser tests
 
 **Goal:** Verify the theme looks and works correctly across screen sizes and
 browsers.
