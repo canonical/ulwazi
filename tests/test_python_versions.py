@@ -76,7 +76,7 @@ def _run(
     read in CI logs, especially when the failure is deep inside a subprocess
     invoked from a parametrized test.
     """
-    result = subprocess.run(  # noqa: S603 -- command is constructed in-test
+    result = subprocess.run(
         cmd,
         cwd=str(cwd),
         env=env,
