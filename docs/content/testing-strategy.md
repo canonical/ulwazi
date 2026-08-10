@@ -55,12 +55,12 @@ checks:
    the HTML structure is sound.
 4. **Feature and regression tests** -- verify every major theme feature renders
    correctly.
-5. **Extension compatibility tests** -- ensure the theme works with all default
-   Sphinx Stack extensions.
+5. **Extension compatibility tests** -- ensure the theme is compatible with
+   the extensions documented as supported, including the Sphinx Stack defaults.
 6. **Responsive and cross-browser tests** -- verify layout across screen sizes
    and browsers.
-7. **Python version and environment compatibility** -- ensure the theme works
-   across supported environments.
+7. **Python version and environment compatibility** -- ensure the theme is
+   compatible with supported environments.
 8. **Accessibility checks** -- ensure the theme meets accessibility standards.
 
 ### 1. Build process tests
@@ -138,16 +138,21 @@ Main features to cover:
 
 ### 5. Extension compatibility tests
 
-**Goal:** Ensure the theme works with every extension that the
+**Goal:** Ensure the theme is compatible with the extensions that the
 [Sphinx Stack](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/)
-enables by default.
+enables by default, plus any other extensions we choose to support.
 
 Because documentation projects rely on these extensions, a theme change must not
-break their output. Each extension should have at least one sample page and a
-test that checks the rendered result.
+break their workflow or output.
 
-For the current list of extensions that the Sphinx Stack enables by default,
-see the
+The list of supported extensions should be documented in the theme's
+documentation and/or the README. It can include additional extensions added by
+popular demand.
+
+For transparency, each extension should have at least one dedicated sample page
+and an associated test that checks the rendered result.
+
+For the current list of default extensions, see the
 [Sphinx Stack documentation](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/).
 
 ### 6. Responsive and cross-browser tests
@@ -172,8 +177,8 @@ What to check:
 
 ### 7. Python version and environment compatibility
 
-**Goal:** Ensure the theme works across the supported Python versions and
-common build environments.
+**Goal:** Ensure the theme is compatible with the supported Python versions
+and common build environments.
 
 The theme declares `requires-python = ">=3.10"`. Tests should verify that the
 build and test suite pass on every supported Python version.
