@@ -504,6 +504,27 @@ Sphinx-design tabs
             path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
 
 
+Metadata
+--------
+
+A ``.. meta::`` directive sets the page description and Open Graph tags used
+for search engines and social media previews. It must appear near the top of
+the file, before or after the title.
+
+Open Graph keys (``og:...``) must use the ``property=og:<name>`` form, not
+``og:<name>``, otherwise they render as ``<meta name="og:...">`` instead of
+the spec-required ``<meta property="og:...">``:
+
+.. code-block:: rst
+
+   .. meta::
+      :description: A one- or two-sentence summary of this page.
+      :property=og:title: Custom title for social media previews
+      :property=og:description: Custom description for social media previews
+      :property=og:image: https://example.com/preview-image.png
+
+See :doc:`the contribution guide <contribute>` for more details.
+
 Glossary
 --------
 

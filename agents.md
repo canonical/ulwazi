@@ -118,6 +118,7 @@ tests/                       # Test scripts
 - **[Makefile](Makefile)**: Build automation and common tasks
 - **[ulwazi/**init**.py](ulwazi/**init**.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
 - **[ulwazi/theme/ulwazi/layout.html](ulwazi/theme/ulwazi/layout.html)**: Base page layout template
+- **[docs/conf.py](docs/conf.py)**: Sample docs Sphinx config
 
 ## Development Workflow
 
@@ -199,6 +200,21 @@ make test
 - **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
 - **Node Modules**: Required for Vanilla Framework compilation
 - **Auto-rebuild**: `make run` watches content changes but NOT theme changes
+- **Metadata/SEO**: `<title>` suffix, `rel="canonical"`, favicon link, and Open Graph tags
+  (`og:title`, `og:description`, `og:image`, etc.) are all generated automatically via
+  `sphinxext-opengraph` (declared in `docs/conf.py` `extensions`, and in `pyproject.toml`
+  under the `docs` dependency group) plus the `layout.html` template. When overriding
+  per-page metadata with a `.. meta::` directive (reST) or `html_meta` front matter
+  (MyST), Open Graph keys **must** use the `property=og:<name>` form -- the bare
+  `og:<name>` form silently produces the wrong `name=` attribute instead of `property=`,
+  which most Open Graph consumers ignore. See `docs/content/contribute.rst` and the
+  RST/MyST cheat sheets for working examples. Do not remove `sphinxext-opengraph` or the
+  `favicon_url`/`pageurl`/`docstitle` references in `layout.html` without re-verifying
+  metadata output in the built HTML.
+- **Sphinx context variable gotcha**: use `favicon_url` in templates, not `favicon`
+  (the latter is a stale sphinx-basic-ng convention that Sphinx 7.4+ no longer
+  populates); `favicon_url` is already a fully resolved URL and must not be passed
+  through `pathto()` again.
 
 ## Testing Locations
 

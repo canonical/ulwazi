@@ -95,7 +95,7 @@ ogp_image = "https://assets.ubuntu.com/v1/253da317-image-document-ubuntudocs.svg
 
 # TODO: To customise the favicon, uncomment and update as needed.
 
-# html_favicon = ".sphinx/_static/favicon.png"
+html_favicon = "_static/favicon.png"
 
 
 # Dictionary of values to pass into the Sphinx context for all pages:
@@ -345,6 +345,7 @@ extensions = [
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
+    "sphinxext.opengraph",
     "ulwazi",
     "sphinx_modern_pdf_style",
     "canonical_sphinx_config",

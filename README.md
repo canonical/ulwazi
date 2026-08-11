@@ -54,6 +54,32 @@ If you change dependencies, you will need to re-build the virtual environment en
 That can be done by manually deleting the `.venv` folder or with the `make clean`
 command.
 
+## Metadata and SEO
+
+The theme relies on standard Sphinx configuration and the
+[`sphinxext-opengraph`](https://github.com/wpilibsuite/sphinxext-opengraph) extension
+to produce metadata for search engines and social media previews.
+
+The following is generated automatically for every page, with no per-page action needed:
+
+- `<title>` -- the page heading followed by an em dash and the site title (`html_title`)
+- `<link rel="canonical">` -- built from `html_baseurl` and the page's path
+- `<link rel="shortcut icon">` -- built from `html_favicon`
+- `og:title`, `og:type`, `og:url`, `og:site_name` -- Open Graph tags
+- `og:description` and `<meta name="description">` -- auto-generated from the first
+  paragraphs of the page unless overridden (see below)
+- `og:image` and `og:image:alt` -- built from the `ogp_image` setting in `conf.py`
+
+To override the auto-generated description or Open Graph tags for a specific page,
+add a `.. meta::` directive (reST) or `html_meta` front matter (MyST Markdown). See the
+[reST cheat sheet](docs/content/rst-cheat-sheet.rst) and
+[MyST cheat sheet](docs/content/myst-cheat-sheet.md) for examples.
+
+**Important:** Open Graph properties (any key starting with `og:`) must be written as
+`property=og:<name>`, not `og:<name>`. Using the bare `og:<name>` form produces
+`<meta name="og:...">`, which most Open Graph consumers (Facebook, LinkedIn, Slack, etc.)
+ignore -- the spec requires `<meta property="og:...">`.
+
 ## Contributing
 
 The theme files are located in the `ulwazi` folder:
