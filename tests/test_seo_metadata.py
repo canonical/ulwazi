@@ -19,6 +19,7 @@ from bs4 import BeautifulSoup
 PAGES = {
     "index": Path("docs/_build/index.html"),
     "contribute": Path("docs/_build/content/contribute/index.html"),
+    "testing_metadata": Path("docs/_build/content/tests/seo-metadata/index.html"),
 }
 
 REQUIRED_OG_PROPERTIES = {
@@ -29,6 +30,106 @@ REQUIRED_OG_PROPERTIES = {
     "og:description",
     "og:image",
 }
+
+# Manual overrides set in the front matter of tests/seo-metadata.md, used to
+# verify that per-page overrides actually take effect (not just that some
+# metadata is present). Keep these in sync with that file.
+OVERRIDE_PAGE = "testing_metadata"
+OVERRIDES = {
+    "og:title": "Testing metadata and SEO overrides",
+    "og:description": (
+        "Custom Open Graph description set on this page to test the override mechanism."
+    ),
+    "description": (
+        "Custom meta description set on this page to test the SEO override mechanism."
+    ),
+}
+
+
+def _check_title(name: str, soup: BeautifulSoup) -> list[str]:
+    """<title> must include the site-name suffix, not just the page heading."""
+    title = soup.title
+    if title is None:
+        return [f"[{name}] missing <title> element"]
+    if " — " not in title.text and "&#8212;" not in str(title):
+        return [f"[{name}] <title> is missing the site-name suffix: {title.text!r}"]
+    return []
+
+
+def _check_description(name: str, soup: BeautifulSoup) -> list[str]:
+    """<meta name="description"> must be present, non-empty, and match any
+    override set for this page."""
+    description = soup.find("meta", attrs={"name": "description"})
+    if description is None or not description.get("content"):
+        return [f'[{name}] missing or empty <meta name="description">']
+
+    if name == OVERRIDE_PAGE:
+        content = cast(str, description.get("content", ""))
+        if content != OVERRIDES["description"]:
+            return [f"[{name}] description override did not take effect: {content!r}"]
+    return []
+
+
+def _check_canonical(name: str, soup: BeautifulSoup) -> list[str]:
+    """rel="canonical" link must be present and an absolute URL."""
+    canonical = soup.find("link", attrs={"rel": "canonical"})
+    if canonical is None:
+        return [f'[{name}] missing rel="canonical" link']
+
+    href = cast(str, canonical.get("href", ""))
+    if not href.startswith("http"):
+        return [f"[{name}] malformed canonical URL: {href!r}"]
+    return []
+
+
+def _check_favicon(name: str, soup: BeautifulSoup) -> list[str]:
+    """The favicon <link> tag must be present."""
+    favicon = soup.find("link", attrs={"rel": "shortcut icon"})
+    if favicon is None or not favicon.get("href"):
+        return [f"[{name}] missing favicon <link> tag"]
+    return []
+
+
+def _check_open_graph(name: str, soup: BeautifulSoup) -> list[str]:
+    """All required Open Graph tags must be present with `property=` (never
+    `name=`), and, on the fixture page, overrides must take effect."""
+    errors: list[str] = []
+
+    og_tags = {
+        cast(str, tag["property"]): cast(str, tag.get("content", ""))
+        for tag in soup.find_all("meta", attrs={"property": True})
+    }
+    missing = REQUIRED_OG_PROPERTIES - og_tags.keys()
+    if missing:
+        errors.append(f"[{name}] missing Open Graph tags: {sorted(missing)}")
+
+    # On the dedicated fixture page, manual og:* overrides must take effect
+    # -- i.e. their values must match what's set in that page's front matter,
+    # not the auto-generated defaults.
+    if name == OVERRIDE_PAGE:
+        for og_property in ("og:title", "og:description"):
+            expected = OVERRIDES[og_property]
+            actual = og_tags.get(og_property)
+            if actual != expected:
+                errors.append(
+                    f"[{name}] {og_property} override did not take effect: "
+                    f"{actual!r} (expected {expected!r})"
+                )
+
+    # Guard against the "name=og:title" regression: no og:* tag should ever
+    # be rendered with a `name` attribute instead of `property`.
+    wrong_attr = [
+        cast(str, tag.get("name"))
+        for tag in soup.find_all("meta", attrs={"name": True})
+        if cast(str, tag.get("name", "")).startswith("og:")
+    ]
+    if wrong_attr:
+        errors.append(
+            f"[{name}] Open Graph tags rendered with name= instead of "
+            f"property=: {wrong_attr}"
+        )
+
+    return errors
 
 
 def _check_page(name: str, path: Path) -> list[str]:
@@ -44,57 +145,11 @@ def _check_page(name: str, path: Path) -> list[str]:
         soup = BeautifulSoup(f, "lxml")
 
     errors: list[str] = []
-
-    # <title> must include the site-name suffix, not just the page heading.
-    title = soup.title
-    if title is None:
-        errors.append(f"[{name}] missing <title> element")
-    elif " — " not in title.text and "&#8212;" not in str(title):
-        errors.append(
-            f"[{name}] <title> is missing the site-name suffix: {title.text!r}"
-        )
-
-    # <meta name="description"> must be present and non-empty.
-    description = soup.find("meta", attrs={"name": "description"})
-    if description is None or not description.get("content"):
-        errors.append(f'[{name}] missing or empty <meta name="description">')
-
-    # rel="canonical" link must be present and absolute.
-    canonical = soup.find("link", attrs={"rel": "canonical"})
-    if canonical is None:
-        errors.append(f'[{name}] missing rel="canonical" link')
-    else:
-        href = cast(str, canonical.get("href", ""))
-        if not href.startswith("http"):
-            errors.append(f"[{name}] malformed canonical URL: {href!r}")
-
-    # Favicon link must be present.
-    favicon = soup.find("link", attrs={"rel": "shortcut icon"})
-    if favicon is None or not favicon.get("href"):
-        errors.append(f"[{name}] missing favicon <link> tag")
-
-    # All expected Open Graph tags must be present.
-    found_properties = {
-        cast(str, tag["property"])
-        for tag in soup.find_all("meta", attrs={"property": True})
-    }
-    missing = REQUIRED_OG_PROPERTIES - found_properties
-    if missing:
-        errors.append(f"[{name}] missing Open Graph tags: {sorted(missing)}")
-
-    # Guard against the "name=og:title" regression: no og:* tag should ever
-    # be rendered with a `name` attribute instead of `property`.
-    wrong_attr = [
-        cast(str, tag.get("name"))
-        for tag in soup.find_all("meta", attrs={"name": True})
-        if cast(str, tag.get("name", "")).startswith("og:")
-    ]
-    if wrong_attr:
-        errors.append(
-            f"[{name}] Open Graph tags rendered with name= instead of "
-            f"property=: {wrong_attr}"
-        )
-
+    errors.extend(_check_title(name, soup))
+    errors.extend(_check_description(name, soup))
+    errors.extend(_check_canonical(name, soup))
+    errors.extend(_check_favicon(name, soup))
+    errors.extend(_check_open_graph(name, soup))
     return errors
 
 

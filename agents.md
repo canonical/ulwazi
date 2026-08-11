@@ -47,6 +47,9 @@ Available tests:
 - **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright
+- **test_seo_metadata.py**: Verifies `<title>`, description, canonical link, favicon, and Open Graph
+  tags on built pages. Also checks that per-page `og:*`/description overrides work. See
+  `docs/content/tests/seo-metadata.md` for more details.
 
 ### Cleaning
 

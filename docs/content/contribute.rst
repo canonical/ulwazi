@@ -178,7 +178,8 @@ The plain page description (``<meta name="description">``) is unrelated to
          ---
 
 See the :ref:`reST cheat sheet <rst_ref>` and :ref:`MyST cheat sheet <myst-ref>`
-for full working examples.
+for full working examples. See the :doc:`Tests documentation <tests/index>` for
+how these defaults and overrides are automatically tested.
 
 Further resources
 -----------------
