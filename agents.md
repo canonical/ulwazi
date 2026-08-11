@@ -203,12 +203,17 @@ make test
 - **Metadata/SEO**: `<title>` suffix, `rel="canonical"`, favicon link, and Open Graph tags
   (`og:title`, `og:description`, `og:image`, etc.) are all generated automatically via
   `sphinxext-opengraph` (declared in `docs/conf.py` `extensions`, and in `pyproject.toml`
-  under the `docs` dependency group) plus the `layout.html` template. When overriding
-  per-page metadata with a `.. meta::` directive (reST) or `html_meta` front matter
-  (MyST), Open Graph keys **must** use the `property=og:<name>` form -- the bare
-  `og:<name>` form silently produces the wrong `name=` attribute instead of `property=`,
-  which most Open Graph consumers ignore. See `docs/content/contribute.rst` and the
-  RST/MyST cheat sheets for working examples. Do not remove `sphinxext-opengraph` or the
+  under the `docs` dependency group) plus the `layout.html` template. Per-page `og:*`
+  overrides are plain top-level fields (reST bibliographic field / MyST front matter
+  key) placed before the title -- e.g. `:og:title: ...` or `og:title: "..."` -- read
+  directly by `sphinxext-opengraph`'s own override mechanism. **Do not** add a
+  `property=` prefix; that's a misconception carried over from the generic docutils
+  `.. meta::` directive and is unnecessary once `sphinxext-opengraph` is installed --
+  it always renders `property="og:..."` regardless. The plain page description
+  (`<meta name="description">`) is a separate setting: use `.. meta:: :description:`
+  (reST) or nest it under `myst.html_meta` (MyST) -- `description` alone is not a
+  recognised bibliographic field. See `docs/content/contribute.rst` and the RST/MyST
+  cheat sheets for working examples. Do not remove `sphinxext-opengraph` or the
   `favicon_url`/`pageurl`/`docstitle` references in `layout.html` without re-verifying
   metadata output in the built HTML.
 - **Sphinx context variable gotcha**: use `favicon_url` in templates, not `favicon`

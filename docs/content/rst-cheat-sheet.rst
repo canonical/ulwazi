@@ -507,23 +507,28 @@ Sphinx-design tabs
 Metadata
 --------
 
-A ``.. meta::`` directive sets the page description and Open Graph tags used
-for search engines and social media previews. It must appear near the top of
-the file, before or after the title.
+Optional. Every page gets working metadata by default; only add these fields
+to override them for a specific page.
 
-Open Graph keys (``og:...``) must use the ``property=og:<name>`` form, not
-``og:<name>``, otherwise they render as ``<meta name="og:...">`` instead of
-the spec-required ``<meta property="og:...">``:
+Open Graph tags (placed before the title, no special syntax needed):
+
+.. code-block:: rst
+
+   :og:title: Custom title for social media previews
+   :og:description: Custom description for social media previews
+   :og:image: https://example.com/preview-image.png
+
+   Page title
+   ==========
+
+Page description (unrelated to ``og:description``):
 
 .. code-block:: rst
 
    .. meta::
       :description: A one- or two-sentence summary of this page.
-      :property=og:title: Custom title for social media previews
-      :property=og:description: Custom description for social media previews
-      :property=og:image: https://example.com/preview-image.png
 
-See :doc:`the contribution guide <contribute>` for more details.
+See :doc:`the contribution guide <contribute>` for defaults and details.
 
 Glossary
 --------

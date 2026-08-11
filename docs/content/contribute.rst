@@ -93,56 +93,92 @@ see the ``_html_page_context`` function in ``ulwazi/__init__.py``.
 Page metadata and SEO
 ----------------------
 
-Every page automatically gets a ``<title>`` with a site-name suffix, a
-``rel="canonical"`` link, a favicon link, and Open Graph tags (``og:title``,
-``og:type``, ``og:url``, ``og:site_name``, ``og:description``, ``og:image``),
-provided by the ``sphinxext-opengraph`` extension declared in ``docs/conf.py``.
-The description and Open Graph text are auto-generated from a page's first
-paragraphs unless you override them.
+**You don't need to add any metadata.** Every page automatically gets a
+working ``<title>``, description, Open Graph tags, canonical link, and
+favicon -- courtesy of Sphinx and the ``sphinxext-opengraph`` extension
+declared in ``docs/conf.py``. The table below shows where each default comes
+from if you add nothing:
 
-To set a custom description or Open Graph values for a specific page, add
-metadata at the top of the source file:
+.. list-table::
+   :header-rows: 1
 
-reST (``.rst``)
-****************
+   * - Tag
+     - Default source
+   * - ``<title>``
+     - Page heading + site title suffix
+   * - ``og:title``
+     - Page heading
+   * - ``<meta name="description">`` and ``og:description``
+     - First ~200 characters of the page's own text (generated
+       *independently* for each -- see note below)
+   * - ``og:image``
+     - The ``ogp_image`` setting in ``conf.py``
+   * - ``rel="canonical"``, favicon
+     - ``html_baseurl`` / ``html_favicon`` in ``conf.py``
 
-.. code-block:: rst
+Only override these if the defaults don't fit a specific page -- for example,
+a landing page you want to promote on social media with custom text.
 
-   Page title
-   ==========
+Overriding Open Graph tags (``og:title``, ``og:description``, ``og:image``)
+*****************************************************************************
 
-   .. meta::
-      :description: A one- or two-sentence summary of this page.
-      :property=og:title: Custom title for social media previews
-      :property=og:description: Custom description for social media previews
-      :property=og:image: https://example.com/preview-image.png
+Add plain ``og:*`` fields at the very start of the file, before the title.
+``sphinxext-opengraph`` reads these directly and always renders the correct
+``<meta property="og:...">`` form -- no special syntax needed:
 
-MyST Markdown (``.md``)
-************************
+.. tab-set::
 
-.. code-block:: markdown
+   .. tab-item:: reST
 
-   ---
-   myst:
-     html_meta:
-       description: "A one- or two-sentence summary of this page."
-       "property=og:title": "Custom title for social media previews"
-       "property=og:description": "Custom description for social media previews"
-       "property=og:image": "https://example.com/preview-image.png"
-   ---
+      .. code-block:: rst
 
-   # Page title
+         :og:title: Custom title for social media previews
+         :og:description: Custom description for social media previews
+         :og:image: https://example.com/preview-image.png
 
-.. important::
+         Page title
+         ==========
 
-   Open Graph keys (anything starting with ``og:``) must be written as
-   ``property=og:<name>``, **not** ``og:<name>``. The bare form produces
-   ``<meta name="og:...">`` instead of the spec-required
-   ``<meta property="og:...">``, which most Open Graph consumers (Facebook,
-   LinkedIn, Slack, etc.) silently ignore. This quirk comes from how
-   docutils and MyST parse ``key=value`` pairs in meta directives -- see the
-   :ref:`reST cheat sheet <rst_ref>` and :ref:`MyST cheat sheet <myst-ref>`
-   for full working examples.
+   .. tab-item:: MyST
+
+      .. code-block:: markdown
+
+         ---
+         og:title: "Custom title for social media previews"
+         og:description: "Custom description for social media previews"
+         og:image: "https://example.com/preview-image.png"
+         ---
+
+         # Page title
+
+Overriding the page description
+********************************
+
+The plain page description (``<meta name="description">``) is unrelated to
+``og:description`` -- setting one does not affect the other. Set it with a
+``.. meta::`` directive (reST) or nested under ``myst.html_meta`` (MyST):
+
+.. tab-set::
+
+   .. tab-item:: reST
+
+      .. code-block:: rst
+
+         .. meta::
+            :description: A one- or two-sentence summary of this page.
+
+   .. tab-item:: MyST
+
+      .. code-block:: markdown
+
+         ---
+         myst:
+           html_meta:
+             description: "A one- or two-sentence summary of this page."
+         ---
+
+See the :ref:`reST cheat sheet <rst_ref>` and :ref:`MyST cheat sheet <myst-ref>`
+for full working examples.
 
 Further resources
 -----------------

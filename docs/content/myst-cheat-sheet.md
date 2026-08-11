@@ -407,26 +407,30 @@ path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/
 
 ## Metadata
 
-A `myst: html_meta:` front matter block sets the page description and Open
-Graph tags used for search engines and social media previews. It must be the
-first thing in the file, before the title.
+Optional. Every page gets working metadata by default; only add these fields
+to override them for a specific page.
 
-Open Graph keys (`og:...`) must use the `"property=og:<name>"` form (as the
-front matter key, in quotes), not `"og:<name>"`, otherwise they render as
-`<meta name="og:...">` instead of the spec-required `<meta property="og:...">`:
+Open Graph tags (top-level front matter keys, no special syntax needed):
+
+```markdown
+---
+og:title: "Custom title for social media previews"
+og:description: "Custom description for social media previews"
+og:image: "https://example.com/preview-image.png"
+---
+```
+
+Page description (unrelated to `og:description`), nested under `myst.html_meta`:
 
 ```markdown
 ---
 myst:
   html_meta:
     description: "A one- or two-sentence summary of this page."
-    "property=og:title": "Custom title for social media previews"
-    "property=og:description": "Custom description for social media previews"
-    "property=og:image": "https://example.com/preview-image.png"
 ---
 ```
 
-See [the contribution guide](contribute) for more details.
+See [the contribution guide](contribute) for defaults and details.
 
 ## Glossary
 
