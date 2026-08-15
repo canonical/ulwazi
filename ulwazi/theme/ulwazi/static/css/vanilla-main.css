@@ -12166,6 +12166,10 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+.p-notification__message > blockquote:last-child {
+  margin-bottom: 0;
+}
+
 .p-tabs > .p-tabs__item[role=tabpanel] {
   min-width: 0;
   width: 100%;

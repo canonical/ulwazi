@@ -52,3 +52,11 @@ This is a generic admonition
 :::
 
 {ref}`This is a reference to the note admonition above <note-reference>`
+
+:::{important}
+If any of your slices' paths are architecture-specific, you must add the
+`arch` field. For
+[example](https://github.com/canonical/chisel-releases/blob/main/slices/libc6.yaml#L29):
+
+>  `/usr/lib/*-linux-*/libmvec.so.*: {arch: [amd64, arm64]}`
+:::
