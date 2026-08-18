@@ -62,8 +62,7 @@ def test_rendered_color():
 @pytest.mark.slow
 def test_ordered_list_marker_matches_text_size():
     typography_path = Path(TYPOGRAPHY_PATH).resolve()
-    assert typography_path.exists()
-    assert Path(typography_path).exists(), f"index.html not found in {typography_path}"
+    assert typography_path.exists(), f"Typography page not found at {typography_path}"
 
     subprocess.run(
         [sys.executable, "-m", "playwright", "install", "chromium"],
