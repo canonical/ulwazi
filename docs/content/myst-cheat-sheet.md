@@ -335,6 +335,33 @@ Important information
 This might damage your hardware!
 ```
 
+## Expandable blocks
+
+Use HTML `<details>` tags to create a collapsible section, for example to hide the output of a command:
+
+```shell
+juju version
+```
+
+<details>
+<summary>Output example</summary>
+
+```text
+3.5.4-genericlinux-amd64
+```
+
+</details>
+
+Keep a blank line between the HTML tags and the content so that the content is parsed as MyST. Any markup can go inside, for example a list:
+
+<details>
+<summary>More details</summary>
+
+- Item 1
+- Item 2
+
+</details>
+
 ## Images
 
 Use `![Alt text]()` for simple images with no caption.

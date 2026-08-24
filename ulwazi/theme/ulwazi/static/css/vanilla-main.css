@@ -11926,6 +11926,33 @@ p {
   line-height: 1.25rem;
 }
 
+/*
+  Expandable blocks (details/summary).
+
+  Vanilla's base styles (vf-b-details) render summary at 1rem, but Ulwazi
+  docs body text is $font-size-p (0.875rem). Match the docs text size and
+  reduce the block's bottom margin to the docs paragraph rhythm, while
+  keeping Vanilla's focus outline and adding the same hover affordance
+  Vanilla gives links (cursor + underline), so the summary reads as
+  clickable.
+*/
+summary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+}
+
+summary:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.075em;
+}
+
+details {
+  margin-bottom: 1.25rem;
+}
+
 th > p {
   padding-top: 0;
   padding-bottom: 0;

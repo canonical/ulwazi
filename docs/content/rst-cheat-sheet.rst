@@ -444,6 +444,44 @@ Notes
 .. caution::
    This might damage your hardware!
 
+
+Expandable blocks
+-----------------
+
+Use raw HTML ``<details>`` tags to create a collapsible section, for example to hide the output of a command:
+
+.. code-block:: shell
+
+   juju version
+
+.. raw:: html
+
+   <details>
+   <summary>Output example</summary>
+
+.. code-block:: text
+
+   3.5.4-genericlinux-amd64
+
+.. raw:: html
+
+   </details>
+
+Split the opening and closing tags into separate ``raw`` directives so that the content in between is rendered as reStructuredText. Any markup can go inside, for example a list:
+
+.. raw:: html
+
+   <details>
+   <summary>More details</summary>
+
+- Item 1
+- Item 2
+
+.. raw:: html
+
+   </details>
+
+
 Images
 ------
 Use ``.. image::`` for simple images without captions.

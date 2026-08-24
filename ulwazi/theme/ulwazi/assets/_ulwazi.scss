@@ -63,6 +63,27 @@ p {
   font-size: $font-size-p;
   line-height: $font-line-height-p;
 }
+
+/*
+  Expandable blocks (details/summary).
+*/
+summary {
+  font-size: $font-size-p;
+  line-height: $font-line-height-p;
+  font-weight: $font-weight-p;
+}
+
+summary:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.075em;
+}
+
+details {
+  margin-bottom: $font-line-height-p;
+}
+
 th > p {
   padding-top: 0;
   padding-bottom: 0;
