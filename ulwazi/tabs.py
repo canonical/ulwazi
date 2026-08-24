@@ -69,6 +69,9 @@ def convert_tabs(body_html: str) -> str:  # noqa: PLR0912, PLR0915
             class_list.remove("sphinx-tabs-tab")
         if "p-tabs__link" not in class_list:
             class_list.append("p-tabs__link")
+        # Vanilla's is-small modifier sizes tab labels to match docs body text
+        if "is-small" not in class_list:
+            class_list.append("is-small")
         tab_button["class"] = " ".join(class_list)
         tab_button["role"] = "tab"
 
@@ -159,7 +162,8 @@ def convert_tabs(body_html: str) -> str:  # noqa: PLR0912, PLR0915
 
             # create the tab button
             btn = soup.new_tag("button")
-            btn["class"] = "p-tabs__link"
+            # is-small: Vanilla modifier matching docs body text size
+            btn["class"] = "p-tabs__link is-small"
             btn["role"] = "tab"
             btn["id"] = button_id
             btn["aria-controls"] = str(panel_id)
