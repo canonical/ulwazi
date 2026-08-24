@@ -370,10 +370,7 @@ html_js_files = ["https://assets.ubuntu.com/v1/287a5e8f-bundle.js"]
 
 
 # Syntax highlighting settings
-
 highlight_language = "none"  # default
-pygments_style = "autumn"
-pygments_dark_style = "github-dark"  # see https://pygments.org/styles for more
 
 # Specifies a reST snippet to be appended to each .rst file
 

@@ -195,5 +195,6 @@ All contributions are welcome: bug reports, feature requests, and pull requests.
 
    rst-cheat-sheet.rst
    myst-cheat-sheet.md
+   syntax-highlighting.md
    roadmap.md
    testing-strategy.md

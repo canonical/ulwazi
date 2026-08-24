@@ -56,6 +56,12 @@ product-menu:  ## Update the product menu
 	@echo "Updating the product menu..."
 	python3 ulwazi/product_menu_gen.py
 
+.PHONY: pygments-css
+pygments-css:  ## Regenerate the syntax highlighting stylesheets (pygments-light/dark.css)
+	@echo "Regenerating Pygments stylesheets..."
+	uv run python ulwazi/theme/ulwazi/static/css/generate_pygments_css.py
+	@echo "Done. Rebuild the docs (make docs-clean && make docs) to pick up the changes."
+
 .PHONY: rebuild
 rebuild: clean docs  ## Clean the environment and rebuild the docs
 

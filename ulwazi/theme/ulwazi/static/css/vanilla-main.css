@@ -1208,7 +1208,7 @@ hr.u-no-margin--bottom {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: #404040;
+  --vf-color-background-code: rgba(255, 255, 255, 0.3);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -5483,7 +5483,7 @@ form + [class*=p-button] {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: #404040;
+  --vf-color-background-code: rgba(255, 255, 255, 0.3);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -9767,7 +9767,7 @@ h1.p-stepped-list__title + .p-stepped-list__content {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: #404040;
+  --vf-color-background-code: rgba(255, 255, 255, 0.3);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -9871,7 +9871,7 @@ h1.p-stepped-list__title + .p-stepped-list__content {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: #404040;
+  --vf-color-background-code: rgba(255, 255, 255, 0.3);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -10420,7 +10420,7 @@ table th[aria-sort]:hover {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: #404040;
+  --vf-color-background-code: rgba(255, 255, 255, 0.3);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -10518,7 +10518,7 @@ body.is-light .p-tooltip__message, body.is-paper .p-tooltip__message, .p-tooltip
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: #404040;
+  --vf-color-background-code: rgba(255, 255, 255, 0.3);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -11870,6 +11870,11 @@ ol.u-text-max-width,
   Set consistent base font size across all displays.
   This prevents rem units from scaling differently on 4K displays.
 */
+:root {
+  --ulwazi-color-brand: #e95420;
+  --ulwazi-color-brand-hover: rgb(194.7836734694, 64.6367346939, 19.2163265306);
+}
+
 /*
   Utility classes.
 */
@@ -12039,33 +12044,33 @@ readthedocs-docdiff {
   margin-left: auto;
 }
 
-/* Darker background for selected nav-item */
+/* Themed backgrounds for selected nav-item (Vanilla active/hover tokens) */
 .nav-item .current {
-  background: #e0e0e0;
-  color: #333;
+  background: var(--vf-color-background-active);
+  color: var(--vf-color-text-default);
 }
 
 li.current:not(:has(li.current)) > .nav-item > label {
-  background: hsl(0, 0%, 88%);
-  color: #333;
+  background: var(--vf-color-background-active);
+  color: var(--vf-color-text-default);
 }
 
 .nav-item a:hover,
 .nav-item a:focus {
-  background: #e0e0e0;
-  color: #333;
+  background: var(--vf-color-background-hover);
+  color: var(--vf-color-text-default);
 }
 
 .nav-item label:hover,
 .nav-item label:focus {
-  background: #e7e7e7;
-  color: #333;
+  background: var(--vf-color-background-hover);
+  color: var(--vf-color-text-default);
 }
 
 li.current:not(:has(li.current)) > .nav-item > label:hover,
 li.current:not(:has(li.current)) > .nav-item > label:focus {
-  background: #e5e5e5;
-  color: #222;
+  background: var(--vf-color-background-hover);
+  color: var(--vf-color-text-default);
 }
 
 .nav-item .icon,
@@ -12160,10 +12165,47 @@ button.copybtn:hover {
   background-color: transparent !important;
 }
 
-.highlight,
-.highlight pre {
+.highlight {
   background-color: var(--vf-color-background-code);
   color: var(--vf-color-text-default);
+}
+
+.highlight pre {
+  background-color: transparent;
+  color: inherit;
+}
+
+.terminal .highlight,
+.terminal .highlight pre {
+  background-color: transparent;
+}
+
+.highlight button.copybtn {
+  color: var(--vf-color-text-muted);
+}
+
+.highlight button.copybtn.success {
+  color: var(--vf-color-border-positive);
+}
+
+[role=tablist] {
+  border-bottom: 1px solid var(--vf-color-border-default);
+}
+
+.sphinx-tabs-tab {
+  background-color: transparent;
+  color: var(--vf-color-text-default);
+}
+
+.sphinx-tabs-tab[aria-selected=true] {
+  border: 1px solid var(--vf-color-border-default);
+  border-bottom-color: var(--vf-color-background-default);
+  background-color: var(--vf-color-background-default);
+}
+
+.sphinx-tabs-panel {
+  border: 1px solid var(--vf-color-border-default);
+  background: var(--vf-color-background-default);
 }
 
 .p-tabs > .p-tabs__item[role=tabpanel] {
@@ -12226,7 +12268,7 @@ div.terminal > div.input > button.copybtn svg {
   filter: brightness(0) invert(1);
 }
 .p-search-box .p-search-box__button:hover {
-  background-color: rgb(194.7836734694, 64.6367346939, 19.2163265306) !important;
+  background-color: var(--ulwazi-color-brand-hover) !important;
 }
 
 .p-search-box__input {
@@ -12241,8 +12283,8 @@ div.terminal > div.input > button.copybtn svg {
 }
 
 .guilabel {
-  background-color: rgba(221, 238, 255, 0.5019607843);
-  border: 1px solid rgba(190, 218, 245, 0.5019607843);
+  background-color: var(--vf-color-background-information-default);
+  border: 1px solid var(--vf-color-border-information);
   border-radius: 0.5em;
   color: var(--vf-color-text-default);
   font-size: 0.9em;
@@ -12348,7 +12390,7 @@ body.is-dark .p-strip.is-dark {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: #404040;
+  --vf-color-background-code: rgba(255, 255, 255, 0.3);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -12612,7 +12654,7 @@ p > [class*=p-icon] {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: #404040;
+  --vf-color-background-code: rgba(255, 255, 255, 0.3);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
