@@ -12166,6 +12166,10 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+div[class*=highlight-] + [class^=p-notification] {
+  margin-top: 1.5rem;
+}
+
 .p-tabs > .p-tabs__item[role=tabpanel] {
   min-width: 0;
   width: 100%;

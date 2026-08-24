@@ -39,8 +39,15 @@ This is a note admonition
 This is a seealso admonition
 :::
 
+```{code-block} yaml
+slices:
+  bins:
+    essential:
+      - libc6_libs
+```
+
 :::{tip}
-This is a tip admonition
+This tip follows a code block with the standard content spacing.
 :::
 
 :::{warning}
