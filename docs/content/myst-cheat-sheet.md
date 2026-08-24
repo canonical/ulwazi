@@ -343,6 +343,13 @@ Use HTML `<details>` tags to create a collapsible section, for example to hide t
 juju version
 ```
 
+The following tabs show the rendered block and its source.
+Note that a backtick fence must be longer than any fence nested inside it:
+
+``````{tab-set}
+
+`````{tab-item} Rendered
+
 <details>
 <summary>Output example</summary>
 
@@ -351,8 +358,29 @@ juju version
 ```
 
 </details>
+`````
+
+`````{tab-item} Source
+
+````markdown
+<details>
+<summary>Output example</summary>
+
+```text
+3.5.4-genericlinux-amd64
+```
+
+</details>
+````
+`````
+
+``````
 
 Keep a blank line between the HTML tags and the content so that the content is parsed as MyST. Any markup can go inside, for example a list:
+
+`````{tab-set}
+
+````{tab-item} Rendered
 
 <details>
 <summary>More details</summary>
@@ -361,6 +389,22 @@ Keep a blank line between the HTML tags and the content so that the content is p
 - Item 2
 
 </details>
+````
+
+````{tab-item} Source
+
+```markdown
+<details>
+<summary>More details</summary>
+
+- Item 1
+- Item 2
+
+</details>
+```
+````
+
+`````
 
 ## Images
 
@@ -404,7 +448,7 @@ Keys can be defined at the top of a file, or in a `myst_substitutions` option in
 ### Sphinx-design tabs
 
 
-````{tab-set}
+`````{tab-set}
 
 ```{tab-item} Tab 1
 :sync: key1
@@ -423,14 +467,14 @@ Content Tab 2
 Content Tab 3
 ```
 
-:::{tab-item} Long code
+````{tab-item} Long code
 
 ```yaml
 path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
 ```
-:::
-
 ````
+
+`````
 
 ## Glossary
 

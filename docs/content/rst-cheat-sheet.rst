@@ -454,32 +454,75 @@ Use raw HTML ``<details>`` tags to create a collapsible section, for example to 
 
    juju version
 
-.. raw:: html
+The following tabs show the rendered block and its source:
 
-   <details>
-   <summary>Output example</summary>
+.. tab-set::
 
-.. code-block:: text
+    .. tab-item:: Rendered
 
-   3.5.4-genericlinux-amd64
+        .. raw:: html
 
-.. raw:: html
+            <details>
+            <summary>Output example</summary>
 
-   </details>
+        .. code-block:: text
+
+            3.5.4-genericlinux-amd64
+
+        .. raw:: html
+
+            </details>
+
+    .. tab-item:: Source
+
+        .. code-block:: rst
+
+            .. raw:: html
+
+               <details>
+               <summary>Output example</summary>
+
+            .. code-block:: text
+
+               3.5.4-genericlinux-amd64
+
+            .. raw:: html
+
+               </details>
 
 Split the opening and closing tags into separate ``raw`` directives so that the content in between is rendered as reStructuredText. Any markup can go inside, for example a list:
 
-.. raw:: html
+.. tab-set::
 
-   <details>
-   <summary>More details</summary>
+    .. tab-item:: Rendered
 
-- Item 1
-- Item 2
+        .. raw:: html
 
-.. raw:: html
+            <details>
+            <summary>More details</summary>
 
-   </details>
+        - Item 1
+        - Item 2
+
+        .. raw:: html
+
+            </details>
+
+    .. tab-item:: Source
+
+        .. code-block:: rst
+
+            .. raw:: html
+
+               <details>
+               <summary>More details</summary>
+
+            - Item 1
+            - Item 2
+
+            .. raw:: html
+
+               </details>
 
 
 Images
