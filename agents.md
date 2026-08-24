@@ -196,6 +196,7 @@ make test
 ### Styles
 
 - [Vanilla Framework](https://vanillaframework.io/) for base styles
+- [Vanilla Framework examples](https://vanillaframework.io/docs/examples) - reference implementations of all components. Note: each example can be switched to dark mode.
 - SCSS source in [ulwazi/theme/ulwazi/assets/](ulwazi/theme/ulwazi/assets/)
 - Compiled CSS in [ulwazi/theme/ulwazi/static/](ulwazi/theme/ulwazi/static/)
 
@@ -252,3 +253,7 @@ When editing documentation or markdown files:
 - [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng)
 - [Demo site](https://canonical-ulwazi.readthedocs-hosted.com/)
 - [Repository](https://github.com/canonical/ulwazi)
+
+## Maintaining This Guide
+
+If you spot a problem in this guide (outdated information, incorrect commands, missing steps) and fix it, update this file accordingly so the instructions stay accurate for future sessions.
