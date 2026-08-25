@@ -16,4 +16,5 @@ More advanced tests:
 
 SEO and metadata <seo-metadata>
 Python versions <python-versions>
+Extension compatibility <extension-compatibility>
 ```
