@@ -31,6 +31,15 @@ npm install
 
 A Makefile includes some basic functionality to build the theme and then build and run the test content with the theme.
 
+The available tests include:
+
+- **test_site_validation.py** — validates built HTML for broken assets (missing CSS, JS, images)
+- **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
+- **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_extension_compatibility.py** — verifies the theme renders correctly with every [Sphinx Stack default extension](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/) enabled (one test per extension; PDF check is slow)
+
+See the [Tests documentation](https://canonical-ulwazi.readthedocs-hosted.com/content/tests/) for more details.
+
 To build the sample documentation using the theme, run:
 
 ```shell

@@ -185,7 +185,11 @@ html_context = {
     # Valid options: none, prev, next, both
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
-    "display_contributors": False,
+    # Enabled for the extension compatibility tests (sphinx_contributor_listing).
+    "display_contributors": True,
+    # Alias expected by sphinx_contributor_listing (it reads github_folder,
+    # while the rest of the theme uses repo_folder).
+    "github_folder": "/docs/",
     # Required for feedback button
     "feedback": True,
     "github_issues": "enabled",
@@ -283,7 +287,24 @@ templates_path = ["_templates"]
 # NOTE: If undefined, set to None, or empty,
 #       the sphinx_reredirects extension will be disabled.
 
-redirects = {}
+redirects = {
+    "content/extensions-old": "content/tests/extension-compatibility/",
+}
+
+rediraffe_redirects = "redirects.txt"
+rediraffe_dir_only = True
+
+############################
+# sphinx-llm configuration #
+############################
+
+# This description is included in llms.txt to provide some initial context
+# for LLMs reading the generated Markdown artifacts.
+
+llms_txt_description = (
+    "This is the sample documentation for the Ulwazi Sphinx theme, "
+    "which provides Canonical Vanilla Framework styling for Sphinx projects."
+)
 
 
 ###########################
@@ -350,13 +371,35 @@ extensions = [
     "canonical_sphinx_config",
     "myst_parser",
     "sphinxcontrib.jquery",
-    "sphinx_tabs.tabs",
     "sphinx_design",
+    # Remaining Sphinx Stack default extensions, enabled for testing:
+    "sphinxext.opengraph",
+    "notfound.extension",
+    "sphinx_reredirects",
+    "sphinx_rerediraffe",
+    "sphinx_config_options",
+    "sphinx_contributor_listing",
+    "sphinx_filtered_toctree",
+    "sphinx_llm.txt",
+    "sphinx_related_links",
+    "sphinx_roles",
+    "sphinx_ubuntu_images",
+    "sphinx_youtube_links",
+    "sphinx_structured_toc",
 ]
 
 # Excludes files or directories from processing
 
-exclude_patterns = ["doc-cheat-sheet*", ".venv*", "_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = [
+    "doc-cheat-sheet*",
+    ".venv*",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    # sphinx-llm pulls in sphinx-markdown-builder, which emits .md artifacts
+    # into the build directory; keep Sphinx from re-reading them as source.
+    "_build/**",
+]
 
 # Adds custom CSS files, located under 'html_static_path'
 
@@ -429,7 +472,9 @@ if os.path.exists("./reuse/substitutions.yaml"):
 
 # Add configuration for intersphinx mapping
 
-intersphinx_mapping = {}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+}
 
 # PDF
 

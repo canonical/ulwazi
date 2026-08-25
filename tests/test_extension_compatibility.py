@@ -14,9 +14,9 @@ Each extension gets its own parametrized test case, so the pytest output
 shows one line per extension.
 
 Known gaps (documented in docs/content/tests/extension-compatibility.md):
-sphinx_contributor_listing and sphinx_related_links expose context
-functions that no Ulwazi template consumes yet. They are enabled and
-built with, but their rendered output is not asserted.
+sphinx_contributor_listing, sphinx_related_links, and
+sphinx_last_updated_by_git are enabled and built with, but their rendered
+output is not asserted because no Ulwazi template consumes it yet.
 """
 
 from pathlib import Path
@@ -43,11 +43,6 @@ def _check_sphinx_design(soup: BeautifulSoup) -> None:
     assert soup.select(".sd-card"), "No sphinx_design cards (.sd-card) found"
     assert soup.select(".sd-row"), "No sphinx_design grid (.sd-row) found"
     assert soup.select(".sd-badge"), "No sphinx_design badge (.sd-badge) found"
-
-
-def _check_sphinx_tabs(soup: BeautifulSoup) -> None:
-    """sphinx_tabs: tab sets render."""
-    assert soup.select(".sd-tab-set"), "No sphinx_tabs tab set (.sd-tab-set) found"
 
 
 def _check_sphinx_terminal(soup: BeautifulSoup) -> None:
@@ -181,10 +176,14 @@ def _check_sphinx_rerediraffe() -> None:
 
 
 def _check_sphinx_last_updated_by_git(soup: BeautifulSoup) -> None:
-    """sphinx_last_updated_by_git: build succeeds with the extension active.
+    """sphinx_last_updated_by_git: enabled and built with (known gap).
 
-    The extension populates the last_updated context from git metadata;
-    there is no visible marker to assert on, so a rendered page is enough.
+    The extension populates the last_updated context and, with
+    git_last_updated_metatags (on by default), an article:modified_time
+    meta tag. The meta tag is not emitted because
+    canonical_sphinx_config sets html_last_updated_fmt to an empty
+    string, and no Ulwazi template renders last_updated. We only assert
+    the page renders; see docs/content/tests/extension-compatibility.md.
     """
     assert soup.title is not None, "Page did not render"
 
@@ -214,7 +213,6 @@ def _check_sphinx_related_links(soup: BeautifulSoup) -> None:
 # take no argument.
 PAGE_CHECKS = {
     "sphinx_design": _check_sphinx_design,
-    "sphinx_tabs.tabs": _check_sphinx_tabs,
     "sphinx_terminal": _check_sphinx_terminal,
     "sphinx_youtube_links": _check_sphinx_youtube_links,
     "sphinx_config_options": _check_sphinx_config_options,

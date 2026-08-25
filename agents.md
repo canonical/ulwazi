@@ -50,6 +50,7 @@ Available tests:
 - **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file (slow test)
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright (color check is a slow test)
+- **test_extension_compatibility.py**: Verifies the theme renders correctly with every Sphinx Stack default extension enabled (one test per extension; PDF check is a slow test). See `docs/content/tests/extension-compatibility.md`
 
 ### Cleaning
 
