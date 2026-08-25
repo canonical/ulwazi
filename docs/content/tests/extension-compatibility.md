@@ -21,14 +21,13 @@ output.
 | `sphinx_design` | Cards, grid items, and badges render with `sd-*` classes |
 | `sphinx_reredirects` | Redirect stub page with a meta refresh is generated |
 | `sphinx_rerediraffe` | Redirect stub page is generated from `redirects.txt` |
-| `sphinx_tabs.tabs` | Tab set renders with `sd-tab-set` classes |
 | `sphinxcontrib.jquery` | jQuery is loaded on the page |
 | `sphinxext.opengraph` | Open Graph meta tags are present |
 | `sphinx.ext.intersphinx` | External reference resolves to a link |
 | `sphinx_config_options` | Config option renders with its fields table |
-| `sphinx_contributor_listing` | Context function is exposed (see known gaps) |
+| `sphinx_contributor_listing` | Build succeeds with the extension active (see known gaps) |
 | `sphinx_filtered_toctree` | Filtered toctree renders its entries |
-| `sphinx_last_updated_by_git` | Build succeeds with the extension active |
+| `sphinx_last_updated_by_git` | Build succeeds with the extension active (see known gaps) |
 | `sphinx_llm.txt` | `llms.txt` is generated in the build output |
 | `sphinx_related_links` | Build succeeds with the extension active (see known gaps) |
 | `sphinx_roles` | Custom roles (`spellexception`, `literalref`) render |
@@ -44,21 +43,31 @@ output.
 `canonical_sphinx` is intentionally **not** tested: it is a Sphinx theme
 (the Furo-based Canonical theme) and cannot coexist with Ulwazi. Its
 sub-extensions (`notfound.extension`, `sphinx_design`, `sphinx_reredirects`,
-`sphinx_tabs.tabs`, `sphinxcontrib.jquery`, `sphinxext.opengraph`) are
-enabled and tested individually instead.
+`sphinxcontrib.jquery`, `sphinxext.opengraph`) are enabled and tested
+individually instead.
+
+`sphinx_tabs.tabs` is also **not** tested: the theme standardises on
+`sphinx_design` tab sets (`tab-set` / `tab-item`), which cover the same
+use cases. The extension is therefore not enabled in `docs/conf.py`.
 
 ## Known gaps
 
-The Ulwazi theme does not yet consume the output of every extension:
+The Ulwazi theme does not yet consume the output of every extension, so
+some checks only assert that the build succeeds with the extension
+active. These extensions are still enabled and built with — regressions
+in the build are caught — but their rendered output is not asserted.
+Supporting them in the theme is tracked as follow-up work:
 
 - `sphinx_contributor_listing` exposes a `get_contributors_for_file`
   context function, but no Ulwazi template calls it yet.
 - `sphinx_related_links` exposes related-links context functions, but no
   Ulwazi template renders them yet.
-
-These extensions are still enabled and built with — so regressions in the
-build are caught — but their rendered output is not asserted. Supporting
-them in the theme is tracked as follow-up work.
+- `sphinx_last_updated_by_git` populates the `last_updated` page context
+  and (with `git_last_updated_metatags`, on by default) an
+  `article:modified_time` meta tag. The meta tag is currently not
+  emitted: `canonical_sphinx_config` sets `html_last_updated_fmt` to an
+  empty string, which makes the extension's page-context hook return
+  early. No Ulwazi template renders `last_updated` either.
 
 ## How it's tested
 
@@ -101,7 +110,9 @@ Some text in the second grid item.
 
 A badge: {bdg-primary}`some badge`
 
-### Tabs (sphinx_tabs)
+### Tabs (sphinx_design)
+
+Tab sets from `sphinx_design` (`tab-set` / `tab-item`):
 
 `````{tab-set}
 
