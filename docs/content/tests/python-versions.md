@@ -33,6 +33,7 @@ currently tested versions are:
 - Python 3.11
 - Python 3.12
 - Python 3.13
+- Python 3.14
 
 The authoritative list lives in `SUPPORTED_PYTHON_VERSIONS` in
 `tests/test_python_versions.py`. The GitHub Actions matrix in

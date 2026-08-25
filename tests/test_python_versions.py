@@ -55,7 +55,13 @@ import pytest
 #   - the ``matrix.python-version`` list in
 #     ``.github/workflows/test-python-versions.yaml``
 # ---------------------------------------------------------------------------
-SUPPORTED_PYTHON_VERSIONS: tuple[str, ...] = ("3.10", "3.11", "3.12", "3.13")
+SUPPORTED_PYTHON_VERSIONS: tuple[str, ...] = (
+    "3.10",
+    "3.11",
+    "3.12",
+    "3.13",
+    "3.14",
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DOCS_DIR = REPO_ROOT / "docs"
