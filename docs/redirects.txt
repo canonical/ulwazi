@@ -1,0 +1,8 @@
+# sphinx-rerediraffe redirects: one 'old new' pair per line.
+# https://sphinxext-rediraffe.readthedocs.io/en/latest/
+#
+# The old path is relative to the source directory (without extension);
+# the new path is the destination document. This file must contain at
+# least one entry, otherwise sphinx_rerediraffe emits a warning that
+# breaks --fail-on-warning builds.
+content/extensions-moved content/tests/extension-compatibility
