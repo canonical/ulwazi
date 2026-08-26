@@ -340,11 +340,9 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
-// A blockquote (e.g. a MyST ">" line) renders with its own 1.5rem
-// bottom margin. When it's the last thing inside an admonition/
-// notification body, that margin isn't absorbed like a trailing
-// paragraph's is, and shows up as an extra blank line inside the box.
-.p-notification__message > blockquote:last-child {
+// A trailing block element (blockquote, list, table, nested admonition)
+// keeps its own bottom margin, showing as a blank line inside the box.
+.p-notification__message > :last-child {
   margin-bottom: 0;
 }
 

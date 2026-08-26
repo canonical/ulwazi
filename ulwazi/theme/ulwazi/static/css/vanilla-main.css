@@ -12166,7 +12166,7 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
-.p-notification__message > blockquote:last-child {
+.p-notification__message > :last-child {
   margin-bottom: 0;
 }
 
