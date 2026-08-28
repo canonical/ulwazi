@@ -13,6 +13,7 @@ all checked pages) is listed in the assertion message.
 
 from pathlib import Path
 from typing import cast
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
@@ -71,13 +72,15 @@ def _check_description(name: str, soup: BeautifulSoup) -> list[str]:
 
 
 def _check_canonical(name: str, soup: BeautifulSoup) -> list[str]:
-    """rel="canonical" link must be present and an absolute URL."""
+    """rel="canonical" link must be present and an absolute http(s) URL."""
     canonical = soup.find("link", attrs={"rel": "canonical"})
     if canonical is None:
         return [f'[{name}] missing rel="canonical" link']
 
     href = cast(str, canonical.get("href", ""))
-    if not href.startswith("http"):
+    # urlparse distinguishes the scheme from the rest
+    parsed = urlparse(href)
+    if parsed.scheme not in ("http", "https") or not parsed.netloc:
         return [f"[{name}] malformed canonical URL: {href!r}"]
     return []
 
