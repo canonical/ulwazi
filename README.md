@@ -67,6 +67,7 @@ Overriding a page's title or description for social previews is optional and
 only needed for pages you want to promote with custom text (e.g. a landing
 page). See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
 for defaults and override syntax.
+
 ### Running the test suite
 
 The test suite is split into fast and slow tests. Fast tests run on every
