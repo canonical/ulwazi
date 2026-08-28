@@ -147,7 +147,6 @@ pdf-prep: install
 
 pdf-prep-force:
 	sudo apt-get update
-	sudo apt-get upgrade -y
 	sudo apt-get install --no-install-recommends -y $(DOCS_PDFPACKAGES) \
 
 pdf: pdf-prep

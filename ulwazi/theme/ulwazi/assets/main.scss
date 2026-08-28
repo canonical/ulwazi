@@ -150,6 +150,11 @@ $nav-offset-left: 0.5rem;
   padding-bottom: 0;
 }
 
+/* Ensure marker is same size as list text */
+.p-list--ordered .p-list__item::marker {
+  font-size: $font-size-p;
+}
+
 /* Code-blocks font size fix */
 .terminal-code pre, 
 pre, 

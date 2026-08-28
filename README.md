@@ -4,23 +4,27 @@ Ulwazi, Xhosa for information, is a work-in-progress Sphinx theme based on [Vani
 
 [Demo website](https://canonical-ulwazi.readthedocs-hosted.com/)
 
-Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng), developed by [praduimsg](https://github.com/pradyunsg) and [Alabaster](https://github.com/sphinx-doc/alabaster).
+Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng), developed by [pradyunsg](https://github.com/pradyunsg) and [Alabaster](https://github.com/sphinx-doc/alabaster).
 
 The theme will default to a generic Vanilla Framework style but will have options for the specific Canonical theming to support the org's documentation needs.
 
-## Installing Node Modules
+## Prerequisites
 
-Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [Yarn](https://yarnpkg.com/) installed:
+- **Python**: `>=3.10` (managed by [uv](https://docs.astral.sh/uv/))
+- **Node.js** and **npm**: required only for compiling SCSS to CSS (see [Installing Node modules](#installing-node-modules))
+
+## Installing Node modules
+
+Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed:
 
 ```shell
 sudo apt install npm
-sudo npm install -g corepack
 ```
 
 If you do not have the `node_modules` directory (for example, after cloning the repository for the first time), install the JavaScript dependencies:
 
 ```shell
-yarn install
+npm install
 ```
 
 ## Testing
@@ -39,9 +43,9 @@ To build the sample documentation in an interactive preview, run:
 make run
 ```
 
-This command set ups a virtual environment, installs dependencies, builds theme, then documentation in this repo, and serves the result via local web server.
+This command uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, then builds the documentation in this repo, and serves the result via a local web server.
 
-The resulted environment tracks changes in sample content and rebuilds the local website automatically.
+The resulting environment tracks changes in sample content and rebuilds the local website automatically.
 However, changes to the theme might require a full rebuild of the theme package:
 
 ```shell

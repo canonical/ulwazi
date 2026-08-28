@@ -12836,6 +12836,11 @@ p {
   padding-bottom: 0;
 }
 
+/* Ensure marker is same size as list text */
+.p-list--ordered .p-list__item::marker {
+  font-size: 0.875rem;
+}
+
 /* Code-blocks font size fix */
 .terminal-code pre,
 pre,
