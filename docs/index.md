@@ -76,6 +76,8 @@ This is a test about SCSS propagation.
 Home <self>
 content/test
 content/contribute
+content/structured-toc
+content/structured-toc-myst
 content/tests/index
 Use Ulwazi in your documentation <https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/>
 ```

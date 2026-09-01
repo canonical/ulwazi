@@ -59,6 +59,7 @@ docs = [
     "sphinx-design>=0.6.1",
     "sphinx-last-updated-by-git>=0.3.8",
     "sphinx-sitemap>=2.9.0",
+    "sphinx-structured-toc>=0.1.1",
     "sphinx-terminal~=1.0.1",
     "sphinxcontrib-jquery>=4.1",
     "sphinxcontrib-svg2pdfconverter[cairosvg]>=2.1.0",
@@ -144,6 +145,9 @@ exclude = [
     "**/.*",
     "**/__pycache__",
     "**/_version.py",
+    # Build output; sphinx-structured-toc copies its package (including .py
+    # sources) into docs/_build/_static, which pyright would otherwise lint.
+    "docs/_build",
 ]
 
 [tool.mypy]

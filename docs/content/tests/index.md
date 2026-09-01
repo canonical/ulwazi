@@ -15,5 +15,6 @@ More advanced tests:
 :maxdepth: 1
 
 SEO and metadata <seo-metadata>
+Structured TOC <structured-toc>
 Python versions <python-versions>
 ```

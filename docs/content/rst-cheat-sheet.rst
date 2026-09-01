@@ -552,6 +552,28 @@ More useful markup
 - .. This is a comment
 - :abbr:`API (Application Programming Interface)`
 
+Structured tables of contents
+-----------------------------
+
+Use the ``domain`` and ``slice`` directives (from the
+`sphinx-structured-toc <https://github.com/canonical/sphinx-structured-toc>`_
+extension) to build compact, accessible tables of contents. A ``domain``
+contains one or more ``slice`` blocks, and each slice holds one ``:doc:``
+link per line. See :doc:`structured-toc` for a full example.
+
+.. domain:: Cheat sheet links
+   :suppress-warnings:
+
+   .. slice:: Syntax references
+
+      :doc:`This page <rst-cheat-sheet>` slice
+      :doc:`MyST cheat sheet <myst-cheat-sheet>` slice
+
+   .. slice:: Guides
+
+      :doc:`Contribution guide <contribute>` domain
+      :doc:`Testing strategy <testing-strategy>` domain
+
 ----
 
 .. Custom extensions

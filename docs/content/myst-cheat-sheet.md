@@ -448,6 +448,32 @@ some term
 - ```{versionadded} X.Y
 - {abbr}`API (Application Programming Interface)`
 
+## Structured tables of contents
+
+Use the `domain` and `slice` directives (from the
+[sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)
+extension) to build compact, accessible tables of contents. A `domain`
+contains one or more `slice` blocks, and each slice holds one `{doc}`
+link per line. See {doc}`structured-toc-myst` for a full example.
+
+:::::{domain} Cheat sheet links
+:suppress-warnings:
+
+:::{slice} Syntax references
+
+{doc}`This page <myst-cheat-sheet>` slice
+{doc}`RST cheat sheet <rst-cheat-sheet>` slice
+
+:::
+
+:::{slice} Guides
+
+{doc}`Contribution guide <contribute>` domain
+{doc}`Testing strategy <testing-strategy>` domain
+
+:::
+
+:::::
 
 <!-- ## Custom extensions
 
