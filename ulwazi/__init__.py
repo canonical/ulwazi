@@ -19,6 +19,7 @@
 import importlib.util
 import json
 import logging
+import os
 from pathlib import Path
 from typing import Any, cast
 
@@ -42,6 +43,10 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     """
     app.add_html_theme("ulwazi", str(Path(__file__).parent / "theme/ulwazi"))
     app.add_config_value("localtoc_max_depth", None, "html")
+    # Project slug: the path segment of the docs site URL, e.g. "ulwazi" in
+    # https://documentation.ubuntu.com/ulwazi/. Used to compute
+    # notfound_urls_prefix for sphinx-notfound-page.
+    app.add_config_value("slug", default="", rebuild="env", types=str)
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
@@ -87,22 +92,124 @@ def config_inited(app: Sphinx, config: Config) -> None:
         "js/theme-toggle.js",
     ]
 
+    for item in extra_js:
+        app.add_js_file(item)
+
+    # General Sphinx setup (absorbed from canonical-sphinx-config)
+
+    for pattern in ("_build", "Thumbs.db", ".DS_Store", ".sphinx"):
+        if pattern not in config.exclude_patterns:
+            config.exclude_patterns.append(pattern)
+
+    # NOTE: These assignments are unconditional and therefore clobber any
+    # user-provided value. This mirrors the behaviour inherited from
+    # canonical-sphinx-config / canonical-sphinx; revisit if a downstream
+    # project ever needs to override them.
+    config.html_last_updated_fmt = ""
+    config.html_permalinks_icon = "¶"
+
+    # html_context defaults. "repo_folder" must be slash-delimited (e.g.
+    # "/docs/") because sections/feedback.html concatenates it verbatim into
+    # GitHub view/edit URLs.
     values_and_defaults = [
-        ("product_tag", "_static/tag.png"),
-        ("github_version", "main"),
-        ("github_folder", "docs"),
-        ("github_issues", "enabled"),
+        ("repo_branch", "main"),
+        ("repo_folder", "/docs/"),
         ("discourse", "https://discourse.ubuntu.com"),
-        ("sequential_nav", "none"),
-        ("display_contributors", True),
-        ("path", "/docs"),
     ]
 
     for value, default in values_and_defaults:
         html_context.setdefault(value, default)
 
-    for item in extra_js:
-        app.add_js_file(item)
+    # On Read the Docs, link to the branch actually being built (except for
+    # PR builds, where the target branch is not available).
+    if "READTHEDOCS" in os.environ and os.environ.get(
+        "READTHEDOCS_VERSION_TYPE"
+    ) != "external":
+        html_context["repo_branch"] = os.environ["READTHEDOCS_GIT_IDENTIFIER"]
+
+    # NOTE: This assigns the whole dict and would wipe any user-provided
+    # html_theme_options. It also sets "sidebar_hide_name", which is not yet
+    # an Ulwazi theme option (no template reads it). Mirrors the behaviour
+    # inherited from canonical-sphinx-config; revisit when the option is
+    # implemented in the theme.
+    if config.html_title == "":
+        config.html_theme_options = {"sidebar_hide_name": True}
+
+    if "notfound.extension" in config.extensions:
+        config.notfound_urls_prefix = _notfound_urls_prefix(config)
+        config.notfound_template = "404.html"
+
+    if "sphinx_modern_pdf_style" in config.extensions:
+        _modern_pdf_defaults(config)
+
+
+def _notfound_urls_prefix(config: Config) -> str:
+    """Compute the URL prefix for sphinx-notfound-page.
+
+    The prefix depends on whether the documentation uses versions and
+    languages, and on the project slug (for documentation.ubuntu.com hosting).
+    It must start and end with a slash so that links on the 404 page resolve
+    correctly regardless of the depth at which the 404 is served.
+
+    The prefix is only applied when building on Read the Docs (i.e. when
+    READTHEDOCS_CANONICAL_URL is set), because sphinx-notfound-page
+    absolutises every link on the 404 page with it. Local builds keep
+    relative links so the page renders under ``make run`` and direct
+    file access.
+
+    :param config: The Sphinx build configuration
+
+    :returns: The notfound URL prefix
+    """
+    canonical_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "")
+    if not canonical_url:
+        return ""
+
+    url_version = ""
+    url_lang = ""
+
+    url_parts = canonical_url.split("/")
+
+    if (
+        len(url_parts) >= 2
+        and os.environ.get("READTHEDOCS_VERSION") == url_parts[-2]
+    ):
+        url_version = url_parts[-2] + "/"
+
+    if (
+        len(url_parts) >= 3
+        and os.environ.get("READTHEDOCS_LANGUAGE") == url_parts[-3]
+    ):
+        url_lang = url_parts[-3] + "/"
+
+    slug = config.slug
+    if slug:
+        return "/" + slug.strip("/") + "/" + url_lang + url_version
+    if url_lang + url_version:
+        return "/" + url_lang + url_version
+    return ""
+
+
+def _modern_pdf_defaults(config: Config) -> None:
+    """Set Canonical branding defaults for sphinx-modern-pdf-style.
+
+    NOTE: This is currently inert in practice, mirroring the behaviour
+    inherited from canonical-sphinx-config: sphinx_modern_pdf_style reads
+    modern_pdf_options in its own config-inited handler, which runs before
+    this one when it is listed earlier in the extensions list. It is kept for
+    parity; making it effective requires connecting with a higher priority
+    and using the correct flag name (set_modern_pdf_config, not
+    set_modern_pdf_style).
+
+    :param config: The Sphinx build configuration
+    """
+    canonical_pdf_values = {
+        "author": "Canonical",
+        "logo": "Canonical-logo-4x.png",
+    }
+
+    for key, value in canonical_pdf_values.items():
+        config.modern_pdf_options.setdefault(key, value)
 
 
 def _compute_navigation_tree(context: dict[str, Any]) -> str:

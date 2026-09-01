@@ -7,7 +7,7 @@ It provides both generic Vanilla styling and Canonical-specific theming for docu
 
 **Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript
 **License**: GPL-3.0
-**Python**: >=`3.8` (`3.11` is recommended)
+**Python**: >=`3.10` (`3.11` is recommended)
 
 ## Common Tasks
 
@@ -222,6 +222,17 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   (the latter is a stale sphinx-basic-ng convention that Sphinx 7.4+ no longer
   populates); `favicon_url` is already a fully resolved URL and must not be passed
   through `pathto()` again.
+- **Native Canonical config**: the theme itself (in `ulwazi/__init__.py`
+  `config_inited`) provides the Canonical configuration defaults that
+  historically came from the `canonical-sphinx-config` extension (now removed
+  as a dependency). This includes: the `slug` config value (used to compute
+  `notfound_urls_prefix` for `sphinx-notfound-page` when `notfound.extension`
+  is in `extensions`), `exclude_patterns` additions, `html_last_updated_fmt` /
+  `html_permalinks_icon` overrides, `html_context` defaults (`repo_branch`,
+  `repo_folder` — must be slash-delimited, e.g. `/docs/` — and `discourse`),
+  the Read-the-Docs `repo_branch` override, and inert
+  `sphinx_modern_pdf_style` branding defaults. The theme ships a `404.html`
+  template and a `static/404.svg` asset used by `sphinx-notfound-page`.
 
 ## Testing Locations
 

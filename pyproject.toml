@@ -51,13 +51,13 @@ dev = [
     "pytest-xdist>=3.6.0",
 ]
 docs = [
-    "canonical-sphinx-config @ git+https://github.com/canonical/canonical-sphinx-config.git@main",
     "beautifulsoup4>=4.14.3",
     "myst-parser~=4.0",
     "packaging>=26.0",
     "sphinx-basic-ng>=1.0.0b2",
     "sphinx-design>=0.6.1",
     "sphinx-last-updated-by-git>=0.3.8",
+    "sphinx-notfound-page~=1.1",
     "sphinx-sitemap>=2.9.0",
     "sphinx-terminal~=1.0.1",
     "sphinxcontrib-jquery>=4.1",
