@@ -37,6 +37,12 @@ from ulwazi.tabs import convert_tabs
 
 logger = sphinx_logging.getLogger(__name__)
 
+# Minimum number of URL path parts for a Read the Docs canonical URL to
+# contain a version segment (…/<version>/) or a language and version segment
+# (…/<language>/<version>/) respectively.
+_URL_PARTS_WITH_VERSION = 2
+_URL_PARTS_WITH_LANGUAGE = 3
+
 
 def setup(app: Sphinx) -> ExtensionMetadata:
     """Connect the extension's core components to Sphinx.
@@ -127,9 +133,10 @@ def config_inited(app: Sphinx, config: Config) -> None:
 
     # On Read the Docs, link to the branch actually being built (except for
     # PR builds, where the target branch is not available).
-    if "READTHEDOCS" in os.environ and os.environ.get(
-        "READTHEDOCS_VERSION_TYPE"
-    ) != "external":
+    if (
+        "READTHEDOCS" in os.environ
+        and os.environ.get("READTHEDOCS_VERSION_TYPE") != "external"
+    ):
         html_context["repo_branch"] = os.environ["READTHEDOCS_GIT_IDENTIFIER"]
 
     # NOTE: This assigns the whole dict and would wipe any user-provided
@@ -145,16 +152,27 @@ def config_inited(app: Sphinx, config: Config) -> None:
         config.notfound_template = "404.html"
 
     if "sphinx_modern_pdf_style" in config.extensions:
-        # The ordering below is load-bearing: warn instead of silently
-        # producing an unbranded PDF.
-        if config.extensions.index("sphinx_modern_pdf_style") < config.extensions.index(
-            "ulwazi"
-        ):
-            logger.warning(
-                'List "ulwazi" before "sphinx_modern_pdf_style" in extensions, '
-                "otherwise the Canonical PDF branding defaults are ignored."
-            )
-        _modern_pdf_defaults(config)
+        _setup_modern_pdf_style(config)
+
+
+def _setup_modern_pdf_style(config: Config) -> None:
+    """Inject Canonical branding defaults for sphinx-modern-pdf-style.
+
+    Emits a build warning when the extension registration order would cause
+    the defaults to be ignored (see :func:`_modern_pdf_defaults`).
+
+    :param config: The Sphinx build configuration
+    """
+    # The ordering below is load-bearing: warn instead of silently
+    # producing an unbranded PDF.
+    if config.extensions.index("sphinx_modern_pdf_style") < config.extensions.index(
+        "ulwazi"
+    ):
+        logger.warning(
+            'List "ulwazi" before "sphinx_modern_pdf_style" in extensions, '
+            "otherwise the Canonical PDF branding defaults are ignored."
+        )
+    _modern_pdf_defaults(config)
 
 
 def _notfound_urls_prefix(config: Config) -> str:
@@ -185,20 +203,20 @@ def _notfound_urls_prefix(config: Config) -> str:
     url_parts = canonical_url.split("/")
 
     if (
-        len(url_parts) >= 2
+        len(url_parts) >= _URL_PARTS_WITH_VERSION
         and os.environ.get("READTHEDOCS_VERSION") == url_parts[-2]
     ):
         url_version = url_parts[-2] + "/"
 
     if (
-        len(url_parts) >= 3
+        len(url_parts) >= _URL_PARTS_WITH_LANGUAGE
         and os.environ.get("READTHEDOCS_LANGUAGE") == url_parts[-3]
     ):
         url_lang = url_parts[-3] + "/"
 
     slug = config.slug
     if slug:
-        return "/" + slug.strip("/") + "/" + url_lang + url_version
+        return "/" + str(slug).strip("/") + "/" + url_lang + url_version
     if url_lang + url_version:
         return "/" + url_lang + url_version
     return ""

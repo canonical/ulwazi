@@ -10,7 +10,6 @@ missing slug produced broken links on every 404 page).
 from __future__ import annotations
 
 import pytest
-
 from ulwazi import _notfound_urls_prefix
 
 RTD_VARS = (
