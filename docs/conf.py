@@ -328,6 +328,10 @@ myst_enable_extensions = {"colon_fence", "deflist", "substitution", "tasklist"}
 
 # NOTE: The Ulwazi theme ("ulwazi") provides the Canonical configuration
 #       defaults that used to come from the canonical_sphinx_config extension.
+#
+# NOTE: "ulwazi" must stay listed before "sphinx_modern_pdf_style": Sphinx fires
+#       'config-inited' in registration order, and the theme injects the
+#       Canonical PDF branding defaults that sphinx_modern_pdf_style reads.
 
 ext_source = Path(__file__).parents[1].resolve()
 sys.path.insert(0, str(ext_source.absolute()))

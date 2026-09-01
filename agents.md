@@ -230,9 +230,20 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   is in `extensions`), `exclude_patterns` additions, `html_last_updated_fmt` /
   `html_permalinks_icon` overrides, `html_context` defaults (`repo_branch`,
   `repo_folder` — must be slash-delimited, e.g. `/docs/` — and `discourse`),
-  the Read-the-Docs `repo_branch` override, and inert
+  the Read-the-Docs `repo_branch` override, and the Canonical
   `sphinx_modern_pdf_style` branding defaults. The theme ships a `404.html`
   template and a `static/404.svg` asset used by `sphinx-notfound-page`.
+- **PDF branding and extension order**: the theme sets `modern_pdf_options`
+  defaults (`author`, `logo`) for `sphinx-modern-pdf-style`, and stages
+  `ulwazi/theme/ulwazi/pdf/Canonical-logo-4x.png` into the LaTeX output
+  directory via a `builder-inited` hook (`_copy_pdf_assets`) — the logo is
+  referenced by bare filename, so it must sit next to the generated `.tex`.
+  **`"ulwazi"` must be listed before `"sphinx_modern_pdf_style"` in
+  `extensions`**: Sphinx fires `config-inited` in registration order, and
+  `sphinx_modern_pdf_style` reads `modern_pdf_options` in its own handler.
+  The theme emits a build warning if the order is wrong. Verify PDF changes
+  with `cd docs && make pdf` (not `make test-all`, whose
+  `docs-pdf-prep-force` prerequisite blocks on a `sudo apt-get` prompt).
 
 ## Testing Locations
 

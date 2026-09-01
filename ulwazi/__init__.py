@@ -20,6 +20,7 @@ import importlib.util
 import json
 import logging
 import os
+import shutil
 from pathlib import Path
 from typing import Any, cast
 
@@ -28,10 +29,13 @@ from bs4.element import AttributeValueList
 from docutils import nodes
 from sphinx.application import Sphinx
 from sphinx.config import Config
+from sphinx.util import logging as sphinx_logging
 from sphinx.util.typing import ExtensionMetadata
 
 from ulwazi.navigation import get_navigation_tree
 from ulwazi.tabs import convert_tabs
+
+logger = sphinx_logging.getLogger(__name__)
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
@@ -51,6 +55,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
         "config-inited",
         config_inited,
     )
+    app.connect("builder-inited", _copy_pdf_assets)  # pyright: ignore [reportUnknownMemberType]
     app.connect("html-page-context", _html_page_context)  # pyright: ignore [reportUnknownMemberType]
 
     return {
@@ -140,6 +145,15 @@ def config_inited(app: Sphinx, config: Config) -> None:
         config.notfound_template = "404.html"
 
     if "sphinx_modern_pdf_style" in config.extensions:
+        # The ordering below is load-bearing: warn instead of silently
+        # producing an unbranded PDF.
+        if config.extensions.index("sphinx_modern_pdf_style") < config.extensions.index(
+            "ulwazi"
+        ):
+            logger.warning(
+                'List "ulwazi" before "sphinx_modern_pdf_style" in extensions, '
+                "otherwise the Canonical PDF branding defaults are ignored."
+            )
         _modern_pdf_defaults(config)
 
 
@@ -193,13 +207,14 @@ def _notfound_urls_prefix(config: Config) -> str:
 def _modern_pdf_defaults(config: Config) -> None:
     """Set Canonical branding defaults for sphinx-modern-pdf-style.
 
-    NOTE: This is currently inert in practice, mirroring the behaviour
-    inherited from canonical-sphinx-config: sphinx_modern_pdf_style reads
-    modern_pdf_options in its own config-inited handler, which runs before
-    this one when it is listed earlier in the extensions list. It is kept for
-    parity; making it effective requires connecting with a higher priority
-    and using the correct flag name (set_modern_pdf_config, not
-    set_modern_pdf_style).
+    IMPORTANT: ``sphinx_modern_pdf_style`` reads ``modern_pdf_options`` in its
+    own ``config-inited`` handler, and Sphinx fires those handlers in
+    extension-registration order. These defaults therefore only take effect
+    while ``"ulwazi"`` precedes ``"sphinx_modern_pdf_style"`` in the project's
+    ``extensions`` list. Keep that order.
+
+    The ``logo`` is referenced by bare filename, so the asset must be staged
+    next to the generated ``.tex`` file; see :func:`_copy_pdf_assets`.
 
     :param config: The Sphinx build configuration
     """
@@ -210,6 +225,26 @@ def _modern_pdf_defaults(config: Config) -> None:
 
     for key, value in canonical_pdf_values.items():
         config.modern_pdf_options.setdefault(key, value)
+
+
+def _copy_pdf_assets(app: Sphinx) -> None:
+    """Copy PDF branding assets into the LaTeX output directory.
+
+    ``sphinx_modern_pdf_style`` references the logo by bare filename, so it
+    must sit alongside the generated ``.tex`` file. ``canonical-sphinx-config``
+    defined an equivalent helper but never connected it to any Sphinx event,
+    which is why the logo was always missing from LaTeX builds.
+
+    :param app: The Sphinx application instance
+    """
+    if app.builder.format != "latex":
+        return
+
+    shutil.copytree(
+        str(Path(__file__).parent / "theme/ulwazi/pdf"),
+        app.outdir,
+        dirs_exist_ok=True,
+    )
 
 
 def _compute_navigation_tree(context: dict[str, Any]) -> str:
