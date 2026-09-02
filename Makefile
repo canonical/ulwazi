@@ -80,11 +80,11 @@ test-fast: docs-html  ##- Run fast tests only (same as 'make test')
 	uv run pytest -m 'not slow'
 
 .PHONY: test-slow
-test-slow: docs-html docs-pdf-prep-force docs-pdf   ##- Run slow tests only (PDF builds, browser checks)
+test-slow: docs-html docs-pdf-prep docs-pdf   ##- Run slow tests only (PDF builds, browser checks)
 	uv run pytest -m 'slow'
 
 .PHONY: test-all
-test-all: docs-html docs-pdf-prep-force docs-pdf  ##- Run all tests (fast and slow)
+test-all: docs-html docs-pdf-prep docs-pdf  ##- Run all tests (fast and slow)
 	uv run pytest
 
 # Build the theme and sample docs on every supported Python version.
