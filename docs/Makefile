@@ -147,18 +147,8 @@ pdf-prep: install
 
 # The check-first approach avoids a sudo password prompt
 pdf-prep-force:
-	@missing=""; \
-	for packageName in $(DOCS_PDFPACKAGES); do \
-		dpkg-query -W -f='$${Status}' $$packageName 2>/dev/null | grep -c "ok installed" >/dev/null \
-		|| missing="$$missing $$packageName"; \
-	done; \
-	if [ -n "$$missing" ]; then \
-		echo "Installing missing PDF packages:$$missing"; \
-		sudo apt-get update; \
-		sudo apt-get install --no-install-recommends -y $$missing; \
-	else \
-		echo "All PDF packages already installed"; \
-	fi
+	sudo apt-get update; \
+	sudo apt-get install --no-install-recommends -y $$missing; \
 
 pdf: pdf-prep
 	@. $(DOCS_VENV); $(SPHINX_BUILD) -M latexpdf "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)
