@@ -145,10 +145,9 @@ pdf-prep: install
 		echo "" && echo "Run 'make pdf-prep-force' to install these packages" && echo "" && echo \
 		"Please be aware these packages will be installed to your system") && exit 1 ; done
 
-# The check-first approach avoids a sudo password prompt
 pdf-prep-force:
-	sudo apt-get update; \
-	sudo apt-get install --no-install-recommends -y $$missing; \
+	sudo apt-get update
+	sudo apt-get install --no-install-recommends -y $(DOCS_PDFPACKAGES)
 
 pdf: pdf-prep
 	@. $(DOCS_VENV); $(SPHINX_BUILD) -M latexpdf "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)
