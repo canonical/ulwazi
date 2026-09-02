@@ -211,26 +211,17 @@ readthedocs-docdiff {
   padding-top: 0;
   cursor: pointer;
   margin-left: auto; // Pushes the label (arrow) to the right
-}
-/* Themed backgrounds for selected nav-item (Vanilla active/hover tokens) */
-.nav-item .current {
-  background: var(--vf-color-background-active);
-  color: var(--vf-color-text-default);
+  // Keep the chevron row the same height as Vanilla's link rows
+  align-self: stretch;
 }
 
-// Add shadow to the arrow label when the parent li is current
 li.current:not(:has(li.current)) > .nav-item > label {
   background: var(--vf-color-background-active);
   color: var(--vf-color-text-default);
 }
 
-//Hover and focus states for links and labels
-.nav-item a:hover,
-.nav-item a:focus {
-  background: var(--vf-color-background-hover);
-  color: var(--vf-color-text-default);
-}
-
+//Hover and focus states for the chevron labels
+//(link hover/focus states come from Vanilla)
 .nav-item label:hover,
 .nav-item label:focus {
   background: var(--vf-color-background-hover);

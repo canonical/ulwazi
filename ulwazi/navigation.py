@@ -45,6 +45,26 @@ def _get_navigation_expand_image(soup: BeautifulSoup) -> Tag:
     return container
 
 
+def _mark_current_link(element: Tag) -> None:
+    """Mark the current page link the way Vanilla Framework expects.
+
+    Adds the `is-active` class and the `aria-current="page"` attribute to
+    the element's first <a>. Vanilla's CSS uses these to draw the active
+    background and the left highlight bar.
+    """
+    current_link = element.find("a")
+    if current_link is None:
+        return
+    link_classes = (
+        cast(AttributeValueList, current_link.get("class"))
+        if current_link.get("class") is not None
+        else AttributeValueList()
+    )
+    link_classes.append("is-active")
+    current_link["class"] = link_classes
+    current_link["aria-current"] = "page"
+
+
 @functools.cache
 def get_navigation_tree(toctree_html: str) -> str:
     """Modify the given navigation tree, with furo-specific elements.
@@ -144,8 +164,9 @@ def get_navigation_tree(toctree_html: str) -> str:
                 element.insert(0, nav_item_div)
 
     if last_element_with_current is not None:
-        cast(AttributeValueList, last_element_with_current["class"]).extend(
-            ["current-page", 'aria-current="page"']
+        cast(AttributeValueList, last_element_with_current["class"]).append(
+            "current-page"
         )
+        _mark_current_link(last_element_with_current)
 
     return str(soup)

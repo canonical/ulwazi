@@ -12042,22 +12042,11 @@ readthedocs-docdiff {
   padding-top: 0;
   cursor: pointer;
   margin-left: auto;
-}
-
-/* Themed backgrounds for selected nav-item (Vanilla active/hover tokens) */
-.nav-item .current {
-  background: var(--vf-color-background-active);
-  color: var(--vf-color-text-default);
+  align-self: stretch;
 }
 
 li.current:not(:has(li.current)) > .nav-item > label {
   background: var(--vf-color-background-active);
-  color: var(--vf-color-text-default);
-}
-
-.nav-item a:hover,
-.nav-item a:focus {
-  background: var(--vf-color-background-hover);
   color: var(--vf-color-text-default);
 }
 
@@ -12825,10 +12814,18 @@ p {
   margin: 0;
 }
 
+main {
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
 .p-side-navigation__link {
   padding-top: 0;
   padding-bottom: 0;
   padding-left: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
@@ -12851,6 +12848,20 @@ p {
   min-height: 32px;
 }
 
+.p-side-navigation--raw-html .caption {
+  font-weight: 550;
+  color: var(--vf-color-text-default);
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  padding: 0.25rem 0 0.25rem 0.5rem;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.p-side-navigation--raw-html .caption .caption-text {
+  font-weight: inherit;
+  color: inherit;
+}
+
 .p-table-of-contents__list .p-table-of-contents__link {
   padding-top: 0;
   padding-bottom: 0;
@@ -12860,8 +12871,6 @@ p {
 .p-side-navigation__item > .nav-item > a.p-side-navigation__link {
   display: flex;
   align-items: center;
-  height: auto; /* in case a fixed height is causing the offset */
-  min-height: 32px; /* keeps single-line items nicely sized */
   white-space: normal; /* allow multi-line labels */
 }
 
