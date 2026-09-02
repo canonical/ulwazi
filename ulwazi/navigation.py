@@ -17,7 +17,7 @@
 """Generate the navigation tree from the Sphinx toctree function."""
 
 import functools
-from typing import cast
+from typing import Any, cast
 
 from bs4 import BeautifulSoup, Tag
 from bs4.element import AttributeValueList, PageElement
@@ -76,6 +76,18 @@ def get_navigation_tree(toctree_html: str) -> str:
         return toctree_html
 
     soup = BeautifulSoup(toctree_html, "html.parser")
+
+    # Sphinx renders a toctree's :caption: as a <p class="caption" role="heading">
+    # rather than a real heading tag, to avoid clashing with the document's own
+    # heading hierarchy. We promote it to a real <h2>, matching the "On this page"
+    # heading style, since this is the top-level globaltoc rather than page content.
+    for element in soup.find_all("p", class_="caption"):
+        element.name = "h2"
+        element["class"] = ["p-text--x-small-capitalised", "globaltoc-caption"]
+        del element["role"]
+        caption_text = element.find("span", class_="caption-text")
+        if caption_text:
+            caption_text.unwrap()
 
     # We add a proper style for each <ul> in the globaltoc
     for element in soup.find_all("ul", recursive=True):
@@ -168,5 +180,51 @@ def get_navigation_tree(toctree_html: str) -> str:
             "current-page"
         )
         _mark_current_link(last_element_with_current)
+
+    return str(soup)
+
+
+def add_help_links(navigation_html: str, help_links: dict[str, Any] | None) -> str:
+    """Append the conf.py-configured "Get help" links after the navigation tree.
+
+    Built directly here, rather than as toctree entries, so the links keep their
+    own p-link--soft styling instead of picking up the p-side-navigation__link
+    styling get_navigation_tree() gives every real toctree entry above.
+    """
+    if not help_links:
+        return navigation_html
+
+    soup = BeautifulSoup(navigation_html, "html.parser")
+
+    container = soup.new_tag(
+        "div", attrs={"class": "p-help-links p-help-links--match-globaltoc"}
+    )
+
+    heading = soup.new_tag("h2", attrs={"class": "p-text--x-small-capitalised"})
+    icon = soup.new_tag(
+        "i", attrs={"class": "p-icon--help p-help-links__icon", "aria-hidden": "true"}
+    )
+    heading.append(icon)
+    heading.append(help_links["title"])
+    container.append(heading)
+
+    link_list = soup.new_tag("ul", attrs={"class": "p-list"})
+    for link in help_links["links"]:
+        item = soup.new_tag("li", attrs={"class": "p-list__item"})
+        anchor = soup.new_tag(
+            "a",
+            attrs={
+                "class": "p-link--soft p-text--small u-no-margin--bottom",
+                "href": link["url"],
+            },
+        )
+        anchor.string = link["text"]
+        item.append(anchor)
+        link_list.append(item)
+    container.append(link_list)
+
+    aside = soup.new_tag("aside")
+    aside.append(container)
+    soup.append(aside)
 
     return str(soup)

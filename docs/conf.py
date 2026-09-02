@@ -217,6 +217,13 @@ html_context = {
             '<a href="#tracker-settings" class="js-revoke-cookie-manager muted-link">Manage your tracker settings</a>',
         ],
     },
+    "help_links": {
+        "title": "Get help",
+        "links": [
+            {"text": "Ask on the forum", "url": "https://discourse.ubuntu.com"},
+            {"text": "Report a doc issue", "url": "https://github.com/canonical/ulwazi/issues/new",}
+        ]
+    }
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a

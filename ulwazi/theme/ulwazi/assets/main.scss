@@ -161,6 +161,78 @@ $nav-offset-left: 0.5rem;
   font-size: $font-size-p !important;
 }
 
+/* Additional resources / Get help panel */
+
+/* Flush like .globaltoc-caption, overriding padding inherited from .p-side-navigation--raw-html h2. */
+.p-help-links h2 {
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Visual separator between help links and the document nav. */
+.p-help-links--match-globaltoc {
+  border-top: 1px solid var(--vf-color-border-default);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.p-help-links h2 .p-help-links__icon {
+  height: 1rem;
+  left: calc(-1rem - 0.25rem);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+}
+
+.p-help-links--match-globaltoc h2 {
+  padding-left: 0;
+  position: relative;
+}
+
+/* Keep the help icon visible when it occupies the Global ToC's left gutter. */
+.l-docs__sidebar .p-side-navigation--raw-html.is-sticky {
+  overflow: visible;
+}
+
+/* Sphinx's toctree :caption:, promoted to <h2> by navigation.py; strips the padding it inherits from .p-side-navigation--raw-html h2. */
+h2.globaltoc-caption {
+  padding: 0;
+}
+
+.p-help-links > ul {
+  padding: 0 0.5rem;
+}
+
+.p-help-links .p-list__item {
+  /* the anchor's own padding already handles this - avoids doubling Vanilla's default gap */
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Cancels the ul's 0.5rem inset so hover bg spans edge-to-edge; padding keeps text position unchanged. */
+.p-help-links .p-list__item a {
+  display: block;
+  margin: 0 -0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Match the real nav links' hover background and text color exactly. */
+.p-help-links .p-list__item a:hover {
+  background: var(--vf-color-background-hover);
+  color: var(--vf-color-text-default);
+}
+
+/* Match the global nav's 32px row height, not .p-list__item's own padding. */
+.p-help-links--match-globaltoc .p-list__item a {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /* Compacting list elements */
 .p-list--unordered .p-list__item,
 .p-list--unordered .p-list__item:not(.task-list-item) p,

@@ -12878,6 +12878,95 @@ main {
   font-size: 0.875rem !important;
 }
 
+/* Additional resources / Get help panel */
+/* Reset the heading's own margin/indent so it sits flush, matching
+   .globaltoc-caption, regardless of which surrounding context (TOC section,
+   feedback icon row, primary raw-html nav) it sits in - each nudges a bare
+   heading differently otherwise. Padding-right is included since the primary
+   raw-html nav context (.p-side-navigation--raw-html h2) applies it too,
+   meant for nav-link flex layout, not a static heading. */
+.p-help-links h2 {
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Separate help from the document navigation. The icon sits outside the
+   heading's text flow, keeping the "Get help" label aligned with captions. */
+.p-help-links--match-globaltoc {
+  border-top: 1px solid var(--vf-color-border-default);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.p-help-links h2 .p-help-links__icon {
+  height: 1rem;
+  left: -1.25rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+}
+
+.p-help-links--match-globaltoc h2 {
+  padding-left: 0;
+  position: relative;
+}
+
+/* Keep the help icon visible when it occupies the Global ToC's left gutter. */
+.l-docs__sidebar .p-side-navigation--raw-html.is-sticky {
+  overflow: visible;
+}
+
+/* Sphinx's toctree :caption:, promoted to a real <h2> by navigation.py so it
+   matches the "On this page" heading style. It sits as a bare sibling of the
+   primary raw-html side-nav's <ul>, so strip the .p-side-navigation--raw-html
+   h2 link-flex padding Vanilla applies there - that padding is meant for nav
+   links, not a static heading. */
+h2.globaltoc-caption {
+  padding: 0;
+}
+
+.p-help-links > ul {
+  padding: 0 0.5rem;
+}
+
+.p-help-links .p-list__item {
+  /* the anchor below already provides this padding - Vanilla's own base
+     .p-list__item rule would otherwise stack another 0.25rem on top of it,
+     doubling the gap between items */
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Negative margin cancels .p-help-links > ul's own 0.5rem inset so the
+   hover background below can bleed to the same true edge-to-edge width as
+   the real nav links' hover box; the matching padding keeps the text itself
+   at the same visual position as if this margin/padding pair weren't here. */
+.p-help-links .p-list__item a {
+  display: block;
+  margin: 0 -0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Match the real nav links' hover box exactly, background and color both -
+   the same box, same darkened default text, as the rest of the Global ToC. */
+.p-help-links .p-list__item a:hover {
+  background: var(--vf-color-background-hover);
+  color: var(--vf-color-text-default);
+}
+
+/* This variant sits directly under the global nav tree, whose items use
+   .p-side-navigation__item/.nav-item at a 32px row height, not
+   .p-list__item's padding - match that rhythm instead of our own default */
+.p-help-links--match-globaltoc .p-list__item a {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /* Compacting list elements */
 .p-list--unordered .p-list__item,
 .p-list--unordered .p-list__item:not(.task-list-item) p,
