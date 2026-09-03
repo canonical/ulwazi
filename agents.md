@@ -75,6 +75,21 @@ make rebuild
 make vanilla-main  # Install npm dependencies and compile SCSS to CSS
 ```
 
+### Upgrading the Vanilla Framework
+
+1. Check the latest version: `npm view vanilla-framework version`
+2. Update the `vanilla-framework` version in `package.json` (`dependencies`)
+3. Install and recompile: `make vanilla-main` (runs `npm install` and compiles
+   `ulwazi/theme/ulwazi/assets/main.scss` to `ulwazi/theme/ulwazi/static/css/vanilla-main.css`)
+4. If SCSS compilation fails, check the
+   [Vanilla Framework changelog](https://github.com/canonical/vanilla-framework/blob/main/CHANGELOG.md)
+   for breaking changes (renamed/removed mixins or settings) and update
+   `ulwazi/theme/ulwazi/assets/` accordingly
+5. Rebuild and verify: `make rebuild`, then `make test` (and `make test-slow` for
+   the Playwright color/typography checks), and review the sample docs in a browser
+   (`make run`) for visual regressions
+6. Commit `package.json` and `package-lock.json` together (both are tracked in git)
+
 ### Quick start
 
 Prefer Makefile targets.
