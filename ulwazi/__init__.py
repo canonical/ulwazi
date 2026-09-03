@@ -37,12 +37,6 @@ from ulwazi.tabs import convert_tabs
 
 logger = sphinx_logging.getLogger(__name__)
 
-# Minimum number of URL path parts for a Read the Docs canonical URL to
-# contain a version segment (…/<version>/) or a language and version segment
-# (…/<language>/<version>/) respectively.
-_URL_PARTS_WITH_VERSION = 2
-_URL_PARTS_WITH_LANGUAGE = 3
-
 
 def setup(app: Sphinx) -> ExtensionMetadata:
     """Connect the extension's core components to Sphinx.
@@ -178,10 +172,25 @@ def _setup_modern_pdf_style(config: Config) -> None:
 def _notfound_urls_prefix(config: Config) -> str:
     """Compute the URL prefix for sphinx-notfound-page.
 
-    The prefix depends on whether the documentation uses versions and
-    languages, and on the project slug (for documentation.ubuntu.com hosting).
-    It must start and end with a slash so that links on the 404 page resolve
-    correctly regardless of the depth at which the 404 is served.
+    The prefix must mirror the URL schema of the hosting site, which varies
+    per project:
+
+    - single-version projects serve at the root: ``/<slug>/``
+    - versioned projects add a version segment: ``/<slug>/<version>/``
+    - translated projects add a language segment:
+      ``/<slug>/<language>/<version>/``
+
+    ``READTHEDOCS_VERSION`` and ``READTHEDOCS_LANGUAGE`` are always set on
+    Read the Docs builds, even when the corresponding segment is absent from
+    the URL schema, so they cannot be appended unconditionally. Instead, the
+    schema is detected from ``READTHEDOCS_CANONICAL_URL`` (which always
+    reflects the segments Read the Docs actually serves) by matching the
+    environment values against its path segments: the version segment is the
+    last path segment, the language segment sits right before it.
+
+    The project slug is never part of the Read the Docs URL (on
+    documentation.ubuntu.com it is added by the hosting proxy), so it always
+    comes from the ``slug`` config value.
 
     The prefix is only applied when building on Read the Docs (i.e. when
     READTHEDOCS_CANONICAL_URL is set), because sphinx-notfound-page
@@ -197,29 +206,22 @@ def _notfound_urls_prefix(config: Config) -> str:
     if not canonical_url:
         return ""
 
-    url_version = ""
-    url_lang = ""
+    # Path segments of the canonical URL, without the scheme and host:
+    # "https://<host>/<language>/<version>/" -> ["<language>", "<version>"]
+    path = canonical_url.rstrip("/").split("/")[3:]
 
-    url_parts = canonical_url.split("/")
+    version = os.environ.get("READTHEDOCS_VERSION", "")
+    language = os.environ.get("READTHEDOCS_LANGUAGE", "")
 
-    if (
-        len(url_parts) >= _URL_PARTS_WITH_VERSION
-        and os.environ.get("READTHEDOCS_VERSION") == url_parts[-2]
-    ):
-        url_version = url_parts[-2] + "/"
+    # A segment is part of the schema only if it sits in the position where
+    # Read the Docs serves it (version last, language right before it).
+    url_version = path[-1] if path and path[-1] == version else ""
+    url_language = path[-2] if len(path) > 1 and path[-2] == language else ""
 
-    if (
-        len(url_parts) >= _URL_PARTS_WITH_LANGUAGE
-        and os.environ.get("READTHEDOCS_LANGUAGE") == url_parts[-3]
-    ):
-        url_lang = url_parts[-3] + "/"
-
-    slug = config.slug
-    if slug:
-        return "/" + str(slug).strip("/") + "/" + url_lang + url_version
-    if url_lang + url_version:
-        return "/" + url_lang + url_version
-    return ""
+    slug = str(config.slug).strip("/")
+    segments = (slug, url_language, url_version)
+    joined = "/".join(segment for segment in segments if segment)
+    return f"/{joined}/" if joined else ""
 
 
 def _modern_pdf_defaults(config: Config) -> None:

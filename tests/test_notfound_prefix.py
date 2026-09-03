@@ -1,10 +1,22 @@
 """Unit tests for the Ulwazi-native notfound_urls_prefix computation.
 
 The helper ``ulwazi._notfound_urls_prefix`` was absorbed from the
-canonical-sphinx-config extension. The prefix must start and end with a
-slash so that links on the 404 page resolve regardless of the depth at
-which the 404 is served (see the sphinx-stack production bug where a
-missing slug produced broken links on every 404 page).
+canonical-sphinx-config extension. It must mirror the URL schema of the
+hosting site, which varies per project:
+
+- single-version projects serve at the root: ``/<slug>/``
+- versioned projects add a version segment: ``/<slug>/<version>/``
+- translated projects add a language segment: ``/<slug>/<language>/<version>/``
+
+``READTHEDOCS_VERSION`` and ``READTHEDOCS_LANGUAGE`` are always set on
+Read the Docs builds, even when the corresponding segment is absent from
+the URL schema, so the helper detects the schema from
+``READTHEDOCS_CANONICAL_URL`` instead of appending them unconditionally.
+
+The prefix must start and end with a slash so that links on the 404 page
+resolve regardless of the depth at which the 404 page is served (see the
+sphinx-stack production bug where a missing slug produced broken links on
+every 404 page).
 """
 
 from __future__ import annotations
@@ -61,57 +73,79 @@ def test_slug_without_rtd_env(prefix):
     assert prefix(slug="ulwazi") == ""
 
 
-def test_slug_with_trailing_slash_normalised(prefix):
-    """A user-supplied slug with stray slashes is normalised."""
-    assert (
-        prefix(
-            slug="/ulwazi/",
-            READTHEDOCS_CANONICAL_URL="https://documentation.ubuntu.com/ulwazi/latest/",
-            READTHEDOCS_VERSION="latest",
-        )
-        == "/ulwazi/latest/"
-    )
+def test_single_version_schema(prefix):
+    """Single-version projects serve at the root of the canonical URL.
 
-
-def test_slug_and_version(prefix):
-    """On RTD with a versioned URL, the version segment is appended."""
+    READTHEDOCS_VERSION and READTHEDOCS_LANGUAGE are still set on the build
+    machine, but the canonical URL has no version or language segment, so
+    neither may appear in the prefix (this is how ulwazi itself is hosted).
+    """
     assert (
         prefix(
             slug="ulwazi",
-            READTHEDOCS_CANONICAL_URL="https://documentation.ubuntu.com/ulwazi/latest/",
-            READTHEDOCS_VERSION="latest",
+            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/",
+            READTHEDOCS_VERSION="main",
+            READTHEDOCS_LANGUAGE="en",
         )
-        == "/ulwazi/latest/"
+        == "/ulwazi/"
     )
 
 
-def test_slug_language_and_version(prefix):
-    """On RTD with language and version segments, both are appended."""
+def test_versioned_schema(prefix):
+    """Versioned projects add the version segment to the canonical URL."""
     assert (
         prefix(
             slug="ulwazi",
-            READTHEDOCS_CANONICAL_URL="https://documentation.ubuntu.com/ulwazi/en/latest/",
+            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/latest/",
             READTHEDOCS_VERSION="latest",
             READTHEDOCS_LANGUAGE="en",
         )
-        == "/ulwazi/en/latest/"
+        == "/ulwazi/latest/"
+    )
+
+
+def test_translated_schema(prefix):
+    """Translated projects add language and version segments."""
+    assert (
+        prefix(
+            slug="ulwazi",
+            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/fr/latest/",
+            READTHEDOCS_VERSION="latest",
+            READTHEDOCS_LANGUAGE="fr",
+        )
+        == "/ulwazi/fr/latest/"
     )
 
 
 def test_version_mismatch_ignored(prefix):
-    """If the RTD version is not the URL's version segment, it is ignored."""
+    """If the RTD version is not the canonical URL's last segment, the URL
+    schema has no version segment and the env value must not leak in."""
     assert (
         prefix(
             slug="ulwazi",
-            READTHEDOCS_CANONICAL_URL="https://documentation.ubuntu.com/ulwazi/latest/",
+            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/",
             READTHEDOCS_VERSION="1.2",
         )
         == "/ulwazi/"
     )
 
 
+def test_language_mismatch_ignored(prefix):
+    """If the RTD language is not the segment before the version, the URL
+    schema has no language segment and the env value must not leak in."""
+    assert (
+        prefix(
+            slug="ulwazi",
+            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/latest/",
+            READTHEDOCS_VERSION="latest",
+            READTHEDOCS_LANGUAGE="en",
+        )
+        == "/ulwazi/latest/"
+    )
+
+
 def test_rtd_env_without_slug(prefix):
-    """On RTD without a slug, the prefix is just the language/version affix."""
+    """On RTD without a slug, the prefix is just the schema segments."""
     assert (
         prefix(
             READTHEDOCS_CANONICAL_URL="https://docs.example.com/en/latest/",
@@ -119,6 +153,18 @@ def test_rtd_env_without_slug(prefix):
             READTHEDOCS_LANGUAGE="en",
         )
         == "/en/latest/"
+    )
+
+
+def test_slug_with_stray_slashes_normalised(prefix):
+    """A user-supplied slug with stray slashes is normalised."""
+    assert (
+        prefix(
+            slug="/ulwazi/",
+            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/latest/",
+            READTHEDOCS_VERSION="latest",
+        )
+        == "/ulwazi/latest/"
     )
 
 
@@ -130,14 +176,22 @@ def test_rtd_env_without_slug(prefix):
         (
             "ulwazi",
             {
-                "READTHEDOCS_CANONICAL_URL": "https://x.io/ulwazi/latest/",
+                "READTHEDOCS_CANONICAL_URL": "https://x.io/",
+                "READTHEDOCS_VERSION": "main",
+                "READTHEDOCS_LANGUAGE": "en",
+            },
+        ),
+        (
+            "ulwazi",
+            {
+                "READTHEDOCS_CANONICAL_URL": "https://x.io/latest/",
                 "READTHEDOCS_VERSION": "latest",
             },
         ),
         (
             "ulwazi",
             {
-                "READTHEDOCS_CANONICAL_URL": "https://x.io/ulwazi/en/latest/",
+                "READTHEDOCS_CANONICAL_URL": "https://x.io/en/latest/",
                 "READTHEDOCS_VERSION": "latest",
                 "READTHEDOCS_LANGUAGE": "en",
             },
