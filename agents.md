@@ -233,6 +233,21 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   the Read-the-Docs `repo_branch` override, and the Canonical
   `sphinx_modern_pdf_style` branding defaults. The theme ships a `404.html`
   template and a `static/404.svg` asset used by `sphinx-notfound-page`.
+- **notfound prefix schema detection**: `_notfound_urls_prefix` detects the
+  URL schema from the _path_ of `READTHEDOCS_CANONICAL_URL` — the version
+  segment is the last path segment, the language segment the one before it,
+  each matched positionally against `READTHEDOCS_VERSION` /
+  `READTHEDOCS_LANGUAGE`. This indirection is load-bearing: RTD always sets
+  those env vars on builds, even when the segments are absent from the URL
+  schema (e.g. single-version projects like ulwazi itself, hosted at
+  `documentation.ubuntu.com/ulwazi/` with no version/language segment), so
+  joining them unconditionally would produce a prefix for URLs that don't
+  exist and break every link on the 404 page. Only the path is read — the
+  host is irrelevant, which is why this works behind the
+  documentation.ubuntu.com reverse proxy (the slug comes from the `slug`
+  config value, never from the RTD URL). Off RTD (no
+  `READTHEDOCS_CANONICAL_URL`), the prefix is empty and 404 links stay
+  relative. Covered by `tests/test_notfound_prefix.py`.
 - **PDF branding and extension order**: the theme sets `modern_pdf_options`
   defaults (`author`, `logo`) for `sphinx-modern-pdf-style`, and stages
   `ulwazi/theme/ulwazi/pdf/Canonical-logo-4x.png` into the LaTeX output
