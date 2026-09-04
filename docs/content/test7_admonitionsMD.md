@@ -60,3 +60,12 @@ If any of your slices' paths are architecture-specific, you must add the
 
 >  `/usr/lib/*-linux-*/libmvec.so.*: {arch: [amd64, arm64]}`
 :::
+
+:::{important}
+An admonition ending with a code block must not show a trailing blank line
+inside the box (the code block's own bottom margin is reset).
+
+```python
+print("last element in the notification")
+```
+:::
