@@ -40,7 +40,7 @@ endif
 
 # Ulwazi-specific targets
 vanilla-main: install-npm  ## Install Vanilla and compile CSS
-	npm install
+	npm install --no-audit --no-fund
 	echo "Compiling SCSS to CSS..."
 
 	@echo "Using local sass..."

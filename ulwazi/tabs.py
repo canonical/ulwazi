@@ -83,7 +83,8 @@ def convert_tabs(body_html: str) -> str:  # noqa: PLR0912, PLR0915
 
             # create the tab button
             btn = soup.new_tag("button")
-            btn["class"] = "p-tabs__link"
+            # is-small: Vanilla modifier matching docs body text size
+            btn["class"] = "p-tabs__link is-small"
             btn["role"] = "tab"
             btn["id"] = button_id
             btn["aria-controls"] = str(panel_id)

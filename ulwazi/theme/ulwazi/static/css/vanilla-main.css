@@ -14194,6 +14194,30 @@ p {
   line-height: 1.25rem;
 }
 
+/*
+  Expandable blocks (details/summary).
+
+  Vanilla's base styles (vf-b-details) render summary at 1rem, but Ulwazi
+  docs body text is $font-size-p (0.875rem). Match the docs text size and
+  reduce the block's bottom margin to the docs paragraph rhythm, while
+  keeping Vanilla's focus outline. The native disclosure triangle is the
+  visual signifier of the toggle (per Vanilla's details example); no hover
+  underline is added, as underline styling signifies hyperlinks.
+*/
+summary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+}
+
+summary:hover {
+  cursor: pointer;
+}
+
+details {
+  margin-bottom: 1.25rem;
+}
+
 th > p {
   padding-top: 0;
   padding-bottom: 0;

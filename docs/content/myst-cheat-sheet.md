@@ -335,6 +335,103 @@ Important information
 This might damage your hardware!
 ```
 
+## Expandable blocks
+
+Use HTML `<details>` tags to create a collapsible section, for example to hide the output of a command:
+
+```shell
+juju version
+```
+
+The following tabs show the rendered block and its source.
+Note that a backtick fence must be longer than any fence nested inside it:
+
+``````{tab-set}
+
+`````{tab-item} Rendered
+
+<details>
+<summary>Output example</summary>
+
+```text
+3.5.4-genericlinux-amd64
+```
+
+</details>
+`````
+
+`````{tab-item} Source
+
+````markdown
+<details>
+<summary>Output example</summary>
+
+```text
+3.5.4-genericlinux-amd64
+```
+
+</details>
+````
+`````
+
+``````
+
+Keep a blank line between the HTML tags and the content so that the content is parsed as MyST. Any markup can go inside, for example a list:
+
+`````{tab-set}
+
+````{tab-item} Rendered
+
+<details>
+<summary>More details</summary>
+
+- Item 1
+- Item 2
+
+</details>
+````
+
+````{tab-item} Source
+
+```markdown
+<details>
+<summary>More details</summary>
+
+- Item 1
+- Item 2
+
+</details>
+```
+````
+
+`````
+
+### Dropdowns
+
+The Sphinx Design `{dropdown}` directive provides a styled alternative to raw HTML `<details>` tags, and is the recommended way to add collapsible content:
+
+:::{dropdown} Output example
+
+The content of the dropdown, revealed when the header is clicked.
+
+:::
+
+A dropdown with an icon and an open-by-default variant:
+
+:::{dropdown} Dropdown with an icon
+:icon: light-bulb
+
+The content of the dropdown.
+
+:::
+
+:::{dropdown} Open dropdown
+:open:
+
+This dropdown is open by default.
+
+:::
+
 ## Images
 
 Use `![Alt text]()` for simple images with no caption.
@@ -378,7 +475,7 @@ Ulwazi supports the sphinx-design extension for tabs.
 
 
 
-````{tab-set}
+`````{tab-set}
 
 ```{tab-item} Tab 1
 :sync: key1
@@ -397,14 +494,14 @@ Content Tab 2
 Content Tab 3
 ```
 
-:::{tab-item} Long code
+````{tab-item} Long code
 
 ```yaml
 path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
 ```
-:::
-
 ````
+
+`````
 
 ## Metadata
 
