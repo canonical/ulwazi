@@ -15,7 +15,7 @@ TYPOGRAPHY_PATH = "docs/_build/content/typography-verification/index.html"
 def test_scss_styles_propagation():
     assert Path(INDEX_PATH).exists(), f"index.html not found in {INDEX_PATH}"
 
-    with Path(INDEX_PATH, encoding="utf-8").open() as f:
+    with Path(INDEX_PATH).open(encoding="utf-8") as f:
         soup = BeautifulSoup(f, "lxml")
 
     target = soup.find("p", class_="heading-test-scss")
