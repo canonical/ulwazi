@@ -501,6 +501,8 @@ path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/
 ```
 ````
 
+`````
+
 ## Metadata
 
 Optional. Every page gets working metadata by default; only add these fields
