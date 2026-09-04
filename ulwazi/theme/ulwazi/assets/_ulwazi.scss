@@ -11,6 +11,12 @@
 //   font-size: 16px;
 // }
 
+:root {
+  // Canonical brand orange (Ubuntu orange)
+  --ulwazi-color-brand: #{$color-brand-orange};
+  --ulwazi-color-brand-hover: #{darken($color-brand-orange, 10%)};
+}
+
 /*
   Utility classes.
 */
@@ -63,6 +69,31 @@ p {
   font-size: $font-size-p;
   line-height: $font-line-height-p;
 }
+
+/*
+  Expandable blocks (details/summary).
+
+  Vanilla's base styles (vf-b-details) render summary at 1rem, but Ulwazi
+  docs body text is $font-size-p (0.875rem). Match the docs text size and
+  reduce the block's bottom margin to the docs paragraph rhythm, while
+  keeping Vanilla's focus outline. The native disclosure triangle is the
+  visual signifier of the toggle (per Vanilla's details example); no hover
+  underline is added, as underline styling signifies hyperlinks.
+*/
+summary {
+  font-size: $font-size-p;
+  line-height: $font-line-height-p;
+  font-weight: $font-weight-p;
+}
+
+summary:hover {
+  cursor: pointer;
+}
+
+details {
+  margin-bottom: $font-line-height-p;
+}
+
 th > p {
   padding-top: 0;
   padding-bottom: 0;
@@ -205,36 +236,27 @@ readthedocs-docdiff {
   padding-top: 0;
   cursor: pointer;
   margin-left: auto; // Pushes the label (arrow) to the right
-}
-/* Darker background for selected nav-item */
-.nav-item .current {
-  background: #e0e0e0; // adjust to your preferred color
-  color: #333;
+  // Keep the chevron row the same height as Vanilla's link rows
+  align-self: stretch;
 }
 
-// Add shadow to the arrow label when the parent li is current
 li.current:not(:has(li.current)) > .nav-item > label {
-  background: hsl(0, 0%, 88%);
-  color: #333;
+  background: var(--vf-color-background-active);
+  color: var(--vf-color-text-default);
 }
 
-//Hover and focus states for links and labels
-.nav-item a:hover,
-.nav-item a:focus {
-  background: #e0e0e0;
-  color: #333;
-}
-
+//Hover and focus states for the chevron labels
+//(link hover/focus states come from Vanilla)
 .nav-item label:hover,
 .nav-item label:focus {
-  background: #e7e7e7;
-  color: #333;
+  background: var(--vf-color-background-hover);
+  color: var(--vf-color-text-default);
 }
 
 li.current:not(:has(li.current)) > .nav-item > label:hover,
 li.current:not(:has(li.current)) > .nav-item > label:focus {
-  background: #e5e5e5;
-  color: #222;
+  background: var(--vf-color-background-hover);
+  color: var(--vf-color-text-default);
 }
 
 .nav-item .icon,
@@ -334,8 +356,7 @@ button.copybtn:hover {
 }
 
 // Ensure code blocks use theme code colors.
-.highlight,
-.highlight pre {
+.highlight {
   background-color: var(--vf-color-background-code);
   color: var(--vf-color-text-default);
 }
@@ -344,6 +365,51 @@ button.copybtn:hover {
 // keeps its own bottom margin, showing as a blank line inside the box.
 .p-notification__message > :last-child {
   margin-bottom: 0;
+}
+
+.highlight pre {
+  background-color: transparent;
+  color: inherit;
+}
+
+// Terminal blocks keep their own intentionally dark surface (see terminal.css).
+.terminal .highlight,
+.terminal .highlight pre {
+  background-color: transparent;
+}
+
+// Copy button (sphinx-copybutton) ships GitHub-light colors. The button
+// surface is intentionally transparent (see the rules above); theme only
+// the icon colors so they work in both light and dark modes.
+.highlight button.copybtn {
+  color: var(--vf-color-text-muted);
+}
+
+.highlight button.copybtn.success {
+  color: var(--vf-color-border-positive);
+}
+
+// sphinx-tabs ships a hardcoded light border on the tablist and light panel
+// backgrounds. Vanilla's p-tabs styling is applied via tabs.py; neutralise
+// the hardcoded colors so the themed Vanilla border/background shows through.
+[role="tablist"] {
+  border-bottom: 1px solid var(--vf-color-border-default);
+}
+
+.sphinx-tabs-tab {
+  background-color: transparent;
+  color: var(--vf-color-text-default);
+}
+
+.sphinx-tabs-tab[aria-selected="true"] {
+  border: 1px solid var(--vf-color-border-default);
+  border-bottom-color: var(--vf-color-background-default);
+  background-color: var(--vf-color-background-default);
+}
+
+.sphinx-tabs-panel {
+  border: 1px solid var(--vf-color-border-default);
+  background: var(--vf-color-background-default);
 }
 
 // Let tab panels shrink to the tab set so wide content scrolls inside its
@@ -402,7 +468,7 @@ div.terminal > div.input > button.copybtn svg {
 }
 
 .p-search-box .p-search-box__button {
-  background-color: #e95420 !important;
+  background-color: $color-brand-orange !important;
   border-left: none !important;
   height: calc(2rem - 1.5px) !important;
   margin: 0 0 1.5px 0 !important;
@@ -414,7 +480,7 @@ div.terminal > div.input > button.copybtn svg {
   }
 
   &:hover {
-    background-color: darken(#e95420, 10%) !important;
+    background-color: var(--ulwazi-color-brand-hover) !important;
   }
 }
 
@@ -430,8 +496,8 @@ div.terminal > div.input > button.copybtn svg {
 }
 
 .guilabel {
-  background-color: #ddeeff80;
-  border: 1px solid #bedaf580;
+  background-color: var(--vf-color-background-information-default);
+  border: 1px solid var(--vf-color-border-information);
   border-radius: 0.5em;
   color: var(--vf-color-text-default);
   font-size: 0.9em;
@@ -471,10 +537,8 @@ kbd.compound {
 // Orange button variant for the "Give feedback" call-to-action.
 // Inherits base styles from p-button--positive.
 .p-button--orange {
-  $orange: #e95420;
-
-  background-color: $orange;
-  border-color: $orange;
+  background-color: $color-brand-orange;
+  border-color: $color-brand-orange;
   color: #fff;
   font-size: $font-size-p;
   font-weight: bold;
@@ -484,27 +548,27 @@ kbd.compound {
   }
 
   &:hover {
-    background-color: adjust-color($orange, $lightness: -10%);
-    border-color: adjust-color($orange, $lightness: -10%);
+    background-color: adjust-color($color-brand-orange, $lightness: -10%);
+    border-color: adjust-color($color-brand-orange, $lightness: -10%);
   }
 
   &:active,
   &[aria-pressed=true],
   &[aria-selected=true],
   &[aria-expanded=true] {
-    background-color: adjust-color($orange, $lightness: -15%);
-    border-color: adjust-color($orange, $lightness: -15%);
+    background-color: adjust-color($color-brand-orange, $lightness: -15%);
+    border-color: adjust-color($color-brand-orange, $lightness: -15%);
     transition-duration: 0s;
   }
 
   &:disabled,
   &.is-disabled {
-    background-color: $orange;
-    border-color: $orange;
+    background-color: $color-brand-orange;
+    border-color: $color-brand-orange;
   }
 
   &:focus-visible {
-    outline: 0.1875rem solid adjust-color($orange, $lightness: -20%);
+    outline: 0.1875rem solid adjust-color($color-brand-orange, $lightness: -20%);
     outline-offset: -0.1875rem;
   }
 }
@@ -534,6 +598,16 @@ kbd.compound {
   }
 }
 
+// Header and footer use background-alt in dark mode.
+//
+// Vanilla's .p-navigation and .p-strip.is-dark both resolve to
+// --vf-color-background-default. On a light page the local `is-dark` class
+// redefines that variable to #262626, giving good contrast against the #fff
+// body. But when the whole page is dark (body.is-dark), the variable is
+// already #262626 everywhere, so `is-dark` becomes a no-op and the header,
+// footer, and body would all collapse to the same color.
+// --vf-color-background-alt (#202020) is Vanilla's documented token for
+// differentiating a surface from the default background, so we use it here.
 body.is-dark .p-navigation {
   background-color: var(--vf-color-background-alt);
 }

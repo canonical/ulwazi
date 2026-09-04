@@ -24,7 +24,7 @@ To build the sample documentation in an interactive preview, run:
 make run
 ```
 
-This sets up a virtual environment, installs dependencies, builds the theme, builds the documentation,
+This uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, builds the documentation,
 and serves it locally. Content edits rebuild automatically; theme edits usually require
 a full rebuild:
 
@@ -72,9 +72,17 @@ This is a test about SCSS propagation.
 
 ```{toctree}
 :hidden:
-
+:caption: Sample content
 Home <self>
 content/test
+content/rst-cheat-sheet.rst
+content/myst-cheat-sheet.md
+```
+
+```{toctree}
+:hidden:
+:caption: Ulwazi documentation
 content/contribute
+content/tests/index
 Use Ulwazi in your documentation <https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/>
 ```

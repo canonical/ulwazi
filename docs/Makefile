@@ -142,13 +142,12 @@ pdf-prep: install
 	@for packageName in $(DOCS_PDFPACKAGES); do (dpkg-query -W -f='$${Status}' $$packageName 2>/dev/null | \
         grep -c "ok installed" >/dev/null && echo "Package $$packageName is installed") && continue || \
         (echo; echo "PDF generation requires the installation of the following packages: $(DOCS_PDFPACKAGES)" && \
-        echo "" && echo "Run 'sudo make pdf-prep-force' to install these packages" && echo "" && echo \
-        "Please be aware these packages will be installed to your system") && exit 1 ; done
+		echo "" && echo "Run 'make pdf-prep-force' to install these packages" && echo "" && echo \
+		"Please be aware these packages will be installed to your system") && exit 1 ; done
 
 pdf-prep-force:
 	sudo apt-get update
-	sudo apt-get upgrade -y
-	sudo apt-get install --no-install-recommends -y $(DOCS_PDFPACKAGES) \
+	sudo apt-get install --no-install-recommends -y $(DOCS_PDFPACKAGES)
 
 pdf: pdf-prep
 	@. $(DOCS_VENV); $(SPHINX_BUILD) -M latexpdf "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)

@@ -2,6 +2,7 @@ __pycache__/
 ulwazi.egg-info/
 dist/
 .venv/
+.tox/
 docs/_build
 node_modules/
 /.vscode

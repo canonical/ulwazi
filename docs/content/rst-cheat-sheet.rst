@@ -149,7 +149,7 @@ Terminal blocks are useful when specific emphasis is needed, such as the user na
   :host: vm
 
   make run
-  
+
   [sphinx-autobuild] Starting initial build
   [sphinx-autobuild] > python -m sphinx build -b dirhtml . _build -c . -d .sphinx/.doctrees -j auto
   build succeeded.
@@ -444,6 +444,109 @@ Notes
 .. caution::
    This might damage your hardware!
 
+
+Expandable blocks
+-----------------
+
+Use raw HTML ``<details>`` tags to create a collapsible section, for example to hide the output of a command:
+
+.. code-block:: shell
+
+   juju version
+
+The following tabs show the rendered block and its source:
+
+.. tab-set::
+
+    .. tab-item:: Rendered
+
+        .. raw:: html
+
+            <details>
+            <summary>Output example</summary>
+
+        .. code-block:: text
+
+            3.5.4-genericlinux-amd64
+
+        .. raw:: html
+
+            </details>
+
+    .. tab-item:: Source
+
+        .. code-block:: rst
+
+            .. raw:: html
+
+               <details>
+               <summary>Output example</summary>
+
+            .. code-block:: text
+
+               3.5.4-genericlinux-amd64
+
+            .. raw:: html
+
+               </details>
+
+Split the opening and closing tags into separate ``raw`` directives so that the content in between is rendered as reStructuredText. Any markup can go inside, for example a list:
+
+.. tab-set::
+
+    .. tab-item:: Rendered
+
+        .. raw:: html
+
+            <details>
+            <summary>More details</summary>
+
+        - Item 1
+        - Item 2
+
+        .. raw:: html
+
+            </details>
+
+    .. tab-item:: Source
+
+        .. code-block:: rst
+
+            .. raw:: html
+
+               <details>
+               <summary>More details</summary>
+
+            - Item 1
+            - Item 2
+
+            .. raw:: html
+
+               </details>
+
+
+Dropdowns
+~~~~~~~~~
+
+The Sphinx Design ``dropdown`` directive provides a styled alternative to raw HTML ``<details>`` tags, and is the recommended way to add collapsible content:
+
+.. dropdown:: Output example
+
+    The content of the dropdown, revealed when the header is clicked.
+
+A dropdown with an icon and an open-by-default variant:
+
+.. dropdown:: Dropdown with an icon
+    :icon: light-bulb
+
+    The content of the dropdown.
+
+.. dropdown:: Open dropdown
+    :open:
+
+    This dropdown is open by default.
+
+
 Images
 ------
 Use ``.. image::`` for simple images without captions.
@@ -477,8 +580,10 @@ Reuse
 Tabs
 ----
 
-Sphinx-design tabs
-~~~~~~~~~~~~~~~~~~
+Ulwazi supports the sphinx-design extension for tabs.
+Support for the sphinx-tabs extension has been
+`dropped <https://documentation.ubuntu.com/sphinx-stack/latest/reference/rst-syntax/#tabs>`_.
+
 
 .. Tabs
 .. ----
@@ -503,6 +608,32 @@ Sphinx-design tabs
 
             path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
 
+
+Metadata
+--------
+
+Optional. Every page gets working metadata by default; only add these fields
+to override them for a specific page.
+
+Open Graph tags (placed before the title, no special syntax needed):
+
+.. code-block:: rst
+
+   :og:title: Custom title for social media previews
+   :og:description: Custom description for social media previews
+   :og:image: https://example.com/preview-image.png
+
+   Page title
+   ==========
+
+Page description (unrelated to ``og:description``):
+
+.. code-block:: rst
+
+   .. meta::
+      :description: A one- or two-sentence summary of this page.
+
+See :doc:`the contribution guide <contribute>` for defaults and details.
 
 Glossary
 --------

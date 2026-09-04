@@ -40,7 +40,7 @@ endif
 
 # Ulwazi-specific targets
 vanilla-main: install-npm  ## Install Vanilla and compile CSS
-	npm install
+	npm install --no-audit --no-fund
 	echo "Compiling SCSS to CSS..."
 
 	@echo "Using local sass..."
@@ -56,6 +56,12 @@ product-menu:  ## Update the product menu
 	@echo "Updating the product menu..."
 	python3 ulwazi/product_menu_gen.py
 
+.PHONY: pygments-css
+pygments-css:  ## Regenerate the syntax highlighting stylesheets (pygments-light/dark.css)
+	@echo "Regenerating Pygments stylesheets..."
+	uv run python ulwazi/theme/ulwazi/static/css/generate_pygments_css.py
+	@echo "Done. Rebuild the docs (make docs-clean && make docs) to pick up the changes."
+
 .PHONY: rebuild
 rebuild: clean docs  ## Clean the environment and rebuild the docs
 
@@ -66,16 +72,43 @@ run:  ## Launch an interactive preview of the docs
 # Override tests to build HTML and PDF output as a prerequisite.
 # These should be removed when the docs are built programmatically in the tests.
 .PHONY: test
-test: docs-html  ## Run all tests (excluding PDF builds)
+test: docs-html  ## Run fast tests only (excluding slow tests)
 	uv run pytest -m 'not slow'
 
 .PHONY: test-fast
-test-fast: docs-html
+test-fast: docs-html  ##- Run fast tests only (same as 'make test')
 	uv run pytest -m 'not slow'
 
 .PHONY: test-slow
-test-slow: docs-html docs-pdf-prep-force docs-pdf   ##- Run all tests (including PDF builds)
+test-slow: docs-html docs-pdf-prep docs-pdf   ##- Run slow tests only (PDF builds, browser checks)
 	uv run pytest -m 'slow'
+
+.PHONY: test-all
+test-all: docs-html docs-pdf-prep docs-pdf  ##- Run all tests (fast and slow)
+	uv run pytest
+
+# Build the theme and sample docs on every supported Python version.
+#
+# This is a slow test (PR #124 testing-strategy category #7). For each
+# version it provisions a throwaway uv venv, installs the theme plus the
+# ``docs`` dependency group, and builds the sample docs with
+# ``--fail-on-warning``. The developer's ``.venv`` is never touched and the
+# source tree stays clean (build output lives under pytest's ``tmp_path``).
+#
+# The version list is defined once in ``tests/test_python_versions.py``
+# (``SUPPORTED_PYTHON_VERSIONS``); pytest expands it via parametrize, so this
+# target does not repeat the list.
+#
+# ``-n auto`` runs the parametrized versions concurrently via pytest-xdist,
+# which is the local parallelism we want. To run a single version instead:
+#
+#     uv run pytest -m slow tests/test_python_versions.py -k 3.11
+#
+# In CI the monthly workflow (``.github/workflows/test-python-versions.yaml``)
+# uses a GitHub Actions matrix instead of pytest-xdist.
+.PHONY: test-python-versions
+test-python-versions:  ##- Build the theme and docs on every supported Python version (slow)
+	uv run pytest -n auto -m slow tests/test_python_versions.py
 
 .PHONY: test-coverage
 test-coverage: docs-html docs-pdf ##- Run tests and generate coverage report

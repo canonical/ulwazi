@@ -45,8 +45,9 @@ make test         # Run all tests
 Available tests:
 
 - **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
-- **test_pdf_generation.py**: Verifies PDF generation produces expected output file
-- **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright
+- **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
+- **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
 
 ### Cleaning
 
@@ -56,7 +57,7 @@ Clean (delete) the built sample documentation content:
 make docs-clean
 ```
 
-Clean the built docs and theme files:
+Clean the built docs and theme files (also removes the `.venv` virtual environment):
 
 ```bash
 make clean
@@ -71,19 +72,33 @@ make rebuild
 ### Styling
 
 ```bash
-make npm-install  # Install Vanilla Framework modules
-make vanilla-main # Compile SCSS to CSS
+make vanilla-main  # Install npm dependencies and compile SCSS to CSS
 ```
+
+### Upgrading the Vanilla Framework
+
+1. Check the latest version: `npm view vanilla-framework version`
+2. Update the `vanilla-framework` version in `package.json` (`dependencies`)
+3. Install and recompile: `make vanilla-main` (runs `npm install` and compiles
+   `ulwazi/theme/ulwazi/assets/main.scss` to `ulwazi/theme/ulwazi/static/css/vanilla-main.css`)
+4. If SCSS compilation fails, check the
+   [Vanilla Framework changelog](https://github.com/canonical/vanilla-framework/blob/main/CHANGELOG.md)
+   for breaking changes (renamed/removed mixins or settings) and update
+   `ulwazi/theme/ulwazi/assets/` accordingly
+5. Rebuild and verify: `make rebuild`, then `make test` (and `make test-slow` for
+   the Playwright color/typography checks), and review the sample docs in a browser
+   (`make run`) for visual regressions
+6. Commit `package.json` and `package-lock.json` together (both are tracked in git)
 
 ### Quick start
 
 Prefer Makefile targets.
-The `make docs` command creates the virtualenv and installs Python deps.
+The `make docs` command uses [uv](https://docs.astral.sh/uv/) to create the virtual environment and install Python dependencies.
 
-Install Node dependencies (only if you need to compile SCSS):
+Install Node dependencies (only required for SCSS compilation via `make vanilla-main`):
 
 ```bash
-yarn install
+npm install
 ```
 
 **Node.js**: required only for SCSS compilation via `make vanilla-main` (uses npm).
@@ -118,6 +133,7 @@ tests/                       # Test scripts
 - **[Makefile](Makefile)**: Build automation and common tasks
 - **[ulwazi/**init**.py](ulwazi/**init**.py)**: Theme entry point, `_html_page_context` for HTML modification hooks
 - **[ulwazi/theme/ulwazi/layout.html](ulwazi/theme/ulwazi/layout.html)**: Base page layout template
+- **[docs/conf.py](docs/conf.py)**: Sample docs Sphinx config
 
 ## Development Workflow
 
@@ -134,7 +150,7 @@ tests/                       # Test scripts
 ### Dependency Changes
 
 - Update [pyproject.toml](pyproject.toml)
-- Run `make clean` then `make run` to rebuild venv
+- Run `make clean` then `make run` to rebuild the uv virtual environment
 
 ### HTML Modifications
 
@@ -169,7 +185,8 @@ When all testing is done, make sure to terminate the `make run` command in the o
 Run tests to avoid regression:
 
 ```bash
-make test
+make test         # fast tests only
+make test-all     # all tests (fast and slow, including PDF and Python version tests)
 ```
 
 ## Code Conventions
@@ -190,21 +207,43 @@ make test
 ### Styles
 
 - [Vanilla Framework](https://vanillaframework.io/) for base styles
+- [Vanilla Framework examples](https://vanillaframework.io/docs/examples) - reference implementations of all components. Note: each example can be switched to dark mode.
 - SCSS source in [ulwazi/theme/ulwazi/assets/](ulwazi/theme/ulwazi/assets/)
 - Compiled CSS in [ulwazi/theme/ulwazi/static/](ulwazi/theme/ulwazi/static/)
 
 ## Important Notes
 
-- **Virtual Environment**: Located at `.venv/`, managed automatically by Make
+- **Virtual Environment**: Located at `.venv/`, managed automatically by [uv](https://docs.astral.sh/uv/) through Make targets
 - **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
 - **Node Modules**: Required for Vanilla Framework compilation
 - **Auto-rebuild**: `make run` watches content changes but NOT theme changes
+- **Metadata/SEO**: `<title>` suffix, `rel="canonical"`, favicon link, and Open Graph tags
+  (`og:title`, `og:description`, `og:image`, etc.) are all generated automatically via
+  `sphinxext-opengraph` (declared in `docs/conf.py` `extensions`, and in `pyproject.toml`
+  under the `docs` dependency group) plus the `layout.html` template. Per-page `og:*`
+  overrides are plain top-level fields (reST bibliographic field / MyST front matter
+  key) placed before the title -- e.g. `:og:title: ...` or `og:title: "..."` -- read
+  directly by `sphinxext-opengraph`'s own override mechanism. **Do not** add a
+  `property=` prefix; that's a misconception carried over from the generic docutils
+  `.. meta::` directive and is unnecessary once `sphinxext-opengraph` is installed --
+  it always renders `property="og:..."` regardless. The plain page description
+  (`<meta name="description">`) is a separate setting: use `.. meta:: :description:`
+  (reST) or nest it under `myst.html_meta` (MyST) -- `description` alone is not a
+  recognised bibliographic field. See `docs/content/contribute.rst` and the RST/MyST
+  cheat sheets for working examples. Do not remove `sphinxext-opengraph` or the
+  `favicon_url`/`pageurl`/`docstitle` references in `layout.html` without re-verifying
+  metadata output in the built HTML.
+- **Sphinx context variable gotcha**: use `favicon_url` in templates, not `favicon`
+  (the latter is a stale sphinx-basic-ng convention that Sphinx 7.4+ no longer
+  populates); `favicon_url` is already a fully resolved URL and must not be passed
+  through `pathto()` again.
 
 ## Testing Locations
 
 - **Sample docs**: [docs/](docs/) - comprehensive test content
 - **Cheatsheet pages**: [docs/content/rst-cheat-sheet.rst](docs/content/rst-cheat-sheet.rst) and [docs/content/myst-cheat-sheet.md](docs/content/myst-cheat-sheet.md) - comprehensive examples of all supported blocks (admonitions, code blocks, tables, etc.). Use these to verify theme rendering. When adding new features, update both cheatsheets with equivalent examples in similar structure.
-- **Test scripts**: [tests/](tests/) - validation and PDF generation tests
+- **Test scripts**: [tests/](tests/) - validation, PDF generation, SCSS propagation, and Python version compatibility tests
+- **Tests documentation**: [docs/content/tests/](docs/content/tests/) - documentation for the test suite, including [Python version compatibility](docs/content/tests/python-versions.md)
 - **Built output**: [docs/\_build/](docs/_build/) - inspect generated HTML
 
 ## Syntax
@@ -226,3 +265,7 @@ When editing documentation or markdown files:
 - [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng)
 - [Demo site](https://canonical-ulwazi.readthedocs-hosted.com/)
 - [Repository](https://github.com/canonical/ulwazi)
+
+## Maintaining This Guide
+
+If you spot a problem in this guide (outdated information, incorrect commands, missing steps) and fix it, update this file accordingly so the instructions stay accurate for future sessions.

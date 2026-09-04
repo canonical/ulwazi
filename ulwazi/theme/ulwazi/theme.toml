@@ -2,6 +2,8 @@
 inherit = "basic-ng"
 stylesheets = [
     "css/vanilla-main.css",
+    "css/pygments-light.css",
+    "css/pygments-dark.css",
     "css/default.css",
     "css/skeleton.css",
     "css/feedback.css",
@@ -9,7 +11,6 @@ stylesheets = [
     "css/tasklist.css",
     "css/local-toc.css",
     "css/search.css",
-    "css/vanilla-main.css",
 ]
 sidebars = [
     "globaltoc.html",
