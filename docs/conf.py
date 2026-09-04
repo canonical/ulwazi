@@ -95,7 +95,7 @@ ogp_image = "https://assets.ubuntu.com/v1/253da317-image-document-ubuntudocs.svg
 
 # TODO: To customise the favicon, uncomment and update as needed.
 
-# html_favicon = ".sphinx/_static/favicon.png"
+html_favicon = "_static/favicon.png"
 
 
 # Dictionary of values to pass into the Sphinx context for all pages:
@@ -330,7 +330,6 @@ myst_enable_extensions = {"colon_fence", "deflist", "substitution", "tasklist"}
 #       - sphinx_copybutton
 #       - sphinx_design
 #       - sphinx_reredirects
-#       - sphinx_tabs.tabs
 #       - sphinxcontrib.jquery
 #       - sphinxext.opengraph
 #       - terminal-output
@@ -345,12 +344,12 @@ extensions = [
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
+    "sphinxext.opengraph",
     "ulwazi",
     "sphinx_modern_pdf_style",
     "canonical_sphinx_config",
     "myst_parser",
     "sphinxcontrib.jquery",
-    "sphinx_tabs.tabs",
     "sphinx_design",
 ]
 
@@ -369,10 +368,7 @@ html_js_files = ["https://assets.ubuntu.com/v1/287a5e8f-bundle.js"]
 
 
 # Syntax highlighting settings
-
 highlight_language = "none"  # default
-pygments_style = "autumn"
-pygments_dark_style = "github-dark"  # see https://pygments.org/styles for more
 
 # Specifies a reST snippet to be appended to each .rst file
 

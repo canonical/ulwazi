@@ -3,6 +3,9 @@
   rendered, so they cascade down the Vanilla stack.
 */
 
+// Canonical brand orange (Ubuntu orange)
+$color-brand-orange: #e95420;
+
 $text-max-width: 100%;
 $font-base-family: 'Ubuntu, Arial, "libra sans", sans-serif';
 $font-monospace: '"Ubuntu Mono", Consolas, Monaco, Courier, monospace';
@@ -34,6 +37,3 @@ $font-line-height-h6: 1.5rem; // 24px
 $font-weight-p: 400;
 $font-size-p: 0.875rem;     // 14px
 $font-line-height-p: 1.25rem; // 20px
-
-// Adjusting code blocks background color for visibility in dark theme
-$colors--dark-theme--background-code: #404040;

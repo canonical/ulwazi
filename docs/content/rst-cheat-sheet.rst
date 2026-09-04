@@ -149,7 +149,7 @@ Terminal blocks are useful when specific emphasis is needed, such as the user na
   :host: vm
 
   make run
-  
+
   [sphinx-autobuild] Starting initial build
   [sphinx-autobuild] > python -m sphinx build -b dirhtml . _build -c . -d .sphinx/.doctrees -j auto
   build succeeded.
@@ -580,8 +580,10 @@ Reuse
 Tabs
 ----
 
-Sphinx-design tabs
-~~~~~~~~~~~~~~~~~~
+Ulwazi supports the sphinx-design extension for tabs.
+Support for the sphinx-tabs extension has been
+`dropped <https://documentation.ubuntu.com/sphinx-stack/latest/reference/rst-syntax/#tabs>`_.
+
 
 .. Tabs
 .. ----
@@ -606,6 +608,32 @@ Sphinx-design tabs
 
             path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
 
+
+Metadata
+--------
+
+Optional. Every page gets working metadata by default; only add these fields
+to override them for a specific page.
+
+Open Graph tags (placed before the title, no special syntax needed):
+
+.. code-block:: rst
+
+   :og:title: Custom title for social media previews
+   :og:description: Custom description for social media previews
+   :og:image: https://example.com/preview-image.png
+
+   Page title
+   ==========
+
+Page description (unrelated to ``og:description``):
+
+.. code-block:: rst
+
+   .. meta::
+      :description: A one- or two-sentence summary of this page.
+
+See :doc:`the contribution guide <contribute>` for defaults and details.
 
 Glossary
 --------

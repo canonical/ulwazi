@@ -470,8 +470,9 @@ Keys can be defined at the top of a file, or in a `myst_substitutions` option in
 
 ## Tabs
 
+Ulwazi supports the sphinx-design extension for tabs.
+**Support for the sphinx-tabs extension has been [dropped](https://documentation.ubuntu.com/sphinx-stack/latest/reference/myst-syntax/#tabs).**
 
-### Sphinx-design tabs
 
 
 `````{tab-set}
@@ -500,7 +501,32 @@ path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/
 ```
 ````
 
-`````
+## Metadata
+
+Optional. Every page gets working metadata by default; only add these fields
+to override them for a specific page.
+
+Open Graph tags (top-level front matter keys, no special syntax needed):
+
+```markdown
+---
+og:title: "Custom title for social media previews"
+og:description: "Custom description for social media previews"
+og:image: "https://example.com/preview-image.png"
+---
+```
+
+Page description (unrelated to `og:description`), nested under `myst.html_meta`:
+
+```markdown
+---
+myst:
+  html_meta:
+    description: "A one- or two-sentence summary of this page."
+---
+```
+
+See [the contribution guide](contribute) for defaults and details.
 
 ## Glossary
 

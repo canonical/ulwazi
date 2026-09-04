@@ -313,7 +313,7 @@ article {
   display: inline-block;
   height: 1rem;
   width: 1rem;
-  color: rgb(17, 17, 17);
+  color: var(--vf-color-text-default, rgb(17, 17, 17));
 }
 
 .visually-hidden {
@@ -326,7 +326,7 @@ article {
   clip: rect(0,0,0,0) !important;
   white-space: nowrap !important;
   border: 0 !important;
-  color: rgb(17, 17, 17);
-  background: rgb(255, 255, 255);
+  color: var(--vf-color-text-default, rgb(17, 17, 17));
+  background: var(--vf-color-background-default, rgb(255, 255, 255));
   display: none !important;
 }
