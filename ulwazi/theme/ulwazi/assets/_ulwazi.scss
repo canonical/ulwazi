@@ -361,6 +361,12 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+// A trailing block element (blockquote, list, table, nested admonition)
+// keeps its own bottom margin, showing as a blank line inside the box.
+.p-notification__message > :last-child {
+  margin-bottom: 0;
+}
+
 .highlight pre {
   background-color: transparent;
   color: inherit;

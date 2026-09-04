@@ -14446,6 +14446,10 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+.p-notification__message > :last-child {
+  margin-bottom: 0;
+}
+
 .highlight pre {
   background-color: transparent;
   color: inherit;
@@ -15196,6 +15200,11 @@ samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 sam
 .p-notification__title {
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
+}
+
+.p-notification__message > [class^=highlight-]:last-child pre,
+.p-notification__message > .highlight:last-child pre {
+  margin-bottom: 0;
 }
 
 /* Definitions*/

@@ -190,6 +190,13 @@ samp:not(h1 samp):not(h2 samp):not(h3 samp):not(h4 samp):not(h5 samp):not(h6 sam
   padding-bottom: 0.5rem !important;
 }
 
+// Trailing code block in an admonition: sphinx-copybutton injects a <button>
+// after the <pre>, so the pre is not :last-child; target it via its wrapper.
+.p-notification__message > [class^="highlight-"]:last-child pre,
+.p-notification__message > .highlight:last-child pre {
+  margin-bottom: 0;
+}
+
 /* Definitions*/
 dt {
   font-weight: 550;
