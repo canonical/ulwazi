@@ -46,3 +46,11 @@ such there is no one to one mapping. Below shows each of the admonitions and how
     ..
 
         ``/usr/lib/*-linux-*/libmvec.so.*: {arch: [amd64, arm64]}``
+
+.. important::
+    An admonition ending with a code block must not show a trailing blank
+    line inside the box (the code block's own bottom margin is reset).
+
+    .. code-block:: python
+
+        print("last element in the notification")
