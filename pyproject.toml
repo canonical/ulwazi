@@ -126,7 +126,9 @@ testpaths = "tests"
 pythonpath = "tests"
 xfail_strict = true
 markers = ["slow: slow tests"]
-addopts = "-v --tb=short -rA"
+# -rfE: only list failures and errors in the summary (passing tests are
+# grouped per file in the progress line, not listed one by one).
+addopts = "--tb=short -rfE"
 
 [tool.coverage.run]
 branch = true
