@@ -525,6 +525,28 @@ Split the opening and closing tags into separate ``raw`` directives so that the 
                </details>
 
 
+Dropdowns
+~~~~~~~~~
+
+The Sphinx Design ``dropdown`` directive provides a styled alternative to raw HTML ``<details>`` tags, and is the recommended way to add collapsible content:
+
+.. dropdown:: Output example
+
+    The content of the dropdown, revealed when the header is clicked.
+
+A dropdown with an icon and an open-by-default variant:
+
+.. dropdown:: Dropdown with an icon
+    :icon: light-bulb
+
+    The content of the dropdown.
+
+.. dropdown:: Open dropdown
+    :open:
+
+    This dropdown is open by default.
+
+
 Images
 ------
 Use ``.. image::`` for simple images without captions.

@@ -11932,9 +11932,9 @@ p {
   Vanilla's base styles (vf-b-details) render summary at 1rem, but Ulwazi
   docs body text is $font-size-p (0.875rem). Match the docs text size and
   reduce the block's bottom margin to the docs paragraph rhythm, while
-  keeping Vanilla's focus outline and adding the same hover affordance
-  Vanilla gives links (cursor + underline), so the summary reads as
-  clickable.
+  keeping Vanilla's focus outline. The native disclosure triangle is the
+  visual signifier of the toggle (per Vanilla's details example); no hover
+  underline is added, as underline styling signifies hyperlinks.
 */
 summary {
   font-size: 0.875rem;
@@ -11944,9 +11944,6 @@ summary {
 
 summary:hover {
   cursor: pointer;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.075em;
 }
 
 details {

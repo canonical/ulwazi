@@ -406,6 +406,32 @@ Keep a blank line between the HTML tags and the content so that the content is p
 
 `````
 
+### Dropdowns
+
+The Sphinx Design `{dropdown}` directive provides a styled alternative to raw HTML `<details>` tags, and is the recommended way to add collapsible content:
+
+:::{dropdown} Output example
+
+The content of the dropdown, revealed when the header is clicked.
+
+:::
+
+A dropdown with an icon and an open-by-default variant:
+
+:::{dropdown} Dropdown with an icon
+:icon: light-bulb
+
+The content of the dropdown.
+
+:::
+
+:::{dropdown} Open dropdown
+:open:
+
+This dropdown is open by default.
+
+:::
+
 ## Images
 
 Use `![Alt text]()` for simple images with no caption.
