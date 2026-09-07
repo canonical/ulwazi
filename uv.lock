@@ -1516,6 +1516,19 @@ wheels = [
 ]
 
 [[package]]
+name = "sphinx-structured-toc"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "docutils" },
+    { name = "sphinx" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4d/ba/ccdec04aff316302fc38dd4c3668e4302554975ad822739715c466d4cd3f/sphinx_structured_toc-0.1.1.tar.gz", hash = "sha256:1627b31f0e029921b1b0e6f7c51ba17293a53d2884cb0d887e5bd6792164d1c6", size = 168956, upload-time = "2026-07-27T08:16:10.316Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/c6/e276893f2fc080caedb2f7d7ef12562140a8dbe990b83a011b987ae583a3/sphinx_structured_toc-0.1.1-py3-none-any.whl", hash = "sha256:b47c31619596eda31b9b6a50c8fd4f9e5c9671c82c9118a9e20422a9aef0a6ab", size = 35505, upload-time = "2026-07-27T08:16:08.046Z" },
+]
+
+[[package]]
 name = "sphinx-terminal"
 version = "1.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1783,6 +1796,7 @@ docs = [
     { name = "sphinx-last-updated-by-git" },
     { name = "sphinx-modern-pdf-style" },
     { name = "sphinx-sitemap" },
+    { name = "sphinx-structured-toc" },
     { name = "sphinx-terminal" },
     { name = "sphinxcontrib-jquery" },
     { name = "sphinxcontrib-svg2pdfconverter", extra = ["cairosvg"] },
@@ -1827,6 +1841,7 @@ docs = [
     { name = "sphinx-last-updated-by-git", specifier = ">=0.3.8" },
     { name = "sphinx-modern-pdf-style", specifier = ">=0.1.3" },
     { name = "sphinx-sitemap", specifier = ">=2.9.0" },
+    { name = "sphinx-structured-toc", specifier = ">=0.1.1" },
     { name = "sphinx-terminal", specifier = "~=1.0.1" },
     { name = "sphinxcontrib-jquery", specifier = ">=4.1" },
     { name = "sphinxcontrib-svg2pdfconverter", extras = ["cairosvg"], specifier = ">=2.1.0" },

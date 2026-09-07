@@ -655,6 +655,61 @@ More useful markup
 - .. This is a comment
 - :abbr:`API (Application Programming Interface)`
 
+Structured tables of contents
+-----------------------------
+
+Use the ``domain`` and ``slice`` directives (from the
+`sphinx-structured-toc <https://github.com/canonical/sphinx-structured-toc>`_
+extension) to build compact, accessible tables of contents, independent of
+Sphinx ``toctree``\ s. A ``domain`` contains one or more ``slice`` blocks, and
+each slice holds one ``:doc:`` link per line.
+
+The blocks below are wrapped in ``.. only:: html`` because the extension ships
+HTML rendering only; without that guard, the PDF build fails on its nodes.
+
+Domain named after a section heading
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With no argument, the domain takes its name from the nearest enclosing section
+heading, and items keep their visible text as their accessible name:
+
+.. only:: html
+
+   .. domain::
+
+      .. slice:: Syntax references
+
+         :doc:`This page <rst-cheat-sheet>`
+         :doc:`MyST cheat sheet <myst-cheat-sheet>`
+
+      .. slice:: Guides
+
+         :doc:`Contribution guide <contribute>`
+         :doc:`Testing strategy <testing-strategy>`
+
+Explicit domain name
+~~~~~~~~~~~~~~~~~~~~
+
+An argument overrides the derived name. The trailing ``slice`` and ``domain``
+keywords add that context to an item's accessible name, so links that share
+visible text (``Overview`` below) stay distinguishable for screen reader
+users. ``:suppress-warnings:`` silences the resulting ambiguity warnings:
+
+.. only:: html
+
+   .. domain:: Ulwazi cheat sheet links
+      :suppress-warnings:
+
+      .. slice:: Reference
+
+         :doc:`Overview <../index>` slice
+         :doc:`Roadmap <roadmap>` slice
+
+      .. slice:: Meta
+
+         :doc:`Overview <testing-strategy>` domain
+         :doc:`Tests <tests/index>` domain
+
 ----
 
 .. Custom extensions

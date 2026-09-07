@@ -47,6 +47,8 @@ Available tests:
 - **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_seo_metadata.py**: Verifies SEO/metadata tags (title, description, canonical, favicon, Open Graph) on built pages
+- **test_structured_toc.py**: Verifies the sphinx-structured-toc extension's domain/slice markup and ARIA wiring in RST and MyST _(partially slow)_
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
 
 ### Cleaning
@@ -237,6 +239,25 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   (the latter is a stale sphinx-basic-ng convention that Sphinx 7.4+ no longer
   populates); `favicon_url` is already a fully resolved URL and must not be passed
   through `pathto()` again.
+- **sphinx-structured-toc**: enabled in `docs/conf.py` (`sphinx_structured_toc`),
+  declared in the `docs` dependency group in `pyproject.toml`. Provides the
+  `domain`/`slice` directives for accessible tables of contents (independent of
+  `toctree`s); ships its own `domain-list.css` automatically. Examples live in
+  the "Structured tables of contents" sections of the two cheat sheets, which
+  double as the fixtures for `tests/test_structured_toc.py` (no dedicated
+  sample pages).
+  Gotchas: (1) it registers HTML visitors only, so the LaTeX/PDF build fails on
+  its nodes -- every `domain`/`slice` example is wrapped in `.. only:: html`
+  (RST) / `{only} html` (MyST) so the LaTeX writer never sees them; no
+  `docs/conf.py` changes are needed; (2) in MyST, fences do not nest at the
+  same fence count, so each nesting level needs more backticks than the level
+  inside it. The cheat sheets use backtick directive fences
+  (` ```{slice} ` etc.) with the ordering `{only}` (5 backticks) >
+  `{domain}` (4) > `{slice}` (3); the Tabs section needs `{tab-set}` at 5
+  backticks because it contains a `{tab-item}` (4) that itself contains a
+  code block (3); (3) `:doc:` targets
+  that are not in any toctree trigger ambiguity warnings -- use
+  `:suppress-warnings:` on the domain in sample content.
 
 ## Testing Locations
 
