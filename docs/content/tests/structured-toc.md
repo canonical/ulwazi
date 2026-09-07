@@ -11,9 +11,13 @@ This implements the "Extension compatibility" test category from the
 
 ## What is tested
 
-The fixture pages are {doc}`structured-toc <../structured-toc>` (RST) and
-{doc}`structured-toc-myst <../structured-toc-myst>` (MyST). They use the same
-slice and domain names so both rendering paths can be verified identically.
+The fixtures are the "Structured tables of contents" sections of the
+{doc}`RST cheat sheet <../rst-cheat-sheet>` and the
+{doc}`MyST cheat sheet <../myst-cheat-sheet>`. There are no dedicated sample
+pages for this feature: the cheat sheets already serve as the theme's
+rendering reference, and reusing them keeps the example and its test in the
+place contributors look first. Both use the same slice and domain names, so
+both rendering paths can be verified identically.
 
 For each fixture page, the fast test verifies:
 
@@ -65,7 +69,7 @@ tagged by page.
 
 ```{note}
 The extension registers HTML visitors only, so the LaTeX (PDF) builder
-would fail on its nodes. `docs/conf.py` registers no-op LaTeX visitors for
-them, which keeps the structured tables of contents out of the PDF while
-the surrounding prose still appears.
+would fail on its nodes. Every `domain`/`slice` example is wrapped in
+`.. only:: html` (RST) or `{only} html` (MyST), so the PDF builder never
+sees these nodes at all -- no changes to `docs/conf.py` are needed.
 ```

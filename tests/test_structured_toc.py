@@ -7,6 +7,10 @@ Ulwazi's HTML post-processing (``_html_page_context`` in ``ulwazi/__init__.py``
 rewrites parts of the page). We do not re-test the extension's internals --
 only that:
 
+The fixtures are the "Structured tables of contents" sections of the two
+cheat sheets, which double as the theme's rendering reference (there are no
+dedicated sample pages for this feature):
+
 * the ``domain``/``slice`` directives render in both RST and MyST source
   syntax (the MyST path goes through the ``colon_fence`` extension, which is
   a genuine compatibility risk);
@@ -32,12 +36,13 @@ import pytest
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
-# Both fixture pages use the same slice/domain names so the same assertions
-# apply to the RST and the MyST rendering path. Keep these in sync with
-# docs/content/structured-toc.rst and docs/content/structured-toc-myst.md.
+# The cheat sheets are the fixtures: their "Structured tables of contents"
+# sections use the same slice/domain names in both syntaxes, so the same
+# assertions apply to the RST and the MyST rendering path. Keep these in sync
+# with docs/content/rst-cheat-sheet.rst and docs/content/myst-cheat-sheet.md.
 PAGES = {
-    "rst": Path("docs/_build/content/structured-toc/index.html"),
-    "myst": Path("docs/_build/content/structured-toc-myst/index.html"),
+    "rst": Path("docs/_build/content/rst-cheat-sheet/index.html"),
+    "myst": Path("docs/_build/content/myst-cheat-sheet/index.html"),
 }
 
 # One nav per domain on each fixture page: the first derives its name from
@@ -45,10 +50,10 @@ PAGES = {
 EXPECTED_NAV_COUNT = 2
 
 # Slices on each fixture page, in document order.
-EXPECTED_SLICES = ["Content", "Tests", "Reference", "Meta"]
+EXPECTED_SLICES = ["Syntax references", "Guides", "Reference", "Meta"]
 
 # The explicitly named domain on each fixture page.
-EXPLICIT_DOMAIN_NAME = "Ulwazi sample documentation"
+EXPECTED_DOMAIN_NAME = "Ulwazi cheat sheet links"
 
 
 def _load(name: str, path: Path) -> tuple[BeautifulSoup | None, list[str]]:
@@ -282,9 +287,9 @@ def test_structured_toc_rendering():
             assert box["height"] <= 2, (
                 f"[{name}] domain-aria-target span is not visually hidden (box: {box})"
             )
-            assert target.text_content() == EXPLICIT_DOMAIN_NAME, (
+            assert target.text_content() == EXPECTED_DOMAIN_NAME, (
                 f"[{name}] domain-aria-target span text is "
-                f"{target.text_content()!r}, expected {EXPLICIT_DOMAIN_NAME!r}"
+                f"{target.text_content()!r}, expected {EXPECTED_DOMAIN_NAME!r}"
             )
 
         browser.close()

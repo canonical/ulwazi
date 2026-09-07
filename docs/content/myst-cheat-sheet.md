@@ -228,24 +228,24 @@ Wide grid table, default aligned:
 
 Grid table with table directive, default aligned:
 
-:::{table}
+```{table}
 
   | Header 1                           | Header 2 |
   |------------------------------------|----------|
   | [1,1]<br>Second paragraph          | [1,2]    |
   | [2,1]                              | [2,2]    |
-:::
+```
 
 Grid table with table directive, right aligned:
 
-:::{table}
+```{table}
 :align: right
 
   | Header 1                           | Header 2 |
   |------------------------------------|----------|
   | [1,1]<br>Second paragraph          | [1,2]    |
   | [2,1]                              | [2,2]    |
-:::
+```
 
 ### List tables
 
@@ -284,22 +284,22 @@ List table, right aligned:
 
 CSV table, default aligned:
 
-:::{csv-table}
+```{csv-table}
 :header: >
 :  "Header 1", "Header 2"
 "[1,1]", "[1,2]"
 "[2,1]", "[2,2]"
-:::
+```
 
 CSV table, right aligned:
 
-:::{csv-table}
+```{csv-table}
 :align: right
 :header: >
 :  "Header 1", "Header 2"
 "[1,1]", "[1,2]"
 "[2,1]", "[2,2]"
-:::
+```
 
 ## Notes
 
@@ -378,7 +378,7 @@ Ulwazi supports the sphinx-design extension for tabs.
 
 
 
-````{tab-set}
+`````{tab-set}
 
 ```{tab-item} Tab 1
 :sync: key1
@@ -397,14 +397,14 @@ Content Tab 2
 Content Tab 3
 ```
 
-:::{tab-item} Long code
+````{tab-item} Long code
 
 ```yaml
 path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
 ```
-:::
-
 ````
+
+`````
 
 ## Metadata
 
@@ -452,28 +452,71 @@ some term
 
 Use the `domain` and `slice` directives (from the
 [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)
-extension) to build compact, accessible tables of contents. A `domain`
-contains one or more `slice` blocks, and each slice holds one `{doc}`
-link per line. See {doc}`structured-toc-myst` for a full example.
+extension) to build compact, accessible tables of contents, independent of
+Sphinx `toctree`s. A `domain` contains one or more `slice` blocks, and each
+slice holds one `{doc}` link per line.
 
-:::::{domain} Cheat sheet links
+The blocks below are wrapped in `{only} html` because the extension ships HTML
+rendering only; without that guard, the PDF build fails on its nodes. Note
+that fences do not nest at the same fence count, so each level needs more
+backticks than the level inside it: `{only}` (5) > `{domain}` (4) > `{slice}` (3).
+
+### Domain named after a section heading
+
+With no argument, the domain takes its name from the nearest enclosing section
+heading, and items keep their visible text as their accessible name:
+
+`````{only} html
+
+````{domain}
+
+```{slice} Syntax references
+
+{doc}`This page <myst-cheat-sheet>`
+{doc}`RST cheat sheet <rst-cheat-sheet>`
+
+```
+
+```{slice} Guides
+
+{doc}`Contribution guide <contribute>`
+{doc}`Testing strategy <testing-strategy>`
+
+```
+
+````
+
+`````
+
+### Explicit domain name
+
+An argument overrides the derived name. The trailing `slice` and `domain`
+keywords add that context to an item's accessible name, so links that share
+visible text (`Overview` below) stay distinguishable for screen reader users.
+`:suppress-warnings:` silences the resulting ambiguity warnings:
+
+`````{only} html
+
+````{domain} Ulwazi cheat sheet links
 :suppress-warnings:
 
-:::{slice} Syntax references
+```{slice} Reference
 
-{doc}`This page <myst-cheat-sheet>` slice
-{doc}`RST cheat sheet <rst-cheat-sheet>` slice
+{doc}`Overview <../index>` slice
+{doc}`Roadmap <roadmap>` slice
 
-:::
+```
 
-:::{slice} Guides
+```{slice} Meta
 
-{doc}`Contribution guide <contribute>` domain
-{doc}`Testing strategy <testing-strategy>` domain
+{doc}`Overview <testing-strategy>` domain
+{doc}`Tests <tests/index>` domain
 
-:::
+```
 
-:::::
+````
+
+`````
 
 <!-- ## Custom extensions
 

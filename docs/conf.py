@@ -355,31 +355,6 @@ extensions = [
 ]
 
 
-def _latex_ignore_node(_translator, _node):
-    """No-op LaTeX visitor for sphinx-structured-toc nodes.
-
-    sphinx-structured-toc registers HTML visitors only, so the LaTeX (PDF)
-    builder raises "unknown node type" on its Domain/Slice/SliceItem nodes.
-    The structured tables of contents are a web-navigation aid, so skipping
-    them in the PDF output is acceptable: the surrounding prose still
-    appears. Remove this once the extension ships its own LaTeX visitors.
-    """
-
-
-def setup(app):
-    from sphinx_structured_toc import nodes as structured_toc_nodes
-
-    for node_class in (
-        structured_toc_nodes.Domain,
-        structured_toc_nodes.Slice,
-        structured_toc_nodes.SliceItem,
-    ):
-        app.add_node(
-            node_class,
-            latex=(_latex_ignore_node, _latex_ignore_node),
-            override=True,
-        )
-
 
 # Excludes files or directories from processing
 
