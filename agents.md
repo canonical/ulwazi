@@ -237,7 +237,7 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   `docs/conf.py` changes are needed; (2) in MyST, fences do not nest at the
   same fence count, so each nesting level needs more backticks than the level
   inside it. The cheat sheets use backtick directive fences
-  (`` ```{slice} `` etc.) with the ordering `{only}` (5 backticks) >
+  (` ```{slice} ` etc.) with the ordering `{only}` (5 backticks) >
   `{domain}` (4) > `{slice}` (3); the Tabs section needs `{tab-set}` at 5
   backticks because it contains a `{tab-item}` (4) that itself contains a
   code block (3); (3) `:doc:` targets
