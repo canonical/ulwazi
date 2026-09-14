@@ -96,6 +96,7 @@ def config_inited(app: Sphinx, config: Config) -> None:
         ("sequential_nav", "none"),
         ("display_contributors", True),
         ("path", "/docs"),
+        ("tag_id", "GTM-N384JMX2"),
     ]
 
     for value, default in values_and_defaults:
