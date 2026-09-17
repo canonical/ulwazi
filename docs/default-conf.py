@@ -151,7 +151,7 @@ html_context = {
         "url": github_repo + "/blob/" + source_branch + "/LICENSE",
     },
     # Google Tag Manager ID (defaults to Canonical's GTM ID).
-    # "tag_id": "custom_tag_id",
+    # "tag_id": "google_tag_id",
     # Your Discourse instance URL
     #
     # TODO: Change to your Discourse instance URL or leave empty.
