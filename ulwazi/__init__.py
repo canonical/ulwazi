@@ -41,7 +41,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     :returns: The extension's metadata
     """
     app.add_html_theme("ulwazi", str(Path(__file__).parent / "theme/ulwazi"))
-    app.add_config_value("localtoc_max_depth", None, "html")
+    app.add_config_value("localtoc_max_depth", -1, "html")
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
