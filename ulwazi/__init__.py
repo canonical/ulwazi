@@ -27,10 +27,13 @@ from bs4.element import AttributeValueList
 from docutils import nodes
 from sphinx.application import Sphinx
 from sphinx.config import Config
+from sphinx.util import logging as sphinx_logging
 from sphinx.util.typing import ExtensionMetadata
 
 from ulwazi.navigation import get_navigation_tree
 from ulwazi.tabs import convert_tabs
+
+logger = sphinx_logging.getLogger(__name__)
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
@@ -86,6 +89,19 @@ def config_inited(app: Sphinx, config: Config) -> None:
         "js/search-breadcrumbs.js",
         "js/theme-toggle.js",
     ]
+
+    # Deprecated aliases from the old canonical-sphinx theme: honour them if
+    # set, but only when the user hasn't already set the new-style name.
+    deprecated_aliases = [
+        ("github_version", "repo_branch"),
+        ("github_folder", "repo_folder"),
+    ]
+    for old_name, new_name in deprecated_aliases:
+        if old_name in html_context and new_name not in html_context:
+            logger.warning(
+                f"conf.py setting '{old_name}' is deprecated. Use '{new_name}' instead.",
+            )
+            html_context[new_name] = html_context[old_name]
 
     values_and_defaults = [
         ("product_tag", "_static/tag.png"),

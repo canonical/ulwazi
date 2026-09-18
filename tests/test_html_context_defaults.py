@@ -22,12 +22,16 @@ docs/content/testing-strategy.md): a project that enables the feedback
 button (``feedback`` and ``github_url``) without also setting
 ``repo_branch``, ``repo_folder``, or ``default_source_extension`` must still
 build successfully, using the same defaults the theme documents in
-``docs/default-conf.py``.
+``docs/default-conf.py``. It also covers the deprecated ``github_version``
+and ``github_folder`` aliases inherited from the old canonical-sphinx theme:
+if a migrating project still sets them, their values must still be honoured
+(with a deprecation warning), rather than silently ignored.
 
-Builds ``tests/fixtures/feedback-no-repo-vars`` through Sphinx's Python API,
-so coverage.py can attribute the run to the ``setup`` function in
-``ulwazi/__init__.py``. It can't reuse the sample docs in ``docs/content``,
-because ``docs/conf.py`` always sets these values explicitly.
+Both tests build their fixture through Sphinx's Python API, so coverage.py
+can attribute the run to the ``setup``/``config_inited`` functions in
+``ulwazi/__init__.py``. They can't reuse the sample docs in
+``docs/content``, because ``docs/conf.py`` always sets these values
+explicitly.
 """
 
 import io
@@ -36,6 +40,9 @@ from pathlib import Path
 from sphinx.application import Sphinx
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "feedback-no-repo-vars"
+DEPRECATED_ALIASES_FIXTURE_DIR = (
+    Path(__file__).parent / "fixtures" / "deprecated-github-aliases"
+)
 
 
 def test_builds_with_feedback_enabled_and_no_repo_vars_set(tmp_path: Path) -> None:
@@ -55,3 +62,30 @@ def test_builds_with_feedback_enabled_and_no_repo_vars_set(tmp_path: Path) -> No
 
     html = (tmp_path / "_build" / "index.html").read_text()
     assert 'href="https://github.com/canonical/example/edit/maindocsindex.rst"' in html
+
+
+def test_deprecated_github_aliases_are_honoured_with_a_warning(tmp_path: Path) -> None:
+    """A conf.py using the deprecated github_version/github_folder aliases
+    must have their values applied to repo_branch/repo_folder, and must emit
+    a deprecation warning for each alias used."""
+    warning_stream = io.StringIO()
+    app = Sphinx(
+        srcdir=str(DEPRECATED_ALIASES_FIXTURE_DIR),
+        confdir=str(DEPRECATED_ALIASES_FIXTURE_DIR),
+        outdir=str(tmp_path / "_build"),
+        doctreedir=str(tmp_path / "_doctrees"),
+        buildername="html",
+        status=io.StringIO(),
+        warning=warning_stream,
+    )
+    app.build()
+
+    html = (tmp_path / "_build" / "index.html").read_text()
+    assert (
+        'href="https://github.com/canonical/example/edit/stable/2.0documentationindex.rst"'
+        in html
+    )
+
+    warnings = warning_stream.getvalue()
+    assert "'github_version' is deprecated" in warnings
+    assert "'github_folder' is deprecated" in warnings
