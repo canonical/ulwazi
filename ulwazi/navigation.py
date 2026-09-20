@@ -17,7 +17,7 @@
 """Generate the navigation tree from the Sphinx toctree function."""
 
 import functools
-from typing import cast
+from typing import Any, cast
 
 from bs4 import BeautifulSoup, Tag
 from bs4.element import AttributeValueList, PageElement
@@ -168,5 +168,55 @@ def get_navigation_tree(toctree_html: str) -> str:
             "current-page"
         )
         _mark_current_link(last_element_with_current)
+
+    return str(soup)
+
+
+def add_help_links(navigation_html: str, help_links: dict[str, Any] | None) -> str:
+    """Append the conf.py-configured "Get help" links after the navigation tree.
+
+    Built directly here, rather than as toctree entries, so the links keep their
+    own p-link--soft styling instead of picking up the p-side-navigation__link
+    styling get_navigation_tree() gives every real toctree entry above.
+    """
+    if not help_links:
+        return navigation_html
+
+    soup = BeautifulSoup(navigation_html, "html.parser")
+
+    container = soup.new_tag(
+        "div", attrs={"class": "p-help-links p-help-links--match-globaltoc"}
+    )
+
+    # Mirror the markup Sphinx emits for a toctree :caption: so the heading picks
+    # up the theme's own .caption styling instead of restating it here.
+    heading = soup.new_tag("p", attrs={"class": "caption", "role": "heading"})
+    icon = soup.new_tag(
+        "i", attrs={"class": "p-icon--help p-help-links__icon", "aria-hidden": "true"}
+    )
+    heading.append(icon)
+    caption_text = soup.new_tag("span", attrs={"class": "caption-text"})
+    caption_text.string = help_links["title"]
+    heading.append(caption_text)
+    container.append(heading)
+
+    link_list = soup.new_tag("ul", attrs={"class": "p-list"})
+    for link in help_links["links"]:
+        item = soup.new_tag("li", attrs={"class": "p-list__item"})
+        anchor = soup.new_tag(
+            "a",
+            attrs={
+                "class": "p-link--soft p-text--small u-no-margin--bottom",
+                "href": link["url"],
+            },
+        )
+        anchor.string = link["text"]
+        item.append(anchor)
+        link_list.append(item)
+    container.append(link_list)
+
+    aside = soup.new_tag("aside")
+    aside.append(container)
+    soup.append(aside)
 
     return str(soup)
