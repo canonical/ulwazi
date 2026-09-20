@@ -37,3 +37,17 @@ $font-line-height-h6: 1.5rem; // 24px
 $font-weight-p: 400;
 $font-size-p: 0.875rem;     // 14px
 $font-line-height-p: 1.25rem; // 20px
+
+/*
+  Left sidebar navigation geometry.
+
+  $nav-offset-left is the text inset of every sidebar nav link (and the search
+  box input text and section captions). It is derived from the active-item
+  indicator: the indicator bar is 0.1875rem (3px) wide at the very left edge
+  of the link, and we want exactly 16px of gap between the bar and the first
+  letter: 3px + 16px = 19px = 1.1875rem.
+
+  $nav-indent-step is the extra indent per nesting level (levels 2-5).
+*/
+$nav-offset-left: 1.1875rem; // 19px = 3px indicator + 16px gap
+$nav-indent-step: 1rem; // per-level indent for nested nav items

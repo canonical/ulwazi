@@ -488,7 +488,8 @@ div.terminal > div.input > button.copybtn svg {
   font-size: 0.875rem !important;
   padding-top: calc(0.25rem - 1.5px) !important;
   padding-bottom: calc(0.25rem - 1.5px) !important;
-  padding-left: 0.5rem !important;
+  // Keep the search text aligned with the sidebar nav link text
+  padding-left: $nav-offset-left !important;
 }
 
 .p-search-box__reset {
