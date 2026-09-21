@@ -263,7 +263,7 @@ When editing documentation or markdown files:
 
 - [Vanilla Framework](https://github.com/canonical/vanilla-framework)
 - [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng)
-- [Demo site](https://canonical-ulwazi.readthedocs-hosted.com/)
+- [Demo site](https://documentation.ubuntu.com/ulwazi/)
 - [Repository](https://github.com/canonical/ulwazi)
 
 ## Maintaining This Guide
