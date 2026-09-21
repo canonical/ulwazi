@@ -473,6 +473,15 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
 }
 
+#####################################
+# sphinx-filtered-toctree configuration #
+#####################################
+
+# Tags listed here are filtered out of filtered-toctree entries.
+# Used by the sample on docs/content/tests/extension-compatibility.md
+# to demonstrate that excluded entries are dropped from the output.
+toc_filter_exclude = ["toc-filter-demo"]
+
 # PDF
 
 set_modern_pdf_config = True

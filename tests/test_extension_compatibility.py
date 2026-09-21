@@ -97,9 +97,21 @@ def _check_sphinxcontrib_jquery(soup: BeautifulSoup) -> None:
 
 
 def _check_sphinx_filtered_toctree(soup: BeautifulSoup) -> None:
-    """sphinx_filtered_toctree: the filtered toctree renders its entries."""
+    """sphinx_filtered_toctree: entries render, excluded tags are filtered out."""
     assert soup.select(".toctree-wrapper"), (
         "No filtered toctree (.toctree-wrapper) found on the extensions page"
+    )
+    wrapper = soup.select_one(".toctree-wrapper")
+    links = [a.get_text() for a in wrapper.find_all("a")]
+    # Entries with a non-excluded tag must be included:
+    assert "Ulwazi demo site" in links, "show-demo entry was filtered out"
+    assert "Sphinx Stack docs" in links, "show-demo entry was filtered out"
+    # Entries tagged with the excluded toc-filter-demo tag must be dropped:
+    assert "Ulwazi repository" not in links, (
+        "toc-filter-demo entry was not filtered out by toc_filter_exclude"
+    )
+    assert "Vanilla Framework" not in links, (
+        "toc-filter-demo entry was not filtered out by toc_filter_exclude"
     )
 
 

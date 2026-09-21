@@ -14493,6 +14493,14 @@ button.copybtn:hover {
   width: 100%;
 }
 
+/*
+  Extension compatibility styling.
+*/
+.configoption .basicinfo .anchor .icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
 .copybtn.o-tooltip--left[data-tooltip]::before,
 .copybtn.o-tooltip--left[data-tooltip]::after {
   content: none !important;

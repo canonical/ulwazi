@@ -160,15 +160,21 @@ Reading package lists... Done
 
 ### Filtered toctree (sphinx_filtered_toctree)
 
-The filtered toctree below includes the cheatsheets only when the
-`show-cheatsheets` filter is not excluded via `toc_filter_exclude`:
+The filtered toctree below uses filter tags on its entries. Entries whose
+tag is listed in the `toc_filter_exclude` config value are dropped from
+the output. Here, the `show-demo` tag is not excluded (so those entries
+are included), while the `toc-filter-demo` tag is excluded (so those
+entries are dropped). External URLs are used as targets so the sample
+does not graft additional pages into the global navigation:
 
 ```{eval-rst}
 .. filtered-toctree::
    :maxdepth: 1
 
-   MyST cheat sheet <../myst-cheat-sheet>
-   RST cheat sheet <../rst-cheat-sheet>
+   Ulwazi demo site <:show-demo:https://documentation.ubuntu.com/ulwazi/>
+   Sphinx Stack docs <:show-demo:https://documentation.ubuntu.com/sphinx-stack/>
+   Ulwazi repository <:toc-filter-demo:https://github.com/canonical/ulwazi>
+   Vanilla Framework <:toc-filter-demo:https://vanillaframework.io/>
 ```
 
 ### Structured TOC (sphinx_structured_toc)
