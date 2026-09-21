@@ -74,8 +74,9 @@ Supporting them in the theme is tracked as follow-up work:
 The test parses the HTML that Sphinx already builds under `docs/_build/`
 using [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) —
 no browser needed, since these checks don't depend on rendered appearance.
-Each extension has its own parametrized test case, so the pytest output
-shows one line per extension.
+All extension checks run inside a single test case that reports one line
+with a pass/total summary (for example `16/16`) when green, and lists
+exactly which extensions failed and why when red.
 
 ```shell
 make docs

@@ -10,8 +10,9 @@ sections on docs/content/tests/extension-compatibility.md exercise each
 of them. These tests parse the built HTML and build artifacts -- no
 browser needed.
 
-Each extension gets its own parametrized test case, so the pytest output
-shows one line per extension.
+All extension checks run inside a single test case that reports one
+PASSED line with a pass/total summary (for example 16/16) when green,
+and lists exactly which extensions failed and why when red.
 
 Known gaps (documented in docs/content/tests/extension-compatibility.md):
 sphinx_contributor_listing, sphinx_related_links, and
@@ -102,6 +103,7 @@ def _check_sphinx_filtered_toctree(soup: BeautifulSoup) -> None:
         "No filtered toctree (.toctree-wrapper) found on the extensions page"
     )
     wrapper = soup.select_one(".toctree-wrapper")
+    assert wrapper is not None, "No filtered toctree wrapper element found"
     links = [a.get_text() for a in wrapper.find_all("a")]
     # Entries with a non-excluded tag must be included:
     assert "Ulwazi demo site" in links, "show-demo entry was filtered out"
@@ -249,14 +251,51 @@ ARTIFACT_CHECKS = {
 }
 
 
-@pytest.mark.parametrize("extension", list(PAGE_CHECKS) + list(ARTIFACT_CHECKS))
-def test_extension_compatibility(extension: str) -> None:
-    """Verify the theme renders one Sphinx Stack default extension correctly."""
-    if extension in PAGE_CHECKS:
-        soup = _load(EXTENSIONS_PAGE)
-        PAGE_CHECKS[extension](soup)
-    else:
-        ARTIFACT_CHECKS[extension]()
+def _run_check(extension: str, check, *args) -> str | None:
+    """Run one extension check; return a failure description or None.
+
+    pytest's assertion rewriting appends its explanation (the
+    ``assert ...`` diff) to the exception message. The aggregated test
+    already reports the message per extension, so drop the diff to keep
+    the failure output compact.
+    """
+    try:
+        check(*args)
+    except AssertionError as exc:
+        message = str(exc.args[0]) if exc.args else str(exc)
+        # The rewritten explanation starts on a new line with "assert".
+        return f"{extension}: {message.split(chr(10) + 'assert', 1)[0].rstrip()}"
+    return None
+
+
+def test_extension_compatibility() -> None:
+    """Verify the theme renders every Sphinx Stack default extension correctly.
+
+    Runs all extension checks and aggregates the results into a single
+    test outcome: one PASSED line with a pass/total summary when green,
+    or a report of exactly which extensions failed (with their errors)
+    when red.
+    """
+    soup = _load(EXTENSIONS_PAGE)
+    failures: list[str] = []
+
+    for extension, check in PAGE_CHECKS.items():
+        failure = _run_check(extension, check, soup)
+        if failure:
+            failures.append(failure)
+
+    for extension, check in ARTIFACT_CHECKS.items():
+        failure = _run_check(extension, check)
+        if failure:
+            failures.append(failure)
+
+    total = len(PAGE_CHECKS) + len(ARTIFACT_CHECKS)
+    passed = total - len(failures)
+    summary = f"{passed}/{total} extension checks passed"
+
+    if failures:
+        details = "\n".join(f"  - {f}" for f in failures)
+        pytest.fail(f"{summary}. Failed checks:\n{details}", pytrace=False)
 
 
 @pytest.mark.slow
