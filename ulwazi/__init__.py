@@ -29,7 +29,7 @@ from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.util.typing import ExtensionMetadata
 
-from ulwazi.navigation import get_navigation_tree
+from ulwazi.navigation import add_help_links, get_navigation_tree
 from ulwazi.tabs import convert_tabs
 
 
@@ -96,6 +96,7 @@ def config_inited(app: Sphinx, config: Config) -> None:
         ("sequential_nav", "none"),
         ("display_contributors", True),
         ("path", "/docs"),
+        ("help_links", None),
     ]
 
     for value, default in values_and_defaults:
@@ -117,7 +118,8 @@ def _compute_navigation_tree(context: dict[str, Any]) -> str:
     else:
         toctree_html = ""
 
-    return get_navigation_tree(toctree_html)
+    navigation_tree = get_navigation_tree(toctree_html)
+    return add_help_links(navigation_tree, context.get("help_links"))
 
 
 def apply_heading_classes(body_html: str) -> str:
