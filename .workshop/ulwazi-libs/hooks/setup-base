@@ -1,0 +1,2 @@
+apt-get -qq update
+apt-get -qq install make python3.12-venv
