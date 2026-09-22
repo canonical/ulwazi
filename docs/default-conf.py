@@ -233,12 +233,11 @@ html_context = {
 # 'source_edit_link': 'https://github.com/canonical/sphinx-docs-starter-pack',
 # }
 
-# Project slug; see https://meta.discourse.org/t/what-is-category-slug/87897
-#
-# TODO: If your documentation is hosted on https://docs.ubuntu.com/,
-#       uncomment and update as needed.
+# Project slug: the path segment of the docs site URL, e.g. "ulwazi" in
+# https://documentation.ubuntu.com/ulwazi/. Used by the Ulwazi theme to
+# compute notfound_urls_prefix for sphinx-notfound-page.
 
-# slug = ''
+slug = "ulwazi"
 
 # Limit the number of levels for Table of contents
 localtoc_max_depth = 3
@@ -263,6 +262,12 @@ else:
 # Include `lastmod` dates in the sitemap:
 
 sitemap_show_lastmod = True
+
+# Exclude the generated 404 page from the sitemap:
+
+sitemap_excludes = [
+    "404/",
+]
 
 #######################
 # Template and asset locations
@@ -332,19 +337,12 @@ myst_enable_extensions = {
 # Custom Sphinx extensions; see
 # https://www.sphinx-doc.org/en/master/usage/extensions/index.html
 
-# NOTE: The canonical_sphinx extension is required for the starter pack.
-#       It automatically enables the following extensions:
-#       - custom-rst-roles
-#       - myst_parser
-#       - notfound.extension
-#       - related-links
-#       - sphinx_copybutton
-#       - sphinx_design
-#       - sphinx_reredirects
-#       - sphinxcontrib.jquery
-#       - sphinxext.opengraph
-#       - terminal-output
-#       - youtube-links
+# NOTE: The Ulwazi theme ("ulwazi") provides the Canonical configuration
+#       defaults that used to come from the canonical_sphinx_config extension.
+#
+# NOTE: "ulwazi" must stay listed before "sphinx_modern_pdf_style": Sphinx fires
+#       'config-inited' in registration order, and the theme injects the
+#       Canonical PDF branding defaults that sphinx_modern_pdf_style reads.
 
 extensions = [
     "sphinx_terminal",
@@ -354,7 +352,7 @@ extensions = [
     "sphinx_sitemap",
     "ulwazi",
     "sphinx_modern_pdf_style",
-    "canonical_sphinx_config",
+    "notfound.extension",
     "myst_parser",
     "sphinxcontrib.jquery",
     "sphinx_design",
