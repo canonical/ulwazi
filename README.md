@@ -27,6 +27,47 @@ If you do not have the `node_modules` directory (for example, after cloning the 
 npm install
 ```
 
+## Upgrading the Vanilla Framework
+
+The theme styles are built on the [Vanilla Framework](https://vanillaframework.io/).
+To upgrade it to a newer version:
+
+1. Check the latest available version:
+
+   ```shell
+   npm view vanilla-framework version
+   ```
+
+2. Update the version in `package.json` (the `vanilla-framework` entry in `dependencies`).
+
+3. Install the new version and recompile the SCSS:
+
+   ```shell
+   make vanilla-main
+   ```
+
+   This runs `npm install` and compiles `ulwazi/theme/ulwazi/assets/main.scss` to
+   `ulwazi/theme/ulwazi/static/css/vanilla-main.css`.
+
+   If the compilation fails, consult the
+   [Vanilla Framework changelog](https://github.com/canonical/vanilla-framework/blob/main/CHANGELOG.md)
+   for breaking changes (for example, renamed or removed mixins and settings) and
+   update `ulwazi/theme/ulwazi/assets/` accordingly.
+
+4. Rebuild the docs and verify the result:
+
+   ```shell
+   make rebuild
+   make test
+   ```
+
+   Additionally, check the sample documentation in a browser (`make run`) for visual
+   regressions, especially on the
+   [cheat sheet pages](docs/content/) that exercise most theme components.
+
+Both `package.json` and `package-lock.json` are tracked in git, so commit the
+updated lock file together with the version bump.
+
 ## Testing
 
 A Makefile includes some basic functionality to build the theme and then build and run the test content with the theme.

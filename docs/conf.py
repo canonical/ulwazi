@@ -200,7 +200,7 @@ html_context = {
     "link2_name": "Second optional link",
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
-    "add_product_menu": True,
+    "add_product_menu": False,
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "/",

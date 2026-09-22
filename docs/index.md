@@ -72,9 +72,16 @@ This is a test about SCSS propagation.
 
 ```{toctree}
 :hidden:
-
+:caption: Sample content
 Home <self>
 content/test
+content/rst-cheat-sheet.rst
+content/myst-cheat-sheet.md
+```
+
+```{toctree}
+:hidden:
+:caption: Ulwazi documentation
 content/contribute
 content/tests/index
 Use Ulwazi in your documentation <https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/>
