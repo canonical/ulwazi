@@ -3,8 +3,13 @@
 The structured TOC tests verify that the
 [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)
 extension works with the Ulwazi theme: its `domain` and `slice` directives
-render correctly in both RST and MyST source syntax, and the accessibility
-markup they produce survives Ulwazi's HTML post-processing.
+render correctly in both RST and MyST source syntax, with the accessibility
+markup they produce surviving Ulwazi's HTML post-processing.
+
+Throughout this page, *domain* means a named group of related documentation
+links and *slice* means one subsection of that group. See the
+[extension's README](https://github.com/canonical/sphinx-structured-toc)
+for details.
 
 This implements the "Extension compatibility" test category from the
 {doc}`testing strategy <../testing-strategy>`.
@@ -33,8 +38,9 @@ For each fixture page, the fast test verifies:
   context disambiguates them for screen reader users.
 - The extension's `domain-list.css` is linked on the page.
 
-The slow test (marked `slow`, run with `make test-slow`) additionally
-verifies the rendered appearance in a real browser with Playwright:
+Fast tests run with `make test`. The slow test (marked `slow`, run with
+`make test-slow`) additionally verifies the rendered appearance in a real
+browser with Playwright:
 
 - Slice items flow inline (one line per slice), as `domain-list.css`
   intends.
@@ -63,9 +69,9 @@ uv run pytest tests/test_structured_toc.py
 ```
 
 All structural checks are grouped into a single `test_structured_toc_markup`
-test, so the pytest summary stays one line when everything passes. If a
-check fails, the assertion message lists every specific problem found,
-tagged by page.
+test, so the pytest summary is output on a single line when everything
+passes. If a check fails, the assertion message lists every specific problem
+found, tagged by page.
 
 ```{note}
 The extension registers HTML visitors only, so the LaTeX (PDF) builder

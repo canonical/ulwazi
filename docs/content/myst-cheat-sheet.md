@@ -550,18 +550,27 @@ some term
 Use the `domain` and `slice` directives (from the
 [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)
 extension) to build compact, accessible tables of contents, independent of
-Sphinx `toctree`s. A `domain` contains one or more `slice` blocks, and each
-slice holds one `{doc}` link per line.
+Sphinx `toctree`s.
+
+A *domain* is a named group of related documentation links. A *slice* is one
+subsection of that group; the domain shown here, for example, groups links
+into "Syntax references" and "Guides" slices. Each slice holds one `{doc}`
+link per line.
 
 The blocks below are wrapped in `{only} html` because the extension ships HTML
-rendering only; without that guard, the PDF build fails on its nodes. Note
-that fences do not nest at the same fence count, so each level needs more
+rendering only; without that guard, the PDF build fails on its nodes. If you
+also publish a PDF of your docs, use Sphinx `toctree`s there instead --
+`{only} html` content is skipped in that build. For conditional rendering in
+general, see the [Sphinx `only` directive
+documentation](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#conditional-inclusion-of-documents).
+Note that fences do not nest at the same fence count, so each level needs more
 backticks than the level inside it: `{only}` (5) > `{domain}` (4) > `{slice}` (3).
 
 ### Domain named after a section heading
 
-With no argument, the domain takes its name from the nearest enclosing section
-heading, and items keep their visible text as their accessible name:
+With no argument, the domain takes its *derived name* from the nearest
+enclosing section heading, and items keep their visible text as their
+accessible name:
 
 `````{only} html
 
@@ -589,8 +598,8 @@ heading, and items keep their visible text as their accessible name:
 
 An argument overrides the derived name. The trailing `slice` and `domain`
 keywords add that context to an item's accessible name, so links that share
-visible text (`Overview` below) stay distinguishable for screen reader users.
-`:suppress-warnings:` silences the resulting ambiguity warnings:
+visible text (`Overview` below) stay distinguishable for users of screen
+readers. `:suppress-warnings:` silences the resulting ambiguity warnings:
 
 `````{only} html
 
