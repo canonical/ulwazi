@@ -35,10 +35,12 @@ For each fixture page, the fast test verifies:
 - Items marked with the trailing `slice`/`domain` keywords carry both `id`
   and `aria-labelledby` on their `<a>` tag; unmarked items carry neither.
 - Duplicate visible link texts have distinct accessible names -- the ARIA
-  context disambiguates them for screen reader users.
+  context disambiguates them for users of screen readers.
 - The extension's `domain-list.css` is linked on the page.
 
-Fast tests run with `make test`. The slow test (marked `slow`, run with
+Fast tests run with `make test`.
+
+The slow test (marked `slow`, run with
 `make test-slow`) additionally verifies the rendered appearance in a real
 browser with Playwright:
 
