@@ -2,7 +2,7 @@
 
 The structured TOC tests verify that the
 [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)
-extension works with the Ulwazi theme: its `domain` and `slice` directives
+extension works with the Ulwazi theme, that its `domain` and `slice` directives
 render correctly in both RST and MyST source syntax, with the accessibility
 markup they produce surviving Ulwazi's HTML post-processing.
 
@@ -51,16 +51,16 @@ browser with Playwright:
 ## What is not tested
 
 The test doesn't re-test the extension's internals (directive parsing, id
-generation, ambiguity warnings) -- only that Ulwazi's build wires the
+generation, ambiguity warnings), only that Ulwazi's build wires the
 extension up correctly and that its output stays intact and legible under
 the theme.
 
 ## How it's tested
 
-The fast test parses the HTML files Sphinx already builds under
+The fast test parses the HTML files that Sphinx already builds under
 `docs/_build/` using
 [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/). The slow
-test loads the built pages in Chromium via
+test loads the built pages in Chromium with
 [Playwright](https://playwright.dev/) and inspects element geometry.
 
 ```shell
