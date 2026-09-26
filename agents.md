@@ -39,7 +39,8 @@ in its terminal.
 ### Testing
 
 ```bash
-make test         # Run all tests
+make test         # Run fast tests
+make test-all     # Run all fast and slow tests (includes PDF and Playwright)
 ```
 
 Available tests:
@@ -47,6 +48,8 @@ Available tests:
 - **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_seo_metadata.py**: Verifies SEO/metadata tags (title, description, canonical, favicon, Open Graph) on built pages
+- **test_structured_toc.py**: Verifies domain/slice markup and ARIA in RST and MyST HTML (fast test); browser styling and LaTeX content from both cheat sheets are grouped into a single slow test _(partially slow)_
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
 
 ### Cleaning
@@ -237,6 +240,23 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   (the latter is a stale sphinx-basic-ng convention that Sphinx 7.4+ no longer
   populates); `favicon_url` is already a fully resolved URL and must not be passed
   through `pathto()` again.
+- **sphinx-structured-toc**: enabled in `docs/conf.py` (`sphinx_structured_toc`),
+  declared at `>=0.2.0` in the `docs` dependency group in `pyproject.toml`. Provides the
+  `domain`/`slice` directives for accessible tables of contents (independent of
+  `toctree`s); ships its own `domain-list.css` automatically. Examples live in
+  the "Structured tables of contents" sections of the two cheat sheets, which
+  double as the HTML and LaTeX fixtures for `tests/test_structured_toc.py`
+  (no dedicated sample pages). PDF support in 0.2.0 emits bold slice labels
+  and linked list items; ARIA attributes apply only to HTML. No `only html`
+  wrapper or custom LaTeX visitor is needed in `docs/conf.py`.
+  Gotchas: (1) in MyST, fences do not nest at the same fence count; use
+  `{domain}` (4 backticks) > `{slice}` (3). The Tabs section needs
+  `{tab-set}` at 5 backticks because it contains a `{tab-item}` (4) that
+  itself contains a code block (3); (2) when Sphinx combines both cheat
+  sheets into one LaTeX document, identically named unmarked items from
+  each sheet trigger ambiguity warnings -- use `:suppress-warnings:` on
+  their domains; (3) keep `:suppress-warnings:` for the deliberately
+  ambiguous links in the explicitly named domains as well.
 
 ## Testing Locations
 
