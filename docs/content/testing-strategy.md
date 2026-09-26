@@ -307,6 +307,11 @@ what a good test in this project looks like:
 - [ ] It is marked `slow` if it needs extra system dependencies (e.g., LaTeX,
       Playwright) or takes long to run; otherwise it stays in the fast
       tier.
+- [ ] It groups all of its checks into a single test case (one per tier, if it
+      has both fast and slow checks), so a green run reports one `PASSED`
+      line, and a red run lists every failed check tagged by page and part
+      in one failure message. See the
+      {ref}`test output convention <test-output-convention>`.
 - [ ] It uses the right tool for the layer: Beautiful Soup for HTML structure,
       Playwright for rendered appearance and interaction.
 - [ ] If it tests output processed by the theme's Python code (for example, the

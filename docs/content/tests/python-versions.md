@@ -1,3 +1,4 @@
+(python-version-tests)=
 # Python version compatibility tests
 
 The Python version compatibility tests verify that the Ulwazi theme can be
