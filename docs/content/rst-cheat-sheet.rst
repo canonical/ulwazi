@@ -668,12 +668,9 @@ subsection of that group; the domain shown here, for example, groups links
 into "Syntax references" and "Guides" slices. Each slice holds one ``:doc:``
 link per line.
 
-The blocks below are wrapped in ``.. only:: html`` because the extension ships
-HTML rendering only; without that guard, the PDF build fails on its nodes. If
-you also publish a PDF of your docs, use Sphinx ``toctree``\ s there instead --
-``.. only:: html`` content is skipped in that build. For conditional rendering
-in general, see the `Sphinx ``only`` directive documentation
-<https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#conditional-inclusion-of-documents>`_.
+The extension renders these links in HTML and PDF. HTML adds ARIA attributes
+for users of screen readers; PDF displays bold slice names and linked items,
+without HTML-only ARIA attributes.
 
 Domain named after a section heading
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -682,19 +679,18 @@ With no argument, the domain takes its *derived name* from the nearest
 enclosing section heading, and items keep their visible text as their
 accessible name:
 
-.. only:: html
+.. domain::
+   :suppress-warnings:
 
-   .. domain::
+   .. slice:: Syntax references
 
-      .. slice:: Syntax references
+      :doc:`This page <rst-cheat-sheet>`
+      :doc:`MyST cheat sheet <myst-cheat-sheet>`
 
-         :doc:`This page <rst-cheat-sheet>`
-         :doc:`MyST cheat sheet <myst-cheat-sheet>`
+   .. slice:: Guides
 
-      .. slice:: Guides
-
-         :doc:`Contribution guide <contribute>`
-         :doc:`Testing strategy <testing-strategy>`
+      :doc:`Contribution guide <contribute>`
+      :doc:`Testing strategy <testing-strategy>`
 
 Explicit domain name
 ~~~~~~~~~~~~~~~~~~~~
@@ -704,20 +700,18 @@ keywords add that context to an item's accessible name, so links that share
 visible text (``Overview`` below) stay distinguishable for users of screen
 readers. ``:suppress-warnings:`` silences the resulting ambiguity warnings:
 
-.. only:: html
+.. domain:: Ulwazi cheat sheet links
+   :suppress-warnings:
 
-   .. domain:: Ulwazi cheat sheet links
-      :suppress-warnings:
+   .. slice:: Reference
 
-      .. slice:: Reference
+      :doc:`Overview <../index>` slice
+      :doc:`Roadmap <roadmap>` slice
 
-         :doc:`Overview <../index>` slice
-         :doc:`Roadmap <roadmap>` slice
+   .. slice:: Meta
 
-      .. slice:: Meta
-
-         :doc:`Overview <testing-strategy>` domain
-         :doc:`Tests <tests/index>` domain
+      :doc:`Overview <testing-strategy>` domain
+      :doc:`Tests <tests/index>` domain
 
 ----
 

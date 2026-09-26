@@ -50,6 +50,13 @@ browser with Playwright:
   the DOM but visually hidden, so screen readers announce the domain while
   sighted users see the compact list.
 
+The same slow test builds LaTeX in a temporary directory and confirms that
+**both** cheat sheets contribute bold slice names and linked list items to the
+PDF source. The extension supports PDF output starting with version 0.2.0;
+PDF links remain usable, but ARIA attributes are specific to HTML. The LaTeX
+and browser checks run independently, so a LaTeX build failure does not hide
+browser problems, and vice versa.
+
 ## What is not tested
 
 The test doesn't re-test the extension's internals (directive parsing, id
@@ -63,21 +70,24 @@ The fast test parses the HTML files that Sphinx already builds under
 `docs/_build/` using
 [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/). The slow
 test loads the built pages in Chromium with
-[Playwright](https://playwright.dev/) and inspects element geometry.
+[Playwright](https://playwright.dev/) and inspects element geometry, then
+runs Sphinx separately with warnings treated as errors and checks the
+generated `.tex` before the PDF target removes intermediate files.
 
 ```shell
 make docs
 uv run pytest tests/test_structured_toc.py
 ```
 
-All structural checks are grouped into a single `test_structured_toc_markup`
-test, so the pytest summary is output on a single line when everything
-passes. If a check fails, the assertion message lists every specific problem
-found, tagged by page.
+The checks are grouped into two tests -- `test_structured_toc_markup` for
+everything that only needs the built HTML, and `test_structured_toc_slow`
+for the LaTeX and browser checks -- so each pytest run reports a single
+line per tier it selects: `make test` and `make test-slow` each report one
+result, and a full run (`make test-all`) reports both. If a check fails, the
+failure message lists every specific problem found, tagged by page and
+checked part.
 
-```{note}
-The extension registers HTML visitors only, so the LaTeX (PDF) builder
-would fail on its nodes. Every `domain`/`slice` example is wrapped in
-`.. only:: html` (RST) or `{only} html` (MyST), so the PDF builder never
-sees these nodes at all -- no changes to `docs/conf.py` are needed.
-```
+The cheat-sheet examples use native `domain`/`slice` directives without
+HTML-only wrappers. When combined into one LaTeX document, identical
+unmarked links from the two cheat sheets trigger the extension's ambiguity
+warnings; their domains use `:suppress-warnings:` to keep the build clean.

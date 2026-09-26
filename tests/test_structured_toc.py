@@ -1,11 +1,10 @@
 """Regression tests for the sphinx-structured-toc extension integration.
 
 Scope follows the Ulwazi testing strategy (see docs/content/testing-strategy.md
-and docs/content/tests/structured-toc.md): we only check that Ulwazi's build
-wires the extension up correctly and that its accessibility markup survives
-Ulwazi's HTML post-processing (``_html_page_context`` in ``ulwazi/__init__.py``
-rewrites parts of the page). We do not re-test the extension's internals --
-only that:
+and docs/content/tests/structured-toc.md): we check that Ulwazi's build wires
+the extension up, that its accessibility markup survives Ulwazi's HTML
+post-processing, and that the PDF includes the links from both cheat sheets.
+We do not re-test the extension's internals.
 
 The fixtures are the "Structured tables of contents" sections of the two
 cheat sheets, which double as the theme's rendering reference (there are no
@@ -19,14 +18,16 @@ dedicated sample pages for this feature):
   ``aria-labelledby``;
 * the extension's ``domain-list.css`` is shipped and linked on every page.
 
-All structural checks are grouped into a single test so CI output stays a
-single line when everything passes. On failure, every individual problem
-found (across all checked pages) is listed in the assertion message.
-
-The rendered-appearance checks (inline flow, visually-hidden domain span)
-run in a separate, Playwright-based test marked ``slow``.
+The tests are grouped into one fast test and one slow test, so each pytest
+run reports a single line for the tier it selects (``make test`` runs the
+fast test, ``make test-slow`` the slow one; a full run reports both). On
+failure, every individual problem found is listed in the failure message,
+tagged by page and checked part. The slow test runs its LaTeX and browser
+checks independently, so a LaTeX build failure does not hide browser
+problems, and a failure on one page does not hide problems on the other.
 """
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -34,7 +35,7 @@ from typing import cast
 
 import pytest
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import Page, sync_playwright
 
 # The cheat sheets are the fixtures: their "Structured tables of contents"
 # sections use the same slice/domain names in both syntaxes, so the same
@@ -54,6 +55,25 @@ EXPECTED_SLICES = ["Syntax references", "Guides", "Reference", "Meta"]
 
 # The explicitly named domain on each fixture page.
 EXPECTED_DOMAIN_NAME = "Ulwazi cheat sheet links"
+
+DOCS_DIR = Path(__file__).resolve().parents[1] / "docs"
+
+# Each slice must retain two actual linked list items in PDF output, not just
+# its label in the prose. The cross-cheat-sheet link differs by format.
+PDF_SLICE_LINKS = {
+    "rst": {
+        "Syntax references": ("This page", "MyST cheat sheet"),
+        "Guides": ("Contribution guide", "Testing strategy"),
+        "Reference": ("Overview", "Roadmap"),
+        "Meta": ("Overview", "Tests"),
+    },
+    "myst": {
+        "Syntax references": ("This page", "RST cheat sheet"),
+        "Guides": ("Contribution guide", "Testing strategy"),
+        "Reference": ("Overview", "Roadmap"),
+        "Meta": ("Overview", "Tests"),
+    },
+}
 
 
 def _load(name: str, path: Path) -> tuple[BeautifulSoup | None, list[str]]:
@@ -226,70 +246,182 @@ def test_structured_toc_markup():
     )
 
 
-@pytest.mark.slow
-def test_structured_toc_rendering():
-    """Verify the rendered appearance of the domain lists in a real browser.
+def _latex_errors(build_dir: Path) -> list[str]:
+    """Build LaTeX in an isolated directory and check both cheat sheets' output.
+
+    ``make docs-pdf`` removes the intermediate TeX files, so build into a
+    temporary directory instead. This checks actual structured-TOC content
+    rather than merely checking that a PDF file exists. No TeX toolchain is
+    needed here. Returns a list of human-readable failure messages; an
+    empty list means every check passed.
+    """
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "sphinx",
+            "-b",
+            "latex",
+            "-W",
+            "--keep-going",
+            ".",
+            str(build_dir),
+        ],
+        cwd=DOCS_DIR,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        return [
+            (
+                f"[latex] build failed (exit {result.returncode}):\n"
+                f"stdout:\n{result.stdout[-4000:]}\nstderr:\n{result.stderr[-4000:]}"
+            )
+        ]
+
+    tex_files = list(build_dir.glob("*.tex"))
+    if len(tex_files) != 1:
+        return [f"[latex] expected one generated TeX file, got {tex_files}"]
+    tex = tex_files[0].read_text(encoding="utf-8")
+
+    errors: list[str] = []
+    for name, expected_slices in PDF_SLICE_LINKS.items():
+        docname = f"content/{name}-cheat-sheet"
+        section = rf"\label{{\detokenize{{{docname}:structured-tables-of-contents}}}}"
+        if section not in tex:
+            errors.append(f"[{name}] missing structured-TOC section in LaTeX")
+            continue
+        # Stop at the next chapter, so one cheat sheet cannot satisfy checks
+        # for the other. In particular, ordinary prose and headings elsewhere
+        # in the book must not make this test pass vacuously.
+        body = tex.split(section, 1)[1].split(r"\chapter{", 1)[0]
+        for slice_name, link_texts in expected_slices.items():
+            match = re.search(
+                rf"\\textbf\{{{re.escape(slice_name)}:\}}\s*"
+                r"\\begin\{itemize\}(.*?)\\end\{itemize\}",
+                body,
+                flags=re.DOTALL,
+            )
+            if match is None:
+                errors.append(f"[{name}] missing bold '{slice_name}' slice and list")
+                continue
+            items = match.group(1)
+            if items.count(r"\item ") != len(link_texts):
+                errors.append(f"[{name}] '{slice_name}' has missing list items")
+            errors.extend(
+                f"[{name}] '{slice_name}' is missing PDF link {link_text!r}"
+                for link_text in link_texts
+                if rf"\DUrole{{doc}}{{{link_text}}}" not in items
+            )
+    return errors
+
+
+def _check_inline_flow(name: str, page: Page) -> list[str]:
+    """Items of one slice must flow inline: the sibling <li> elements of a
+    slice's nested <ul> share the same vertical position.
+
+    A small tolerance allows for sub-pixel rounding.
+    """
+    slice_items = page.query_selector_all("nav.domain-list > ul > li > ul > li")
+    if not slice_items:
+        return [f"[{name}] no slice items rendered"]
+
+    ys = [
+        box["y"] for item in slice_items[:2] if (box := item.bounding_box()) is not None
+    ]
+    if len(ys) < 2:
+        return [f"[{name}] could not measure slice item positions"]
+    if abs(ys[0] - ys[1]) >= 2:
+        return [f"[{name}] slice items are not rendered inline (y positions: {ys})"]
+    return []
+
+
+def _check_domain_span(name: str, page: Page) -> list[str]:
+    """The explicit domain name span must be present in the DOM but visually
+    hidden (1px clip), so screen readers announce the domain while sighted
+    users see the compact list."""
+    target = page.query_selector("span.domain-aria-target")
+    if target is None:
+        return [f"[{name}] domain-aria-target span not found"]
+
+    errors: list[str] = []
+    box = target.bounding_box()
+    if box is None:
+        errors.append(f"[{name}] domain-aria-target span has no box")
+    elif box["width"] > 2 or box["height"] > 2:
+        errors.append(
+            f"[{name}] domain-aria-target span is not visually hidden (box: {box})"
+        )
+
+    text = target.text_content()
+    if text != EXPECTED_DOMAIN_NAME:
+        errors.append(
+            f"[{name}] domain-aria-target span text is {text!r}, "
+            f"expected {EXPECTED_DOMAIN_NAME!r}"
+        )
+    return errors
+
+
+def _browser_errors() -> list[str]:
+    """Check the rendered appearance of the domain lists in a real browser.
 
     The extension's domain-list.css makes slice items flow inline (one line
-    per slice) and visually hides the explicit domain name span while
-    keeping it in the accessibility tree. Both behaviours are easy to break
-    with theme-level CSS, so they are checked with Playwright against the
-    built pages.
+    per slice) and visually hides the explicit domain name span while keeping
+    it in the accessibility tree. Both behaviours are easy to break with
+    theme-level CSS, so they are checked with Playwright against the built
+    pages. Returns a list of human-readable failure messages; an empty list
+    means every check passed.
     """
-    for name, path in PAGES.items():
-        resolved = path.resolve()
-        assert resolved.exists(), (
-            f"[{name}] {resolved} not found -- run 'make docs' first"
-        )
+    missing = [
+        f"[{name}] {path.resolve()} not found -- run 'make docs' first"
+        for name, path in PAGES.items()
+        if not path.resolve().exists()
+    ]
+    if missing:
+        return missing
 
     subprocess.run(
         [sys.executable, "-m", "playwright", "install", "chromium"],
         check=True,
     )
 
+    errors: list[str] = []
     with sync_playwright() as p:
         browser = p.chromium.launch()
         assert browser, "Failed to launch Chromium browser"
         page = browser.new_page()
         assert page, "Failed to create a new browser page"
 
-        for name, path in PAGES.items():
-            page.goto(f"file://{path.resolve()}")
-            assert page.content(), f"[{name}] Page failed to load content"
+        try:
+            for name, path in PAGES.items():
+                page.goto(f"file://{path.resolve()}")
+                if not page.content():
+                    errors.append(f"[{name}] page failed to load content")
+                    continue
+                errors.extend(_check_inline_flow(name, page))
+                errors.extend(_check_domain_span(name, page))
+        finally:
+            browser.close()
+    return errors
 
-            # Items of one slice must flow inline: all sibling <li> elements
-            # of a slice's nested <ul> share the same vertical position.
-            # (Allow a small tolerance for sub-pixel rounding.)
-            slice_items = page.query_selector_all("nav.domain-list > ul > li > ul > li")
-            assert slice_items, f"[{name}] No slice items rendered"
 
-            first_slice_items = slice_items[:2]
-            ys = []
-            for item in first_slice_items:
-                box = item.bounding_box()
-                if box is not None:
-                    ys.append(box["y"])
-            assert len(ys) == 2, f"[{name}] Could not measure slice item positions"
-            assert abs(ys[0] - ys[1]) < 2, (
-                f"[{name}] Slice items are not rendered inline (y positions: {ys})"
-            )
+@pytest.mark.slow
+def test_structured_toc_slow(tmp_path: Path) -> None:
+    """Run every slow structured-TOC check and report the outcome once.
 
-            # The explicit domain name span must be present in the DOM but
-            # visually hidden (1px clip), so screen readers announce the
-            # domain while sighted users see the compact list.
-            target = page.query_selector("span.domain-aria-target")
-            assert target, f"[{name}] domain-aria-target span not found"
-            box = target.bounding_box()
-            assert box is not None, f"[{name}] domain-aria-target span has no box"
-            assert box["width"] <= 2, (
-                f"[{name}] domain-aria-target span is not visually hidden (box: {box})"
-            )
-            assert box["height"] <= 2, (
-                f"[{name}] domain-aria-target span is not visually hidden (box: {box})"
-            )
-            assert target.text_content() == EXPECTED_DOMAIN_NAME, (
-                f"[{name}] domain-aria-target span text is "
-                f"{target.text_content()!r}, expected {EXPECTED_DOMAIN_NAME!r}"
-            )
+    All slow checks (LaTeX content and rendered appearance) are grouped into
+    this single test so a successful run reports one PASSED line, while any
+    failure lists every specific problem found, tagged by page and part.
+    The LaTeX and browser checks run independently: a LaTeX build failure
+    does not hide browser problems, and vice versa.
+    """
+    errors = _latex_errors(tmp_path / "latex")
+    errors.extend(_browser_errors())
 
-        browser.close()
+    if errors:
+        pytest.fail(
+            "structured-TOC slow checks failed:\n"
+            + "\n".join(f"  - {error}" for error in errors),
+            pytrace=False,
+        )
