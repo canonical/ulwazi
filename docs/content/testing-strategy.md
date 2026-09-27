@@ -8,6 +8,7 @@ towards them.
 This is a target to aim for, not a detailed implementation plan.
 Some of the tests described here already exist; others are planned work that
 aligns with the goals in the [roadmap](roadmap.md).
+For the current test inventory and actual coverage, see {doc}`tests/index`.
 
 ## Guiding principles
 
@@ -129,7 +130,7 @@ Main features to cover:
   inline code.
 - **Tables of contents** -- global navigation tree, local (on-page) TOC, and TOC
   depth truncation.
-- **Tabs** -- `sphinx-tabs` rendering and synced tabs.
+- **Tabs** -- `sphinx-design` rendering, tab selection, and synchronisation.
 - **Typography** -- paragraph text, headings, lists, and blockquotes match the
   Vanilla Framework design tokens.
 - **Breadcrumbs** -- breadcrumb navigation reflects the page hierarchy.
@@ -188,7 +189,7 @@ build and test suite pass on every supported Python version.
 What to check:
 
 - Build and test on all supported Python versions (currently 3.10 through
-  3.13).
+  3.14).
 - Build on Ubuntu (the primary CI platform) and macOS (for local development).
 - Verify that the `uv.lock` file is in sync with `pyproject.toml`
   (`make lint-uv-lockfile`).

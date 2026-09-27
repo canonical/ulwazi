@@ -83,7 +83,6 @@ def config_inited(app: Sphinx, config: Config) -> None:
         "js/vanilla-tabs.js",
         "js/nav-toggle.js",
         "js/search.js",
-        "js/search-breadcrumbs.js",
         "js/theme-toggle.js",
     ]
 
@@ -212,8 +211,10 @@ def apply_admonition_classes(body_html: str) -> str:
             if child.get("class") == ["admonition-title"]:
                 # Default to 'information' class notification
                 div_tag = soup.new_tag(
-                    "div", attrs={"class": "p-notification--information", "id": div_id}
+                    "div", attrs={"class": "p-notification--information"}
                 )
+                if div_id:
+                    div_tag["id"] = div_id
                 title = soup.new_tag("h5", attrs={"class": "p-notification__title"})
                 title.string = child.string if child.string else ""
 
@@ -222,10 +223,11 @@ def apply_admonition_classes(body_html: str) -> str:
                     div_tag = soup.new_tag(
                         "div",
                         attrs={
-                            "class": f"p-notification--{admonition_classes[child.text]}",
-                            "id": div_id,
+                            "class": f"p-notification--{admonition_classes[child.text]}"
                         },
                     )
+                    if div_id:
+                        div_tag["id"] = div_id
                     title = soup.new_tag("h5", attrs={"class": "p-notification__title"})
                     title.string = child.string if child.string is not None else ""
             else:
@@ -247,10 +249,10 @@ def modify_inline_code(body_html: str) -> str:
     soup = BeautifulSoup(body_html, "html.parser")
 
     for code in soup.find_all("code", class_="docutils literal notranslate"):
-        child_tags = code.findChildren()
+        child_tags = code.find_all()
         child_text: list[str] = []
         for child in child_tags:
-            child_text.append(child.string)
+            child_text.append(child.string or "")
             child.decompose()
 
         code.string = " ".join(child_text)

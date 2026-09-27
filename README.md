@@ -126,7 +126,9 @@ make test-coverage     # Run tests and generate coverage report
 
 The available tests are:
 
-- **test_site_validation.py** — validates built HTML for broken assets (missing CSS, JS, images)
+- **test_smoke.py** — checks the home-page shell and navigation (fast)
+- **test_assets_structure.py** — checks representative built assets and theme controls (fast)
+- **test_features.py** — checks theme markup (fast) and browser interactions _(slow)_
 - **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
 - **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
 - **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
