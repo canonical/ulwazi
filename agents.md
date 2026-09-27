@@ -20,7 +20,7 @@ make docs
 ```
 
 Build theme and docs, and then run a local web server
-(auto-rebuilds on content changes) to serve them:
+(auto-rebuilds on content and theme changes) to serve them:
 
 ```bash
 make run
@@ -140,7 +140,9 @@ tests/                       # Test scripts
 ### Theme Changes
 
 1. Modify files in [ulwazi/](ulwazi/) or [ulwazi/theme/ulwazi/](ulwazi/theme/ulwazi/)
-2. Run `make rebuild` (theme changes require full rebuild)
+2. `make run` automatically rebuilds the preview; SCSS is compiled before Sphinx
+   copies the resulting CSS. For dependency changes or stale builds, use
+   `make rebuild`.
 3. Test in browser at http://127.0.0.1:8000
 
 ### Content Changes
@@ -216,7 +218,7 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
 - **Virtual Environment**: Located at `.venv/`, managed automatically by [uv](https://docs.astral.sh/uv/) through Make targets
 - **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
 - **Node Modules**: Required for Vanilla Framework compilation
-- **Auto-rebuild**: `make run` watches content changes but NOT theme changes
+- **Auto-rebuild**: `make run` watches both content and theme changes. Changes to shared navigation toctrees may leave older pages with stale sidebars; use `make rebuild` to refresh the site when needed.
 - **Metadata/SEO**: `<title>` suffix, `rel="canonical"`, favicon link, and Open Graph tags
   (`og:title`, `og:description`, `og:image`, etc.) are all generated automatically via
   `sphinxext-opengraph` (declared in `docs/conf.py` `extensions`, and in `pyproject.toml`
