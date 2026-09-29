@@ -97,4 +97,4 @@ jobs:
           if [[ "$BASE_AVAILABLE" == true ]]; then
             args+=(--baseline "$RUNNER_TEMP/coverage-base")
           fi
-          uv run python tests/pr_coverage.py "${args[@]}"
+          python3 tests/pr_coverage.py "${args[@]}"
