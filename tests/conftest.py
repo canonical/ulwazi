@@ -1,14 +1,18 @@
 """Fresh, shared Sphinx build for tests of Ulwazi's rendered HTML."""
 
+import json
 import os
 from io import StringIO
 from pathlib import Path
 
 import pytest
+import yaml
 from bs4 import BeautifulSoup
 from sphinx.application import Sphinx
 
 DOCS = Path(__file__).resolve().parents[1] / "docs"
+FEATURES_MANIFEST = Path(__file__).parent / "features.yaml"
+FEATURE_STATE = Path("results/feature-coverage.json")
 
 
 class BuiltSite:
@@ -75,3 +79,37 @@ def built_site(tmp_path_factory):
             pytrace=False,
         )
     return BuiltSite(output)
+
+
+def pytest_terminal_summary(config, terminalreporter) -> None:
+    """Report mapped checks only during an explicit coverage run."""
+    if (
+        os.environ.get("ULWAZI_COVERAGE_REPORT") != "1"
+        or not FEATURES_MANIFEST.is_file()
+    ):
+        return
+    passed = {report.nodeid for report in terminalreporter.stats.get("passed", [])}
+    manifest = yaml.safe_load(FEATURES_MANIFEST.read_text(encoding="utf-8"))
+    covered, missing = [], []
+    for group in manifest.values():
+        for feature in group:
+            checks = feature.get("checks", [])
+            if checks and all(check in passed for check in checks):
+                covered.append(feature["name"])
+            else:
+                missing.append(feature["name"])
+    total = len(covered) + len(missing)
+    if not total:
+        return
+    percent = round(100 * len(covered) / total)
+    terminalreporter.section("mapped feature checks")
+    terminalreporter.write_line(
+        f"Feature checks: {len(covered)}/{total} mapped features ({percent}%)"
+    )
+    if missing:
+        terminalreporter.write_line("Unchecked features: " + ", ".join(missing))
+    FEATURE_STATE.parent.mkdir(parents=True, exist_ok=True)
+    FEATURE_STATE.write_text(
+        json.dumps({"covered": covered, "missing": missing}, indent=2),
+        encoding="utf-8",
+    )

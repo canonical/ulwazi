@@ -38,7 +38,8 @@ link in the site; it does not replace Sphinx's build warnings.
 	these need additional dependencies.
 - `make test-all` runs both tiers.
 - `make test-python-versions` runs the Python version checks in parallel.
-- `make test-coverage` runs all tests and generates a coverage report.
+- `make test-coverage` runs fast tests plus the slow browser feature journey;
+	see {doc}`test coverage <coverage>` for its three metrics and limitations.
 
 ### Shared test setup
 
@@ -57,4 +58,5 @@ Assets and structure <assets-structure>
 SEO and metadata <seo-metadata>
 Theme features <features>
 Python versions <python-versions>
+Test coverage <coverage>
 ```
