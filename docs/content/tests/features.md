@@ -6,13 +6,16 @@ sheets, the code-heading page, and the two admonition example pages.
 
 ## Fast: generated markup
 
-One grouped fast case, `test_features_fast`, checks document heading classes and inline code,
-plain-text global navigation titles, Vanilla body-list and local-TOC markup,
+One grouped fast case, `test_features_fast`, checks document heading classes
+and inline code, plain-text global navigation titles, Vanilla body-list and
+local-TOC markup,
 the configured TOC depth, and notification type mappings. It also checks that
 named admonition targets survive, each converted tab set has reciprocal
 button/panel references and one initially selected panel, and a highlighted
 code block and copy script are wired in. The search page must include a
-breadcrumb-map entry for the code-heading page.
+breadcrumb-map entry for the code-heading page. The same case also checks the
+inline-code example and the first rendered header and data row of each grid,
+list, and CSV table in both cheat sheets.
 
 This verifies Ulwazi's conversions, not Sphinx's parsing and highlighting
 algorithms or the details of `sphinx-design` and other extensions.

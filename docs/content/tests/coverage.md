@@ -81,6 +81,13 @@ counts as checked only when **all** its mapped tests pass in the selected
 pytest run. Known behaviors without a qualifying test have `checks: []` and
 stay in the denominator as unverified. The final output names them.
 
+The catalog describes **specific checks**, not whole Sphinx components. For
+example, the TOC check verifies Vanilla markup and H4/H5 depth on the two
+cheat sheets, not every navigation variant; the asset check inspects a small
+set of pages, not the entire site. A feature with both markup and browser
+checks lists both pytest IDs so that both must pass. An item that is planned
+but not configured (such as the styled 404 page) remains unverified.
+
 This is **not** an automatic count of all cheatsheet sections or all possible
 theme behavior. In particular, a grouped test such as `test_features_fast`
 checks several behaviors in one pytest result: its passing result counts for

@@ -122,6 +122,35 @@ def _check_admonitions(name, soup, *, full_mapping=False):
     return errors
 
 
+def _check_inline_code_and_tables(name, soup):
+    """Verify both cheatsheets' inline code and representative table content."""
+    errors = []
+    inline_code = soup.select_one("#inline-formatting li code")
+    if (
+        not inline_code
+        or inline_code.get_text(strip=True) != "code"
+        or inline_code.get("class")
+        or inline_code.find() is not None
+    ):
+        errors.append(f"[{name}] inline code: expected plain <code>code</code>")
+
+    for kind in ("grid-tables", "list-tables", "csv-tables"):
+        table = soup.select_one(f"section#{kind} table.docutils")
+        cells = table.select("tbody tr:first-child td") if table else []
+        if (
+            not table
+            or [cell.get_text(" ", strip=True) for cell in table.select("thead th")]
+            != ["Header 1", "Header 2"]
+            or len(cells) != 2
+            or not all(
+                cell.get_text(" ", strip=True).startswith(expected)
+                for cell, expected in zip(cells, ("[1,1]", "[1,2]"))
+            )
+        ):
+            errors.append(f"[{name}] {kind}: expected header and first data row")
+    return errors
+
+
 def test_features_fast(built_site):
     """One grouped fast result for Python post-processing and theme markup."""
     errors = []
@@ -158,6 +187,7 @@ def test_features_fast(built_site):
         errors.extend(_check_toc(name, soup))
         errors.extend(_check_tabs(name, soup))
         errors.extend(_check_admonitions(name, soup))
+        errors.extend(_check_inline_code_and_tables(name, soup))
         body_list = soup.select_one(
             "main#content article ul.p-list--unordered > li.p-list__item"
         )
