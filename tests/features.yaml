@@ -1,0 +1,76 @@
+# Feature coverage manifest.
+#
+# Each entry maps a theme feature to the pytest checks that assert it. The
+# feature-coverage percentage is the proportion of features with at least one
+# passing check. `source` documents where the feature is exercised (cheatsheet
+# section or fixture page) for reviewers; the summary hook only reads `checks`.
+#
+# Markup features are derived from the syntax cheatsheets; site-level features
+# come from the testing strategy and the slow browser journey.
+
+markup:
+  - name: Admonitions
+    source: myst-cheat-sheet.md / rst-cheat-sheet.rst "Admonitions"; test6_admonitions.rst; test7_admonitionsMD.md
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Code blocks and copy buttons
+    source: cheatsheets "Code blocks"; copybutton.js wiring
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Headings with inline code
+    source: test-code-headings.md
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Local table of contents
+    source: cheatsheets "Table of contents" sections
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Tabs
+    source: cheatsheets "Tabs" sections (sphinx-design)
+    checks:
+      - tests/test_features.py::test_features_fast
+      - tests/test_features.py::test_features_slow
+  - name: Body lists
+    source: cheatsheets list sections
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Search breadcrumbs map
+    source: search page; test-code-headings.md ancestor
+    checks:
+      - tests/test_features.py::test_features_fast
+
+site:
+  - name: Home page shell
+    source: docs/index.md
+    checks:
+      - tests/test_smoke.py::test_smoke_fast
+  - name: Global navigation
+    source: side navigation drawer
+    checks:
+      - tests/test_smoke.py::test_smoke_fast
+      - tests/test_features.py::test_features_slow
+  - name: Local assets and controls
+    source: representative built pages
+    checks:
+      - tests/test_assets_structure.py::test_assets_structure_fast
+  - name: SEO and metadata
+    source: built page heads
+    checks:
+      - tests/test_seo_metadata.py::test_seo_metadata
+  - name: SCSS propagation
+    source: index.md heading-test-scss fixture
+    checks:
+      - tests/test_scss_propagation.py::test_scss_styles_propagation
+      - tests/test_scss_propagation.py::test_rendered_color
+  - name: Cookie consent
+    source: Canonical cookie bundle integration
+    checks:
+      - tests/test_features.py::test_features_slow
+  - name: Dark mode
+    source: theme-toggle.js
+    checks:
+      - tests/test_features.py::test_features_slow
+  - name: Search
+    source: search page and searchindex.js
+    checks:
+      - tests/test_features.py::test_features_slow

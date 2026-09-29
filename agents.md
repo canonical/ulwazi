@@ -40,6 +40,7 @@ in its terminal.
 
 ```bash
 make test         # Run fast tests only
+make test-coverage # Run tests and report Python, JS, and feature coverage
 ```
 
 Available tests:

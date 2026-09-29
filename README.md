@@ -121,7 +121,7 @@ make test-fast         # Same as 'make test'
 make test-slow         # Run slow tests only (PDF builds, browser checks)
 make test-all          # Run all tests (fast and slow)
 make test-python-versions  # Build theme and docs on every supported Python version (slow)
-make test-coverage     # Run tests and generate coverage report
+make test-coverage     # Run tests and report Python, JS, and feature coverage
 ```
 
 The available tests are:
@@ -132,6 +132,12 @@ The available tests are:
 - **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
 - **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
 - **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
+
+`make test-coverage` reports three metrics: Python line coverage of the
+`ulwazi` package (the in-process docs build makes this non-zero), JavaScript
+line coverage of the theme's own scripts (`results/js-coverage.json`), and a
+feature-coverage percentage from `tests/features.yaml`, printed in the pytest
+summary.
 
 See the [Tests documentation](https://canonical-ulwazi.readthedocs-hosted.com/content/tests/) for more details on the test suite.
 

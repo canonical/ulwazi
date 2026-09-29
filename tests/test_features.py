@@ -13,6 +13,8 @@ import pytest
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import expect, sync_playwright
 
+from js_coverage import JSCoverageRecorder
+
 CHEAT_SHEETS = ("content/myst-cheat-sheet", "content/rst-cheat-sheet")
 ADMONITIONS = ("content/test6_admonitions", "content/test7_admonitionsMD")
 NOTIFICATIONS = {
@@ -221,6 +223,7 @@ def test_features_slow(built_site):  # noqa: PLR0915
         [sys.executable, "-m", "playwright", "install", "chromium"], check=True
     )
     errors = []
+    js_coverage = JSCoverageRecorder(built_site.output / "_static")
     with _serve_site(built_site.output) as base, sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         try:
@@ -228,6 +231,7 @@ def test_features_slow(built_site):  # noqa: PLR0915
             page = context.new_page()
             page_errors = []
             page.on("pageerror", lambda error: page_errors.append(str(error)))
+            js_coverage.start(page)
 
             def navigate(path):
                 page.goto(f"{base}/{path}", wait_until="domcontentloaded")
@@ -362,8 +366,13 @@ def test_features_slow(built_site):  # noqa: PLR0915
                 ("search", search, "content/myst-cheat-sheet/"),
             ):
                 journey(label, check, start)
+            js_coverage.stop(page)
             context.close()
         finally:
             browser.close()
+
+    js_report = js_coverage.write()
+    for name, data in js_report.items():
+        print(f"[js-coverage] {name}: {data['percent']}%")
 
     assert not errors, "Features [slow] checks failed:\n  - " + "\n  - ".join(errors)

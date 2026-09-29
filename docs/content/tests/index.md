@@ -38,7 +38,8 @@ link in the site; it does not replace Sphinx's build warnings.
 	these need additional dependencies.
 - `make test-all` runs both tiers.
 - `make test-python-versions` runs the Python version checks in parallel.
-- `make test-coverage` runs all tests and generates a coverage report.
+- `make test-coverage` runs the tests and reports three coverage metrics
+	(see below).
 
 ### Shared test setup
 
@@ -47,6 +48,24 @@ fresh HTML in a temporary directory for the smoke, asset, and feature tests.
 This avoids stale `docs/_build` output and lets coverage observe the theme's
 Python hooks. The Make targets still run the regular docs build, which also
 supports tests that read its output.
+
+## Coverage metrics
+
+`make test-coverage` reports three separate metrics. They answer different
+questions and are not aggregated into a single number:
+
+- **Python line coverage** (`coverage report`, `results/coverage.xml`): which
+	lines of the `ulwazi` package executed while the fast tests ran. Because the
+	tests build the docs in-process, the theme's Sphinx hooks are measured.
+- **JavaScript line coverage** (`results/js-coverage.json`): which lines of the
+	theme's own scripts in `ulwazi/theme/ulwazi/static/js/` executed during the
+	slow browser journey, collected with Chromium's V8 coverage API. Scripts on
+	pages the journey does not visit are reported as gaps, not failures.
+- **Feature coverage** (printed in the pytest summary): the proportion of
+	features listed in `tests/features.yaml` with at least one passing check.
+	The manifest maps each feature to its asserting tests; unchecked features
+	are named in the summary. Markup features are derived from the syntax
+	cheatsheets; site-level features come from the testing strategy.
 
 ```{toctree}
 :hidden:
