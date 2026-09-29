@@ -26,6 +26,7 @@ def test_scss_styles_propagation():
 
 
 @pytest.mark.slow
+@pytest.mark.coverage_style
 def test_rendered_color():
     index_path = Path("docs/_build/index.html").resolve()
     assert Path(index_path).exists(), f"index.html not found in {index_path}"

@@ -29,7 +29,8 @@ all** and saves the consent cookie, stays closed on another page in the same
 browser context, and reopens from the footer's **Manage your tracker
 settings** link. It then expands and collapses the global navigation,
 selects tabs by click and arrow key, checks that dark mode persists between
-pages, and submits a search and follows a result with the correct breadcrumb.
+pages, clicks a code-block copy button and verifies the clipboard text, and
+submits a search and follows a result with the correct breadcrumb.
 Chromium is installed on demand; the case needs browser dependencies, so it
 is not run by the fast PR workflow.
 

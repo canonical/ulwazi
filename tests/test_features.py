@@ -259,6 +259,9 @@ def test_features_slow(built_site):  # noqa: PLR0915
         browser = playwright.chromium.launch()
         try:
             context = browser.new_context(viewport={"width": 1280, "height": 900})
+            context.grant_permissions(
+                ["clipboard-read", "clipboard-write"], origin=base
+            )
             page = context.new_page()
             page_errors = []
             page.on("pageerror", lambda error: page_errors.append(str(error)))
@@ -348,6 +351,26 @@ def test_features_slow(built_site):  # noqa: PLR0915
                     tabset.locator(f"#{third.get_attribute('aria-controls')}")
                 ).to_be_visible()
 
+            def copy_button():
+                # Test the extension-generated control with a real Chromium
+                # clipboard, not merely the presence of copybutton.js.
+                block = page.locator(
+                    "#code-blocks-font-test .highlight-yaml .highlight"
+                ).first
+                button = block.locator("button.copybtn")
+                expect(button).to_be_attached()
+                source = block.locator("pre")
+                assert button.get_attribute("data-clipboard-target") == (
+                    f"#{source.get_attribute('id')}"
+                ), "copy button must target the displayed code block"
+                expect(source).to_contain_text("example: true")
+                button.click()
+                expect(button).to_have_class(re.compile(r"\bsuccess\b"))
+                copied = page.evaluate("navigator.clipboard.readText()")
+                assert "example: true" in copied, (
+                    f"copy button copied unexpected text: {copied!r}"
+                )
+
             def theme():
                 toggle = page.locator(".theme-toggle")
                 toggle.click()
@@ -393,6 +416,7 @@ def test_features_slow(built_site):  # noqa: PLR0915
                 ("cookie consent", cookie_consent, ""),
                 ("navigation", navigation, "content/myst-cheat-sheet/"),
                 ("tabs", tabs, "content/myst-cheat-sheet/"),
+                ("copy button", copy_button, "content/myst-cheat-sheet/"),
                 ("dark mode", theme, "content/myst-cheat-sheet/"),
                 ("search", search, "content/myst-cheat-sheet/"),
             ):

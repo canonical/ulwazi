@@ -8,11 +8,13 @@ single score. Run `make test-all` for the complete test suite instead.
 ## Which tests run?
 
 The coverage target first builds the sample HTML, then runs pytest once under
-coverage.py with `-m 'not slow or coverage_js'`. This selects **all fast tests
-and one slow test**, `tests/test_features.py::test_features_slow`, which is
-marked `coverage_js`. The latter visits the built site in Chromium and tests
-cookie consent, navigation, tabs, dark mode, and search. Its browser session
-also collects JavaScript execution data. The shared `built_site` fixture builds
+coverage.py with `-m 'not slow or coverage_js or coverage_style'`. This
+selects **all fast tests and two slow tests**. The `coverage_js` browser
+journey (`tests/test_features.py::test_features_slow`) visits the built site
+in Chromium and tests cookie consent, navigation, tabs, copying code to the
+clipboard, dark mode, and search; it also collects JavaScript execution data.
+The `coverage_style` check (`tests/test_scss_propagation.py::test_rendered_color`)
+verifies a computed colour in Chromium. The shared `built_site` fixture builds
 the sample docs **inside pytest**, so the theme's Sphinx hooks contribute to
 Python coverage. A separate HTML build remains a prerequisite for tests that
 still read `docs/_build`.
@@ -25,10 +27,9 @@ The other `slow` tests are **not** run by `make test-coverage`:
   their subprocesses are not instrumented by this coverage run.
 - The remote-asset check is network-dependent and advisory. It checks
   availability, not theme code-line execution.
-- The SCSS computed-colour and list-marker browser checks verify rendered
-  styles, not Python or theme-JavaScript execution. In particular, leaving
-  out the colour check means **SCSS propagation is unverified** in the feature
-  percentage, even though its fast markup check runs.
+- The list-marker browser check verifies a rendered typography detail, not
+  Python or theme-JavaScript execution. The computed-colour SCSS check **is**
+  included to substantiate the SCSS propagation manifest entry.
 
 These tests remain useful and are available via `make test-slow` and
 `make test-all`. The coverage command is **not** a replacement for either:
@@ -73,7 +74,7 @@ asserted by the feature test.
 
 ### Mapped feature checks
 
-`tests/features.yaml` is a **curated** catalog drawn from the MyST and reST
+`tests/features.yaml` is a **curated** manifest drawn from the MyST and reST
 cheatsheets, dedicated fixture pages, existing assertions, and the
 {doc}`testing strategy <../testing-strategy>`. Each entry has a `source` to
 explain what it refers to and `checks` containing pytest node IDs. An entry
@@ -81,7 +82,7 @@ counts as checked only when **all** its mapped tests pass in the selected
 pytest run. Known behaviors without a qualifying test have `checks: []` and
 stay in the denominator as unverified. The final output names them.
 
-The catalog describes **specific checks**, not whole Sphinx components. For
+The manifest describes **specific checks**, not whole Sphinx components. For
 example, the TOC check verifies Vanilla markup and H4/H5 depth on the two
 cheat sheets, not every navigation variant; the asset check inspects a small
 set of pages, not the entire site. A feature with both markup and browser

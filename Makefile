@@ -121,17 +121,17 @@ test-python-versions:  ##- Build the theme and docs on every supported Python ve
 #   3. Curated feature checks: the proportion of entries in tests/features.yaml
 #      whose mapped checks all pass (not an exhaustive feature inventory).
 #
-# Run the fast tier and the tagged browser journey in one pytest session so
-# feature coverage uses the same results. PDF and Python-version subprocess
-# builds do not add useful Python coverage and are excluded.
+# Run the fast tier, the tagged JS browser journey, and the existing SCSS
+# computed-colour check in one pytest session so feature coverage uses the
+# same results. PDF and Python-version subprocess builds are excluded.
 .PHONY: test-coverage
 test-coverage: docs-html ##- Run tests and report Python, JS, and feature coverage
 	# Fail rather than presenting stale metrics if a run stops early.
 	rm -f results/feature-coverage.json results/js-coverage.json results/coverage.xml
 ifeq ($(COVERAGE_SOURCE),)
-	ULWAZI_COVERAGE_REPORT=1 uv run coverage run --source $(PROJECT) -m pytest -m 'not slow or coverage_js'
+	ULWAZI_COVERAGE_REPORT=1 uv run coverage run --source $(PROJECT) -m pytest -m 'not slow or coverage_js or coverage_style'
 else
-	ULWAZI_COVERAGE_REPORT=1 uv run coverage run --source $(COVERAGE_SOURCE) -m pytest -m 'not slow or coverage_js'
+	ULWAZI_COVERAGE_REPORT=1 uv run coverage run --source $(COVERAGE_SOURCE) -m pytest -m 'not slow or coverage_js or coverage_style'
 endif
 	uv run coverage xml -o results/coverage.xml
 	# for backwards compatibility

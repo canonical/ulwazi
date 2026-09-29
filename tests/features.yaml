@@ -42,8 +42,9 @@ markup:
     checks:
       - tests/test_features.py::test_features_fast
   - name: Copy button interaction
-    source: syntax cheatsheets code blocks
-    checks: []
+    source: docs/content/myst-cheat-sheet.md YAML block (Chromium button, target, and copied text)
+    checks:
+      - tests/test_features.py::test_features_slow
   - name: Tab synchronization across sets
     source: myst-cheat-sheet.md synced tab sets
     checks: []
@@ -73,8 +74,9 @@ site:
     checks:
       - tests/test_seo_metadata.py::test_seo_metadata
   - name: SCSS propagation
-    source: index.md heading-test-scss fixture
+    source: docs/index.md heading-test-scss fixture (markup and computed colour)
     checks:
+      - tests/test_scss_propagation.py::test_scss_styles_propagation
       - tests/test_scss_propagation.py::test_rendered_color
   - name: Cookie consent
     source: Canonical cookie bundle integration
