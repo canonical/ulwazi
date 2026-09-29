@@ -217,6 +217,7 @@ def _serve_site(output):
 
 
 @pytest.mark.slow
+@pytest.mark.coverage_js
 def test_features_slow(built_site):  # noqa: PLR0915
     """One browser result for controls that cannot be verified in static HTML."""
     subprocess.run(

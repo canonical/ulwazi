@@ -133,11 +133,12 @@ The available tests are:
 - **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
 - **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
 
-`make test-coverage` reports three metrics: Python line coverage of the
-`ulwazi` package (the in-process docs build makes this non-zero), JavaScript
-line coverage of the theme's own scripts (`results/js-coverage.json`), and a
-feature-coverage percentage from `tests/features.yaml`, printed in the pytest
-summary.
+`make test-coverage` ends with a three-metric summary: Python line coverage
+of the `ulwazi` package, aggregate JavaScript code-line coverage of **all**
+theme scripts (`results/js-coverage.json`), and the fraction of curated
+features whose mapped checks all pass (`tests/features.yaml`). The feature
+percentage is not exhaustive coverage of every cheatsheet section; known
+unverified behaviors remain visible in the manifest and summary.
 
 See the [Tests documentation](https://canonical-ulwazi.readthedocs-hosted.com/content/tests/) for more details on the test suite.
 

@@ -1,20 +1,18 @@
-# Feature coverage manifest.
+# Features test coverage manifest.
 #
-# Each entry maps a theme feature to the pytest checks that assert it. The
-# feature-coverage percentage is the proportion of features with at least one
-# passing check. `source` documents where the feature is exercised (cheatsheet
-# section or fixture page) for reviewers; the summary hook only reads `checks`.
-#
-# Markup features are derived from the syntax cheatsheets; site-level features
-# come from the testing strategy and the slow browser journey.
+# Curated catalog, NOT an automatic inventory of all Sphinx/cheatsheet features.
+# A feature counts only when ALL its listed checks pass; each grouped test
+# must actually assert this specific behavior. Unimplemented checks use `checks: []` so
+# they stay visible in the denominator. The source field is reviewer evidence.
+# Extend this list when adding a feature or a regression check.
 
 markup:
   - name: Admonitions
     source: myst-cheat-sheet.md / rst-cheat-sheet.rst "Admonitions"; test6_admonitions.rst; test7_admonitionsMD.md
     checks:
       - tests/test_features.py::test_features_fast
-  - name: Code blocks and copy buttons
-    source: cheatsheets "Code blocks"; copybutton.js wiring
+  - name: Highlighted code blocks and copy script wiring
+    source: cheatsheets "Code blocks"; copybutton.js script tag
     checks:
       - tests/test_features.py::test_features_fast
   - name: Headings with inline code
@@ -38,16 +36,27 @@ markup:
     source: search page; test-code-headings.md ancestor
     checks:
       - tests/test_features.py::test_features_fast
+  - name: Inline code styling
+    source: syntax cheatsheets inline code examples
+    checks: []
+  - name: Copy button interaction
+    source: syntax cheatsheets code blocks
+    checks: []
+  - name: Tab synchronization across sets
+    source: myst-cheat-sheet.md synced tab sets
+    checks: []
+  - name: Typography design tokens
+    source: typography-verification.rst paragraphs, headings and blockquotes
+    checks: []
 
 site:
   - name: Home page shell
     source: docs/index.md
     checks:
       - tests/test_smoke.py::test_smoke_fast
-  - name: Global navigation
-    source: side navigation drawer
+  - name: Global navigation expander
+    source: side navigation drawer browser interaction
     checks:
-      - tests/test_smoke.py::test_smoke_fast
       - tests/test_features.py::test_features_slow
   - name: Local assets and controls
     source: representative built pages
@@ -60,7 +69,6 @@ site:
   - name: SCSS propagation
     source: index.md heading-test-scss fixture
     checks:
-      - tests/test_scss_propagation.py::test_scss_styles_propagation
       - tests/test_scss_propagation.py::test_rendered_color
   - name: Cookie consent
     source: Canonical cookie bundle integration
@@ -74,3 +82,9 @@ site:
     source: search page and searchindex.js
     checks:
       - tests/test_features.py::test_features_slow
+  - name: Per-page breadcrumbs
+    source: nested content pages
+    checks: []
+  - name: Styled 404 page
+    source: 404 page (testing-strategy.md)
+    checks: []

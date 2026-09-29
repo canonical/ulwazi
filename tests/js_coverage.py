@@ -22,35 +22,45 @@ THEME_JS_PATTERN = re.compile(r"/_static/js/([A-Za-z0-9_-]+\.js)(?:\?[^/]*)?$")
 RESULTS_PATH = Path("results/js-coverage.json")
 
 
-def _line_starts(source: str) -> list[int]:
-    """Character offsets where each line begins (line 1 starts at 0)."""
-    starts = [0]
-    starts.extend(match.start() + 1 for match in re.finditer("\n", source))
-    return starts
-
-
-def _bisect_right(sorted_list: list[int], value: int) -> int:
-    """Return the insertion point for value to keep the list sorted."""
-    low, high = 0, len(sorted_list)
-    while low < high:
-        mid = (low + high) // 2
-        if sorted_list[mid] <= value:
-            low = mid + 1
-        else:
-            high = mid
-    return low
+def _code_lines(source: str) -> list[tuple[int, int, int]]:
+    """Nonblank, non-comment-only lines with UTF-16 offsets (V8's units)."""
+    lines = []
+    offset = 0
+    in_comment = False
+    for number, line in enumerate(source.splitlines(keepends=True), 1):
+        text = line.strip()
+        if in_comment:
+            if "*/" in text:
+                in_comment = False
+        elif text.startswith("/*"):
+            in_comment = "*/" not in text
+        elif text.startswith("*/"):
+            in_comment = False
+        elif not in_comment and text and not text.startswith("//"):
+            start = (
+                offset
+                + len(line[: len(line) - len(line.lstrip())].encode("utf-16-le")) // 2
+            )
+            end = offset + len(line.rstrip().encode("utf-16-le")) // 2
+            lines.append((number, start, end))
+        offset += len(line.encode("utf-16-le")) // 2
+    return lines
 
 
 def _covered_lines(source: str, ranges: list[dict]) -> set[int]:
-    """Convert V8 character-offset ranges to covered 1-based line numbers."""
-    starts = _line_starts(source)
-    covered: set[int] = set()
-    for entry in ranges:
+    """Count executed code lines, respecting nested zero-count V8 ranges."""
+    code = _code_lines(source)
+    if not code:
+        return set()
+    executed = bytearray(max(end for _, _, end in code))
+    # A function's outer range may execute while an inner branch does not.
+    # Paint larger ranges first so nested, smaller zero-count ranges override.
+    for entry in sorted(
+        ranges, key=lambda item: item["endOffset"] - item["startOffset"], reverse=True
+    ):
         start, end = entry["startOffset"], entry["endOffset"]
-        first = _bisect_right(starts, start)
-        last = _bisect_right(starts, max(start, end - 1))
-        covered.update(range(first + 1, last + 1))
-    return covered
+        executed[start:end] = bytes([int(entry["count"] > 0)]) * (end - start)
+    return {number for number, start, end in code if any(executed[start:end])}
 
 
 class JSCoverageRecorder:
@@ -88,8 +98,12 @@ class JSCoverageRecorder:
             if source is None:
                 continue
             data = self.entries.setdefault(name, {"source": source, "covered": set()})
-            for function in entry.get("functions", []):
-                data["covered"].update(_covered_lines(source, function["ranges"]))
+            ranges = [
+                item
+                for function in entry.get("functions", [])
+                for item in function["ranges"]
+            ]
+            data["covered"].update(_covered_lines(source, ranges))
 
     def _source_for(self, name: str) -> str | None:
         """Read the theme script's source; None if it is not a theme file."""
@@ -100,13 +114,20 @@ class JSCoverageRecorder:
 
     def report(self) -> dict[str, dict]:
         """Per-file line coverage: covered, total, and percentage."""
+        for path in self.static_dir.joinpath("js").glob("*.js"):
+            self.entries.setdefault(
+                path.name,
+                {"source": path.read_text(encoding="utf-8"), "covered": set()},
+            )
         return {
             name: {
                 "covered_lines": sorted(data["covered"]),
-                "total_lines": data["source"].count("\n") + 1,
+                "total_lines": len(_code_lines(data["source"])),
                 "percent": round(
-                    100 * len(data["covered"]) / max(1, data["source"].count("\n") + 1)
-                ),
+                    100 * len(data["covered"]) / len(_code_lines(data["source"])), 1
+                )
+                if _code_lines(data["source"])
+                else 100.0,
             }
             for name, data in sorted(self.entries.items())
         }

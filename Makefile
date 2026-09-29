@@ -118,21 +118,20 @@ test-python-versions:  ##- Build the theme and docs on every supported Python ve
 #   2. JavaScript line coverage of the theme's own scripts
 #      (results/js-coverage.json), collected by the slow browser journey in
 #      tests/test_features.py via Chromium's V8 coverage API.
-#   3. Feature coverage: the proportion of features in tests/features.yaml
-#      with at least one passing check, printed in the pytest summary.
+#   3. Curated feature checks: the proportion of entries in tests/features.yaml
+#      whose mapped checks all pass (not an exhaustive feature inventory).
 #
-# The fast tier runs under coverage; the slow browser journey runs separately
-# (it needs Playwright/Chromium) and contributes the JS report. Slow tests
-# that build Sphinx in subprocesses (PDF, Python versions) add no measurable
-# Python coverage and are excluded.
+# Run the fast tier and the tagged browser journey in one pytest session so
+# feature coverage uses the same results. PDF and Python-version subprocess
+# builds do not add useful Python coverage and are excluded.
 .PHONY: test-coverage
 test-coverage: docs-html ##- Run tests and report Python, JS, and feature coverage
-	# Reset the accumulated feature-coverage state from previous runs.
-	rm -f results/feature-coverage.json
+	# Fail rather than presenting stale metrics if a run stops early.
+	rm -f results/feature-coverage.json results/js-coverage.json results/coverage.xml
 ifeq ($(COVERAGE_SOURCE),)
-	uv run coverage run --source $(PROJECT) -m pytest -m 'not slow'
+	ULWAZI_COVERAGE_REPORT=1 uv run coverage run --source $(PROJECT) -m pytest -m 'not slow or coverage_js'
 else
-	uv run coverage run --source $(COVERAGE_SOURCE) -m pytest -m 'not slow'
+	ULWAZI_COVERAGE_REPORT=1 uv run coverage run --source $(COVERAGE_SOURCE) -m pytest -m 'not slow or coverage_js'
 endif
 	uv run coverage xml -o results/coverage.xml
 	# for backwards compatibility
@@ -140,4 +139,4 @@ endif
 	cp results/coverage.xml coverage.xml
 	uv run coverage report -m
 	uv run coverage html
-	uv run pytest -m 'slow' tests/test_features.py
+	uv run python tests/coverage_summary.py

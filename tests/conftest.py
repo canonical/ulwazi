@@ -12,9 +12,6 @@ from sphinx.application import Sphinx
 
 DOCS = Path(__file__).resolve().parents[1] / "docs"
 FEATURES_MANIFEST = Path(__file__).parent / "features.yaml"
-# Passed node IDs accumulate here across the pytest sessions that a single
-# `make test-coverage` run starts (fast tier, then the slow browser journey),
-# so the final summary reports the combined feature coverage.
 FEATURE_STATE = Path("results/feature-coverage.json")
 
 
@@ -85,25 +82,19 @@ def built_site(tmp_path_factory):
 
 
 def pytest_terminal_summary(config, terminalreporter) -> None:
-    """Print the feature-coverage percentage from the manifest.
-
-    A feature counts as covered when at least one of its mapped checks
-    passed in this session or in an earlier session of the same
-    `make test-coverage` run (state file). Uncovered features are listed by
-    name so gaps are visible without digging through the manifest.
-    """
-    if not FEATURES_MANIFEST.is_file():
+    """Report mapped checks only during an explicit coverage run."""
+    if (
+        os.environ.get("ULWAZI_COVERAGE_REPORT") != "1"
+        or not FEATURES_MANIFEST.is_file()
+    ):
         return
     passed = {report.nodeid for report in terminalreporter.stats.get("passed", [])}
-    if FEATURE_STATE.is_file():
-        passed.update(json.loads(FEATURE_STATE.read_text(encoding="utf-8")))
-    FEATURE_STATE.parent.mkdir(parents=True, exist_ok=True)
-    FEATURE_STATE.write_text(json.dumps(sorted(passed)), encoding="utf-8")
     manifest = yaml.safe_load(FEATURES_MANIFEST.read_text(encoding="utf-8"))
     covered, missing = [], []
     for group in manifest.values():
         for feature in group:
-            if any(check in passed for check in feature.get("checks", [])):
+            checks = feature.get("checks", [])
+            if checks and all(check in passed for check in checks):
                 covered.append(feature["name"])
             else:
                 missing.append(feature["name"])
@@ -111,9 +102,14 @@ def pytest_terminal_summary(config, terminalreporter) -> None:
     if not total:
         return
     percent = round(100 * len(covered) / total)
-    terminalreporter.section("feature coverage")
+    terminalreporter.section("mapped feature checks")
     terminalreporter.write_line(
-        f"Feature coverage: {len(covered)}/{total} features checked ({percent}%)"
+        f"Feature checks: {len(covered)}/{total} mapped features ({percent}%)"
     )
     if missing:
         terminalreporter.write_line("Unchecked features: " + ", ".join(missing))
+    FEATURE_STATE.parent.mkdir(parents=True, exist_ok=True)
+    FEATURE_STATE.write_text(
+        json.dumps({"covered": covered, "missing": missing}, indent=2),
+        encoding="utf-8",
+    )

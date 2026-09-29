@@ -44,6 +44,7 @@ dev = [
     "coverage[toml]>=7.13.5",
     "lxml>=6.0.2",
     "playwright>=1.61.0",
+    "pyyaml>=6.0.3",
     "pytest>=9.0.2",
     "requests>=2.32.0",
     "tinycss2>=1.4.0",
@@ -127,7 +128,7 @@ minversion = "7.0"
 testpaths = "tests"
 pythonpath = "tests"
 xfail_strict = true
-markers = ["slow: slow tests"]
+markers = ["slow: slow tests", "coverage_js: browser journey used for JS coverage"]
 addopts = "-v --tb=short -rA"
 
 [tool.coverage.run]
