@@ -6,6 +6,7 @@ import pytest
 
 from coverage_summary import summary
 from js_coverage import JSCoverageRecorder, _covered_lines
+from pr_coverage import compare
 
 
 def test_nested_v8_ranges_do_not_count_unexecuted_lines():
@@ -85,3 +86,30 @@ def test_final_summary_rejects_incomplete_js_report(tmp_path):
     (results / "js-coverage.json").write_text("{}")
     with pytest.raises(ValueError, match="JS coverage files differ"):
         summary(tmp_path)
+
+
+def test_pr_coverage_compares_unrounded_percentages():
+    """Even a regression hidden by display rounding fails the PR check."""
+    current = {
+        "python": {"percent": 69.34},
+        "javascript": {"percent": 53.9},
+        "features": {"percent": 85.7},
+    }
+    base = {
+        "python": {"percent": 69.35},
+        "javascript": {"percent": 53.9},
+        "features": {"percent": 85.7},
+    }
+    report, decreased = compare(current, base)
+    assert decreased
+    assert "Coverage: Py: 69.3%, JS: 53.9%, Feat: 85.7%" in report
+
+
+def test_pr_coverage_skips_unavailable_baseline():
+    """Never treat a missing or pre-reporting base as 0% coverage."""
+    current = {key: {"percent": 50.0} for key in ("python", "javascript", "features")}
+    report, decreased = compare(current, None)
+    assert not decreased
+    assert "baseline unavailable" in report
+    assert "comparison is skipped" in report
+    assert "Result: baseline unavailable (comparison skipped)" in report

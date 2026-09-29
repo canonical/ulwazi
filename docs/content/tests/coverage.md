@@ -136,3 +136,18 @@ list of unverified manifest entries. Its summary combines
 command rather than silently displaying an old percentage. Neither a high
 code-line percentage nor a high mapped-feature percentage alone guarantees
 that the theme is bug-free.
+
+## Pull request check
+
+The `Coverage` GitHub Actions workflow runs `make test-coverage` on pull
+requests. Its comparison check is titled `Coverage: Py: …, JS: …, Feat: …`
+and its check summary shows the three PR percentages next to the base
+revision. It compares **unrounded rates** and fails if any one decreases;
+Python and JavaScript have source-line denominators, while the feature rate
+uses the curated manifest, so adding an untested feature can lower the latter.
+
+The base is rebuilt at the PR's current base commit **only if** it has the same
+three-metric reporting format. If it does not (for example, on the first PR
+introducing coverage), the check displays the PR numbers and says "baseline
+unavailable" rather than treating the missing baseline as 0%. The check
+summary is visible on the PR without posting or updating a comment.
