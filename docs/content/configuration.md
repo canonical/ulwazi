@@ -13,10 +13,11 @@ simply doesn't render the feature that value controls. This page lists
 every Ulwazi-specific setting so you know what's available and what
 happens if you skip it.
 
+```{note}
 For a fully worked example with explanatory comments, see
 [`docs/default-conf.py`](https://github.com/canonical/ulwazi/blob/main/docs/default-conf.py)
-in the repository -- it's the "simple way" starter template most projects
-copy from.
+in the repository -- this is easiest way to start using Ulwazi.
+```
 
 ## Top-level configuration values
 
@@ -87,5 +88,5 @@ and logs a deprecation warning at build time:
 | `github_version` | `repo_branch` |
 | `github_folder`  | `repo_folder` |
 
-If both the old and new names are set, the new name wins and no warning is
-shown.
+If both the old and new names are set, the new name takes precedence and no
+warning is shown.
