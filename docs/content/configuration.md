@@ -18,7 +18,7 @@ For a fully worked example with explanatory comments, see
 in the repository -- it's the "simple way" starter template most projects
 copy from.
 
-## Top-level `conf.py` values
+## Top-level configuration values
 
 These are set directly in `conf.py`.
 
@@ -26,7 +26,7 @@ These are set directly in `conf.py`.
 | -------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `localtoc_max_depth` | `-1` (unlimited depth) | Limits how many nested heading levels show in the page's local table of contents. Set to a positive integer (e.g. `3`) to truncate at that depth, or `-1` to show every level. |
 
-## `html_context` values with a built-in default
+## HTML context values with a built-in default
 
 Set these inside the `html_context` dictionary in `conf.py`, for example:
 
@@ -51,7 +51,7 @@ If you don't set them, Ulwazi uses the defaults below.
 | `display_contributors`     | `True`                           | Reserved for toggling a contributors list (`True`/`False`). **Not currently read by any Ulwazi template** -- setting it has no visible effect yet.                                                                                                           |
 | `path`                     | `"/docs"`                        | Reserved/legacy value. **Not currently read by any Ulwazi template** -- setting it has no visible effect yet.                                                                                                                                                |
 
-## `html_context` values with no built-in default
+## HTML context values with no built-in default
 
 These have no fallback value. Most are simply optional, and, if unset, the
 feature they control doesn't render, and nothing breaks. A few are used without
