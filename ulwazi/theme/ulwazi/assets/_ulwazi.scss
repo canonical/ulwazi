@@ -570,51 +570,12 @@ kbd.compound {
   Feedback section.
 */
 
-// Orange button variant for the "Give feedback" call-to-action.
-// Inherits base styles from p-button--positive.
-.p-button--orange {
-  background-color: $color-brand-orange;
-  border-color: $color-brand-orange;
-  color: #fff;
-  font-size: $font-size-p;
-  font-weight: bold;
-
-  &:visited {
-    color: #fff;
-  }
-
-  &:hover {
-    background-color: adjust-color($color-brand-orange, $lightness: -10%);
-    border-color: adjust-color($color-brand-orange, $lightness: -10%);
-  }
-
-  &:active,
-  &[aria-pressed=true],
-  &[aria-selected=true],
-  &[aria-expanded=true] {
-    background-color: adjust-color($color-brand-orange, $lightness: -15%);
-    border-color: adjust-color($color-brand-orange, $lightness: -15%);
-    transition-duration: 0s;
-  }
-
-  &:disabled,
-  &.is-disabled {
-    background-color: $color-brand-orange;
-    border-color: $color-brand-orange;
-  }
-
-  &:focus-visible {
-    outline: 0.1875rem solid adjust-color($color-brand-orange, $lightness: -20%);
-    outline-offset: -0.1875rem;
-  }
-}
-
 // Icon links (edit / view-source) aligned next to the Give feedback button.
 .content-icon-container {
   gap: 0.5rem; // uniform spacing: button→icon and icon→icon are equal
 
   // Neutralise Vanilla's default button margins so gap alone controls spacing.
-  .p-button--positive {
+  .p-button {
     margin-bottom: 0;
     margin-right: 0;
   }
