@@ -1506,7 +1506,7 @@ hr.u-no-margin--bottom {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -4100,7 +4100,7 @@ a.p-chip--information:active {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -4198,7 +4198,7 @@ body.is-light .p-chip--branded, body.is-paper .p-chip--branded, .p-chip--branded
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -7025,7 +7025,7 @@ form + [class*=p-button] {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -12008,7 +12008,7 @@ body:has(.p-navigation--sliding.is-sticky) .grid-row:has(.p-in-page-navigation) 
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -12112,7 +12112,7 @@ body:has(.p-navigation--sliding.is-sticky) .grid-row:has(.p-in-page-navigation) 
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -12683,7 +12683,7 @@ table th[aria-sort]:hover {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -12781,7 +12781,7 @@ body.is-light .p-tooltip__message, body.is-paper .p-tooltip__message, .p-tooltip
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -14446,6 +14446,11 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+body.is-dark .highlight,
+body.is-dark code:not(pre code) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
 .p-notification__message > :last-child {
   margin-bottom: 0;
 }
@@ -14670,7 +14675,7 @@ body.is-dark .p-strip.is-dark {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;
@@ -14938,7 +14943,7 @@ p > [class*=p-icon] {
   --vf-color-focus: #9cf;
   --vf-color-background-default: #262626;
   --vf-color-background-alt: #202020;
-  --vf-color-background-code: rgba(255, 255, 255, 0.15);
+  --vf-color-background-code: rgba(255, 255, 255, 0.05);
   --vf-color-background-inputs: #2f2f2f;
   --vf-color-background-active: #373737;
   --vf-color-background-hover: #313131;

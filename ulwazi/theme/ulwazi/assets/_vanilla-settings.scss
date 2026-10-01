@@ -6,6 +6,9 @@
 // Canonical brand orange (Ubuntu orange)
 $color-brand-orange: #e95420;
 
+// Darker dark-mode code-block background so pygments-dark.css token colours meet WCAG AA contrast
+$colors--dark-theme--background-code: rgba($color-x-light, 0.05);
+
 $text-max-width: 100%;
 $font-base-family: 'Ubuntu, Arial, "libra sans", sans-serif';
 $font-monospace: '"Ubuntu Mono", Consolas, Monaco, Courier, monospace';

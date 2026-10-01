@@ -361,6 +361,11 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+body.is-dark .highlight,
+body.is-dark code:not(pre code) {
+  background-color: $colors--dark-theme--background-code;
+}
+
 // A trailing block element (blockquote, list, table, nested admonition)
 // keeps its own bottom margin, showing as a blank line inside the box.
 .p-notification__message > :last-child {
