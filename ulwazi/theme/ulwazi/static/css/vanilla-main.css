@@ -14411,7 +14411,7 @@ li.current:not(:has(li.current)) > .nav-item > label:focus {
   Canary class.
 */
 .heading-test-scss {
-  color: purple;
+  color: #800080;
 }
 
 .p-list__item p {
@@ -15017,7 +15017,11 @@ p > [class*=p-icon] {
 }
 
 .heading-test-scss {
-  color: purple;
+  color: #800080;
+}
+
+body.is-dark .heading-test-scss {
+  color: #c8a0e8;
 }
 
 .arrow-toggle {
