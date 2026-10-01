@@ -14451,6 +14451,11 @@ body.is-dark code:not(pre code) {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
+a code:not(pre code),
+body.is-dark a code:not(pre code) {
+  background-color: transparent;
+}
+
 .p-notification__message > :last-child {
   margin-bottom: 0;
 }
