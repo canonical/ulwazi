@@ -26,7 +26,11 @@
 // Custom styles
 
 .heading-test-scss{
-  color: purple;
+  color: #800080;
+}
+
+body.is-dark .heading-test-scss {
+  color: #c8a0e8;
 }
 
 .arrow-toggle {
