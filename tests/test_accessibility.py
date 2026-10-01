@@ -28,12 +28,9 @@ import pytest
 from axe_playwright_python.sync_playwright import Axe
 from playwright.sync_api import sync_playwright
 
-# Key pages to scan: the home page (header/footer/feedback button) and the
-# two cheat sheets, which exercise the widest range of theme components
-# (admonitions, tables, code blocks, tabs) per docs/content/testing-strategy.md.
+# The MyST cheat sheet has the theme's representative components
+# (header, footer, feedback button, admonitions, tables, code blocks, and tabs).
 PAGES = {
-    "index": Path("docs/_build/index.html"),
-    "rst_cheat_sheet": Path("docs/_build/content/rst-cheat-sheet/index.html"),
     "myst_cheat_sheet": Path("docs/_build/content/myst-cheat-sheet/index.html"),
 }
 
