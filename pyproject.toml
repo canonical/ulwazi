@@ -69,8 +69,8 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://canonical-ulwazi.readthedocs-hosted.com/"
-Documentation = "https://canonical-ulwazi.readthedocs-hosted.com/"
+Homepage = "https://documentation.ubuntu.com/ulwazi/"
+Documentation = "https://documentation.ubuntu.com/ulwazi/"
 Repository = "https://github.com/canonical/ulwazi"
 Issues = "https://github.com/canonical/ulwazi/issues"
 
@@ -96,7 +96,7 @@ git_describe_command = [
     "--dirty",
     "--long",
     "--match",
-    "[0-9]*.[0-9]*.[0-9]*",
+    "[0-9]*.[0-9]*",
     "--exclude",
     "*[^0-9.]*",
 ]

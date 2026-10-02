@@ -74,7 +74,7 @@ copyright = f"{datetime.date.today().year}"
 # NOTE: The Open Graph Protocol (OGP) enhances page display in a social graph
 #       and is used by social media platforms; see https://ogp.me/
 
-ogp_site_url = "https://canonical-ulwazi.readthedocs-hosted.com/"
+ogp_site_url = "https://documentation.ubuntu.com/ulwazi/"
 
 
 # Preview name of the documentation website
@@ -200,7 +200,7 @@ html_context = {
     "link2_name": "Second optional link",
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
-    "add_product_menu": True,
+    "add_product_menu": False,
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "/",
@@ -245,7 +245,7 @@ localtoc_max_depth = 3
 
 # Base URL of RTD hosted project
 
-html_baseurl = "https://canonical-starter-pack.readthedocs-hosted.com/"
+html_baseurl = "https://documentation.ubuntu.com/ulwazi/"
 
 # URL scheme. Add language and version scheme elements.
 # When configured with RTD variables, check for RTD environment so manual runs succeed:

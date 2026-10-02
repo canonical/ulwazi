@@ -444,6 +444,109 @@ Notes
 .. caution::
    This might damage your hardware!
 
+
+Expandable blocks
+-----------------
+
+Use raw HTML ``<details>`` tags to create a collapsible section, for example to hide the output of a command:
+
+.. code-block:: shell
+
+   juju version
+
+The following tabs show the rendered block and its source:
+
+.. tab-set::
+
+    .. tab-item:: Rendered
+
+        .. raw:: html
+
+            <details>
+            <summary>Output example</summary>
+
+        .. code-block:: text
+
+            3.5.4-genericlinux-amd64
+
+        .. raw:: html
+
+            </details>
+
+    .. tab-item:: Source
+
+        .. code-block:: rst
+
+            .. raw:: html
+
+               <details>
+               <summary>Output example</summary>
+
+            .. code-block:: text
+
+               3.5.4-genericlinux-amd64
+
+            .. raw:: html
+
+               </details>
+
+Split the opening and closing tags into separate ``raw`` directives so that the content in between is rendered as reStructuredText. Any markup can go inside, for example a list:
+
+.. tab-set::
+
+    .. tab-item:: Rendered
+
+        .. raw:: html
+
+            <details>
+            <summary>More details</summary>
+
+        - Item 1
+        - Item 2
+
+        .. raw:: html
+
+            </details>
+
+    .. tab-item:: Source
+
+        .. code-block:: rst
+
+            .. raw:: html
+
+               <details>
+               <summary>More details</summary>
+
+            - Item 1
+            - Item 2
+
+            .. raw:: html
+
+               </details>
+
+
+Dropdowns
+~~~~~~~~~
+
+The Sphinx Design ``dropdown`` directive provides a styled alternative to raw HTML ``<details>`` tags, and is the recommended way to add collapsible content:
+
+.. dropdown:: Output example
+
+    The content of the dropdown, revealed when the header is clicked.
+
+A dropdown with an icon and an open-by-default variant:
+
+.. dropdown:: Dropdown with an icon
+    :icon: light-bulb
+
+    The content of the dropdown.
+
+.. dropdown:: Open dropdown
+    :open:
+
+    This dropdown is open by default.
+
+
 Images
 ------
 Use ``.. image::`` for simple images without captions.

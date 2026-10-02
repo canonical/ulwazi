@@ -87,7 +87,7 @@ Running tests
 -------------
 
 The test suite is split into fast and slow tests. See the
-`Tests documentation <https://canonical-ulwazi.readthedocs-hosted.com/content/tests/>`_
+`Tests documentation <https://documentation.ubuntu.com/ulwazi/content/tests/>`_
 for details on each test.
 
 .. code-block:: shell
@@ -209,8 +209,6 @@ All contributions are welcome: bug reports, feature requests, and pull requests.
 .. toctree::
    :hidden:
 
-   rst-cheat-sheet.rst
-   myst-cheat-sheet.md
    syntax-highlighting.md
    roadmap.md
    testing-strategy.md

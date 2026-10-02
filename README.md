@@ -2,7 +2,7 @@
 
 Ulwazi, Xhosa for information, is a work-in-progress Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
 
-[Demo website](https://canonical-ulwazi.readthedocs-hosted.com/)
+[Demo website](https://documentation.ubuntu.com/ulwazi/)
 
 Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng), developed by [pradyunsg](https://github.com/pradyunsg) and [Alabaster](https://github.com/sphinx-doc/alabaster).
 
@@ -26,6 +26,47 @@ If you do not have the `node_modules` directory (for example, after cloning the 
 ```shell
 npm install
 ```
+
+## Upgrading the Vanilla Framework
+
+The theme styles are built on the [Vanilla Framework](https://vanillaframework.io/).
+To upgrade it to a newer version:
+
+1. Check the latest available version:
+
+   ```shell
+   npm view vanilla-framework version
+   ```
+
+2. Update the version in `package.json` (the `vanilla-framework` entry in `dependencies`).
+
+3. Install the new version and recompile the SCSS:
+
+   ```shell
+   make vanilla-main
+   ```
+
+   This runs `npm install` and compiles `ulwazi/theme/ulwazi/assets/main.scss` to
+   `ulwazi/theme/ulwazi/static/css/vanilla-main.css`.
+
+   If the compilation fails, consult the
+   [Vanilla Framework changelog](https://github.com/canonical/vanilla-framework/blob/main/CHANGELOG.md)
+   for breaking changes (for example, renamed or removed mixins and settings) and
+   update `ulwazi/theme/ulwazi/assets/` accordingly.
+
+4. Rebuild the docs and verify the result:
+
+   ```shell
+   make rebuild
+   make test
+   ```
+
+   Additionally, check the sample documentation in a browser (`make run`) for visual
+   regressions, especially on the
+   [cheat sheet pages](docs/content/) that exercise most theme components.
+
+Both `package.json` and `package-lock.json` are tracked in git, so commit the
+updated lock file together with the version bump.
 
 ## Testing
 
@@ -58,21 +99,13 @@ If you change dependencies, you will need to re-build the virtual environment en
 That can be done by manually deleting the `.venv` folder or with the `make clean`
 command.
 
-## Metadata and SEO
-
-Every page gets a complete, working set of SEO/social-preview metadata
-automatically -- `<title>`, `<meta name="description">`, Open Graph tags,
-`rel="canonical"`, and favicon. **You never need to add anything by hand.**
-Overriding a page's title or description for social previews is optional and
-only needed for pages you want to promote with custom text (e.g. a landing
-page). See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
-for defaults and override syntax.
-
 ### Running the test suite
 
-The test suite is split into fast and slow tests. Fast tests run on every
-change; slow tests (PDF generation, browser-based visual checks, and Python
-version compatibility) require extra system dependencies or take longer.
+The test suite is split into fast and slow tests, following the
+[testing strategy](docs/content/testing-strategy.md).
+Fast tests run on every change; slow tests (PDF generation, browser-based
+visual checks, and Python version compatibility) require extra system
+dependencies or take longer.
 
 ```shell
 make test              # Run fast tests only
@@ -83,14 +116,20 @@ make test-python-versions  # Build theme and docs on every supported Python vers
 make test-coverage     # Run tests and generate coverage report
 ```
 
-The available tests are:
+The suite covers site validation, SCSS propagation, SEO metadata, PDF
+generation, and Python version compatibility. See the
+[Tests documentation](https://documentation.ubuntu.com/ulwazi/content/tests/)
+for details on each test and how it is run.
 
-- **test_site_validation.py** — validates built HTML for broken assets (missing CSS, JS, images)
-- **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
-- **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
-- **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
+## Metadata and SEO
 
-See the [Tests documentation](https://canonical-ulwazi.readthedocs-hosted.com/content/tests/) for more details on the test suite.
+Every page gets a complete, working set of SEO/social-preview metadata
+automatically -- `<title>`, `<meta name="description">`, Open Graph tags,
+`rel="canonical"`, and favicon. **You never need to add anything by hand.**
+Overriding a page's title or description for social previews is optional and
+only needed for pages you want to promote with custom text (e.g. a landing
+page). See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
+for defaults and override syntax.
 
 ## Contributing
 
@@ -98,6 +137,8 @@ The theme files are located in the `ulwazi` folder:
 
 - `__init__.py` -- initialization script for the theme.
 - `navigation.py` -- modifies the global TOC navigation tree
+- `product_menu_gen.py` -- generates the Canonical product menu (optional)
+- `tabs.py` -- styles and structures sphinx-design tabs in accordance with Vanilla
 - `theme/ulwazi/` -- contains the theme files
   - theme.toml -- theme configuration file
   - static -- static content to be used by the theme without processing

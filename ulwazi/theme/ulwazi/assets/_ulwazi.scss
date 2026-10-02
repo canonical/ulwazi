@@ -69,6 +69,31 @@ p {
   font-size: $font-size-p;
   line-height: $font-line-height-p;
 }
+
+/*
+  Expandable blocks (details/summary).
+
+  Vanilla's base styles (vf-b-details) render summary at 1rem, but Ulwazi
+  docs body text is $font-size-p (0.875rem). Match the docs text size and
+  reduce the block's bottom margin to the docs paragraph rhythm, while
+  keeping Vanilla's focus outline. The native disclosure triangle is the
+  visual signifier of the toggle (per Vanilla's details example); no hover
+  underline is added, as underline styling signifies hyperlinks.
+*/
+summary {
+  font-size: $font-size-p;
+  line-height: $font-line-height-p;
+  font-weight: $font-weight-p;
+}
+
+summary:hover {
+  cursor: pointer;
+}
+
+details {
+  margin-bottom: $font-line-height-p;
+}
+
 th > p {
   padding-top: 0;
   padding-bottom: 0;
@@ -211,26 +236,17 @@ readthedocs-docdiff {
   padding-top: 0;
   cursor: pointer;
   margin-left: auto; // Pushes the label (arrow) to the right
-}
-/* Themed backgrounds for selected nav-item (Vanilla active/hover tokens) */
-.nav-item .current {
-  background: var(--vf-color-background-active);
-  color: var(--vf-color-text-default);
+  // Keep the chevron row the same height as Vanilla's link rows
+  align-self: stretch;
 }
 
-// Add shadow to the arrow label when the parent li is current
 li.current:not(:has(li.current)) > .nav-item > label {
   background: var(--vf-color-background-active);
   color: var(--vf-color-text-default);
 }
 
-//Hover and focus states for links and labels
-.nav-item a:hover,
-.nav-item a:focus {
-  background: var(--vf-color-background-hover);
-  color: var(--vf-color-text-default);
-}
-
+//Hover and focus states for the chevron labels
+//(link hover/focus states come from Vanilla)
 .nav-item label:hover,
 .nav-item label:focus {
   background: var(--vf-color-background-hover);
@@ -343,6 +359,12 @@ button.copybtn:hover {
 .highlight {
   background-color: var(--vf-color-background-code);
   color: var(--vf-color-text-default);
+}
+
+// A trailing block element (blockquote, list, table, nested admonition)
+// keeps its own bottom margin, showing as a blank line inside the box.
+.p-notification__message > :last-child {
+  margin-bottom: 0;
 }
 
 .highlight pre {
