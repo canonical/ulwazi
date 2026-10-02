@@ -24,7 +24,7 @@ For every supported Python version it verifies that:
 
 1. The theme can be installed into a *fresh* virtual environment (the
    ``docs`` dependency group is required, because ``docs/conf.py`` imports
-   extensions such as ``sphinx_terminal`` and ``canonical_sphinx_config`` that
+   extensions such as ``sphinx_terminal`` and ``notfound.extension`` that
    are not runtime dependencies of the theme package itself).
 2. The sample documentation builds with ``--fail-on-warning`` using that
    environment.
