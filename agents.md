@@ -7,7 +7,7 @@ It provides both generic Vanilla styling and Canonical-specific theming for docu
 
 **Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript
 **License**: GPL-3.0
-**Python**: >=`3.8` (`3.11` is recommended)
+**Python**: >=`3.10` (`3.11` is recommended)
 
 ## Common Tasks
 
@@ -45,7 +45,9 @@ make test-all     # Run all fast and slow tests (includes PDF and Playwright)
 
 Available tests:
 
-- **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
+- **test_smoke.py**: Checks the home-page shell and navigation (fast)
+- **test_assets_structure.py**: Checks representative built assets and theme controls (fast)
+- **test_features.py**: Checks theme markup (fast) and browser interactions (slow)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
 - **test_seo_metadata.py**: Verifies SEO/metadata tags (title, description, canonical, favicon, Open Graph) on built pages
@@ -283,7 +285,7 @@ When editing documentation or markdown files:
 
 - [Vanilla Framework](https://github.com/canonical/vanilla-framework)
 - [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng)
-- [Demo site](https://canonical-ulwazi.readthedocs-hosted.com/)
+- [Demo site](https://documentation.ubuntu.com/ulwazi/)
 - [Repository](https://github.com/canonical/ulwazi)
 
 ## Maintaining This Guide

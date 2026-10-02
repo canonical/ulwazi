@@ -45,6 +45,8 @@ dev = [
     "lxml>=6.0.2",
     "playwright>=1.61.0",
     "pytest>=9.0.2",
+    "requests>=2.32.0",
+    "tinycss2>=1.4.0",
     # pytest-xdist enables parallel test execution via `-n auto`.
     # Used by `make test-python-versions` to run the per-Python-version
     # build tests concurrently. See tests/test_python_versions.py.
@@ -70,8 +72,8 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://canonical-ulwazi.readthedocs-hosted.com/"
-Documentation = "https://canonical-ulwazi.readthedocs-hosted.com/"
+Homepage = "https://documentation.ubuntu.com/ulwazi/"
+Documentation = "https://documentation.ubuntu.com/ulwazi/"
 Repository = "https://github.com/canonical/ulwazi"
 Issues = "https://github.com/canonical/ulwazi/issues"
 
@@ -145,7 +147,7 @@ exclude = [
     "**/.*",
     "**/__pycache__",
     "**/_version.py",
-    "docs/_build",
+    "docs/_build",  # Generated HTML assets may include third-party Python sources.
 ]
 
 [tool.mypy]

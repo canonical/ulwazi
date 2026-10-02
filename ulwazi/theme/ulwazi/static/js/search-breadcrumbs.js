@@ -176,17 +176,17 @@
       return;
     }
 
-    // Store original performSearch
+    // Store original performSearch. This wrapper must be installed before
+    // Sphinx's DOMContentLoaded handler starts the first query.
     const originalPerformSearch = Search.performSearch;
+    let observer;
     
     // Override performSearch to inject our custom display logic
     Search.performSearch = function(query) {
-      // Call original
-      originalPerformSearch.call(this, query);
-      
-      // After search completes, modify the results
-      // Use multiple checks with increasing delays to catch all results
-      const addBreadcrumbsToResults = () => {
+      const results = document.getElementById('search-results');
+      if (observer) observer.disconnect();
+      // Watch for results added after searchindex.js finishes loading.
+      function addBreadcrumbsToResults() {
         const results = document.querySelectorAll('#search-results ul.search > li');
         results.forEach(listItem => {
           // Check if breadcrumb already added
@@ -212,19 +212,15 @@
             listItem.insertBefore(breadcrumb, link);
           }
         });
-      };
-      
-      // Try multiple times to catch all results as they're rendered
-      setTimeout(addBreadcrumbsToResults, 10);
-      setTimeout(addBreadcrumbsToResults, 100);
-      setTimeout(addBreadcrumbsToResults, 300);
+      }
+      observer = new MutationObserver(addBreadcrumbsToResults);
+      observer.observe(results, { childList: true, subtree: true });
+      originalPerformSearch.call(this, query);
+      addBreadcrumbsToResults();
     };
   }
 
-  // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSearchBreadcrumbs);
-  } else {
-    initSearchBreadcrumbs();
-  }
+  // Sphinx registered its own DOM-ready handler when searchtools.js loaded.
+  // Intercept now, before that handler issues the initial query.
+  initSearchBreadcrumbs();
 })();
