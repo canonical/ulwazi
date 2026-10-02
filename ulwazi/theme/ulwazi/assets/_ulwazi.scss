@@ -419,6 +419,20 @@ button.copybtn:hover {
   width: 100%;
 }
 
+/*
+  Extension compatibility styling.
+*/
+
+// sphinx_config_options renders an expand anchor with a sprite-based chevron
+// (<i class="icon"><svg><use href="#svg-arrow-right"/></svg></i>). The SVG
+// carries no intrinsic size and the extension's CSS only rotates it, so the
+// default 300x150 viewport size leaks through (a huge chevron and horizontal
+// overflow)
+.configoption .basicinfo .anchor .icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
 
 // Disable tooltip for copy buttons only
 .copybtn.o-tooltip--left[data-tooltip]::before,

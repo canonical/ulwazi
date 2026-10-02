@@ -48,6 +48,7 @@ Available tests:
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
+- **test_extension_compatibility.py**: Verifies the theme renders correctly with every Sphinx Stack default extension enabled (one test per extension; PDF check is a slow test). See `docs/content/tests/extension-compatibility.md`
 
 ### Cleaning
 
