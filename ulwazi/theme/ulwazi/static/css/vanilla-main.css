@@ -432,6 +432,17 @@
   Vanilla settings and variables. These values are put into memory _before_ Vanilla is
   rendered, so they cascade down the Vanilla stack.
 */
+/*
+  Left sidebar navigation geometry.
+
+  $nav-offset-left is the text inset of every sidebar nav link (and the search
+  box input text and section captions). It is derived from the active-item
+  indicator: the indicator bar is 0.1875rem (3px) wide at the very left edge
+  of the link, and we want exactly 16px of gap between the bar and the first
+  letter: 3px + 16px = 19px = 1.1875rem.
+
+  $nav-indent-step is the extra indent per nesting level (levels 2-5).
+*/
 /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
   ========================================================================== */
@@ -14555,7 +14566,7 @@ div.terminal > div.input > button.copybtn svg {
   font-size: 0.875rem !important;
   padding-top: calc(0.25rem - 1.5px) !important;
   padding-bottom: calc(0.25rem - 1.5px) !important;
-  padding-left: 0.5rem !important;
+  padding-left: 1.1875rem !important;
 }
 
 .p-search-box__reset {
@@ -15118,25 +15129,26 @@ main {
 .p-side-navigation__link {
   padding-top: 0;
   padding-bottom: 0;
-  padding-left: 0.5rem;
+  padding-left: 1.1875rem;
+  padding-right: 0.3125rem;
   font-size: 0.875rem;
   line-height: 1.5rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 2rem;
+  padding-left: 2.1875rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 3.5rem;
+  padding-left: 3.1875rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 5rem;
+  padding-left: 4.1875rem;
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: 6.5rem;
+  padding-left: 5.1875rem;
 }
 
 .p-side-navigation__item .nav-item, .p-side-navigation__item .p-side-navigation__link {
@@ -15148,7 +15160,7 @@ main {
   color: var(--vf-color-text-default);
   font-size: 0.875rem;
   line-height: 1.5rem;
-  padding: 0.25rem 0 0.25rem 0.5rem;
+  padding: 0.25rem 0 0.25rem 1.1875rem;
   margin: 0.5rem 0 0.25rem;
 }
 
