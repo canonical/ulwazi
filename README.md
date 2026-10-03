@@ -86,8 +86,10 @@ make run
 
 This command uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, then builds the documentation in this repo, and serves the result via a local web server.
 
-The resulting environment tracks changes in sample content and rebuilds the local website automatically.
-However, changes to the theme might require a full rebuild of the theme package:
+The preview tracks sample content and theme files. On a theme change it
+rebuilds the HTML; SCSS changes are compiled to CSS before Sphinx runs.
+Ordinary content edits still use Sphinx's incremental build. If you change
+dependencies or need to reset an existing stale build, use:
 
 ```shell
 make rebuild
