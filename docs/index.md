@@ -6,6 +6,7 @@ a Vanilla Framework-based theme built for Canonical’s
 
 - Want to help? See {doc}`content/contribute`.
 - Want to use it? Start with [Use Ulwazi in your documentation](https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/).
+- Want the full list of settings and their defaults? See {doc}`content/configuration`.
 
 ## Build and test locally
 
@@ -82,6 +83,7 @@ content/myst-cheat-sheet.md
 ```{toctree}
 :hidden:
 :caption: Ulwazi documentation
+content/configuration
 content/contribute
 content/tests/index
 Use Ulwazi in your documentation <https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/>
