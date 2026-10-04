@@ -17,9 +17,15 @@ The prefix must start and end with a slash so that links on the 404 page
 resolve regardless of the depth at which the 404 page is served (see the
 sphinx-stack production bug where a missing slug produced broken links on
 every 404 page).
+
+All scenarios run through a single parametrised test: each case in
+``CASES`` carries a descriptive ``id`` and a comment documenting its
+rationale.
 """
 
 from __future__ import annotations
+
+from typing import Any
 
 import pytest
 from ulwazi import _notfound_urls_prefix
@@ -39,178 +45,150 @@ def _clean_rtd_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-def prefix(monkeypatch: pytest.MonkeyPatch):
-    """Return a callable computing the prefix for a slug and RTD environment.
+def prefix(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> str:
+    """Compute the prefix for the case passed indirectly via ``request.param``.
+
+    ``request.param`` is a dict with two keys:
+
+    - ``slug``: the project slug config value
+    - ``env``: the Read the Docs environment variables for the case
 
     Environment variables are set through monkeypatch so they are reverted
     automatically after each test.
     """
+    case: dict[str, Any] = request.param
+    for var, value in case["env"].items():
+        monkeypatch.setenv(var, value)
 
-    def _compute(slug: str = "", **rtd_env: str) -> str:
-        for var, value in rtd_env.items():
-            monkeypatch.setenv(var, value)
+    class _Config:
+        """Minimal stand-in for the Sphinx config object."""
 
-        class _Config:
-            """Minimal stand-in for the Sphinx config object."""
+        def __init__(self, slug: str) -> None:
+            self.slug = slug
 
-            def __init__(self, slug: str) -> None:
-                self.slug = slug
-
-        return _notfound_urls_prefix(_Config(slug))  # type: ignore[arg-type]
-
-    return _compute
+    return _notfound_urls_prefix(_Config(case["slug"]))  # type: ignore[arg-type]
 
 
-def test_no_rtd_env(prefix):
-    """Outside Read the Docs, the prefix is empty (links stay relative)."""
-    assert prefix() == ""
-
-
-def test_slug_without_rtd_env(prefix):
-    """A slug alone does not produce a prefix: it only applies on RTD builds,
-    because sphinx-notfound-page absolutises every link with it and would
-    break local builds (make run, file:// access)."""
-    assert prefix(slug="ulwazi") == ""
-
-
-def test_single_version_schema(prefix):
-    """Single-version projects serve at the root of the canonical URL.
-
-    READTHEDOCS_VERSION and READTHEDOCS_LANGUAGE are still set on the build
-    machine, but the canonical URL has no version or language segment, so
-    neither may appear in the prefix (this is how ulwazi itself is hosted).
-    """
-    assert (
-        prefix(
-            slug="ulwazi",
-            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/",
-            READTHEDOCS_VERSION="main",
-            READTHEDOCS_LANGUAGE="en",
-        )
-        == "/ulwazi/"
-    )
-
-
-def test_versioned_schema(prefix):
-    """Versioned projects add the version segment to the canonical URL."""
-    assert (
-        prefix(
-            slug="ulwazi",
-            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/latest/",
-            READTHEDOCS_VERSION="latest",
-            READTHEDOCS_LANGUAGE="en",
-        )
-        == "/ulwazi/latest/"
-    )
-
-
-def test_translated_schema(prefix):
-    """Translated projects add language and version segments."""
-    assert (
-        prefix(
-            slug="ulwazi",
-            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/fr/latest/",
-            READTHEDOCS_VERSION="latest",
-            READTHEDOCS_LANGUAGE="fr",
-        )
-        == "/ulwazi/fr/latest/"
-    )
-
-
-def test_version_mismatch_ignored(prefix):
-    """If the RTD version is not the canonical URL's last segment, the URL
-    schema has no version segment and the env value must not leak in."""
-    assert (
-        prefix(
-            slug="ulwazi",
-            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/",
-            READTHEDOCS_VERSION="1.2",
-        )
-        == "/ulwazi/"
-    )
-
-
-def test_language_mismatch_ignored(prefix):
-    """If the RTD language is not the segment before the version, the URL
-    schema has no language segment and the env value must not leak in."""
-    assert (
-        prefix(
-            slug="ulwazi",
-            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/latest/",
-            READTHEDOCS_VERSION="latest",
-            READTHEDOCS_LANGUAGE="en",
-        )
-        == "/ulwazi/latest/"
-    )
-
-
-def test_rtd_env_without_slug(prefix):
-    """On RTD without a slug, the prefix is just the schema segments."""
-    assert (
-        prefix(
-            READTHEDOCS_CANONICAL_URL="https://docs.example.com/en/latest/",
-            READTHEDOCS_VERSION="latest",
-            READTHEDOCS_LANGUAGE="en",
-        )
-        == "/en/latest/"
-    )
-
-
-def test_slug_with_stray_slashes_normalised(prefix):
-    """A user-supplied slug with stray slashes is normalised."""
-    assert (
-        prefix(
-            slug="/ulwazi/",
-            READTHEDOCS_CANONICAL_URL="https://canonical-ulwazi.readthedocs-hosted.com/latest/",
-            READTHEDOCS_VERSION="latest",
-        )
-        == "/ulwazi/latest/"
-    )
-
-
-@pytest.mark.parametrize(
-    ("slug", "rtd_env"),
-    [
-        ("ulwazi", {}),
-        ("", {}),
-        (
-            "ulwazi",
-            {
-                "READTHEDOCS_CANONICAL_URL": "https://x.io/",
+CASES = [
+    # Off Read the Docs (no canonical URL): the prefix is empty so links on
+    # the 404 page stay relative and work under `make run` / file:// access.
+    pytest.param(
+        {"slug": "", "env": {}},
+        "",
+        id="no-rtd-env",
+    ),
+    # A slug alone must not produce a prefix either: the prefix only applies
+    # on RTD builds, because sphinx-notfound-page absolutises every link on
+    # the 404 page with it and would break local builds.
+    pytest.param(
+        {"slug": "ulwazi", "env": {}},
+        "",
+        id="slug-without-rtd-env",
+    ),
+    # Single-version projects serve at the root of the canonical URL.
+    # READTHEDOCS_VERSION and READTHEDOCS_LANGUAGE are still set on the build
+    # machine, but the canonical URL has no version or language segment, so
+    # neither may appear in the prefix (this is how ulwazi itself is hosted).
+    pytest.param(
+        {
+            "slug": "ulwazi",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-ulwazi.readthedocs-hosted.com/",
                 "READTHEDOCS_VERSION": "main",
                 "READTHEDOCS_LANGUAGE": "en",
             },
-        ),
-        (
-            "ulwazi",
-            {
-                "READTHEDOCS_CANONICAL_URL": "https://x.io/latest/",
-                "READTHEDOCS_VERSION": "latest",
-            },
-        ),
-        (
-            "ulwazi",
-            {
-                "READTHEDOCS_CANONICAL_URL": "https://x.io/en/latest/",
+        },
+        "/ulwazi/",
+        id="single-version-schema",
+    ),
+    # Versioned projects add the version segment to the canonical URL.
+    pytest.param(
+        {
+            "slug": "ulwazi",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-ulwazi.readthedocs-hosted.com/latest/",
                 "READTHEDOCS_VERSION": "latest",
                 "READTHEDOCS_LANGUAGE": "en",
             },
-        ),
-        (
-            "",
-            {
-                "READTHEDOCS_CANONICAL_URL": "https://x.io/en/latest/",
+        },
+        "/ulwazi/latest/",
+        id="versioned-schema",
+    ),
+    # Translated projects add language and version segments.
+    pytest.param(
+        {
+            "slug": "ulwazi",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-ulwazi.readthedocs-hosted.com/fr/latest/",
+                "READTHEDOCS_VERSION": "latest",
+                "READTHEDOCS_LANGUAGE": "fr",
+            },
+        },
+        "/ulwazi/fr/latest/",
+        id="translated-schema",
+    ),
+    # If the RTD version is not the canonical URL's last segment, the URL
+    # schema has no version segment and the env value must not leak in.
+    pytest.param(
+        {
+            "slug": "ulwazi",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-ulwazi.readthedocs-hosted.com/",
+                "READTHEDOCS_VERSION": "1.2",
+            },
+        },
+        "/ulwazi/",
+        id="version-mismatch-ignored",
+    ),
+    # If the RTD language is not the segment right before the version, the
+    # URL schema has no language segment and the env value must not leak in.
+    pytest.param(
+        {
+            "slug": "ulwazi",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-ulwazi.readthedocs-hosted.com/latest/",
                 "READTHEDOCS_VERSION": "latest",
                 "READTHEDOCS_LANGUAGE": "en",
             },
-        ),
-    ],
-)
-def test_prefix_always_slash_delimited(prefix, slug: str, rtd_env: dict[str, str]):
-    """The prefix must always start and end with a slash (or be empty).
+        },
+        "/ulwazi/latest/",
+        id="language-mismatch-ignored",
+    ),
+    # On RTD without a slug, the prefix is just the schema segments.
+    pytest.param(
+        {
+            "slug": "",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://docs.example.com/en/latest/",
+                "READTHEDOCS_VERSION": "latest",
+                "READTHEDOCS_LANGUAGE": "en",
+            },
+        },
+        "/en/latest/",
+        id="rtd-env-without-slug",
+    ),
+    # A user-supplied slug with stray slashes is normalised.
+    pytest.param(
+        {
+            "slug": "/ulwazi/",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-ulwazi.readthedocs-hosted.com/latest/",
+                "READTHEDOCS_VERSION": "latest",
+            },
+        },
+        "/ulwazi/latest/",
+        id="slug-stray-slashes-normalised",
+    ),
+]
 
-    This is the invariant sphinx-notfound-page validates; getting it wrong
-    silently breaks every link on the 404 page.
+
+@pytest.mark.parametrize(("prefix", "expected"), CASES, indirect=["prefix"])
+def test_notfound_prefix(prefix: str, expected: str) -> None:
+    """The prefix mirrors the hosting site's URL schema (see ``CASES``).
+
+    Every expected value is an exact string, which also enforces the
+    invariant sphinx-notfound-page validates: the prefix is either empty or
+    starts and ends with a slash. Getting it wrong silently breaks every
+    link on the 404 page.
     """
-    result = prefix(slug=slug, **rtd_env)
-    assert result == "" or (result.startswith("/") and result.endswith("/"))
+    assert prefix == expected
