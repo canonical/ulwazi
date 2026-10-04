@@ -241,13 +241,20 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   `config_inited`) provides the Canonical configuration defaults that
   historically came from the `canonical-sphinx-config` extension (now removed
   as a dependency). This includes: the `slug` config value (used to compute
-  `notfound_urls_prefix` for `sphinx-notfound-page` when `notfound.extension`
-  is in `extensions`), `exclude_patterns` additions, `html_last_updated_fmt` /
-  `html_permalinks_icon` overrides, `html_context` defaults (`repo_branch`,
-  `repo_folder` — must be slash-delimited, e.g. `/docs/` — and `discourse`),
-  the Read-the-Docs `repo_branch` override, and the Canonical
-  `sphinx_modern_pdf_style` branding defaults. The theme ships a `404.html`
-  template and a `static/404.svg` asset used by `sphinx-notfound-page`.
+  `notfound_urls_prefix` for `sphinx-notfound-page`), `exclude_patterns`
+  additions, `html_last_updated_fmt` / `html_permalinks_icon` overrides,
+  `html_context` defaults (`repo_branch`, `repo_folder` — must be
+  slash-delimited, e.g. `/docs/` — and `discourse`), the Read-the-Docs
+  `repo_branch` override, and the Canonical `sphinx_modern_pdf_style`
+  branding defaults.
+- **Bundled 404-page integration**: `sphinx-notfound-page` is a runtime
+  dependency, activated automatically via `app.setup_extension()` from the
+  theme's `setup()` (idempotent — projects that also list
+  `notfound.extension` in `extensions` are unaffected). The theme ships a
+  `404.html` template and a `static/404.svg` asset. Opt out with
+  `notfound_disabled = True` in conf.py or `-D notfound_disabled=1` on the
+  command line; when the extension is listed explicitly, the flag only skips
+  Ulwazi's prefix/template overrides.
 - **notfound prefix schema detection**: `_notfound_urls_prefix` detects the
   URL schema from the _path_ of `READTHEDOCS_CANONICAL_URL` — the version
   segment is the last path segment, the language segment the one before it,

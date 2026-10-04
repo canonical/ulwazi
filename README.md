@@ -131,6 +131,23 @@ only needed for pages you want to promote with custom text (e.g. a landing
 page). See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
 for defaults and override syntax.
 
+## 404 page
+
+The theme bundles the [sphinx-notfound-page](https://github.com/readthedocs/sphinx-notfound-page)
+extension and activates it automatically -- **you never need to add anything
+to your `extensions` list.** A styled 404 page (with the Canonical penguin)
+is generated for every build, and links on it resolve correctly on
+Read the Docs.
+
+Set the `slug` config value in your `conf.py` to the path segment of your
+docs site URL (e.g. `slug = "ulwazi"` for `https://documentation.ubuntu.com/ulwazi/`)
+so that links on the 404 page resolve correctly when hosted on Read the Docs.
+
+To opt out of the 404-page integration, set `notfound_disabled = True` in your
+`conf.py` (or pass `-D notfound_disabled=1` on the command line). Projects
+that already list `notfound.extension` in their `extensions` are unaffected
+either way.
+
 ## Contributing
 
 The theme files are located in the `ulwazi` folder:

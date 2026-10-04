@@ -51,6 +51,19 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     # https://documentation.ubuntu.com/ulwazi/. Used to compute
     # notfound_urls_prefix for sphinx-notfound-page.
     app.add_config_value("slug", default="", rebuild="env", types=str)
+    # Opt-out flag for the bundled sphinx-notfound-page integration: set
+    # notfound_disabled = True in conf.py (or pass -D notfound_disabled=1 on
+    # the command line) to skip both the activation and the prefix/template
+    # setup. Explicitly listing "notfound.extension" in extensions still
+    # works and only skips Ulwazi's overrides.
+    app.add_config_value("notfound_disabled", default=False, rebuild="env")
+    # sphinx-notfound-page is a bundled dependency: the theme ships a 404
+    # template, a 404.svg asset, and the prefix computation, so the
+    # extension is activated by default. setup_extension is idempotent
+    # ("no-op if called twice"), so projects that also list
+    # "notfound.extension" in extensions are unaffected.
+    if not app.config.notfound_disabled:
+        app.setup_extension("notfound.extension")  # pyright: ignore [reportUnknownMemberType]
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
@@ -141,7 +154,11 @@ def config_inited(app: Sphinx, config: Config) -> None:
     if config.html_title == "":
         config.html_theme_options = {"sidebar_hide_name": True}
 
-    if "notfound.extension" in config.extensions:
+    # The 404-page integration is bundled by default (see setup()); the
+    # notfound_disabled flag opts out of Ulwazi's prefix/template setup.
+    # When the user explicitly lists "notfound.extension" in extensions,
+    # the extension still loads and only these overrides are skipped.
+    if not config.notfound_disabled:
         config.notfound_urls_prefix = _notfound_urls_prefix(config)
         config.notfound_template = "404.html"
 
@@ -466,14 +483,14 @@ def modify_local_toc(toc: str) -> str:
     return str(toc_html)
 
 
-def truncate_local_toc(toc: str, max_depth: int = -1) -> str:
+def truncate_local_toc(toc: str, max_depth: int | None = -1) -> str:
     """Limit the number of nested levels if localtoc_max_depth is set in conf.py."""
     if not toc:
         return toc
 
     toc_html = BeautifulSoup(toc, "html.parser")
 
-    if max_depth != -1:
+    if max_depth is not None and max_depth != -1:
 
         def trim_ul(ul: Tag, depth: int = 1) -> None:
             if depth >= max_depth:

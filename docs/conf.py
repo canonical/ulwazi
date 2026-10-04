@@ -345,7 +345,6 @@ extensions = [
     "sphinxext.opengraph",
     "ulwazi",
     "sphinx_modern_pdf_style",
-    "notfound.extension",
     "myst_parser",
     "sphinxcontrib.jquery",
     "sphinx_design",

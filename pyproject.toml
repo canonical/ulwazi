@@ -27,6 +27,7 @@ dependencies = [
     "sphinx-basic-ng",
     "sphinxcontrib-jquery>=4.1",
     "beautifulsoup4",
+    "sphinx-notfound-page~=1.1",
 ]
 
 [dependency-groups]
@@ -57,7 +58,6 @@ docs = [
     "sphinx-basic-ng>=1.0.0b2",
     "sphinx-design>=0.6.1",
     "sphinx-last-updated-by-git>=0.3.8",
-    "sphinx-notfound-page~=1.1",
     "sphinx-sitemap>=2.9.0",
     "sphinx-terminal~=1.0.1",
     "sphinxcontrib-jquery>=4.1",
