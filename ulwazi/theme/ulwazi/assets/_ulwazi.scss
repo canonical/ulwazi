@@ -423,14 +423,30 @@ button.copybtn:hover {
   Extension compatibility styling.
 */
 
-// sphinx_config_options renders an expand anchor with a sprite-based chevron
-// (<i class="icon"><svg><use href="#svg-arrow-right"/></svg></i>). The SVG
-// carries no intrinsic size and the extension's CSS only rotates it, so the
-// default 300x150 viewport size leaks through (a huge chevron and horizontal
-// overflow)
-.configoption .basicinfo .anchor .icon svg {
-  width: 1rem;
-  height: 1rem;
+// sphinx_config_options targets Furo. Remove these rules once the extension
+// is theme-agnostic.
+.configoption {
+  // The extension draws the separator between options with Furo's
+  // --color-table-border, which Ulwazi doesn't define (so no line renders).
+  // Use Vanilla's low-contrast separator, as in divided lists.
+  --color-table-border: var(--vf-color-border-low-contrast);
+
+  // The chevron is a sprite-based SVG
+  // (<i class="icon"><svg><use href="#svg-arrow-right"/></svg></i>) sized by
+  // Furo's global .icon rules. Without a size it falls back to 300x150 (a
+  // huge chevron and horizontal overflow), so size it to Vanilla's icon size.
+  // The extension also pins it to rotate(90deg), so it always points down.
+  // Follow Vanilla's accordion instead: right when collapsed, down when open.
+  .basicinfo .anchor .icon svg {
+    width: $default-icon-size;
+    height: $default-icon-size;
+    transform: none;
+    @include vf-transition($property: transform, $duration: fast);
+  }
+
+  &:has(> .details:not([hidden])) .basicinfo .anchor .icon svg {
+    transform: rotate(90deg);
+  }
 }
 
 

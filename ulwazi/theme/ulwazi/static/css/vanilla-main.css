@@ -14496,9 +14496,19 @@ button.copybtn:hover {
 /*
   Extension compatibility styling.
 */
+.configoption {
+  --color-table-border: var(--vf-color-border-low-contrast);
+}
 .configoption .basicinfo .anchor .icon svg {
   width: 1rem;
   height: 1rem;
+  transform: none;
+  transition-duration: 0.165s;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.configoption:has(> .details:not([hidden])) .basicinfo .anchor .icon svg {
+  transform: rotate(90deg);
 }
 
 .copybtn.o-tooltip--left[data-tooltip]::before,
