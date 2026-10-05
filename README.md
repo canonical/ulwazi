@@ -2,7 +2,7 @@
 
 Ulwazi, Xhosa for information, is a work-in-progress Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
 
-[Demo website](https://canonical-ulwazi.readthedocs-hosted.com/)
+[Demo website](https://documentation.ubuntu.com/ulwazi/)
 
 Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng), developed by [pradyunsg](https://github.com/pradyunsg) and [Alabaster](https://github.com/sphinx-doc/alabaster).
 
@@ -99,21 +99,13 @@ If you change dependencies, you will need to re-build the virtual environment en
 That can be done by manually deleting the `.venv` folder or with the `make clean`
 command.
 
-## Metadata and SEO
-
-Every page gets a complete, working set of SEO/social-preview metadata
-automatically -- `<title>`, `<meta name="description">`, Open Graph tags,
-`rel="canonical"`, and favicon. **You never need to add anything by hand.**
-Overriding a page's title or description for social previews is optional and
-only needed for pages you want to promote with custom text (e.g. a landing
-page). See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
-for defaults and override syntax.
-
 ### Running the test suite
 
-The test suite is split into fast and slow tests. Fast tests run on every
-change; slow tests (PDF generation, browser-based visual checks, and Python
-version compatibility) require extra system dependencies or take longer.
+The test suite is split into fast and slow tests, following the
+[testing strategy](docs/content/testing-strategy.md).
+Fast tests run on every change; slow tests (PDF generation, browser-based
+visual checks, and Python version compatibility) require extra system
+dependencies or take longer.
 
 ```shell
 make test              # Run fast tests only
@@ -131,6 +123,7 @@ The available tests are:
 - **test_features.py** — checks theme markup (fast) and browser interactions _(slow)_
 - **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
 - **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML (fast test); browser styling and linked LaTeX slice lists are grouped into a single slow test _(partially slow)_
 - **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
 
 `make test-coverage` ends with a three-metric summary: Python line coverage
@@ -140,7 +133,17 @@ features whose mapped checks all pass (`tests/features.yaml`). The feature
 percentage is not exhaustive coverage of every cheatsheet section; known
 unverified behaviors remain visible in the manifest and summary.
 
-See the [Tests documentation](https://canonical-ulwazi.readthedocs-hosted.com/content/tests/) for more details on the test suite.
+See the [Tests documentation](https://documentation.ubuntu.com/ulwazi/content/tests/) for more details on the test suite.
+
+## Metadata and SEO
+
+Every page gets a complete, working set of SEO/social-preview metadata
+automatically -- `<title>`, `<meta name="description">`, Open Graph tags,
+`rel="canonical"`, and favicon. **You never need to add anything by hand.**
+Overriding a page's title or description for social previews is optional and
+only needed for pages you want to promote with custom text (e.g. a landing
+page). See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
+for defaults and override syntax.
 
 ## Contributing
 
@@ -148,6 +151,8 @@ The theme files are located in the `ulwazi` folder:
 
 - `__init__.py` -- initialization script for the theme.
 - `navigation.py` -- modifies the global TOC navigation tree
+- `product_menu_gen.py` -- generates the Canonical product menu (optional)
+- `tabs.py` -- styles and structures sphinx-design tabs in accordance with Vanilla
 - `theme/ulwazi/` -- contains the theme files
   - theme.toml -- theme configuration file
   - static -- static content to be used by the theme without processing

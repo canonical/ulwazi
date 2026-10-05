@@ -15,6 +15,10 @@ not every check proposed there is implemented yet.
 - {doc}`SEO and metadata <seo-metadata>` (`tests/test_seo_metadata.py`, **fast**)
 	checks page titles, descriptions, canonical links, favicons, and Open Graph
 	tags.
+- {doc}`Structured TOC <structured-toc>`
+	(`tests/test_structured_toc.py`, **fast and slow**) checks the
+	sphinx-structured-toc extension's domain/slice markup and ARIA in both
+	cheat sheets, plus browser styling and LaTeX output.
 - {doc}`Theme features <features>` (`tests/test_features.py`, **fast and
 	slow**) checks generated markup and browser interactions, including tabs,
 	dark mode, and search.
@@ -56,7 +60,36 @@ supports tests that read its output.
 Smoke <smoke>
 Assets and structure <assets-structure>
 SEO and metadata <seo-metadata>
+Structured TOC <structured-toc>
 Theme features <features>
 Python versions <python-versions>
 Test coverage <coverage>
 ```
+
+(test-output-convention)=
+## Test output convention
+
+Tests are grouped so that their pytest output stays minimal when everything
+passes, but pinpoints every problem when something fails:
+
+- **When green:** all checks of a test run inside a single pytest test case,
+  so a passing run reports one `PASSED` line per test. A test file with both
+  a fast and a slow test reports one line per tier it runs in (two lines in
+  `make test-all`).
+- **When red:** the test collects every failed check it can safely run --
+  across all checked pages and parts -- and lists them all in one failure
+  message, each tagged by page and checked part. A failure on one page or
+  part does not hide problems found elsewhere.
+
+For example, a failing structured-TOC run reports which of the RST or MyST
+fixture pages broke and which check failed on it:
+
+```text
+structured-TOC slow checks failed:
+  - [rst] slice items are not rendered inline (y positions: [11031, 11051])
+  - [rst] domain-aria-target span not found
+```
+
+The exception is tests that are parametrized on purpose, such as the
+{ref}`Python version tests <python-version-tests>`, where each parameter
+value is an independently reported result.

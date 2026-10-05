@@ -87,7 +87,7 @@ Running tests
 -------------
 
 The test suite is split into fast and slow tests. See the
-`Tests documentation <https://canonical-ulwazi.readthedocs-hosted.com/content/tests/>`_
+`Tests documentation <https://documentation.ubuntu.com/ulwazi/content/tests/>`_
 for details on each test.
 
 .. code-block:: shell
