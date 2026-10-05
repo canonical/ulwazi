@@ -389,7 +389,6 @@ extensions = [
 ]
 
 
-
 # Excludes files or directories from processing
 
 exclude_patterns = [
