@@ -99,9 +99,7 @@ ACTIVATION_CASES = [
     # integration must still get its defaults at this later entry point.
     pytest.param([], "", "404.html", "", id="theme-only"),
     # The flag must prevent automatic activation when Ulwazi is an extension.
-    pytest.param(
-        ["ulwazi"], "notfound_disabled = True", None, None, id="opt-out"
-    ),
+    pytest.param(["ulwazi"], "notfound_disabled = True", None, None, id="opt-out"),
     # The same flag must work when Ulwazi is selected only through html_theme.
     pytest.param([], "notfound_disabled = True", None, None, id="theme-only-opt-out"),
     # An explicit notfound entry remains active when Ulwazi's integration is
@@ -190,3 +188,25 @@ def test_cli_notfound_settings_are_respected(tmp_path: Path) -> None:
     )
     assert app.config.notfound_template == "page.html"
     assert app.config.notfound_urls_prefix == "/my-docs/"
+
+
+def test_built_404_page(built_site) -> None:
+    """The sample site's 404 page uses Ulwazi chrome and its bundled asset."""
+    soup = built_site.page("404")
+    assert soup.find("header") or soup.select_one(".p-navigation")
+    assert soup.select_one(".l-footer") or soup.find("footer")
+    assert "Page not found" in soup.get_text()
+
+    img = soup.find("img", alt="Penguin with a question mark")
+    assert img is not None, "404 page is missing the penguin image"
+    assert str(img.get("src", "")).endswith("404.svg")
+    # sphinx-notfound-page rewrites relative URLs on 404 pages; check the
+    # generated file directly rather than interpreting the rewritten URL.
+    assert (built_site.output / "_static" / "404.svg").is_file()
+
+
+def test_404_page_excluded_from_sitemap(built_site) -> None:
+    """The generated 404 page must not appear in the sample site's sitemap."""
+    sitemap = built_site.output / "sitemap.xml"
+    assert sitemap.is_file()
+    assert "/404/" not in sitemap.read_text(encoding="utf-8")

@@ -46,6 +46,8 @@ dev = [
     "lxml>=6.0.2",
     "playwright>=1.61.0",
     "pytest>=9.0.2",
+    "requests>=2.32.0",
+    "tinycss2>=1.4.0",
     # pytest-xdist enables parallel test execution via `-n auto`.
     # Used by `make test-python-versions` to run the per-Python-version
     # build tests concurrently. See tests/test_python_versions.py.
@@ -59,6 +61,7 @@ docs = [
     "sphinx-design>=0.6.1",
     "sphinx-last-updated-by-git>=0.3.8",
     "sphinx-sitemap>=2.9.0",
+    "sphinx-structured-toc>=0.2.0",
     "sphinx-terminal~=1.0.1",
     "sphinxcontrib-jquery>=4.1",
     "sphinxcontrib-svg2pdfconverter[cairosvg]>=2.1.0",
@@ -146,6 +149,7 @@ exclude = [
     "**/.*",
     "**/__pycache__",
     "**/_version.py",
+    "docs/_build",  # Generated HTML assets may include third-party Python sources.
 ]
 
 [tool.mypy]

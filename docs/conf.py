@@ -342,6 +342,7 @@ extensions = [
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
+    "sphinx_structured_toc",
     "sphinxext.opengraph",
     "ulwazi",
     "sphinx_modern_pdf_style",

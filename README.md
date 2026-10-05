@@ -116,10 +116,19 @@ make test-python-versions  # Build theme and docs on every supported Python vers
 make test-coverage     # Run tests and generate coverage report
 ```
 
-The suite covers site validation, SCSS propagation, SEO metadata, PDF
-generation, and Python version compatibility. See the
-[Tests documentation](https://documentation.ubuntu.com/ulwazi/content/tests/)
-for details on each test and how it is run.
+The available tests are:
+
+- **test_smoke.py** — checks the home-page shell and navigation (fast)
+- **test_assets_structure.py** — checks representative built assets and theme controls (fast)
+- **test_features.py** — checks theme markup (fast) and browser interactions _(slow)_
+- **test_notfound_bundling.py** — checks automatic 404 integration, explicit extensions, opt-out, and the built 404 page and sitemap (fast)
+- **test_notfound_prefix.py** — checks URL prefixes for Read the Docs hosting layouts (fast)
+- **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
+- **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML (fast test); browser styling and linked LaTeX slice lists are grouped into a single slow test _(partially slow)_
+- **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
+
+See the [Tests documentation](https://documentation.ubuntu.com/ulwazi/content/tests/) for more details on the test suite.
 
 ## Metadata and SEO
 
