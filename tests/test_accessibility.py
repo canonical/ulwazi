@@ -41,6 +41,13 @@ PAGES = {
 # real toggle, exactly as a reader would.
 THEMES = {"is-light": False, "is-dark": True}
 
+# Seconds to wait after the page loads (and after the theme toggle, if any)
+# before scanning. Theme changes trigger CSS transitions (for example, the
+# 0.1s background transition on `.p-button`); scanning mid-transition makes
+# axe sample intermediate colours and report spurious, timing-dependent
+# contrast failures.
+THEME_SETTLE_SECONDS = 2
+
 CONTRAST_RULE = "color-contrast"
 AXE_OPTIONS = {
     "runOnly": {"type": "rule", "values": [CONTRAST_RULE]},
@@ -95,6 +102,7 @@ def test_color_contrast_meets_wcag_aa():
                 page.goto(f"file://{path.resolve()}")
                 if needs_toggle:
                     page.click(".theme-toggle")
+                page.wait_for_timeout(THEME_SETTLE_SECONDS * 1000)
                 results = axe.run(page, options=AXE_OPTIONS)
                 failures.extend(
                     ContrastFailure(
