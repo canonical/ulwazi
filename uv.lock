@@ -1786,6 +1786,7 @@ dev = [
     { name = "playwright" },
     { name = "pytest" },
     { name = "pytest-xdist" },
+    { name = "pyyaml" },
     { name = "requests" },
     { name = "tinycss2" },
 ]
@@ -1835,6 +1836,7 @@ dev = [
     { name = "playwright", specifier = ">=1.61.0" },
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "pytest-xdist", specifier = ">=3.6.0" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "requests", specifier = ">=2.32.0" },
     { name = "tinycss2", specifier = ">=1.4.0" },
 ]

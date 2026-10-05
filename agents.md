@@ -20,7 +20,7 @@ make docs
 ```
 
 Build theme and docs, and then run a local web server
-(auto-rebuilds on content changes) to serve them:
+(auto-rebuilds on content and theme changes) to serve them:
 
 ```bash
 make run
@@ -39,8 +39,9 @@ in its terminal.
 ### Testing
 
 ```bash
-make test         # Run fast tests
+make test         # Run fast tests only
 make test-all     # Run all fast and slow tests (includes PDF and Playwright)
+make test-coverage # Run tests and report Python, JS, and feature coverage
 ```
 
 Available tests:
@@ -53,6 +54,32 @@ Available tests:
 - **test_seo_metadata.py**: Verifies SEO/metadata tags (title, description, canonical, favicon, Open Graph) on built pages
 - **test_structured_toc.py**: Verifies domain/slice markup and ARIA in RST and MyST HTML (fast test); browser styling and LaTeX content from both cheat sheets are grouped into a single slow test _(partially slow)_
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
+
+#### When adding or changing a theme feature
+
+1. Update representative fixtures in `docs/content/myst-cheat-sheet.md` and
+   `docs/content/rst-cheat-sheet.rst` in parallel when applicable; use a
+   dedicated sample page for a site-level feature.
+2. Add or update an **assertion** for the specific rendered markup or browser
+   behavior in `tests/test_features.py` (or the appropriate existing test).
+   For grouped tests such as `test_features_fast`, inspect the assertions:
+   the test's name or a passing Sphinx build alone is not evidence.
+3. Add or edit **one** narrowly scoped entry in `tests/features.yaml` under
+   `markup` or `site`: `name` describes only verified behavior, `source`
+   identifies the fixture, `checks` lists exact pytest node IDs (for example,
+   `tests/test_features.py::test_features_fast`). List **all** required tests;
+   if none qualifies yet, set `checks: []`. Do not map to a test that merely
+   loads a page or script, or duplicate an existing entry to inflate coverage.
+4. Ensure mapped tests run in `make test-coverage`: fast tests are selected;
+   slow tests need an explicit coverage marker **and** inclusion in the
+   `Makefile` marker expression. Run `make test-coverage` and check the final
+   summary and `results/feature-coverage.json`: a new entry adds **one to
+   total**, and **one to checked** only when every mapped test is selected
+   and passes. Run `make lint` and rebuild the docs after changing fixtures.
+
+See `docs/content/tests/coverage.md` for scope and limitations of all three
+coverage metrics; do not confuse the curated feature percentage with Python
+or JavaScript line coverage.
 
 ### Cleaning
 
@@ -145,7 +172,9 @@ tests/                       # Test scripts
 ### Theme Changes
 
 1. Modify files in [ulwazi/](ulwazi/) or [ulwazi/theme/ulwazi/](ulwazi/theme/ulwazi/)
-2. Run `make rebuild` (theme changes require full rebuild)
+2. `make run` automatically rebuilds the preview; SCSS is compiled before Sphinx
+   copies the resulting CSS. For dependency changes or stale builds, use
+   `make rebuild`.
 3. Test in browser at http://127.0.0.1:8000
 
 ### Content Changes
@@ -221,7 +250,7 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
 - **Virtual Environment**: Located at `.venv/`, managed automatically by [uv](https://docs.astral.sh/uv/) through Make targets
 - **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
 - **Node Modules**: Required for Vanilla Framework compilation
-- **Auto-rebuild**: `make run` watches content changes but NOT theme changes
+- **Auto-rebuild**: `make run` watches both content and theme changes. Changes to shared navigation toctrees may leave older pages with stale sidebars; use `make rebuild` to refresh the site when needed.
 - **Metadata/SEO**: `<title>` suffix, `rel="canonical"`, favicon link, and Open Graph tags
   (`og:title`, `og:description`, `og:image`, etc.) are all generated automatically via
   `sphinxext-opengraph` (declared in `docs/conf.py` `extensions`, and in `pyproject.toml`

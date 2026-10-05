@@ -86,8 +86,10 @@ make run
 
 This command uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, then builds the documentation in this repo, and serves the result via a local web server.
 
-The resulting environment tracks changes in sample content and rebuilds the local website automatically.
-However, changes to the theme might require a full rebuild of the theme package:
+The preview tracks sample content and theme files. On a theme change it
+rebuilds the HTML; SCSS changes are compiled to CSS before Sphinx runs.
+Ordinary content edits still use Sphinx's incremental build. If you change
+dependencies or need to reset an existing stale build, use:
 
 ```shell
 make rebuild
@@ -113,7 +115,7 @@ make test-fast         # Same as 'make test'
 make test-slow         # Run slow tests only (PDF builds, browser checks)
 make test-all          # Run all tests (fast and slow)
 make test-python-versions  # Build theme and docs on every supported Python version (slow)
-make test-coverage     # Run tests and generate coverage report
+make test-coverage     # Run tests and report Python, JS, and feature coverage
 ```
 
 The available tests are:
@@ -127,6 +129,13 @@ The available tests are:
 - **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
 - **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML (fast test); browser styling and linked LaTeX slice lists are grouped into a single slow test _(partially slow)_
 - **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
+
+`make test-coverage` ends with a three-metric summary: Python line coverage
+of the `ulwazi` package, aggregate JavaScript code-line coverage of **all**
+theme scripts (`results/js-coverage.json`), and the fraction of curated
+features whose mapped checks all pass (`tests/features.yaml`). The feature
+percentage is not exhaustive coverage of every cheatsheet section; known
+unverified behaviors remain visible in the manifest and summary.
 
 See the [Tests documentation](https://documentation.ubuntu.com/ulwazi/content/tests/) for more details on the test suite.
 

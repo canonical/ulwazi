@@ -6,13 +6,16 @@ sheets, the code-heading page, and the two admonition example pages.
 
 ## Fast: generated markup
 
-One grouped fast case, `test_features_fast`, checks document heading classes and inline code,
-plain-text global navigation titles, Vanilla body-list and local-TOC markup,
+One grouped fast case, `test_features_fast`, checks document heading classes
+and inline code, plain-text global navigation titles, Vanilla body-list and
+local-TOC markup,
 the configured TOC depth, and notification type mappings. It also checks that
 named admonition targets survive, each converted tab set has reciprocal
 button/panel references and one initially selected panel, and a highlighted
 code block and copy script are wired in. The search page must include a
-breadcrumb-map entry for the code-heading page.
+breadcrumb-map entry for the code-heading page. The same case also checks the
+inline-code example and the first rendered header and data row of each grid,
+list, and CSV table in both cheat sheets.
 
 This verifies Ulwazi's conversions, not Sphinx's parsing and highlighting
 algorithms or the details of `sphinx-design` and other extensions.
@@ -26,7 +29,8 @@ all** and saves the consent cookie, stays closed on another page in the same
 browser context, and reopens from the footer's **Manage your tracker
 settings** link. It then expands and collapses the global navigation,
 selects tabs by click and arrow key, checks that dark mode persists between
-pages, and submits a search and follows a result with the correct breadcrumb.
+pages, clicks a code-block copy button and verifies the clipboard text, and
+submits a search and follows a result with the correct breadcrumb.
 Chromium is installed on demand; the case needs browser dependencies, so it
 is not run by the fast PR workflow.
 

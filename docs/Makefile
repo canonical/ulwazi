@@ -60,7 +60,13 @@ install:
 	@$(MAKE) -C .. docs-install --no-print-directory
 
 run: install
-	. $(DOCS_VENV); $(DOCS_VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)
+	. $(DOCS_VENV); $(DOCS_VENVDIR)/bin/sphinx-autobuild -b dirhtml \
+	  --host $(SPHINX_HOST) --port $(SPHINX_PORT) \
+	  --watch ../ulwazi \
+	  --ignore ../ulwazi/theme/ulwazi/static/css/vanilla-main.css \
+	  --ignore ../ulwazi/theme/ulwazi/static/css/vanilla-main.css.map \
+	  --pre-build '$(abspath $(DOCS_VENVDIR))/bin/python preview_theme.py' \
+	  "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)
 
 # Does not depend on $(DOCS_BUILDDIR) to rebuild properly at every run.
 html: install

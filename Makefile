@@ -110,12 +110,28 @@ test-all: docs-html docs-pdf-prep docs-pdf  ##- Run all tests (fast and slow)
 test-python-versions:  ##- Build the theme and docs on every supported Python version (slow)
 	uv run pytest -n auto -m slow tests/test_python_versions.py
 
+# Run the test suite and report three coverage metrics:
+#
+#   1. Python line coverage of the ulwazi package (coverage.py). The
+#      smoke/assets/features tests build the sample docs in-process via the
+#      shared built_site fixture, so the theme's Sphinx hooks are measured.
+#   2. JavaScript line coverage of the theme's own scripts
+#      (results/js-coverage.json), collected by the slow browser journey in
+#      tests/test_features.py via Chromium's V8 coverage API.
+#   3. Curated feature checks: the proportion of entries in tests/features.yaml
+#      whose mapped checks all pass (not an exhaustive feature inventory).
+#
+# Run the fast tier, the tagged JS browser journey, and the existing SCSS
+# computed-colour check in one pytest session so feature coverage uses the
+# same results. PDF and Python-version subprocess builds are excluded.
 .PHONY: test-coverage
-test-coverage: docs-html docs-pdf ##- Run tests and generate coverage report
+test-coverage: docs-html ##- Run tests and report Python, JS, and feature coverage
+	# Fail rather than presenting stale metrics if a run stops early.
+	rm -f results/feature-coverage.json results/js-coverage.json results/coverage.xml
 ifeq ($(COVERAGE_SOURCE),)
-	uv run coverage run --source $(PROJECT),tests -m pytest
+	ULWAZI_COVERAGE_REPORT=1 uv run coverage run --source $(PROJECT) -m pytest -m 'not slow or coverage_js or coverage_style'
 else
-	uv run coverage run --source $(COVERAGE_SOURCE),tests -m pytest
+	ULWAZI_COVERAGE_REPORT=1 uv run coverage run --source $(COVERAGE_SOURCE) -m pytest -m 'not slow or coverage_js or coverage_style'
 endif
 	uv run coverage xml -o results/coverage.xml
 	# for backwards compatibility
@@ -123,3 +139,4 @@ endif
 	cp results/coverage.xml coverage.xml
 	uv run coverage report -m
 	uv run coverage html
+	uv run python tests/coverage_summary.py
