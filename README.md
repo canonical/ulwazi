@@ -72,15 +72,6 @@ updated lock file together with the version bump.
 
 A Makefile includes some basic functionality to build the theme and then build and run the test content with the theme.
 
-The available tests include:
-
-- **test_site_validation.py** — validates built HTML for broken assets (missing CSS, JS, images)
-- **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
-- **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
-- **test_extension_compatibility.py** — verifies the theme renders correctly with every [Sphinx Stack default extension](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/) enabled (one test per extension; PDF check is slow)
-
-See the [Tests documentation](https://canonical-ulwazi.readthedocs-hosted.com/content/tests/) for more details.
-
 To build the sample documentation using the theme, run:
 
 ```shell
@@ -95,8 +86,10 @@ make run
 
 This command uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, then builds the documentation in this repo, and serves the result via a local web server.
 
-The resulting environment tracks changes in sample content and rebuilds the local website automatically.
-However, changes to the theme might require a full rebuild of the theme package:
+The preview tracks sample content and theme files. On a theme change it
+rebuilds the HTML; SCSS changes are compiled to CSS before Sphinx runs.
+Ordinary content edits still use Sphinx's incremental build. If you change
+dependencies or need to reset an existing stale build, use:
 
 ```shell
 make rebuild
@@ -122,13 +115,29 @@ make test-fast         # Same as 'make test'
 make test-slow         # Run slow tests only (PDF builds, browser checks)
 make test-all          # Run all tests (fast and slow)
 make test-python-versions  # Build theme and docs on every supported Python version (slow)
-make test-coverage     # Run tests and generate coverage report
+make test-coverage     # Run tests and report Python, JS, and feature coverage
 ```
 
-The suite covers site validation, SCSS propagation, SEO metadata, PDF
-generation, and Python version compatibility. See the
-[Tests documentation](https://documentation.ubuntu.com/ulwazi/content/tests/)
-for details on each test and how it is run.
+The available tests are:
+
+- **test_smoke.py** — checks the home-page shell and navigation (fast)
+- **test_assets_structure.py** — checks representative built assets and theme controls (fast)
+- **test_features.py** — checks theme markup (fast) and browser interactions _(slow)_
+- **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
+- **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML (fast test); browser styling and linked LaTeX slice lists are grouped into a single slow test _(partially slow)_
+- **test_layout_smoke.py** — checks every built page renders its article inside the main docs column, and (in a browser at 1440px) that nothing overflows the viewport or spills out of the main column _(browser check is slow)_
+- **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
+- **test_extension_compatibility.py** — verifies the theme renders correctly with every [Sphinx Stack default extension](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/) enabled (one test per extension; PDF check is slow)
+
+`make test-coverage` ends with a three-metric summary: Python line coverage
+of the `ulwazi` package, aggregate JavaScript code-line coverage of **all**
+theme scripts (`results/js-coverage.json`), and the fraction of curated
+features whose mapped checks all pass (`tests/features.yaml`). The feature
+percentage is not exhaustive coverage of every cheatsheet section; known
+unverified behaviors remain visible in the manifest and summary.
+
+See the [Tests documentation](https://documentation.ubuntu.com/ulwazi/content/tests/) for more details on the test suite.
 
 ## Metadata and SEO
 
