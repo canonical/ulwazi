@@ -134,19 +134,25 @@ for defaults and override syntax.
 ## 404 page
 
 The theme bundles the [sphinx-notfound-page](https://github.com/readthedocs/sphinx-notfound-page)
-extension and activates it automatically -- **you never need to add anything
-to your `extensions` list.** A styled 404 page (with the Canonical penguin)
-is generated for every build, and links on it resolve correctly on
-Read the Docs.
+extension and activates it automatically when Ulwazi is enabled -- **you do
+not need to list `notfound.extension` separately.** A styled 404 page (with
+the Canonical penguin) is generated for HTML builds, and links on it resolve
+correctly on Read the Docs.
 
 Set the `slug` config value in your `conf.py` to the path segment of your
 docs site URL (e.g. `slug = "ulwazi"` for `https://documentation.ubuntu.com/ulwazi/`)
 so that links on the 404 page resolve correctly when hosted on Read the Docs.
+If your project sets `notfound_urls_prefix` or `notfound_template` explicitly,
+Ulwazi leaves those settings unchanged.
 
 To opt out of the 404-page integration, set `notfound_disabled = True` in your
-`conf.py` (or pass `-D notfound_disabled=1` on the command line). Projects
-that already list `notfound.extension` in their `extensions` are unaffected
-either way.
+`conf.py`. If `"ulwazi"` is in `extensions`, you can also pass
+`-D notfound_disabled=1` on the command line. With `html_theme = "ulwazi"`
+alone, use the `conf.py` flag: Sphinx processes command-line overrides before
+loading theme entry points and would warn that the flag is unknown. Projects
+that already list `notfound.extension` may keep that entry: Sphinx loads it
+only once. In such projects, the opt-out skips **Ulwazi's** 404 defaults but
+does not disable the explicitly enabled extension or its 404 page.
 
 ## Contributing
 

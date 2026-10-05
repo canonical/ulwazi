@@ -64,6 +64,12 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     # "notfound.extension" in extensions are unaffected.
     if not app.config.notfound_disabled:
         app.setup_extension("notfound.extension")  # pyright: ignore [reportUnknownMemberType]
+        # If Ulwazi is selected only via html_theme, Sphinx loads this entry
+        # point during HTML builder setup, after config-inited has fired.
+        # Apply just the 404 defaults here; running the entire config-inited
+        # hook at this stage would set up unrelated extensions too late.
+        if hasattr(app, "builder"):
+            _configure_notfound(app.config)
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
@@ -154,16 +160,33 @@ def config_inited(app: Sphinx, config: Config) -> None:
     if config.html_title == "":
         config.html_theme_options = {"sidebar_hide_name": True}
 
-    # The 404-page integration is bundled by default (see setup()); the
-    # notfound_disabled flag opts out of Ulwazi's prefix/template setup.
-    # When the user explicitly lists "notfound.extension" in extensions,
-    # the extension still loads and only these overrides are skipped.
+    # The opt-out skips Ulwazi's defaults even if the user loads the extension.
     if not config.notfound_disabled:
-        config.notfound_urls_prefix = _notfound_urls_prefix(config)
-        config.notfound_template = "404.html"
+        _configure_notfound(config)
 
     if "sphinx_modern_pdf_style" in config.extensions:
         _setup_modern_pdf_style(config)
+
+
+def _configure_notfound(config: Config) -> None:
+    """Provide theme defaults without replacing explicit project settings.
+
+    Sphinx keeps conf.py assignments in ``_raw_config``; reading the current
+    value alone cannot distinguish an explicit value from an extension default.
+    Command-line overrides are available through ``overrides``. Both must be
+    checked so the theme does not silently discard project-specific 404 URLs.
+    Sphinx does not expose a public API for checking raw conf.py assignments.
+    """
+    if (
+        "notfound_urls_prefix" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "notfound_urls_prefix" not in config.overrides
+    ):
+        config.notfound_urls_prefix = _notfound_urls_prefix(config)
+    if (
+        "notfound_template" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "notfound_template" not in config.overrides
+    ):
+        config.notfound_template = "404.html"
 
 
 def _setup_modern_pdf_style(config: Config) -> None:

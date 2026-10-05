@@ -5,19 +5,10 @@ The theme activates ``sphinx-notfound-page`` automatically via
 also list ``notfound.extension`` in ``extensions`` are unaffected), and
 provides an opt-out via the ``notfound_disabled`` config value.
 
-These tests run minimal in-process Sphinx builds with four configurations,
-covering every adoption path:
-
-1. Ulwazi only -- the extension is auto-activated and the 404 page is
-   generated with Ulwazi's template and prefix.
-2. Ulwazi + the extension listed explicitly -- no double registration, the
-   404 page is still generated with Ulwazi's overrides (the
-   ``setup_extension`` call becomes a no-op).
-3. Ulwazi + ``notfound_disabled = True`` -- no 404 page is generated.
-4. Ulwazi + ``notfound_disabled = True`` + the extension listed explicitly
-   -- the extension's own behaviour applies, but Ulwazi's prefix/template
-   overrides are skipped (``notfound_template`` keeps the extension's
-   default, ``page.html``).
+The ``ACTIVATION_CASES`` table covers normal activation, extension ordering,
+theme-only entry-point loading, and opt-out. Each case has a descriptive ID
+and a nearby comment explaining why it matters. Separate tests cover RTD
+prefixes, command-line opt-out, and project-supplied overrides.
 
 Each build uses a tiny throwaway source directory under ``tmp_path`` so the
 developer's environment and the sample docs are never touched.
@@ -26,6 +17,7 @@ developer's environment and the sample docs are never touched.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 from sphinx.application import Sphinx
@@ -49,6 +41,7 @@ def _build(
     tmp_path: Path,
     extensions: list[str],
     extra_config: str = "",
+    overrides: dict[str, Any] | None = None,
 ) -> tuple[Sphinx, Path]:
     """Run a minimal in-process Sphinx build and return (app, outdir)."""
     srcdir = tmp_path / "src"
@@ -69,6 +62,7 @@ def _build(
         outdir=str(outdir),
         doctreedir=str(tmp_path / "doctrees"),
         buildername="dirhtml",
+        confoverrides=overrides,
         warningiserror=False,
     )
     app.build()
@@ -80,94 +74,119 @@ def _page_404(outdir: Path) -> Path:
     return outdir / "404" / "index.html"
 
 
-def test_auto_activation(tmp_path: Path) -> None:
-    """Ulwazi alone activates the extension and generates the 404 page."""
-    app, outdir = _build(tmp_path, extensions=["ulwazi"])
-    assert "notfound.extension" in app.extensions, (
-        "sphinx-notfound-page was not auto-activated by the theme"
-    )
-    page = _page_404(outdir)
-    assert page.exists(), "404 page was not generated"
-    content = page.read_text(encoding="utf-8")
-    # Ulwazi's 404.html template renders the penguin image.
-    assert "404.svg" in content, "404 page does not use Ulwazi's template"
-    # Ulwazi's prefix computation ran (empty off RTD, but the config value
-    # must have been assigned, not left at the extension's default).
-    assert app.config.notfound_template == "404.html"
-
-
-def test_coexistence_with_explicit_extension(tmp_path: Path) -> None:
-    """Listing notfound.extension explicitly does not break the build."""
-    app, outdir = _build(
-        tmp_path, extensions=["ulwazi", "notfound.extension"]
-    )
-    # No double registration: the extension appears exactly once.
-    assert "notfound.extension" in app.extensions
-    page = _page_404(outdir)
-    assert page.exists(), "404 page was not generated"
-    content = page.read_text(encoding="utf-8")
-    assert "404.svg" in content, "404 page does not use Ulwazi's template"
-    assert app.config.notfound_template == "404.html"
-
-
-def test_opt_out(tmp_path: Path) -> None:
-    """notfound_disabled = True skips activation and the 404 page."""
-    app, outdir = _build(
-        tmp_path,
-        extensions=["ulwazi"],
-        extra_config="notfound_disabled = True",
-    )
-    assert "notfound.extension" not in app.extensions, (
-        "notfound_disabled did not prevent the extension activation"
-    )
-    assert not _page_404(outdir).exists(), (
-        "404 page was generated despite notfound_disabled = True"
-    )
-
-
-def test_opt_out_with_explicit_extension(tmp_path: Path) -> None:
-    """With the extension listed explicitly, the flag only skips Ulwazi's
-    overrides: the extension still runs, but with its own defaults."""
-    app, outdir = _build(
-        tmp_path,
-        extensions=["ulwazi", "notfound.extension"],
-        extra_config="notfound_disabled = True",
-    )
-    # The extension is active (explicit user intent wins)...
-    assert "notfound.extension" in app.extensions
-    page = _page_404(outdir)
-    assert page.exists(), "404 page was not generated"
-    # ...but Ulwazi's template override was skipped.
-    assert app.config.notfound_template == "page.html", (
-        "notfound_disabled did not skip Ulwazi's template override"
-    )
+ACTIVATION_CASES = [
+    # Ulwazi alone must load notfound and apply its own 404 template and
+    # local-build prefix rather than the extension's /en/latest/ default.
+    pytest.param(["ulwazi"], "", "404.html", "", id="auto-activation"),
+    # Existing projects can keep notfound explicitly after Ulwazi; Sphinx's
+    # setup_extension call must not register the extension twice.
+    pytest.param(
+        ["ulwazi", "notfound.extension"],
+        "",
+        "404.html",
+        "",
+        id="explicit-extension-after-ulwazi",
+    ),
+    # Sphinx Stack can list notfound first; Ulwazi must still apply its defaults.
+    pytest.param(
+        ["notfound.extension", "ulwazi"],
+        "",
+        "404.html",
+        "",
+        id="explicit-extension-before-ulwazi",
+    ),
+    # Selecting only html_theme loads Ulwazi after config-inited; the 404
+    # integration must still get its defaults at this later entry point.
+    pytest.param([], "", "404.html", "", id="theme-only"),
+    # The flag must prevent automatic activation when Ulwazi is an extension.
+    pytest.param(
+        ["ulwazi"], "notfound_disabled = True", None, None, id="opt-out"
+    ),
+    # The same flag must work when Ulwazi is selected only through html_theme.
+    pytest.param([], "notfound_disabled = True", None, None, id="theme-only-opt-out"),
+    # An explicit notfound entry remains active when Ulwazi's integration is
+    # disabled; it retains the extension's own template and prefix defaults.
+    pytest.param(
+        ["ulwazi", "notfound.extension"],
+        "notfound_disabled = True",
+        "page.html",
+        "/en/latest/",
+        id="opt-out-with-explicit-extension",
+    ),
+]
 
 
 @pytest.mark.parametrize(
-    ("extensions", "extra_config", "expected"),
-    [
-        (["ulwazi"], "", "404.html"),
-        (["ulwazi", "notfound.extension"], "", "404.html"),
-        (["ulwazi"], "notfound_disabled = True", None),
-        (["ulwazi", "notfound.extension"], "notfound_disabled = True", "page.html"),
-    ],
+    ("extensions", "extra_config", "expected_template", "expected_prefix"),
+    ACTIVATION_CASES,
 )
-def test_notfound_template_config(
+def test_notfound_activation(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
     extensions: list[str],
     extra_config: str,
-    expected: str | None,
+    expected_template: str | None,
+    expected_prefix: str | None,
 ) -> None:
-    """Consolidated check: the effective notfound_template per configuration.
+    """Build each adoption scenario and check the resulting 404 integration."""
+    monkeypatch.delenv("READTHEDOCS_CANONICAL_URL", raising=False)
+    app, outdir = _build(tmp_path, extensions=extensions, extra_config=extra_config)
+    page = _page_404(outdir)
+    assert ("notfound.extension" in app.extensions) == (expected_template is not None)
+    assert page.exists() == (expected_template is not None)
+    if expected_template is not None:
+        assert app.config.notfound_template == expected_template
+        assert app.config.notfound_urls_prefix == expected_prefix
+        assert ("404.svg" in page.read_text(encoding="utf-8")) == (
+            expected_template == "404.html"
+        )
 
-    ``None`` means the extension is not active at all (opt-out without the
-    explicit extension entry), in which case the config value is not
-    registered by anyone.
-    """
-    app, _outdir = _build(
-        tmp_path, extensions=extensions, extra_config=extra_config
+
+def test_theme_entry_point_rtd_prefix(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Late theme loading still applies the RTD schema to 404 links."""
+    monkeypatch.setenv("READTHEDOCS_CANONICAL_URL", "https://example.com/latest/")
+    monkeypatch.setenv("READTHEDOCS_VERSION", "latest")
+    monkeypatch.setenv("READTHEDOCS_LANGUAGE", "en")
+    app, outdir = _build(tmp_path, extensions=[], extra_config='slug = "ulwazi"')
+    assert app.config.notfound_urls_prefix == "/ulwazi/latest/"
+    assert 'href="/ulwazi/latest/' in _page_404(outdir).read_text(encoding="utf-8")
+
+
+def test_cli_opt_out(tmp_path: Path) -> None:
+    """Sphinx's -D override skips automatic activation."""
+    app, outdir = _build(
+        tmp_path, extensions=["ulwazi"], overrides={"notfound_disabled": "1"}
     )
-    if expected is None:
-        assert "notfound.extension" not in app.extensions
-    else:
-        assert app.config.notfound_template == expected
+    assert "notfound.extension" not in app.extensions
+    assert not _page_404(outdir).exists()
+
+
+@pytest.mark.parametrize("extensions", [["ulwazi"], []], ids=["extension", "theme"])
+def test_project_notfound_settings_are_respected(
+    tmp_path: Path, extensions: list[str]
+) -> None:
+    """Project settings in conf.py take precedence over Ulwazi's defaults."""
+    app, outdir = _build(
+        tmp_path,
+        extensions=extensions,
+        extra_config='notfound_template = "page.html"\nnotfound_urls_prefix = "/my-docs/"',
+    )
+    assert app.config.notfound_template == "page.html"
+    assert app.config.notfound_urls_prefix == "/my-docs/"
+    assert _page_404(outdir).exists()
+
+
+def test_cli_notfound_settings_are_respected(tmp_path: Path) -> None:
+    """Sphinx command-line -D settings also take precedence."""
+    app, _ = _build(
+        tmp_path,
+        extensions=["ulwazi"],
+        overrides={
+            "notfound_template": "page.html",
+            "notfound_urls_prefix": "/my-docs/",
+        },
+    )
+    assert app.config.notfound_template == "page.html"
+    assert app.config.notfound_urls_prefix == "/my-docs/"
