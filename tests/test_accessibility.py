@@ -82,7 +82,6 @@ def _group_by_root_cause(failures: list[ContrastFailure]) -> list[str]:
     ]
 
 
-@pytest.mark.slow
 def test_color_contrast_meets_wcag_aa():
     """Scan key pages, in both themes, for axe `color-contrast` violations."""
     for path in PAGES.values():
