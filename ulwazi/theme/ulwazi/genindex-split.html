@@ -6,8 +6,10 @@
 {%- endblock head_title %}
 
 {% block content %}
-<div class="sb-article-container">
+<main class="l-docs__main" id="content">
   <article role="main">
+  <div class="row">
+  <div class="col-12">
 
 {% block content_inner %}
 <section class="genindex-section">
@@ -28,5 +30,6 @@
 </section>
 {% endblock content_inner %}
 
-</article></div>
+</div></div>
+</article></main>
 {% endblock %}

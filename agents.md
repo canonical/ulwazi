@@ -47,6 +47,7 @@ Available tests:
 - **test_site_validation.py**: Validates built HTML for broken assets (missing CSS, JS, images)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_layout_smoke.py**: Checks every built page renders its article inside `main.l-docs__main`, and (in Chromium at 1440px) that no page overflows the viewport and no element spills out of the main column _(browser check is slow)_
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
 - **test_extension_compatibility.py**: Verifies the theme renders correctly with every Sphinx Stack default extension enabled (one test per extension; PDF check is a slow test). See `docs/content/tests/extension-compatibility.md`
 
