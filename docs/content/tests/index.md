@@ -1,19 +1,95 @@
 # Tests
 
-This section documents the Ulwazi theme test suite. See the list of tests
-implemented in Ulwazi below.
+These are the tests currently available in Ulwazi. The
+{doc}`testing strategy <../testing-strategy>` describes the broader goals;
+not every check proposed there is implemented yet.
 
-Basic tests:
+## Test inventory
 
-- **Site validation** (`tests/test_site_validation.py`) — verifies the built HTML has no broken assets (missing CSS, JS, images).
-- **SCSS propagation** (`tests/test_scss_propagation.py`) — checks that custom SCSS classes reach the rendered HTML with the expected computed styles.
-- **PDF generation** (`tests/test_pdf_generation.py`) — verifies PDF generation produces the expected output file. *(slow)*
+- {doc}`Smoke <smoke>` (`tests/test_smoke.py`, **fast**) checks the home-page
+	content and essential theme layout.
+- {doc}`Assets and structure <assets-structure>`
+	(`tests/test_assets_structure.py`, **fast and slow**) checks local assets
+	and theme-generated controls, plus advisory remote availability on
+	representative pages.
+- {doc}`SEO and metadata <seo-metadata>` (`tests/test_seo_metadata.py`, **fast**)
+	checks page titles, descriptions, canonical links, favicons, and Open Graph
+	tags.
+- {doc}`Structured TOC <structured-toc>`
+	(`tests/test_structured_toc.py`, **fast and slow**) checks the
+	sphinx-structured-toc extension's domain/slice markup and ARIA in both
+	cheat sheets, plus browser styling and LaTeX output.
+- {doc}`Theme features <features>` (`tests/test_features.py`, **fast and
+	slow**) checks generated markup and browser interactions, including tabs,
+	dark mode, and search.
+- **SCSS propagation** (`tests/test_scss_propagation.py`, **fast and slow**)
+	checks the presence of custom styling in built HTML and selected rendered
+	styles in a browser.
+- **PDF generation** (`tests/test_pdf_generation.py`, **slow**) checks that
+	the PDF build produces its expected output file.
+- {doc}`Python version compatibility <python-versions>`
+	(`tests/test_python_versions.py`, **slow**) checks installation and the
+	documentation build on supported Python versions.
 
-More advanced tests:
+Follow the linked pages for detailed checks, sample content, and limitations.
+In particular, the asset test covers representative pages rather than every
+link in the site; it does not replace Sphinx's build warnings.
+
+## Running the tests
+
+- `make test` runs the fast tests and builds the sample HTML first.
+- `make test-slow` runs the slow tests, including browser and PDF checks;
+	these need additional dependencies.
+- `make test-all` runs both tiers.
+- `make test-python-versions` runs the Python version checks in parallel.
+- `make test-coverage` runs fast tests plus the slow browser feature journey;
+	see {doc}`test coverage <coverage>` for its three metrics and limitations.
+
+### Shared test setup
+
+Pytest loads `tests/conftest.py` automatically. Its `built_site` fixture builds
+fresh HTML in a temporary directory for the smoke, asset, and feature tests.
+This avoids stale `docs/_build` output and lets coverage observe the theme's
+Python hooks. The Make targets still run the regular docs build, which also
+supports tests that read its output.
 
 ```{toctree}
+:hidden:
 :maxdepth: 1
 
+Smoke <smoke>
+Assets and structure <assets-structure>
 SEO and metadata <seo-metadata>
+Structured TOC <structured-toc>
+Theme features <features>
 Python versions <python-versions>
+Test coverage <coverage>
 ```
+
+(test-output-convention)=
+## Test output convention
+
+Tests are grouped so that their pytest output stays minimal when everything
+passes, but pinpoints every problem when something fails:
+
+- **When green:** all checks of a test run inside a single pytest test case,
+  so a passing run reports one `PASSED` line per test. A test file with both
+  a fast and a slow test reports one line per tier it runs in (two lines in
+  `make test-all`).
+- **When red:** the test collects every failed check it can safely run --
+  across all checked pages and parts -- and lists them all in one failure
+  message, each tagged by page and checked part. A failure on one page or
+  part does not hide problems found elsewhere.
+
+For example, a failing structured-TOC run reports which of the RST or MyST
+fixture pages broke and which check failed on it:
+
+```text
+structured-TOC slow checks failed:
+  - [rst] slice items are not rendered inline (y positions: [11031, 11051])
+  - [rst] domain-aria-target span not found
+```
+
+The exception is tests that are parametrized on purpose, such as the
+{ref}`Python version tests <python-version-tests>`, where each parameter
+value is an independently reported result.

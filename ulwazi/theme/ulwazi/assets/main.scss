@@ -99,32 +99,35 @@ main {
   line-height: $font-line-height-p;
 }
 
-// Navigation offset constant
-$nav-offset-left: 0.5rem;
+// Navigation geometry constants live in vanilla-settings.scss:
+// $nav-offset-left (text inset, 19px) and $nav-indent-step (per-level indent).
 
 .p-side-navigation__link {
   padding-top: 0;
   padding-bottom: 0;
   padding-left: $nav-offset-left; // Override vanilla's 1.5rem for the top level
+  // Trim vanilla's 1rem right padding so the wider left inset does not
+  // narrow the label text area (keeps level-1 text width unchanged).
+  padding-right: 0.3125rem; // 5px
   font-size: $font-size-p;
   line-height: 1.5rem;
 }
 
 // Add incremental padding for each nesting level
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: calc(1.5rem + $nav-offset-left); // Level 2
+  padding-left: calc($nav-indent-step + $nav-offset-left); // Level 2: 35px
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: calc(3rem + $nav-offset-left); // Level 3
+  padding-left: calc(2 * $nav-indent-step + $nav-offset-left); // Level 3: 51px
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: calc(4.5rem + $nav-offset-left); // Level 4
+  padding-left: calc(3 * $nav-indent-step + $nav-offset-left); // Level 4: 67px
 }
 
 .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item .p-side-navigation__link {
-  padding-left: calc(6rem + $nav-offset-left); // Level 5
+  padding-left: calc(4 * $nav-indent-step + $nav-offset-left); // Level 5: 83px
 }
 
 .p-side-navigation__item .nav-item, .p-side-navigation__item .p-side-navigation__link {

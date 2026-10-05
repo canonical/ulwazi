@@ -1,0 +1,95 @@
+# Features test coverage manifest.
+#
+# Curated catalog, NOT an automatic inventory of all Sphinx/cheatsheet features.
+# A feature counts only when ALL its listed checks pass; each grouped test
+# must actually assert this specific behavior. Unimplemented checks use
+# `checks: []` so they stay visible in the denominator. The source field
+# identifies the sample content or implementation exercised by the check.
+# Extend this list when adding a feature or a regression check.
+
+markup:
+  - name: Admonitions
+    source: myst-cheat-sheet.md / rst-cheat-sheet.rst "Admonitions"; test6_admonitions.rst; test7_admonitionsMD.md
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Highlighted code blocks and copy script wiring
+    source: cheatsheets "Code blocks"; copybutton.js script tag
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: H1-H3 headings with inline code
+    source: docs/content/test-code-headings.md (heading classes and preserved code)
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Local TOC markup and configured depth
+    source: docs/content/myst-cheat-sheet.md and rst-cheat-sheet.rst (H4 included; H5 excluded)
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Tab markup, selection and keyboard navigation
+    source: docs/content/myst-cheat-sheet.md and rst-cheat-sheet.rst (markup); MyST browser tab journey
+    checks:
+      - tests/test_features.py::test_features_fast
+      - tests/test_features.py::test_features_slow
+  - name: Unordered body-list classes
+    source: docs/content/myst-cheat-sheet.md and rst-cheat-sheet.rst (one unordered list each)
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Search breadcrumbs map
+    source: search page; test-code-headings.md ancestor
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Plain inline code in both cheat sheets
+    source: docs/content/myst-cheat-sheet.md and rst-cheat-sheet.rst (inline-formatting section)
+    checks:
+      - tests/test_features.py::test_features_fast
+  - name: Copy button interaction
+    source: docs/content/myst-cheat-sheet.md YAML block (Chromium button, target, and copied text)
+    checks:
+      - tests/test_features.py::test_features_slow
+  - name: Tab synchronization across sets
+    source: myst-cheat-sheet.md synced tab sets
+    checks: []
+  - name: Typography design tokens
+    source: typography-verification.rst paragraphs, headings and blockquotes
+    checks: []
+  - name: Sample grid/list/CSV table headers and first rows
+    source: docs/content/myst-cheat-sheet.md and rst-cheat-sheet.rst (grid, list and CSV header and first row)
+    checks:
+      - tests/test_features.py::test_features_fast
+
+site:
+  - name: Home page shell
+    source: docs/index.md
+    checks:
+      - tests/test_smoke.py::test_smoke_fast
+  - name: Global navigation expander
+    source: side navigation drawer browser interaction
+    checks:
+      - tests/test_features.py::test_features_slow
+  - name: Sampled local assets and control wiring
+    source: representative built pages (home, both cheat sheets, code headings, search)
+    checks:
+      - tests/test_assets_structure.py::test_assets_structure_fast
+  - name: SEO and metadata on three sample pages
+    source: docs/_build index, contribute and tests/seo-metadata pages
+    checks:
+      - tests/test_seo_metadata.py::test_seo_metadata
+  - name: SCSS propagation
+    source: docs/index.md heading-test-scss fixture (markup and computed colour)
+    checks:
+      - tests/test_scss_propagation.py::test_scss_styles_propagation
+      - tests/test_scss_propagation.py::test_rendered_color
+  - name: Cookie consent
+    source: Canonical cookie bundle integration
+    checks:
+      - tests/test_features.py::test_features_slow
+  - name: Dark-mode toggle and persistence
+    source: theme-toggle.js browser journey across two pages
+    checks:
+      - tests/test_features.py::test_features_slow
+  - name: Search result and breadcrumb navigation
+    source: search page, one queried result and its breadcrumb in Chromium
+    checks:
+      - tests/test_features.py::test_features_slow
+  - name: Styled 404 page
+    source: planned 404 page (testing-strategy.md); not configured in docs/conf.py
+    checks: []

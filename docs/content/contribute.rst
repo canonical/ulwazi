@@ -31,14 +31,17 @@ Setup
    This uses `uv <https://docs.astral.sh/uv/>`_ to set up a virtual environment,
    installs dependencies, and builds the sample docs.
 
-You can rebuild the theme manually, which is especially useful if you make significant theme changes
-outside of the docs content:
+During development, ``make run`` watches theme files and recompiles changed
+SCSS before rebuilding the preview. Ordinary content edits remain incremental.
+See :doc:`preview-workflow` for how the change detection works.
+To reset an existing build or after changing dependencies, rebuild from scratch:
 
 .. code-block:: shell
 
    make rebuild
 
-This does a clean build, which may be necessary after changes to the theme files.
+This does a clean build. If a change to a shared table of contents leaves older,
+unchanged pages showing stale navigation, use this command to refresh them.
 
 Reset the environment
 *********************
@@ -87,7 +90,7 @@ Running tests
 -------------
 
 The test suite is split into fast and slow tests. See the
-`Tests documentation <https://canonical-ulwazi.readthedocs-hosted.com/content/tests/>`_
+`Tests documentation <https://documentation.ubuntu.com/ulwazi/content/tests/>`_
 for details on each test.
 
 .. code-block:: shell

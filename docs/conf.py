@@ -74,7 +74,7 @@ copyright = f"{datetime.date.today().year}"
 # NOTE: The Open Graph Protocol (OGP) enhances page display in a social graph
 #       and is used by social media platforms; see https://ogp.me/
 
-ogp_site_url = "https://canonical-ulwazi.readthedocs-hosted.com/"
+ogp_site_url = "https://documentation.ubuntu.com/ulwazi/"
 
 
 # Preview name of the documentation website
@@ -246,7 +246,7 @@ localtoc_max_depth = 3
 
 # Base URL of RTD hosted project
 
-html_baseurl = "https://canonical-starter-pack.readthedocs-hosted.com/"
+html_baseurl = "https://documentation.ubuntu.com/ulwazi/"
 
 # URL scheme. Add language and version scheme elements.
 # When configured with RTD variables, check for RTD environment so manual runs succeed:
@@ -344,6 +344,7 @@ extensions = [
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
+    "sphinx_structured_toc",
     "sphinxext.opengraph",
     "ulwazi",
     "sphinx_modern_pdf_style",
@@ -352,6 +353,8 @@ extensions = [
     "sphinxcontrib.jquery",
     "sphinx_design",
 ]
+
+
 
 # Excludes files or directories from processing
 
