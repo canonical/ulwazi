@@ -25,7 +25,7 @@ These are set directly in `conf.py`.
 
 | Setting              | Default if unset       | Purpose                                                                                                                                                                        |
 | -------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `localtoc_max_depth` | `-1` (unlimited depth) | Limits how many nested heading levels show in the page's local table of contents. Set to a positive integer (e.g. `3`) to truncate at that depth, or `-1` to show every level. |
+| `localtoc_max_depth` | `3` | Limits how many nested heading levels show in the page's local table of contents. Set to `-1` (or `None`) to show every level. |
 
 ## HTML context values with a built-in default
 
