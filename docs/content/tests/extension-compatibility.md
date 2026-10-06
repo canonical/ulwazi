@@ -212,9 +212,9 @@ rendered by the theme's templates:
 
 ### Custom roles (sphinx_roles)
 
-A spelling exception: :spellexception:`PurposelyWrong`.
+A spelling exception: {spellexception}`PurposelyWrong`.
 
-A literal reference: :literalref:`some literal text`.
+A literal reference: {literalref}`link text <https://canonical.com>`.
 
 ### Ubuntu images (sphinx_ubuntu_images)
 

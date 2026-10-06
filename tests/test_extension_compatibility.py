@@ -69,10 +69,23 @@ def _check_sphinx_config_options(soup: BeautifulSoup) -> None:
 
 
 def _check_sphinx_roles(soup: BeautifulSoup) -> None:
-    """sphinx_roles: custom roles render their content."""
-    text = soup.get_text()
-    assert "PurposelyWrong" in text, "spellexception role content not found"
-    assert "some literal text" in text, "literalref role content not found"
+    """sphinx_roles: roles render a spelling exception and monospaced link."""
+    pages = {
+        "extension compatibility": soup,
+        "MyST cheat sheet": _load(BUILD_DIR / "content/myst-cheat-sheet/index.html"),
+        "RST cheat sheet": _load(BUILD_DIR / "content/rst-cheat-sheet/index.html"),
+    }
+    for name, page in pages.items():
+        exception = page.find("spellexception")
+        assert exception is not None, f"{name}: spellexception role did not render"
+        assert exception.get_text() == "PurposelyWrong", (
+            f"{name}: spellexception text is incorrect"
+        )
+        links = page.find_all("a", href="https://canonical.com")
+        assert any(
+            link.find("code") is not None and link.get_text(strip=True) == "link text"
+            for link in links
+        ), f"{name}: literalref role did not render a monospaced link"
 
 
 def _check_sphinx_ubuntu_images(soup: BeautifulSoup) -> None:
