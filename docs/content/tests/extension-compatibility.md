@@ -33,7 +33,7 @@ output.
 | `sphinx_roles` | Custom roles (`spellexception`, `literalref`) render |
 | `sphinx_sitemap` | `sitemap.xml` is generated with page entries |
 | `sphinx_structured_toc` | Structured TOC renders as a `nav` with slices |
-| `sphinx_terminal` | Terminal block renders with terminal classes |
+| `sphinx_terminal` | Adjacent terminal blocks and the markup hooks for `output-only`, `scroll`, and `copy` render |
 | `sphinx_ubuntu_images` | Image list renders for the given filters |
 | `sphinx_youtube_links` | YouTube link renders with the play icon |
 | `sphinxcontrib.cairosvgconverter` | PDF build succeeds *(slow)* |
@@ -129,6 +129,11 @@ Content of the second tab.
 
 ### Terminal output (sphinx_terminal)
 
+These adjacent blocks exercise the default input/output view, scrollable
+output without a prompt, and a copyable command. The compatibility check
+only checks the markup needed by Ulwazi's styling; it does not verify exact
+terminal contents or the copy button's JavaScript behavior.
+
 ```{terminal}
 :user: root
 :host: vampyr
@@ -138,6 +143,23 @@ sudo apt update
 
 Hit:1 https://example.com/ubuntu stable InRelease
 Reading package lists... Done
+```
+
+```{terminal}
+:output-only:
+:scroll:
+
+Output-only example: a long line of terminal output that can scroll horizontally without adding a shell prompt.
+```
+
+```{terminal}
+:copy:
+:user: ubuntu
+:host: vm
+
+printf 'ready\n'
+
+ready
 ```
 
 ### YouTube embeds (sphinx_youtube_links)

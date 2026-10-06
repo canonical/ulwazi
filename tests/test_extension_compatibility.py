@@ -47,10 +47,33 @@ def _check_sphinx_design(soup: BeautifulSoup) -> None:
 
 
 def _check_sphinx_terminal(soup: BeautifulSoup) -> None:
-    """sphinx_terminal: terminal blocks render with input and output."""
-    assert soup.select(".terminal"), "No sphinx_terminal block (.terminal) found"
-    assert soup.select(".terminal-code"), (
-        "No sphinx_terminal output (.terminal-code) found"
+    """sphinx_terminal: adjacent blocks and option styling hooks render."""
+    section = soup.select_one("section#terminal-output-sphinx-terminal")
+    assert section is not None, "Terminal sample section not found"
+    blocks = section.find_all("div", class_="terminal", recursive=False)
+    assert len(blocks) >= 3, "Expected adjacent terminal examples"
+    basic, output_only, copyable = blocks[:3]
+    assert basic.find_next_sibling() is output_only, (
+        "Terminal blocks should be consecutive siblings"
+    )
+    assert output_only.find_next_sibling() is copyable, (
+        "Terminal blocks should be consecutive siblings"
+    )
+    assert basic.select_one(".input") is not None, "Default terminal input missing"
+    assert basic.select_one(".terminal-code") is not None, (
+        "Default terminal output missing"
+    )
+    classes = output_only.get("class")
+    assert classes is not None, ":scroll: terminal has no classes"
+    assert "scroll" in classes, ":scroll: class missing"
+    assert output_only.select_one(".input") is None, (
+        ":output-only: should not render input"
+    )
+    assert output_only.select_one(".terminal-code") is not None, (
+        ":output-only: output missing"
+    )
+    assert copyable.select_one(".input .command.copybutton") is not None, (
+        ":copy: command is not marked copyable"
     )
 
 
