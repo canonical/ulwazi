@@ -14,21 +14,21 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Regression tests for local table-of-contents depth handling.
+"""Regression tests for minimal configuration and local TOC depth handling.
 
-Covers the "TOC depth truncation" item from the "Feature and regression
-tests" category in the testing strategy (see
-docs/content/testing-strategy.md), and the "build works from a clean
-environment" requirement from the "Build process tests" category: a project
-that never sets ``localtoc_max_depth`` must still build successfully, with an
+Covers the "build works from a clean environment" requirement from the
+"Build process tests" category and the "TOC depth truncation" item from the
+"Feature and regression tests" category in the testing strategy (see
+docs/content/testing-strategy.md). The minimal-configuration test checks that
+Ulwazi builds and styles a page using only ``extensions`` and ``html_theme``.
+A separate test checks that a project without ``localtoc_max_depth`` has an
 H4 but not H5 in its local TOC (the same depth 3 as the sample docs). Projects
 that explicitly set ``-1`` or ``None`` have no depth limit.
 
-The single test builds ``tests/fixtures/minimal-conf`` (a two-line conf.py)
-through Sphinx's Python API for omitted, ``None`` and ``-1`` depth settings.
-It also checks the already-built sample docs, whose ``docs/conf.py`` sets
-``localtoc_max_depth = 3``. Each case reports its own failure details without
-adding another pytest result line.
+Both tests build ``tests/fixtures/minimal-conf`` (a two-line conf.py) through
+Sphinx's Python API. The TOC test also checks the already-built sample docs,
+whose ``docs/conf.py`` sets ``localtoc_max_depth = 3``. Its depth cases report
+their own failure details without adding another pytest result line.
 """
 
 import io
@@ -51,6 +51,34 @@ def _local_toc_text(html: str) -> str:
     nav = soup.find("nav", class_="p-table-of-contents__nav")
     assert nav is not None, "local TOC nav not found in rendered page"
     return nav.get_text()
+
+
+def test_minimal_config_builds(tmp_path: Path) -> None:
+    """A two-line conf.py builds an HTML page with Ulwazi's stylesheet."""
+    output = tmp_path / "_build"
+    warnings = io.StringIO()
+    app = Sphinx(
+        srcdir=str(FIXTURE_DIR),
+        confdir=str(FIXTURE_DIR),
+        outdir=str(output),
+        doctreedir=str(tmp_path / "_doctrees"),
+        buildername="html",
+        status=io.StringIO(),
+        warning=warnings,
+    )
+    app.build()
+
+    assert app.statuscode == 0, f"Minimal Sphinx build failed: {warnings.getvalue()}"
+    page = output / "index.html"
+    assert page.is_file(), f"Minimal Sphinx build did not produce {page}"
+    soup = BeautifulSoup(page.read_text(encoding="utf-8"), "html.parser")
+    heading = soup.select_one("main#content h1")
+    assert heading is not None and heading.get_text(" ", strip=True).startswith(
+        "Test"
+    ), "Fixture title did not render"
+    assert soup.select_one('link[href*="vanilla-main.css"]') is not None, (
+        "Built page does not load the Ulwazi stylesheet"
+    )
 
 
 def test_localtoc_depth(tmp_path: Path) -> None:

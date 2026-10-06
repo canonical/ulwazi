@@ -23,9 +23,10 @@ not every check proposed there is implemented yet.
 	slow**) checks generated markup and browser interactions, including tabs,
 	dark mode, and search.
 - **Configuration robustness** (`tests/test_config_robustness.py` and
-	`tests/test_html_context_defaults.py`, **fast**) checks local TOC depth
-	defaults and overrides, and feedback links when repository settings are
-	omitted or use deprecated names.
+	`tests/test_html_context_defaults.py`, **fast**) checks that a minimal
+	`conf.py` builds a themed page, local TOC depth defaults and overrides,
+	and feedback links when repository settings are omitted or
+	use deprecated names.
 - **SCSS propagation** (`tests/test_scss_propagation.py`, **fast and slow**)
 	checks the presence of custom styling in built HTML and selected rendered
 	styles in a browser.
