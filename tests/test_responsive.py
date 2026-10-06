@@ -152,3 +152,40 @@ def test_mobile_layout():
         )
 
         browser.close()
+
+
+@pytest.mark.slow
+def test_mobile_side_navigation():
+    """Check the side navigation on a mobile screen (375 px wide).
+
+    This test is expected to fail until
+    https://github.com/canonical/ulwazi/issues/168 is fixed.
+
+    What we test:
+
+    1. The side navigation is hidden when the page loads.
+    2. Clicking the three-line (hamburger) icon shows the side navigation.
+    """
+    index_path = Path(INDEX_PATH).resolve()
+    assert index_path.exists(), f"index.html not found in {index_path}"
+    subprocess.run(
+        [sys.executable, "-m", "playwright", "install", "chromium"],
+        check=True,
+    )
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page(
+            viewport={"width": MOBILE_WIDTH, "height": SCREEN_HEIGHT}
+        )
+        page.goto(f"file://{index_path}")
+
+        # The links inside the side navigation are what the reader sees.
+        side_navigation_links = page.locator(f"{SIDE_NAVIGATION} a").first
+        assert not side_navigation_links.is_visible(), (
+            "[mobile] side navigation is visible before its icon is clicked"
+        )
+
+        page.locator(SIDE_MENU_ICON).click()
+        expect(side_navigation_links).to_be_visible()
+
+        browser.close()
