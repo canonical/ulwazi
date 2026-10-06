@@ -100,7 +100,11 @@ def config_inited(app: Sphinx, config: Config) -> None:
             logger.warning(
                 f"conf.py setting '{old_name}' is deprecated. Use '{new_name}' instead.",
             )
-            html_context[new_name] = html_context[old_name]
+            value = html_context[old_name]
+            if old_name == "github_folder":
+                folder = str(value).strip("/")
+                value = f"/{folder}/" if folder else "/"
+            html_context[new_name] = value
 
     values_and_defaults = [
         ("product_tag", "_static/tag.png"),

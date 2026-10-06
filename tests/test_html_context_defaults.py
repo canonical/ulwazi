@@ -90,7 +90,11 @@ def test_deprecated_github_aliases_are_honoured_with_a_warning(tmp_path: Path) -
 
     html = (tmp_path / "_build" / "index.html").read_text()
     assert (
-        'href="https://github.com/canonical/example/edit/stable/2.0documentationindex.rst"'
+        'href="https://github.com/canonical/example/edit/stable/2.0/documentation/index.rst"'
+        in html
+    )
+    assert (
+        'href="https://github.com/canonical/example/blob/stable/2.0/documentation/index.rst"'
         in html
     )
 
