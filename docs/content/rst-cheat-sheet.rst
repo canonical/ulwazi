@@ -17,14 +17,14 @@ ReStructuredText cheat sheet
 This file contains the syntax for commonly used reST markup.
 Open it in your text editor to quickly copy and paste the markup you need.
 
-.. See the :ref:`reStructuredText style guide <style-guide>` for detailed information and conventions.
+See the `reStructuredText syntax reference <https://documentation.ubuntu.com/sphinx-stack/latest/reference/rst-syntax/>`_ for detailed information and conventions.
 
 Also see the `Sphinx reStructuredText Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_ for more details on reST, and the `Canonical Documentation Style Guide <https://docs.ubuntu.com/styleguide/en>`_ for general style conventions.
 
 H2 heading
 ----------
 
-:h2:`H2 heading without TOC entry`
+:h2:`H2 heading without TOC entry (reST-specific)`
 
 H3 heading
 ~~~~~~~~~~
@@ -60,7 +60,7 @@ Start a code block::
      code:
        - example: true
 
-.. code-block:: yaml
+.. code-block:: text
 
      # Demonstrate a code block
      code:
@@ -165,7 +165,7 @@ Links
 
 - `Canonical website <https://canonical.com/>`_
 - `Canonical website`_ (defined in ``reuse/links.txt`` or at the bottom of the page)
-- https:\ //canonical.com/
+- https://canonical.com/
 - :ref:`a_section_target`
 - :ref:`Link text <a_section_target>`
 - :doc:`../../index`
@@ -194,11 +194,11 @@ Lists
      * Sub-item
    - Item 2
 
-     i. Sub-step 1
+     #. Sub-step 1
      #. Sub-step 2
 #. Step 2
 
-   a. Sub-step 1
+   #. Sub-step 1
 
       - Item
    #. Sub-step 2
@@ -206,9 +206,9 @@ Lists
 Definition lists
 ~~~~~~~~~~~~~~~~
 
-Term 1:
+Term 1
   Definition
-Term 2:
+Term 2
   Definition
 
 Tables
@@ -226,7 +226,7 @@ Small grid table, default aligned (no alignment options):
 +------------------------------------+----------+
 | Header 1                           | Header 2 |
 +====================================+==========+
-| [1,1] |br| Second paragraph        |  [1,2]   |
+| [1,1] |br| Second line             |  [1,2]   |
 +------------------------------------+----------+
 | [2,1]                              |  [2,2]   |
 +------------------------------------+----------+
@@ -272,7 +272,7 @@ Grid table with table directive, right aligned:
   | [2,1]                | [2,2]            |
   +----------------------+------------------+
 
-Grid table with rst-class directive, default aligned:
+Grid table with rst-class directive, default aligned (reST-specific):
 
 .. rst-class:: align-default
 
@@ -286,7 +286,7 @@ Grid table with rst-class directive, default aligned:
   | [2,1]                | [2,2]            |
   +----------------------+------------------+
 
-Grid table with rst-class directive, right aligned:
+Grid table with rst-class directive, right aligned (reST-specific):
 
 .. rst-class:: align-right
 
@@ -355,8 +355,8 @@ CSV table, right aligned:
   "[1,1]", "[1,2]"
   "[2,1]", "[2,2]"
 
-Simple tables
-~~~~~~~~~~~~~
+Simple tables (reST-specific)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple table, default aligned (no alignment options):
 
@@ -364,7 +364,7 @@ Simple table, default aligned (no alignment options):
 Header 1 Header 2
 ======== ========
 [1,1]    [1,2]
-[1,2]    [2,2]
+[2,1]    [2,2]
 ======== ========
 
 Simple with table directive, default aligned:
@@ -376,7 +376,7 @@ Simple with table directive, default aligned:
   Header 1 Header 2
   ======== ========
   [1,1]    [1,2]
-  [1,2]    [2,2]
+  [2,1]    [2,2]
   ======== ========
 
 Simple with table directive, right aligned:
@@ -389,7 +389,7 @@ Simple with table directive, right aligned:
   Header 1 Header 2
   ======== ========
   [1,1]    [1,2]
-  [1,2]    [2,2]
+  [2,1]    [2,2]
   ======== ========
 
 Simple table with rst-class directive, default aligned:
@@ -400,7 +400,7 @@ Simple table with rst-class directive, default aligned:
   Header 1 Header 2
   ======== ========
   [1,1]    [1,2]
-  [1,2]    [2,2]
+  [2,1]    [2,2]
   ======== ========
 
 Simple table with rst-class directive, right aligned:
@@ -411,7 +411,7 @@ Simple table with rst-class directive, right aligned:
   Header 1 Header 2
   ======== ========
   [1,1]    [1,2]
-  [1,2]    [2,2]
+  [2,1]    [2,2]
   ======== ========
 
 
@@ -552,6 +552,7 @@ Images
 Use ``.. image::`` for simple images without captions.
 
 .. image:: https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png
+  :alt: Alt text
 
 Use ``.. figure::`` to include a caption, and to reference the image in text.
 
@@ -569,9 +570,20 @@ Images can be inserted in-line |logo| via a substitution.
 Reuse
 -----
 
+Keys
+~~~~
+
+Keys can be defined in substitutions at the top of a file.
+
 .. |reuse_key| replace:: This is **included** text.
+.. |advanced_reuse_key| replace:: This is a substitution with inline code: ``code block``.
 
 |reuse_key|
+
+|advanced_reuse_key|
+
+File inclusion
+~~~~~~~~~~~~~~
 
 .. include:: include.txt
    :start-after: [include_start]
@@ -581,24 +593,23 @@ Tabs
 ----
 
 Ulwazi supports the sphinx-design extension for tabs.
-Support for the sphinx-tabs extension has been
-`dropped <https://documentation.ubuntu.com/sphinx-stack/latest/reference/rst-syntax/#tabs>`_.
-
-
-.. Tabs
-.. ----
+**Support for the sphinx-tabs extension has been
+`dropped <https://documentation.ubuntu.com/sphinx-stack/latest/reference/rst-syntax/#tabs>`_.**
 
 .. tab-set::
 
     .. tab-item:: Tab 1
+        :sync: key1
 
         Content for tab 1
 
     .. tab-item:: Tab 2
+        :sync: key2
 
         Content for tab 2
 
     .. tab-item:: Tab 3
+        :sync: key3
 
         Content for tab 3
 
@@ -649,11 +660,17 @@ More useful markup
 ------------------
 
 - .. versionadded:: X.Y
-- | Line 1
+- | Line 1 (reST-specific line block)
   | Line 2
   | Line 3
-- .. This is a comment
 - :abbr:`API (Application Programming Interface)`
+
+Custom roles
+------------
+
+Terms that should not be checked by the spelling checker: :spellexception:`PurposelyWrong`.
+
+Use :literalref:`link text <https://canonical.com>` for a monospaced link.
 
 Structured tables of contents
 -----------------------------
@@ -713,8 +730,6 @@ readers. ``:suppress-warnings:`` silences the resulting ambiguity warnings:
       :doc:`Overview <testing-strategy>` domain
       :doc:`Tests <tests/index>` domain
 
-----
-
 .. Custom extensions
 .. -----------------
 
@@ -722,8 +737,6 @@ readers. ``:suppress-warnings:`` silences the resulting ambiguity warnings:
 
 ..   :relatedlinks: https://github.com/canonical/lxd-sphinx-extensions, [RTFM](https://www.google.com)
 ..   :discourse: 12345
-
-.. Terms that should not be checked by the spelling checker: :spellexception:`PurposelyWrong`
 
 .. A single-line terminal view that separates input from output:
 

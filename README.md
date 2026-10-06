@@ -126,7 +126,9 @@ The available tests are:
 - **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
 - **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
 - **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML (fast test); browser styling and linked LaTeX slice lists are grouped into a single slow test _(partially slow)_
+- **test_layout_smoke.py** — checks every built page renders its article inside the main docs column, and (in a browser at 1440px) that nothing overflows the viewport or spills out of the main column _(browser check is slow)_
 - **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
+- **test_extension_compatibility.py** — verifies the theme renders correctly with every [Sphinx Stack default extension](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/) enabled (one test per extension; PDF check is slow)
 
 `make test-coverage` ends with a three-metric summary: Python line coverage
 of the `ulwazi` package, aggregate JavaScript code-line coverage of **all**

@@ -34,14 +34,19 @@ not every check proposed there is implemented yet.
 - **SCSS propagation** (`tests/test_scss_propagation.py`, **fast and slow**)
 	checks the presence of custom styling in built HTML and selected rendered
 	styles in a browser.
+- **Layout smoke** (`tests/test_layout_smoke.py`, **fast and slow**) checks
+      that every built page renders its article inside the main docs column,
+      and, in a browser at 1440px, that no page is wider than the viewport and
+      no element (like an unsized icon) spills out of the main column.
 - **PDF generation** (`tests/test_pdf_generation.py`, **slow**) checks that
-	the PDF build produces its expected output file.
+      the PDF build produces its expected output file.
 - {doc}`Python version compatibility <python-versions>`
-	(`tests/test_python_versions.py`, **slow**) checks installation and the
-	documentation build on supported Python versions.
-
-Follow the linked pages for detailed checks, sample content, and limitations.
-In particular, the asset test covers representative pages rather than every
+      (`tests/test_python_versions.py`, **slow**) checks installation and the
+      documentation build on supported Python versions.
+- {doc}`Extension compatibility <extension-compatibility>`
+      (`tests/test_extension_compatibility.py`, **fast and slow**) checks that
+      the theme renders correctly with every Sphinx Stack default extension
+      enabled, plus the PDF build.
 link in the site; it does not replace Sphinx's build warnings.
 
 ## Running the tests
@@ -72,6 +77,7 @@ SEO and metadata <seo-metadata>
 Structured TOC <structured-toc>
 Theme features <features>
 Python versions <python-versions>
+Extension compatibility <extension-compatibility>
 Test coverage <coverage>
 ```
 
