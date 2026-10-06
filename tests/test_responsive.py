@@ -38,7 +38,7 @@ TOP_BAR_MENU_BUTTON = "header#navigation .p-navigation__toggle--open"
 TOP_BAR_CLOSE_BUTTON = "header#navigation .p-navigation__toggle--close"
 
 # The three-line (hamburger) icon for the side navigation on smaller screens.
-SIDE_MENU_ICON = "label.hide-when-primary-sidebar-shown"
+SIDE_MENU_ICON = 'button[aria-label="Toggle side navigation"]'
 
 
 @pytest.mark.slow
@@ -162,9 +162,6 @@ def test_small_screen_layout(screen, width):
 def test_small_screen_side_navigation(screen, width):
     """Check the side navigation on a mobile screen (375 px wide) and on a
     tablet screen (768 px wide).
-
-    This test is expected to fail until
-    https://github.com/canonical/ulwazi/issues/168 is fixed.
 
     What we test:
 
