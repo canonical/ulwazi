@@ -21,7 +21,9 @@
     </nav>
 {%- endmacro %}
 
+{%- if pagename == "search" or builder == "singlehtml" %}
 {%- include "components/toggle-sidebar-primary.html" %}
+{%- endif %}
 <aside class="l-docs__sidebar">
   {%- block sidebar %}{{ sidebar() }}{% endblock %}
 </aside>

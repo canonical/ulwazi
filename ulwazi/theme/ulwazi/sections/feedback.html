@@ -1,11 +1,12 @@
-{% if feedback %}
 <div class="content-icon-container">
+  {%- include "components/toggle-sidebar-primary.html" %}
+{% if feedback %}
   {%- if github_url and pagename -%}
     {%- if page_source_suffix is defined -%}
       {%- set source_file_extension = page_source_suffix -%}
     {%- else -%}
       {%- set source_file_extension = default_source_extension -%}
-    {%- endif -%} 
+    {%- endif -%}
     {%- set edit_url = github_url + "/edit/" + repo_branch + repo_folder + pagename + source_file_extension -%}
     {%- set view_url = github_url + "/blob/" + repo_branch + repo_folder + pagename + source_file_extension -%}
   {%- else -%}
@@ -51,5 +52,5 @@
     <div class="visually-hidden">Toggle table of contents sidebar</div>
     <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
   </label> -->
-</div>
 {% endif %}
+</div>
