@@ -37,7 +37,10 @@ explicitly.
 import io
 from pathlib import Path
 
+import pytest
 from sphinx.application import Sphinx
+
+pytestmark = pytest.mark.usefixtures("isolated_sphinx_build")
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "feedback-no-repo-vars"
 DEPRECATED_ALIASES_FIXTURE_DIR = (
