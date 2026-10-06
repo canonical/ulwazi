@@ -22,11 +22,15 @@ not every check proposed there is implemented yet.
 - {doc}`Theme features <features>` (`tests/test_features.py`, **fast and
 	slow**) checks generated markup and browser interactions, including tabs,
 	dark mode, and search.
-- **Configuration robustness** (`tests/test_config_robustness.py` and
-	`tests/test_html_context_defaults.py`, **fast**) checks that a minimal
-	`conf.py` builds a themed page, local TOC depth defaults and overrides,
-	and feedback links when repository settings are omitted or
-	use deprecated names.
+- **Configuration robustness** (`tests/test_config_robustness.py`,
+	`tests/test_html_context_defaults.py`, and `tests/test_maximum_config.py`,
+	**fast**) checks that a minimal `conf.py` builds a themed page, local TOC
+	depth defaults and overrides, and feedback links with omitted or deprecated
+	repository settings. The maximum-configuration fixture overrides all defaults
+	in the {doc}`configuration reference <../configuration>`, checks supported
+	settings in the rendered page, and exercises fallback edit/view URLs.
+	Settings not yet supported are checked only for value preservation in
+	`html_context`.
 - **SCSS propagation** (`tests/test_scss_propagation.py`, **fast and slow**)
 	checks the presence of custom styling in built HTML and selected rendered
 	styles in a browser.

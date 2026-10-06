@@ -73,9 +73,10 @@ def test_minimal_config_builds(tmp_path: Path) -> None:
     assert page.is_file(), f"Minimal Sphinx build did not produce {page}"
     soup = BeautifulSoup(page.read_text(encoding="utf-8"), "html.parser")
     heading = soup.select_one("main#content h1")
-    assert heading is not None and heading.get_text(" ", strip=True).startswith(
-        "Test"
-    ), "Fixture title did not render"
+    assert heading is not None, "Fixture title did not render"
+    assert heading.get_text(" ", strip=True).startswith("Test"), (
+        "Fixture title did not render"
+    )
     assert soup.select_one('link[href*="vanilla-main.css"]') is not None, (
         "Built page does not load the Ulwazi stylesheet"
     )
