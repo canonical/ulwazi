@@ -1,4 +1,4 @@
-<label for="sb-sidebar-toggle--primary" class="hide-when-primary-sidebar-shown" role="button">
+<button type="button" class="p-button--base has-icon u-hide--large js-drawer-toggle" aria-controls="drawer" aria-expanded="false" aria-label="Toggle side navigation">
   {% block content %}
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -11,10 +11,11 @@
     stroke-linecap="round"
     stroke-linejoin="round"
     class="feather feather-menu"
+    aria-hidden="true"
   >
     <line x1="3" y1="12" x2="21" y2="12"></line>
     <line x1="3" y1="6" x2="21" y2="6"></line>
     <line x1="3" y1="18" x2="21" y2="18"></line>
   </svg>
   {% endblock content %}
-</label>
+</button>
