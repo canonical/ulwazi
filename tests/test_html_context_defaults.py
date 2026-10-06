@@ -61,7 +61,12 @@ def test_builds_with_feedback_enabled_and_no_repo_vars_set(tmp_path: Path) -> No
     app.build()
 
     html = (tmp_path / "_build" / "index.html").read_text()
-    assert 'href="https://github.com/canonical/example/edit/maindocsindex.rst"' in html
+    assert (
+        'href="https://github.com/canonical/example/edit/main/docs/index.rst"' in html
+    )
+    assert (
+        'href="https://github.com/canonical/example/blob/main/docs/index.rst"' in html
+    )
 
 
 def test_deprecated_github_aliases_are_honoured_with_a_warning(tmp_path: Path) -> None:

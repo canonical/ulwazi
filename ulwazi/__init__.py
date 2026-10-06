@@ -105,7 +105,7 @@ def config_inited(app: Sphinx, config: Config) -> None:
     values_and_defaults = [
         ("product_tag", "_static/tag.png"),
         ("repo_branch", "main"),
-        ("repo_folder", "docs"),
+        ("repo_folder", "/docs/"),
         ("default_source_extension", ".rst"),
         ("github_issues", "enabled"),
         ("discourse", "https://discourse.ubuntu.com"),
