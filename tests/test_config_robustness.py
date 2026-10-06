@@ -24,20 +24,11 @@ that never sets ``localtoc_max_depth`` must still build successfully, with an
 H4 but not H5 in its local TOC (the same depth 3 as the sample docs). Projects
 that explicitly set ``-1`` or ``None`` have no depth limit.
 
-``test_builds_without_localtoc_max_depth_set`` builds
-``tests/fixtures/minimal-conf`` -- the smallest possible conf.py a new or
-migrating user would write -- through Sphinx's Python API, so coverage.py can
-attribute the run to ``truncate_local_toc``. It can't reuse the sample docs in
-``docs/content``, because ``docs/conf.py`` always sets
-``localtoc_max_depth`` explicitly and needs the ``docs`` dependency group,
-which isn't installed for a plain ``pytest`` run (see ``docs-html`` in
-``Makefile``/``docs/Makefile``).
-
-``test_localtoc_max_depth_still_truncates_when_set`` instead reads the
-already-built ``docs/content/rst-cheat-sheet.rst`` page from ``docs/_build``,
-like the other tests in this suite, since that sample page already has the
-heading levels needed and the real ``docs/conf.py`` already sets
-``localtoc_max_depth = 3``.
+The single test builds ``tests/fixtures/minimal-conf`` (a two-line conf.py)
+through Sphinx's Python API for omitted, ``None`` and ``-1`` depth settings.
+It also checks the already-built sample docs, whose ``docs/conf.py`` sets
+``localtoc_max_depth = 3``. Each case reports its own failure details without
+adding another pytest result line.
 """
 
 import io
@@ -62,54 +53,54 @@ def _local_toc_text(html: str) -> str:
     return nav.get_text()
 
 
-def test_builds_without_localtoc_max_depth_set(tmp_path: Path) -> None:
-    """A conf.py that never sets localtoc_max_depth must still build, with
-    the same depth-3 local TOC as the sample docs."""
-    app = Sphinx(
-        srcdir=str(FIXTURE_DIR),
-        confdir=str(FIXTURE_DIR),
-        outdir=str(tmp_path / "_build"),
-        doctreedir=str(tmp_path / "_doctrees"),
-        buildername="html",
-        status=io.StringIO(),
-        warning=io.StringIO(),
-    )
-    app.build()
+def test_localtoc_depth(tmp_path: Path) -> None:
+    """Check each depth setting and the sample docs in one grouped result."""
+    errors: list[str] = []
+    cases: list[tuple[str, dict[str, int | None], bool]] = [
+        ("unset", {}, False),
+        ("None", {"localtoc_max_depth": None}, True),
+        ("-1", {"localtoc_max_depth": -1}, True),
+    ]
 
-    html = (tmp_path / "_build" / "index.html").read_text()
-    toc_text = _local_toc_text(html)
-    assert "H4 heading" in toc_text
-    assert "H5 heading" not in toc_text
+    for label, overrides, includes_h5 in cases:
+        output = tmp_path / label
+        warnings = io.StringIO()
+        try:
+            app = Sphinx(
+                srcdir=str(FIXTURE_DIR),
+                confdir=str(FIXTURE_DIR),
+                outdir=str(output / "_build"),
+                doctreedir=str(output / "_doctrees"),
+                buildername="html",
+                confoverrides=overrides,
+                status=io.StringIO(),
+                warning=warnings,
+            )
+            app.build()
+            assert app.statuscode == 0, f"Sphinx exited with status {app.statuscode}"
+            toc_text = _local_toc_text((output / "_build" / "index.html").read_text())
+        except Exception as exc:  # noqa: BLE001 (report all fixture build failures)
+            errors.append(f"[{label}] build or local TOC failed: {exc}")
+            continue
 
+        if "H4 heading" not in toc_text:
+            errors.append(f"[{label}] H4 heading missing from local TOC")
+        if ("H5 heading" in toc_text) != includes_h5:
+            expectation = "present" if includes_h5 else "absent"
+            errors.append(f"[{label}] expected H5 heading {expectation} in local TOC")
+        if "localtoc_max_depth" in warnings.getvalue():
+            errors.append(f"[{label}] Sphinx warned about localtoc_max_depth")
 
-@pytest.mark.parametrize("max_depth", [None, -1])
-def test_explicit_unlimited_local_toc(tmp_path: Path, max_depth: int | None) -> None:
-    """None (the historical default) and -1 both disable the depth limit."""
-    warnings = io.StringIO()
-    app = Sphinx(
-        srcdir=str(FIXTURE_DIR),
-        confdir=str(FIXTURE_DIR),
-        outdir=str(tmp_path / "_build"),
-        doctreedir=str(tmp_path / "_doctrees"),
-        buildername="html",
-        confoverrides={"localtoc_max_depth": max_depth},
-        status=io.StringIO(),
-        warning=warnings,
-    )
-    app.build()
+    if not CHEAT_SHEET_PATH.exists():
+        errors.append(f"[sample docs] {CHEAT_SHEET_PATH} not found; run 'make docs'")
+    else:
+        try:
+            toc_text = _local_toc_text(CHEAT_SHEET_PATH.read_text())
+            if "H4 heading" not in toc_text:
+                errors.append("[sample docs] H4 heading missing from local TOC")
+            if "H5 heading" in toc_text:
+                errors.append("[sample docs] H5 heading should not appear in local TOC")
+        except AssertionError as exc:
+            errors.append(f"[sample docs] {exc}")
 
-    html = (tmp_path / "_build" / "index.html").read_text()
-    assert "H5 heading" in _local_toc_text(html)
-    assert "localtoc_max_depth" not in warnings.getvalue()
-
-
-def test_localtoc_max_depth_still_truncates_when_set() -> None:
-    """The sample docs set localtoc_max_depth = 3, so the local TOC must
-    stop at H4; this proves the fix didn't disable truncation for projects
-    that opt into it."""
-    assert CHEAT_SHEET_PATH.exists(), f"{CHEAT_SHEET_PATH} not found; run 'make docs'"
-
-    html = CHEAT_SHEET_PATH.read_text()
-    toc_text = _local_toc_text(html)
-    assert "H4 heading" in toc_text
-    assert "H5 heading" not in toc_text
+    assert not errors, "local TOC depth checks failed:\n- " + "\n- ".join(errors)

@@ -23,9 +23,9 @@ in the repository -- this is easiest way to start using Ulwazi.
 
 These are set directly in `conf.py`.
 
-| Setting              | Default if unset       | Purpose                                                                                                                                                                        |
-| -------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `localtoc_max_depth` | `3` | Limits how many nested heading levels show in the page's local table of contents. Set to `-1` (or `None`) to show every level. |
+| Setting              | Default if unset | Purpose                                                                                                                     |
+| -------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `localtoc_max_depth` | `3`              | Limits the local table of contents to H2–H4 on a page with an H1 title. Set to `-1` or `None` to show every heading level. |
 
 ## HTML context values with a built-in default
 
@@ -34,7 +34,7 @@ Set these inside the `html_context` dictionary in `conf.py`, for example:
 ```python
 html_context = {
     "repo_branch": "main",
-    "repo_folder": "docs",
+    "repo_folder": "/docs/",
 }
 ```
 
@@ -43,8 +43,8 @@ If you don't set them, Ulwazi uses the defaults below.
 | Setting                    | Default if unset                 | Purpose                                                                                                                                                                                                                                                      |
 | -------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `repo_branch`              | `"main"`                         | Branch containing the doc source, used to build "edit this page" / "view source" links.                                                                                                                                                                      |
-| `repo_folder`              | `"docs"`                         | Folder containing the doc source, used to build "edit this page" / "view source" links.                                                                                                                                                                      |
-| `default_source_extension` | `".rst"`                         | Source file extension used to build "edit this page" / "view source" links, and as a fallback on pages (like `genindex`) that don't have a source suffix of their own. Set to `".md"` if your docs are written in MyST Markdown instead of reStructuredText. |
+| `repo_folder`              | `"/docs/"`                       | Folder containing the doc source, used to build "edit this page" / "view source" links. Include the leading and trailing slashes when setting a custom folder.                                                                                              |
+| `default_source_extension` | `".rst"`                         | Source file extension used to build "edit this page" / "view source" links on generated pages (such as `genindex`) without a source suffix. Set to `".md"` if your docs are written in MyST Markdown instead of reStructuredText.                         |
 | `discourse`                | `"https://discourse.ubuntu.com"` | Base URL for the Discourse link shown in the header's community-links menu (only shown if this is set to a non-empty value).                                                                                                                                 |
 | `product_tag`              | `"_static/tag.png"`              | Reserved for a product tag/logo image path. **Not currently read by any Ulwazi template** -- setting it has no visible effect yet.                                                                                                                           |
 | `github_issues`            | `"enabled"`                      | Reserved for toggling the GitHub issues integration. **Not currently read by any Ulwazi template** -- setting it has no visible effect yet.                                                                                                                  |
@@ -62,7 +62,7 @@ setting a value, so an incomplete setup can produce a broken link.
 | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `feedback`                              | Feedback/edit/view icons don't render.                                                                                                                                 | Set to `True` (or leave unset/`False`) to show or hide the feedback button and the "edit this page" / "view source" icons.                 |
 | `github_url`                            | If `feedback` is `True` but `github_url` is unset, the feedback button still renders with a broken/incomplete link (`href="/issues/new?..."` with no host).            | Documentation repository URL, used for the feedback button and to build edit/view links. Required for `feedback` to work correctly.        |
-| `default_edit_url` / `default_view_url` | Used as-is when `github_url` or the current page name isn't available (e.g. on `genindex`). If unset in that situation, the edit/view icons render with an empty link. | Fallback "edit this page" / "view source" URLs for pages that can't build one from `github_url` + page name.                               |
+| `default_edit_url` / `default_view_url` | Used as-is when `github_url` or the current page name isn't available. If unset in that situation, the edit/view icons render with an empty link.                       | Fallback "edit this page" / "view source" URLs for pages that can't build one from `github_url` + page name.                               |
 | `mattermost`                            | Link doesn't render.                                                                                                                                                   | Adds a Mattermost link to the header's community-links menu.                                                                               |
 | `matrix`                                | Link doesn't render.                                                                                                                                                   | Adds a Matrix link to the header's community-links menu.                                                                                   |
 | `product_page`                          | If unset, the project link in the header renders as `href="https://"`.                                                                                                 | Product website hostname shown in the header navigation, next to the project name.                                                         |
