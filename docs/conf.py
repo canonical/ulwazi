@@ -110,9 +110,12 @@ github_repo = "https://github.com/canonical/ulwazi"
 repo_default_branch = "main"
 
 # Determine the source branch for GitHub links (view/edit source, license, etc.)
-# On Read the Docs, use the actual git branch/tag being built;
-# fall back to the default branch for local builds.
-source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER", repo_default_branch)
+# On Read the Docs, the Git identifier is a branch only for branch builds;
+# for PR previews it is a number, and tags cannot be edited on GitHub.
+if os.environ.get("READTHEDOCS_VERSION_TYPE") == "branch":
+    source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER") or repo_default_branch
+else:
+    source_branch = repo_default_branch
 
 # TODO: Select the default syntax for docs source files.
 # This is for a fallback view/edit source code buttons.
