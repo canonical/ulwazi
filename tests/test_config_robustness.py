@@ -80,6 +80,26 @@ def test_builds_without_localtoc_max_depth_set(tmp_path: Path) -> None:
     assert "H5 heading" in _local_toc_text(html)
 
 
+def test_explicit_none_keeps_unlimited_local_toc(tmp_path: Path) -> None:
+    """The historical default None still means no depth limit."""
+    warnings = io.StringIO()
+    app = Sphinx(
+        srcdir=str(FIXTURE_DIR),
+        confdir=str(FIXTURE_DIR),
+        outdir=str(tmp_path / "_build"),
+        doctreedir=str(tmp_path / "_doctrees"),
+        buildername="html",
+        confoverrides={"localtoc_max_depth": None},
+        status=io.StringIO(),
+        warning=warnings,
+    )
+    app.build()
+
+    html = (tmp_path / "_build" / "index.html").read_text()
+    assert "H5 heading" in _local_toc_text(html)
+    assert "localtoc_max_depth" not in warnings.getvalue()
+
+
 def test_localtoc_max_depth_still_truncates_when_set() -> None:
     """The sample docs set localtoc_max_depth = 3, so the local TOC must
     stop at H4; this proves the fix didn't disable truncation for projects

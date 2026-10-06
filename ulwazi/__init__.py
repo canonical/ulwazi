@@ -44,7 +44,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     :returns: The extension's metadata
     """
     app.add_html_theme("ulwazi", str(Path(__file__).parent / "theme/ulwazi"))
-    app.add_config_value("localtoc_max_depth", -1, "html")
+    app.add_config_value("localtoc_max_depth", -1, "html", types=(int, type(None)))
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
@@ -323,14 +323,14 @@ def modify_local_toc(toc: str) -> str:
     return str(toc_html)
 
 
-def truncate_local_toc(toc: str, max_depth: int = -1) -> str:
+def truncate_local_toc(toc: str, max_depth: int | None = -1) -> str:
     """Limit the number of nested levels if localtoc_max_depth is set in conf.py."""
     if not toc:
         return toc
 
     toc_html = BeautifulSoup(toc, "html.parser")
 
-    if max_depth != -1:
+    if max_depth is not None and max_depth != -1:
 
         def trim_ul(ul: Tag, depth: int = 1) -> None:
             if depth >= max_depth:
