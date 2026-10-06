@@ -44,7 +44,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     :returns: The extension's metadata
     """
     app.add_html_theme("ulwazi", str(Path(__file__).parent / "theme/ulwazi"))
-    app.add_config_value("localtoc_max_depth", -1, "html", types=(int, type(None)))
+    app.add_config_value("localtoc_max_depth", 3, "html", types=(int, type(None)))
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
@@ -444,7 +444,7 @@ def _html_page_context(
     if "toc" in context:
         context["toc"] = modify_local_toc(context["toc"])
         context["toc"] = truncate_local_toc(
-            context["toc"], getattr(app.config, "localtoc_max_depth", -1)
+            context["toc"], getattr(app.config, "localtoc_max_depth", 3)
         )
 
     # Build navigation breadcrumb mapping for search

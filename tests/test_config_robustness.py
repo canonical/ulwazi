@@ -21,8 +21,8 @@ tests" category in the testing strategy (see
 docs/content/testing-strategy.md), and the "build works from a clean
 environment" requirement from the "Build process tests" category: a project
 that never sets ``localtoc_max_depth`` must still build successfully, with an
-unbounded local TOC, while a project that sets it keeps the depth it asked
-for.
+H4 but not H5 in its local TOC (the same depth 3 as the sample docs). Projects
+that explicitly set ``-1`` or ``None`` have no depth limit.
 
 ``test_builds_without_localtoc_max_depth_set`` builds
 ``tests/fixtures/minimal-conf`` -- the smallest possible conf.py a new or
@@ -64,7 +64,7 @@ def _local_toc_text(html: str) -> str:
 
 def test_builds_without_localtoc_max_depth_set(tmp_path: Path) -> None:
     """A conf.py that never sets localtoc_max_depth must still build, with
-    every heading level present in the local TOC (no depth limit applied)."""
+    the same depth-3 local TOC as the sample docs."""
     app = Sphinx(
         srcdir=str(FIXTURE_DIR),
         confdir=str(FIXTURE_DIR),
@@ -77,11 +77,14 @@ def test_builds_without_localtoc_max_depth_set(tmp_path: Path) -> None:
     app.build()
 
     html = (tmp_path / "_build" / "index.html").read_text()
-    assert "H5 heading" in _local_toc_text(html)
+    toc_text = _local_toc_text(html)
+    assert "H4 heading" in toc_text
+    assert "H5 heading" not in toc_text
 
 
-def test_explicit_none_keeps_unlimited_local_toc(tmp_path: Path) -> None:
-    """The historical default None still means no depth limit."""
+@pytest.mark.parametrize("max_depth", [None, -1])
+def test_explicit_unlimited_local_toc(tmp_path: Path, max_depth: int | None) -> None:
+    """None (the historical default) and -1 both disable the depth limit."""
     warnings = io.StringIO()
     app = Sphinx(
         srcdir=str(FIXTURE_DIR),
@@ -89,7 +92,7 @@ def test_explicit_none_keeps_unlimited_local_toc(tmp_path: Path) -> None:
         outdir=str(tmp_path / "_build"),
         doctreedir=str(tmp_path / "_doctrees"),
         buildername="html",
-        confoverrides={"localtoc_max_depth": None},
+        confoverrides={"localtoc_max_depth": max_depth},
         status=io.StringIO(),
         warning=warnings,
     )
