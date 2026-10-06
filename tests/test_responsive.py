@@ -8,6 +8,7 @@ The HTML is the same at every width, so these tests open the page
 in a real browser and check what is visible and where it sits.
 """
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -31,14 +32,16 @@ SIDE_NAVIGATION = "#drawer"
 MAIN_CONTENT = "main#content"
 ON_THIS_PAGE = "aside.p-table-of-contents"
 
-# The dark bar at the top of the page: its links, and the "Menu" button that
-# replaces the links on smaller screens.
+# The dark bar at the top of the page
 TOP_BAR_LINKS = "header#navigation .p-navigation__items"
 TOP_BAR_MENU_BUTTON = "header#navigation .p-navigation__toggle--open"
 TOP_BAR_CLOSE_BUTTON = "header#navigation .p-navigation__toggle--close"
 
-# The three-line (hamburger) icon for the side navigation on smaller screens.
-SIDE_MENU_ICON = 'button[aria-label="Toggle side navigation"]'
+# The side navigation on smaller screens (for global TOC)
+SIDE_MENU_ICON = "button.has-icon.js-drawer-toggle"
+SIDE_MENU_PANEL = "#drawer .p-side-navigation__drawer"
+SIDE_MENU_CLOSE_BUTTON = "#drawer .p-side-navigation__toggle--in-drawer"
+SIDE_MENU_OPEN_CLASS = re.compile(r"\bis-drawer-expanded\b")
 
 
 @pytest.mark.slow
@@ -54,6 +57,8 @@ def test_desktop_layout():
     5. The top bar "Menu" button is hidden, because the links already fit.
     6. The side navigation sits to the left of the main content.
     7. The "On this page" list sits to the right of the main content.
+    8. The three-line (hamburger) icon is hidden, because the side navigation
+       is already on screen.
     """
     index_path = Path(INDEX_PATH).resolve()
     assert index_path.exists(), f"index.html not found in {index_path}"
@@ -81,6 +86,9 @@ def test_desktop_layout():
         # The top bar links are shown in full, so there is nothing to open.
         assert not page.locator(TOP_BAR_MENU_BUTTON).is_visible(), (
             '[desktop] top bar "Menu" button is visible'
+        )
+        assert not page.locator(SIDE_MENU_ICON).is_visible(), (
+            "[desktop] three-line icon for the side navigation is visible"
         )
 
         # Where each part starts, in pixels from the left edge of the screen.
@@ -166,7 +174,10 @@ def test_small_screen_side_navigation(screen, width):
     What we test:
 
     1. The side navigation is hidden when the page loads.
-    2. Clicking the three-line (hamburger) icon shows the side navigation.
+    2. Clicking the three-line (hamburger) icon shows the side navigation
+       and marks it as open.
+    3. Clicking the button inside the side navigation hides it again and
+       removes the open mark.
     """
     index_path = Path(INDEX_PATH).resolve()
     assert index_path.exists(), f"index.html not found in {index_path}"
@@ -179,13 +190,19 @@ def test_small_screen_side_navigation(screen, width):
         page = browser.new_page(viewport={"width": width, "height": SCREEN_HEIGHT})
         page.goto(f"file://{index_path}")
 
-        # The links inside the side navigation are what the reader sees.
-        side_navigation_links = page.locator(f"{SIDE_NAVIGATION} a").first
-        assert not side_navigation_links.is_visible(), (
+        side_navigation = page.locator(SIDE_NAVIGATION)
+        side_menu_panel = page.locator(SIDE_MENU_PANEL)
+        assert not side_menu_panel.is_visible(), (
             f"[{screen}] side navigation is visible before its icon is clicked"
         )
 
+        # expect() waits a moment for the page to react to the click.
         page.locator(SIDE_MENU_ICON).click()
-        expect(side_navigation_links).to_be_visible()
+        expect(side_menu_panel).to_be_visible()
+        expect(side_navigation).to_have_class(SIDE_MENU_OPEN_CLASS)
+
+        page.locator(SIDE_MENU_CLOSE_BUTTON).click()
+        expect(side_menu_panel).to_be_hidden()
+        expect(side_navigation).not_to_have_class(SIDE_MENU_OPEN_CLASS)
 
         browser.close()
