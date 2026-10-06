@@ -275,7 +275,11 @@ def test_features_slow(built_site):  # noqa: PLR0915
                     navigate(start)
                     check()
                 except (AssertionError, PlaywrightError) as exc:
-                    errors.append(f"[{label}] {str(exc)[-1600:].strip()}")
+                    message = str(exc).strip() or type(exc).__name__
+                    if len(message) > 1600:
+                        # Preserve the exception's headline as well as its call log.
+                        message = f"{message.splitlines()[0]}\n...\n{message[-1400:]}"
+                    errors.append(f"[{label}] {message}")
 
             def cookie_consent():
                 # A fresh browser context has no consent cookie. Test the
@@ -332,7 +336,7 @@ def test_features_slow(built_site):  # noqa: PLR0915
             def tabs():
                 tabset = (
                     page.locator("main .p-tabs")
-                    .filter(has=page.get_by_text("Content Tab 1", exact=True))
+                    .filter(has=page.get_by_text("Content for tab 1", exact=True))
                     .first
                 )
                 second = tabset.get_by_role("tab", name="Tab 2")
@@ -340,7 +344,7 @@ def test_features_slow(built_site):  # noqa: PLR0915
                 expect(second).to_have_attribute("aria-selected", "true")
                 expect(
                     tabset.locator(f"#{second.get_attribute('aria-controls')}")
-                ).to_contain_text("Content Tab 2")
+                ).to_contain_text("Content for tab 2")
                 second.press(
                     "ArrowRight"
                 )  # vanilla-tabs.js selects the next tab on keyup/focus.
@@ -353,7 +357,7 @@ def test_features_slow(built_site):  # noqa: PLR0915
 
             def copy_button():
                 # Test the extension-generated control with a real Chromium
-                # clipboard, not merely the presence of copybutton.js.
+                # clipboard on the YAML sample, not merely copybutton.js.
                 block = page.locator(
                     "#code-blocks-font-test .highlight-yaml .highlight"
                 ).first
@@ -363,11 +367,11 @@ def test_features_slow(built_site):  # noqa: PLR0915
                 assert button.get_attribute("data-clipboard-target") == (
                     f"#{source.get_attribute('id')}"
                 ), "copy button must target the displayed code block"
-                expect(source).to_contain_text("example: true")
+                expect(source).to_contain_text("version: 2")
                 button.click()
                 expect(button).to_have_class(re.compile(r"\bsuccess\b"))
                 copied = page.evaluate("navigator.clipboard.readText()")
-                assert "example: true" in copied, (
+                assert "version: 2" in copied, (
                     f"copy button copied unexpected text: {copied!r}"
                 )
 
@@ -430,4 +434,10 @@ def test_features_slow(built_site):  # noqa: PLR0915
     for name, data in js_report.items():
         print(f"[js-coverage] {name}: {data['percent']}%")
 
-    assert not errors, "Features [slow] checks failed:\n  - " + "\n  - ".join(errors)
+    if errors:
+        summary = "; ".join(error.splitlines()[0] for error in errors)
+        pytest.fail(
+            f"Features [slow] checks failed: {summary}\nDetails:\n  - "
+            + "\n  - ".join(errors),
+            pytrace=False,
+        )
