@@ -43,8 +43,11 @@ heading levels needed and the real ``docs/conf.py`` already sets
 import io
 from pathlib import Path
 
+import pytest
 from bs4 import BeautifulSoup
 from sphinx.application import Sphinx
+
+pytestmark = pytest.mark.usefixtures("isolated_sphinx_build")
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "minimal-conf"
 CHEAT_SHEET_PATH = Path("docs/_build/content/rst-cheat-sheet/index.html")
