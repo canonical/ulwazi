@@ -20,8 +20,11 @@ INDEX_PATH = "docs/_build/index.html"
 # Width in CSS pixels at which each screen class is tested. The height only
 # decides how much of the page fits on the first screen.
 DESKTOP_WIDTH = 1280
-MOBILE_WIDTH = 375
 SCREEN_HEIGHT = 900
+
+# Mobile and tablet screens follow the same layout rules, so the same tests
+# run once for each of them.
+SMALL_SCREENS = [("mobile", 375), ("tablet", 768)]
 
 # The three parts of the page that sit side by side on a desktop screen.
 SIDE_NAVIGATION = "#drawer"
@@ -97,8 +100,10 @@ def test_desktop_layout():
 
 
 @pytest.mark.slow
-def test_mobile_layout():
-    """Check how the home page looks on a mobile screen (375 px wide).
+@pytest.mark.parametrize(("screen", "width"), SMALL_SCREENS)
+def test_small_screen_layout(screen, width):
+    """Check how the home page looks on a mobile screen (375 px wide) and on
+    a tablet screen (768 px wide).
 
     What we test:
 
@@ -117,27 +122,25 @@ def test_mobile_layout():
     )
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        page = browser.new_page(
-            viewport={"width": MOBILE_WIDTH, "height": SCREEN_HEIGHT}
-        )
+        page = browser.new_page(viewport={"width": width, "height": SCREEN_HEIGHT})
         page.goto(f"file://{index_path}")
 
         assert page.locator(MAIN_CONTENT).is_visible(), (
-            "[mobile] main content is not visible"
+            f"[{screen}] main content is not visible"
         )
 
         # The page is wider than the screen only if something sticks out.
         page_width = page.evaluate("document.documentElement.scrollWidth")
-        assert page_width <= MOBILE_WIDTH, (
-            f"[mobile] page is {page_width} px wide and scrolls sideways"
+        assert page_width <= width, (
+            f"[{screen}] page is {page_width} px wide and scrolls sideways"
         )
 
         top_bar_links = page.locator(TOP_BAR_LINKS)
         assert page.locator(TOP_BAR_MENU_BUTTON).is_visible(), (
-            '[mobile] top bar "Menu" button is not visible'
+            f'[{screen}] top bar "Menu" button is not visible'
         )
         assert not top_bar_links.is_visible(), (
-            "[mobile] top bar links are visible before the menu is opened"
+            f"[{screen}] top bar links are visible before the menu is opened"
         )
 
         # expect() waits a moment for the page to react to the click.
@@ -148,15 +151,17 @@ def test_mobile_layout():
         expect(top_bar_links).to_be_hidden()
 
         assert page.locator(SIDE_MENU_ICON).is_visible(), (
-            "[mobile] three-line icon for the side navigation is not visible"
+            f"[{screen}] three-line icon for the side navigation is not visible"
         )
 
         browser.close()
 
 
 @pytest.mark.slow
-def test_mobile_side_navigation():
-    """Check the side navigation on a mobile screen (375 px wide).
+@pytest.mark.parametrize(("screen", "width"), SMALL_SCREENS)
+def test_small_screen_side_navigation(screen, width):
+    """Check the side navigation on a mobile screen (375 px wide) and on a
+    tablet screen (768 px wide).
 
     This test is expected to fail until
     https://github.com/canonical/ulwazi/issues/168 is fixed.
@@ -174,15 +179,13 @@ def test_mobile_side_navigation():
     )
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        page = browser.new_page(
-            viewport={"width": MOBILE_WIDTH, "height": SCREEN_HEIGHT}
-        )
+        page = browser.new_page(viewport={"width": width, "height": SCREEN_HEIGHT})
         page.goto(f"file://{index_path}")
 
         # The links inside the side navigation are what the reader sees.
         side_navigation_links = page.locator(f"{SIDE_NAVIGATION} a").first
         assert not side_navigation_links.is_visible(), (
-            "[mobile] side navigation is visible before its icon is clicked"
+            f"[{screen}] side navigation is visible before its icon is clicked"
         )
 
         page.locator(SIDE_MENU_ICON).click()
