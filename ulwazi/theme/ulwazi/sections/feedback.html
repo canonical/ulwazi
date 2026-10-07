@@ -1,4 +1,4 @@
-<div class="content-icon-container">
+<div class="content-icon-container{% if not feedback %} navigation-only{% endif %}">
   {%- include "components/toggle-sidebar-primary.html" %}
 {% if feedback %}
   {%- if github_url and pagename -%}
