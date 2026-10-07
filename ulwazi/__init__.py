@@ -177,6 +177,7 @@ def _configure_html_context(html_context: dict[str, Any]) -> None:
         ("sequential_nav", "none"),
         ("display_contributors", True),
         ("path", "/docs"),
+        ("tag_id", "GTM-N384JMX2"),
     ]
 
     for value, default in values_and_defaults:
