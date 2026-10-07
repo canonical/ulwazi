@@ -34,7 +34,21 @@ These are set directly in `conf.py`.
     - `localtoc_max_depth`
     - `3`
     - Limits the local table of contents to H2–H4 on a page with an H1 title. Set to `-1` or `None` to show every heading level.
+*
+    - `slug`
+    - `""`
+    - Path segment for the project's hosted documentation, used to prefix links on the bundled 404 page. For example, use `"ulwazi"` for `documentation.ubuntu.com/ulwazi/`.
+*
+    - `notfound_enabled`
+    - `True`
+    - Set to `False` to opt out of Ulwazi's automatic `sphinx-notfound-page` activation and 404 defaults. If `notfound.extension` is also explicitly listed, it remains active.
 ```
+
+Ulwazi also supplies a `404.html` template and chooses the 404 URL prefix from
+the Read the Docs canonical URL when available. Explicit `notfound_template`
+and `notfound_urls_prefix` settings take precedence. List `"ulwazi"` before
+`"sphinx_modern_pdf_style"` in `extensions` to enable Canonical PDF branding;
+Ulwazi stages the logo in the LaTeX output directory.
 
 ## HTML context
 

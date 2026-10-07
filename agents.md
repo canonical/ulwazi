@@ -55,7 +55,8 @@ Available tests:
 - **test_seo_metadata.py**: Verifies SEO/metadata tags (title, description, canonical, favicon, Open Graph) on built pages
 - **test_structured_toc.py**: Verifies domain/slice markup and ARIA in RST and MyST HTML (fast test); browser styling and LaTeX content from both cheat sheets are grouped into a single slow test _(partially slow)_
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
-- **test_extension_compatibility.py**: Verifies the theme renders correctly with every Sphinx Stack default extension enabled (one test per extension; PDF check is a slow test). See `docs/content/tests/extension-compatibility.md`
+- **test_config_robustness.py**: Checks minimal and maximum configurations, defaults, and legacy aliases (fast)
+- **test_extension_compatibility.py**: Verifies the theme renders correctly with Sphinx Stack default extensions enabled (grouped fast checks and a slow PDF check). See `docs/content/tests/extension-compatibility.md`
 
 #### When adding or changing a theme feature
 
@@ -273,6 +274,61 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   (the latter is a stale sphinx-basic-ng convention that Sphinx 7.4+ no longer
   populates); `favicon_url` is already a fully resolved URL and must not be passed
   through `pathto()` again.
+- **Native Canonical config**: the theme itself (in `ulwazi/__init__.py`
+  `config_inited`) provides the Canonical configuration defaults that
+  historically came from the `canonical-sphinx-config` extension (now removed
+  as a dependency). This includes: the `slug` config value (used to compute
+  `notfound_urls_prefix` for `sphinx-notfound-page`), `exclude_patterns`
+  additions, `html_last_updated_fmt` / `html_permalinks_icon` overrides,
+  `html_context` defaults (`repo_branch`, `repo_folder` — must be
+  slash-delimited, e.g. `/docs/` — and `discourse`), the Read-the-Docs
+  `repo_branch` override, and the Canonical `sphinx_modern_pdf_style`
+  branding defaults.
+- **Bundled 404-page integration**: `sphinx-notfound-page` is a runtime
+  dependency, activated automatically via `app.setup_extension()` from the
+  theme's `setup()` (idempotent — projects that also list
+  `notfound.extension` in `extensions` are unaffected). The theme ships a
+  `404.html` template and a `static/404.svg` asset. Opt out with
+   `notfound_enabled = False` in conf.py, or `-D notfound_enabled=0` when
+  `"ulwazi"` is in `extensions`. For theme-only loading, Sphinx checks `-D`
+  overrides before registering theme config values and warns about an unknown
+  setting. When the extension is listed explicitly, the flag only skips
+  Ulwazi's prefix/template defaults (the extension still generates its own
+  404 page). Explicit `notfound_urls_prefix` and `notfound_template` settings
+  in conf.py or `-D` also take precedence over the theme defaults. When the
+  theme is selected only via `html_theme`, Sphinx loads it after
+   `config-inited`; the theme sets up these 404 defaults during late loading
+   too, but other Ulwazi config-inited features still require `"ulwazi"` in
+   `extensions`. `tests/test_notfound_bundling.py` keeps activation, ordering,
+   and theme-only build scenarios in a documented `ACTIVATION_CASES` table;
+   separate tests cover opt-out, RTD prefixes, and explicit settings.
+   `tests/test_notfound_prefix.py` tests the prefix helper directly.
+- **notfound prefix schema detection**: `_notfound_urls_prefix` detects the
+  URL schema from the _path_ of `READTHEDOCS_CANONICAL_URL` — the version
+  segment is the last path segment, the language segment the one before it,
+  each matched positionally against `READTHEDOCS_VERSION` /
+  `READTHEDOCS_LANGUAGE`. This indirection is load-bearing: RTD always sets
+  those env vars on builds, even when the segments are absent from the URL
+  schema (e.g. single-version projects like ulwazi itself, hosted at
+  `documentation.ubuntu.com/ulwazi/` with no version/language segment), so
+  joining them unconditionally would produce a prefix for URLs that don't
+  exist and break every link on the 404 page. Only the path is read — the
+  host is irrelevant, which is why this works behind the
+  documentation.ubuntu.com reverse proxy (the slug comes from the `slug`
+  config value, never from the RTD URL). Off RTD (no
+  `READTHEDOCS_CANONICAL_URL`), the prefix is empty and 404 links stay
+  relative. Covered by `tests/test_notfound_prefix.py`.
+- **PDF branding and extension order**: the theme sets `modern_pdf_options`
+  defaults (`author`, `logo`) for `sphinx-modern-pdf-style`, and stages
+  `ulwazi/theme/ulwazi/pdf/Canonical-logo-4x.png` into the LaTeX output
+  directory via a `builder-inited` hook (`_copy_pdf_assets`) — the logo is
+  referenced by bare filename, so it must sit next to the generated `.tex`.
+  **`"ulwazi"` must be listed before `"sphinx_modern_pdf_style"` in
+  `extensions`**: Sphinx fires `config-inited` in registration order, and
+  `sphinx_modern_pdf_style` reads `modern_pdf_options` in its own handler.
+  The theme emits a build warning if the order is wrong. Verify PDF changes
+  with `cd docs && make pdf` (not `make test-all`, whose
+  `docs-pdf-prep-force` prerequisite blocks on a `sudo apt-get` prompt).
 - **sphinx-structured-toc**: enabled in `docs/conf.py` (`sphinx_structured_toc`),
   declared at `>=0.2.0` in the `docs` dependency group in `pyproject.toml`. Provides the
   `domain`/`slice` directives for accessible tables of contents (independent of

@@ -19,6 +19,8 @@
 import importlib.util
 import json
 import logging
+import os
+import shutil
 from pathlib import Path
 from typing import Any, cast
 
@@ -45,10 +47,34 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     """
     app.add_html_theme("ulwazi", str(Path(__file__).parent / "theme/ulwazi"))
     app.add_config_value("localtoc_max_depth", 3, "html", types=(int, type(None)))
+    # Project slug: the path segment of the docs site URL, e.g. "ulwazi" in
+    # https://documentation.ubuntu.com/ulwazi/. Used to compute
+    # notfound_urls_prefix for sphinx-notfound-page.
+    app.add_config_value("slug", default="", rebuild="env", types=str)
+    # Opt-out flag for the bundled sphinx-notfound-page integration: set
+    # notfound_enabled = False in conf.py (or pass -D notfound_enabled=0 on
+    # the command line) to skip both the activation and the prefix/template
+    # setup. Explicitly listing "notfound.extension" in extensions still
+    # works and only skips Ulwazi's overrides.
+    app.add_config_value("notfound_enabled", default=True, rebuild="env")
+    # sphinx-notfound-page is a bundled dependency: the theme ships a 404
+    # template, a 404.svg asset, and the prefix computation, so the
+    # extension is activated by default. setup_extension is idempotent
+    # ("no-op if called twice"), so projects that also list
+    # "notfound.extension" in extensions are unaffected.
+    if app.config.notfound_enabled:
+        app.setup_extension("notfound.extension")  # pyright: ignore [reportUnknownMemberType]
+        # If Ulwazi is selected only via html_theme, Sphinx loads this entry
+        # point during HTML builder setup, after config-inited has fired.
+        # Apply just the 404 defaults here; running the entire config-inited
+        # hook at this stage would set up unrelated extensions too late.
+        if hasattr(app, "builder"):
+            _configure_notfound(app.config)
     app.connect(  # pyright: ignore [reportUnknownMemberType]
         "config-inited",
         config_inited,
     )
+    app.connect("builder-inited", _copy_pdf_assets)  # pyright: ignore [reportUnknownMemberType]
     app.connect("html-page-context", _html_page_context)  # pyright: ignore [reportUnknownMemberType]
 
     return {
@@ -64,8 +90,6 @@ def config_inited(app: Sphinx, config: Config) -> None:
     :param app: The Sphinx application instance
     :param config: The Sphinx build configuration
     """
-    html_context = config.html_context
-
     required_packages = [
         "sphinxcontrib.jquery",
     ]
@@ -89,6 +113,39 @@ def config_inited(app: Sphinx, config: Config) -> None:
         "js/theme-toggle.js",
     ]
 
+    for item in extra_js:
+        app.add_js_file(item)
+
+    # General Sphinx setup (absorbed from canonical-sphinx-config)
+
+    for pattern in ("_build", "Thumbs.db", ".DS_Store", ".sphinx"):
+        if pattern not in config.exclude_patterns:
+            config.exclude_patterns.append(pattern)
+
+    # Preserve the Canonical defaults formerly set by canonical-sphinx-config.
+    config.html_last_updated_fmt = ""
+    config.html_permalinks_icon = "¶"
+
+    _configure_html_context(config.html_context)
+
+    # NOTE: This assigns the whole dict and would wipe any user-provided
+    # html_theme_options. It also sets "sidebar_hide_name", which is not yet
+    # an Ulwazi theme option (no template reads it). Mirrors the behaviour
+    # inherited from canonical-sphinx-config; revisit when the option is
+    # implemented in the theme.
+    if config.html_title == "":
+        config.html_theme_options = {"sidebar_hide_name": True}
+
+    # The opt-out skips Ulwazi's defaults even if the user loads the extension.
+    if config.notfound_enabled:
+        _configure_notfound(config)
+
+    if "sphinx_modern_pdf_style" in config.extensions:
+        _setup_modern_pdf_style(config)
+
+
+def _configure_html_context(html_context: dict[str, Any]) -> None:
+    """Apply legacy aliases, Canonical defaults, and RTD branch links."""
     # Deprecated aliases from the old canonical-sphinx theme: honour them if
     # set, but only when the user hasn't already set the new-style name.
     deprecated_aliases = [
@@ -99,6 +156,8 @@ def config_inited(app: Sphinx, config: Config) -> None:
         if old_name in html_context and new_name not in html_context:
             logger.warning(
                 f"conf.py setting '{old_name}' is deprecated. Use '{new_name}' instead.",
+                type="ulwazi",
+                subtype="deprecated",
             )
             value = html_context[old_name]
             if old_name == "github_folder":
@@ -106,6 +165,8 @@ def config_inited(app: Sphinx, config: Config) -> None:
                 value = f"/{folder}/" if folder else "/"
             html_context[new_name] = value
 
+    # "repo_folder" must be slash-delimited because feedback.html joins it
+    # directly with the branch and page name to construct GitHub links.
     values_and_defaults = [
         ("product_tag", "_static/tag.png"),
         ("repo_branch", "main"),
@@ -122,8 +183,156 @@ def config_inited(app: Sphinx, config: Config) -> None:
     for value, default in values_and_defaults:
         html_context.setdefault(value, default)
 
-    for item in extra_js:
-        app.add_js_file(item)
+    folder = str(html_context["repo_folder"]).strip("/")
+    html_context["repo_folder"] = f"/{folder}/" if folder else "/"
+
+    # Only branch builds have an editable Git identifier. PR identifiers are
+    # numbers, tags cannot be edited, and an absent identifier must not fail.
+    if (
+        "READTHEDOCS" in os.environ
+        and os.environ.get("READTHEDOCS_VERSION_TYPE") == "branch"
+        and os.environ.get("READTHEDOCS_GIT_IDENTIFIER")
+    ):
+        html_context["repo_branch"] = os.environ["READTHEDOCS_GIT_IDENTIFIER"]
+
+
+def _configure_notfound(config: Config) -> None:
+    """Provide theme defaults without replacing explicit project settings.
+
+    Sphinx keeps conf.py assignments in ``_raw_config``; reading the current
+    value alone cannot distinguish an explicit value from an extension default.
+    Command-line overrides are available through ``overrides``. Both must be
+    checked so the theme does not silently discard project-specific 404 URLs.
+    Sphinx does not expose a public API for checking raw conf.py assignments.
+    """
+    if (
+        "notfound_urls_prefix" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "notfound_urls_prefix" not in config.overrides
+    ):
+        config.notfound_urls_prefix = _notfound_urls_prefix(config)
+    if (
+        "notfound_template" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "notfound_template" not in config.overrides
+    ):
+        config.notfound_template = "404.html"
+
+
+def _setup_modern_pdf_style(config: Config) -> None:
+    """Inject Canonical branding defaults for sphinx-modern-pdf-style.
+
+    Emits a build warning when the extension registration order would cause
+    the defaults to be ignored (see :func:`_modern_pdf_defaults`).
+
+    :param config: The Sphinx build configuration
+    """
+    # The ordering below is load-bearing: warn instead of silently
+    # producing an unbranded PDF.
+    if config.extensions.index("sphinx_modern_pdf_style") < config.extensions.index(
+        "ulwazi"
+    ):
+        logger.warning(
+            'List "ulwazi" before "sphinx_modern_pdf_style" in extensions, '
+            "otherwise the Canonical PDF branding defaults are ignored."
+        )
+    _modern_pdf_defaults(config)
+
+
+def _notfound_urls_prefix(config: Config) -> str:
+    """Compute the URL prefix for sphinx-notfound-page.
+
+    The prefix must mirror the URL schema of the hosting site, which varies
+    per project:
+
+    - single-version projects serve at the root: ``/<slug>/``
+    - versioned projects add a version segment: ``/<slug>/<version>/``
+    - translated projects add a language segment:
+      ``/<slug>/<language>/<version>/``
+
+    ``READTHEDOCS_VERSION`` and ``READTHEDOCS_LANGUAGE`` are always set on
+    Read the Docs builds, even when the corresponding segment is absent from
+    the URL schema, so they cannot be appended unconditionally. Instead, the
+    schema is detected from ``READTHEDOCS_CANONICAL_URL`` (which always
+    reflects the segments Read the Docs actually serves) by matching the
+    environment values against its path segments: the version segment is the
+    last path segment, the language segment sits right before it.
+
+    The project slug is never part of the Read the Docs URL (on
+    documentation.ubuntu.com it is added by the hosting proxy), so it always
+    comes from the ``slug`` config value.
+
+    The prefix is only applied when building on Read the Docs (i.e. when
+    READTHEDOCS_CANONICAL_URL is set), because sphinx-notfound-page
+    absolutises every link on the 404 page with it. Local builds keep
+    relative links so the page renders under ``make run`` and direct
+    file access.
+
+    :param config: The Sphinx build configuration
+
+    :returns: The notfound URL prefix
+    """
+    canonical_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "")
+    if not canonical_url:
+        return ""
+
+    # Path segments of the canonical URL, without the scheme and host:
+    # "https://<host>/<language>/<version>/" -> ["<language>", "<version>"]
+    path = canonical_url.rstrip("/").split("/")[3:]
+
+    version = os.environ.get("READTHEDOCS_VERSION", "")
+    language = os.environ.get("READTHEDOCS_LANGUAGE", "")
+
+    # A segment is part of the schema only if it sits in the position where
+    # Read the Docs serves it (version last, language right before it).
+    url_version = path[-1] if path and path[-1] == version else ""
+    url_language = path[-2] if len(path) > 1 and path[-2] == language else ""
+
+    slug = str(config.slug).strip("/")
+    segments = (slug, url_language, url_version)
+    joined = "/".join(segment for segment in segments if segment)
+    return f"/{joined}/" if joined else ""
+
+
+def _modern_pdf_defaults(config: Config) -> None:
+    """Set Canonical branding defaults for sphinx-modern-pdf-style.
+
+    IMPORTANT: ``sphinx_modern_pdf_style`` reads ``modern_pdf_options`` in its
+    own ``config-inited`` handler, and Sphinx fires those handlers in
+    extension-registration order. These defaults therefore only take effect
+    while ``"ulwazi"`` precedes ``"sphinx_modern_pdf_style"`` in the project's
+    ``extensions`` list. Keep that order.
+
+    The ``logo`` is referenced by bare filename, so the asset must be staged
+    next to the generated ``.tex`` file; see :func:`_copy_pdf_assets`.
+
+    :param config: The Sphinx build configuration
+    """
+    canonical_pdf_values = {
+        "author": "Canonical",
+        "logo": "Canonical-logo-4x.png",
+    }
+
+    for key, value in canonical_pdf_values.items():
+        config.modern_pdf_options.setdefault(key, value)
+
+
+def _copy_pdf_assets(app: Sphinx) -> None:
+    """Copy PDF branding assets into the LaTeX output directory.
+
+    ``sphinx_modern_pdf_style`` references the logo by bare filename, so it
+    must sit alongside the generated ``.tex`` file. ``canonical-sphinx-config``
+    defined an equivalent helper but never connected it to any Sphinx event,
+    which is why the logo was always missing from LaTeX builds.
+
+    :param app: The Sphinx application instance
+    """
+    if app.builder.format != "latex":
+        return
+
+    shutil.copytree(
+        str(Path(__file__).parent / "theme/ulwazi/pdf"),
+        app.outdir,
+        dirs_exist_ok=True,
+    )
 
 
 def _compute_navigation_tree(context: dict[str, Any]) -> str:

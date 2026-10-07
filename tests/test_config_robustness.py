@@ -28,8 +28,8 @@ from pathlib import Path
 import pytest
 from bs4 import BeautifulSoup
 from sphinx.application import Sphinx
-
-pytestmark = pytest.mark.usefixtures("isolated_sphinx_build")
+from sphinx.util.docutils import docutils_namespace, patch_docutils
+from ulwazi import _configure_html_context
 
 FIXTURES = Path(__file__).parent / "fixtures"
 CHEAT_SHEET_PATH = Path("docs/_build/content/rst-cheat-sheet/index.html")
@@ -88,17 +88,18 @@ def _build(
     source = FIXTURES / fixture
     output = root / "_build"
     warnings = io.StringIO()
-    app = Sphinx(
-        srcdir=str(source),
-        confdir=str(source),
-        outdir=str(output),
-        doctreedir=str(root / "_doctrees"),
-        buildername="html",
-        confoverrides=overrides,
-        status=io.StringIO(),
-        warning=warnings,
-    )
-    app.build()
+    with patch_docutils(str(source)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(source),
+            confdir=str(source),
+            outdir=str(output),
+            doctreedir=str(root / "_doctrees"),
+            buildername="html",
+            confoverrides=overrides,
+            status=io.StringIO(),
+            warning=warnings,
+        )
+        app.build()
     assert app.statuscode == 0, (
         f"Sphinx exited with status {app.statuscode}: {warnings.getvalue()}"
     )
@@ -284,6 +285,33 @@ def _check_fallback(output: Path) -> None:
     assert edit.get("href") == EDIT_FALLBACK
     assert view is not None
     assert view.get("href") == VIEW_FALLBACK
+
+
+@pytest.mark.parametrize(
+    ("version_type", "identifier", "expected_branch"),
+    [
+        ("branch", "feature/docs", "feature/docs"),
+        ("branch", "", "stable"),
+        ("external", "123", "stable"),
+        ("tag", "v2.0", "stable"),
+    ],
+)
+def test_rtd_source_branch(
+    monkeypatch: pytest.MonkeyPatch,
+    version_type: str,
+    identifier: str,
+    expected_branch: str,
+) -> None:
+    """RTD builds use only a real branch identifier in source links."""
+    monkeypatch.setenv("READTHEDOCS", "True")
+    monkeypatch.setenv("READTHEDOCS_VERSION_TYPE", version_type)
+    monkeypatch.setenv("READTHEDOCS_GIT_IDENTIFIER", identifier)
+    context = {"repo_branch": "stable", "repo_folder": "guides"}
+
+    _configure_html_context(context)
+
+    assert context["repo_branch"] == expected_branch
+    assert context["repo_folder"] == "/guides/"
 
 
 def test_config_robustness(tmp_path: Path) -> None:

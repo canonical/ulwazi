@@ -72,7 +72,7 @@ Features [fast] checks failed:
 - [search] breadcrumb map: code-heading page must have 'This is a test' ancestor
 ```
 
-The project-wide pytest `-rA` setting still prints its normal pass recap;
+The project-wide pytest `-rfE` setting reports failures and errors only;
 these tests do not change output from other suites. A shared Sphinx build
 failure instead appears as a fixture setup error with captured build warnings,
 not as a failed feature check.

@@ -65,7 +65,7 @@ Supporting them in the theme is tracked as follow-up work:
 - `sphinx_last_updated_by_git` populates the `last_updated` page context
   and (with `git_last_updated_metatags`, on by default) an
   `article:modified_time` meta tag. The meta tag is currently not
-  emitted: `canonical_sphinx_config` sets `html_last_updated_fmt` to an
+   emitted: Ulwazi sets `html_last_updated_fmt` to an
   empty string, which makes the extension's page-context hook return
   early. No Ulwazi template renders `last_updated` either.
 

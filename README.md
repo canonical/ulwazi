@@ -123,12 +123,15 @@ The available tests are:
 - **test_smoke.py** — checks the home-page shell and navigation (fast)
 - **test_assets_structure.py** — checks representative built assets and theme controls (fast)
 - **test_features.py** — checks theme markup (fast) and browser interactions _(slow)_
+- **test_notfound_bundling.py** — checks automatic 404 integration, explicit extensions, opt-out, and the built 404 page and sitemap (fast)
+- **test_notfound_prefix.py** — checks URL prefixes for Read the Docs hosting layouts (fast)
 - **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
 - **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
 - **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML (fast test); browser styling and linked LaTeX slice lists are grouped into a single slow test _(partially slow)_
 - **test_layout_smoke.py** — checks every built page renders its article inside the main docs column, and (in a browser at 1440px) that nothing overflows the viewport or spills out of the main column _(browser check is slow)_
 - **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
-- **test_extension_compatibility.py** — verifies the theme renders correctly with every [Sphinx Stack default extension](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/) enabled (one test per extension; PDF check is slow)
+- **test_config_robustness.py** — checks minimal and maximum configuration, defaults, and legacy aliases (fast)
+- **test_extension_compatibility.py** — verifies the theme renders correctly with [Sphinx Stack default extensions](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/) enabled (grouped fast checks and a slow PDF check)
 
 `make test-coverage` ends with a three-metric summary: Python line coverage
 of the `ulwazi` package, aggregate JavaScript code-line coverage of **all**
@@ -148,6 +151,29 @@ Overriding a page's title or description for social previews is optional and
 only needed for pages you want to promote with custom text (e.g. a landing
 page). See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
 for defaults and override syntax.
+
+## 404 page
+
+The theme bundles the [sphinx-notfound-page](https://github.com/readthedocs/sphinx-notfound-page)
+extension and activates it automatically when Ulwazi is enabled -- **you do
+not need to list `notfound.extension` separately.** A styled 404 page (with
+the Canonical penguin) is generated for HTML builds, and links on it resolve
+correctly on Read the Docs.
+
+Set the `slug` config value in your `conf.py` to the path segment of your
+docs site URL (e.g. `slug = "ulwazi"` for `https://documentation.ubuntu.com/ulwazi/`)
+so that links on the 404 page resolve correctly when hosted on Read the Docs.
+If your project sets `notfound_urls_prefix` or `notfound_template` explicitly,
+Ulwazi leaves those settings unchanged.
+
+To opt out of the 404-page integration, set `notfound_enabled = False` in your
+`conf.py`. If `"ulwazi"` is in `extensions`, you can also pass
+`-D notfound_enabled=0` on the command line. With `html_theme = "ulwazi"`
+alone, use the `conf.py` flag: Sphinx processes command-line overrides before
+loading theme entry points and would warn that the flag is unknown. Projects
+that already list `notfound.extension` may keep that entry: Sphinx loads it
+only once. In such projects, the opt-out skips **Ulwazi's** 404 defaults but
+does not disable the explicitly enabled extension or its 404 page.
 
 ## Contributing
 

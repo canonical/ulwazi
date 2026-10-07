@@ -70,7 +70,8 @@ def built_site(tmp_path_factory):
     output = root / "html"
     status, warnings = StringIO(), StringIO()
     try:
-        app = _build_site(output, root, status, warnings)
+        with patch_docutils(str(DOCS)), docutils_namespace():
+            app = _build_site(output, root, status, warnings)
     except (OSError, RuntimeError, ImportError) as exc:
         pytest.fail(
             f"Sphinx build failed in {output}: {exc}\n"

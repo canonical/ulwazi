@@ -27,6 +27,7 @@ dependencies = [
     "sphinx-basic-ng",
     "sphinxcontrib-jquery>=4.1",
     "beautifulsoup4",
+    "sphinx-notfound-page~=1.1",
 ]
 
 [dependency-groups]
@@ -54,7 +55,6 @@ dev = [
     "pytest-xdist>=3.6.0",
 ]
 docs = [
-    "canonical-sphinx-config @ git+https://github.com/canonical/canonical-sphinx-config.git@main",
     "beautifulsoup4>=4.14.3",
     "myst-parser~=4.0",
     "packaging>=26.0",
@@ -71,7 +71,6 @@ docs = [
     "sphinxext-opengraph>=0.10.0",
     "starlette>=1.3.1",  # Fix CVEs (PYSEC-2026-248/249) in transitive dep from sphinx-autobuild
     # Remaining Sphinx Stack default extensions (for compatibility tests):
-    "sphinx-notfound-page>=1.1",
     "sphinx-reredirects>=0.1.6,<1.0.0",
     "sphinx-rerediraffe>=0.0.3,<1.0.0",
     "sphinx-config-options~=0.1",
@@ -146,7 +145,9 @@ markers = [
     "coverage_js: browser journey used for JS coverage",
     "coverage_style: computed SCSS colour check included in coverage run",
 ]
-addopts = "-v --tb=short -rA"
+# -rfE: only list failures and errors in the summary (passing tests are
+# grouped per file in the progress line, not listed one by one).
+addopts = "--tb=short -rfE"
 
 [tool.coverage.run]
 branch = true

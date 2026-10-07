@@ -231,7 +231,7 @@ def _check_sphinx_last_updated_by_git(soup: BeautifulSoup) -> None:
     The extension populates the last_updated context and, with
     git_last_updated_metatags (on by default), an article:modified_time
     meta tag. The meta tag is not emitted because
-    canonical_sphinx_config sets html_last_updated_fmt to an empty
+    Ulwazi sets html_last_updated_fmt to an empty
     string, and no Ulwazi template renders last_updated. We only assert
     the page renders; see docs/content/tests/extension-compatibility.md.
     """
