@@ -166,9 +166,9 @@ so that links on the 404 page resolve correctly when hosted on Read the Docs.
 If your project sets `notfound_urls_prefix` or `notfound_template` explicitly,
 Ulwazi leaves those settings unchanged.
 
-To opt out of the 404-page integration, set `notfound_disabled = True` in your
+To opt out of the 404-page integration, set `notfound_enabled = False` in your
 `conf.py`. If `"ulwazi"` is in `extensions`, you can also pass
-`-D notfound_disabled=1` on the command line. With `html_theme = "ulwazi"`
+`-D notfound_enabled=0` on the command line. With `html_theme = "ulwazi"`
 alone, use the `conf.py` flag: Sphinx processes command-line overrides before
 loading theme entry points and would warn that the flag is unknown. Projects
 that already list `notfound.extension` may keep that entry: Sphinx loads it

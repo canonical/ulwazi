@@ -39,9 +39,9 @@ These are set directly in `conf.py`.
     - `""`
     - Path segment for the project's hosted documentation, used to prefix links on the bundled 404 page. For example, use `"ulwazi"` for `documentation.ubuntu.com/ulwazi/`.
 *
-    - `notfound_disabled`
-    - `False`
-    - Set to `True` to opt out of Ulwazi's automatic `sphinx-notfound-page` activation and 404 defaults. If `notfound.extension` is also explicitly listed, it remains active.
+    - `notfound_enabled`
+    - `True`
+    - Set to `False` to opt out of Ulwazi's automatic `sphinx-notfound-page` activation and 404 defaults. If `notfound.extension` is also explicitly listed, it remains active.
 ```
 
 Ulwazi also supplies a `404.html` template and chooses the 404 URL prefix from

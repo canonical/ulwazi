@@ -52,17 +52,17 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     # notfound_urls_prefix for sphinx-notfound-page.
     app.add_config_value("slug", default="", rebuild="env", types=str)
     # Opt-out flag for the bundled sphinx-notfound-page integration: set
-    # notfound_disabled = True in conf.py (or pass -D notfound_disabled=1 on
+    # notfound_enabled = False in conf.py (or pass -D notfound_enabled=0 on
     # the command line) to skip both the activation and the prefix/template
     # setup. Explicitly listing "notfound.extension" in extensions still
     # works and only skips Ulwazi's overrides.
-    app.add_config_value("notfound_disabled", default=False, rebuild="env")
+    app.add_config_value("notfound_enabled", default=True, rebuild="env")
     # sphinx-notfound-page is a bundled dependency: the theme ships a 404
     # template, a 404.svg asset, and the prefix computation, so the
     # extension is activated by default. setup_extension is idempotent
     # ("no-op if called twice"), so projects that also list
     # "notfound.extension" in extensions are unaffected.
-    if not app.config.notfound_disabled:
+    if app.config.notfound_enabled:
         app.setup_extension("notfound.extension")  # pyright: ignore [reportUnknownMemberType]
         # If Ulwazi is selected only via html_theme, Sphinx loads this entry
         # point during HTML builder setup, after config-inited has fired.
@@ -137,7 +137,7 @@ def config_inited(app: Sphinx, config: Config) -> None:
         config.html_theme_options = {"sidebar_hide_name": True}
 
     # The opt-out skips Ulwazi's defaults even if the user loads the extension.
-    if not config.notfound_disabled:
+    if config.notfound_enabled:
         _configure_notfound(config)
 
     if "sphinx_modern_pdf_style" in config.extensions:

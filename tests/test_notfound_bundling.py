@@ -3,7 +3,7 @@
 The theme activates ``sphinx-notfound-page`` automatically via
 ``app.setup_extension()`` from its ``setup()`` (idempotent, so projects that
 also list ``notfound.extension`` in ``extensions`` are unaffected), and
-provides an opt-out via the ``notfound_disabled`` config value.
+provides an opt-out via the ``notfound_enabled`` config value.
 
 The ``ACTIVATION_CASES`` table covers normal activation, extension ordering,
 theme-only entry-point loading, and opt-out. Each case has a descriptive ID
@@ -101,14 +101,14 @@ ACTIVATION_CASES = [
     # integration must still get its defaults at this later entry point.
     pytest.param([], "", "404.html", "", id="theme-only"),
     # The flag must prevent automatic activation when Ulwazi is an extension.
-    pytest.param(["ulwazi"], "notfound_disabled = True", None, None, id="opt-out"),
+    pytest.param(["ulwazi"], "notfound_enabled = False", None, None, id="opt-out"),
     # The same flag must work when Ulwazi is selected only through html_theme.
-    pytest.param([], "notfound_disabled = True", None, None, id="theme-only-opt-out"),
+    pytest.param([], "notfound_enabled = False", None, None, id="theme-only-opt-out"),
     # An explicit notfound entry remains active when Ulwazi's integration is
     # disabled; it retains the extension's own template and prefix defaults.
     pytest.param(
         ["ulwazi", "notfound.extension"],
-        "notfound_disabled = True",
+        "notfound_enabled = False",
         "page.html",
         "/en/latest/",
         id="opt-out-with-explicit-extension",
@@ -157,7 +157,7 @@ def test_theme_entry_point_rtd_prefix(
 def test_cli_opt_out(tmp_path: Path) -> None:
     """Sphinx's -D override skips automatic activation."""
     app, outdir = _build(
-        tmp_path, extensions=["ulwazi"], overrides={"notfound_disabled": "1"}
+        tmp_path, extensions=["ulwazi"], overrides={"notfound_enabled": "0"}
     )
     assert "notfound.extension" not in app.extensions
     assert not _page_404(outdir).exists()

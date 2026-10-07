@@ -289,7 +289,7 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   theme's `setup()` (idempotent — projects that also list
   `notfound.extension` in `extensions` are unaffected). The theme ships a
   `404.html` template and a `static/404.svg` asset. Opt out with
-  `notfound_disabled = True` in conf.py, or `-D notfound_disabled=1` when
+   `notfound_enabled = False` in conf.py, or `-D notfound_enabled=0` when
   `"ulwazi"` is in `extensions`. For theme-only loading, Sphinx checks `-D`
   overrides before registering theme config values and warns about an unknown
   setting. When the extension is listed explicitly, the flag only skips
