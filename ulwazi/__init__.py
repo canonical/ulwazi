@@ -46,7 +46,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     :returns: The extension's metadata
     """
     app.add_html_theme("ulwazi", str(Path(__file__).parent / "theme/ulwazi"))
-    app.add_config_value("localtoc_max_depth", None, "html")
+    app.add_config_value("localtoc_max_depth", 3, "html", types=(int, type(None)))
     # Project slug: the path segment of the docs site URL, e.g. "ulwazi" in
     # https://documentation.ubuntu.com/ulwazi/. Used to compute
     # notfound_urls_prefix for sphinx-notfound-page.
@@ -90,8 +90,6 @@ def config_inited(app: Sphinx, config: Config) -> None:
     :param app: The Sphinx application instance
     :param config: The Sphinx build configuration
     """
-    html_context = config.html_context
-
     required_packages = [
         "sphinxcontrib.jquery",
     ]
@@ -124,32 +122,11 @@ def config_inited(app: Sphinx, config: Config) -> None:
         if pattern not in config.exclude_patterns:
             config.exclude_patterns.append(pattern)
 
-    # NOTE: These assignments are unconditional and therefore clobber any
-    # user-provided value. This mirrors the behaviour inherited from
-    # canonical-sphinx-config / canonical-sphinx; revisit if a downstream
-    # project ever needs to override them.
+    # Preserve the Canonical defaults formerly set by canonical-sphinx-config.
     config.html_last_updated_fmt = ""
     config.html_permalinks_icon = "¶"
 
-    # html_context defaults. "repo_folder" must be slash-delimited (e.g.
-    # "/docs/") because sections/feedback.html concatenates it verbatim into
-    # GitHub view/edit URLs.
-    values_and_defaults = [
-        ("repo_branch", "main"),
-        ("repo_folder", "/docs/"),
-        ("discourse", "https://discourse.ubuntu.com"),
-    ]
-
-    for value, default in values_and_defaults:
-        html_context.setdefault(value, default)
-
-    # On Read the Docs, link to the branch actually being built (except for
-    # PR builds, where the target branch is not available).
-    if (
-        "READTHEDOCS" in os.environ
-        and os.environ.get("READTHEDOCS_VERSION_TYPE") != "external"
-    ):
-        html_context["repo_branch"] = os.environ["READTHEDOCS_GIT_IDENTIFIER"]
+    _configure_html_context(config.html_context)
 
     # NOTE: This assigns the whole dict and would wipe any user-provided
     # html_theme_options. It also sets "sidebar_hide_name", which is not yet
@@ -165,6 +142,57 @@ def config_inited(app: Sphinx, config: Config) -> None:
 
     if "sphinx_modern_pdf_style" in config.extensions:
         _setup_modern_pdf_style(config)
+
+
+def _configure_html_context(html_context: dict[str, Any]) -> None:
+    """Apply legacy aliases, Canonical defaults, and RTD branch links."""
+    # Deprecated aliases from the old canonical-sphinx theme: honour them if
+    # set, but only when the user hasn't already set the new-style name.
+    deprecated_aliases = [
+        ("github_version", "repo_branch"),
+        ("github_folder", "repo_folder"),
+    ]
+    for old_name, new_name in deprecated_aliases:
+        if old_name in html_context and new_name not in html_context:
+            logger.warning(
+                f"conf.py setting '{old_name}' is deprecated. Use '{new_name}' instead.",
+                type="ulwazi",
+                subtype="deprecated",
+            )
+            value = html_context[old_name]
+            if old_name == "github_folder":
+                folder = str(value).strip("/")
+                value = f"/{folder}/" if folder else "/"
+            html_context[new_name] = value
+
+    # "repo_folder" must be slash-delimited because feedback.html joins it
+    # directly with the branch and page name to construct GitHub links.
+    values_and_defaults = [
+        ("product_tag", "_static/tag.png"),
+        ("repo_branch", "main"),
+        ("repo_folder", "/docs/"),
+        ("default_source_extension", ".rst"),
+        ("github_issues", "enabled"),
+        ("discourse", "https://discourse.ubuntu.com"),
+        ("sequential_nav", "none"),
+        ("display_contributors", True),
+        ("path", "/docs"),
+    ]
+
+    for value, default in values_and_defaults:
+        html_context.setdefault(value, default)
+
+    folder = str(html_context["repo_folder"]).strip("/")
+    html_context["repo_folder"] = f"/{folder}/" if folder else "/"
+
+    # Only branch builds have an editable Git identifier. PR identifiers are
+    # numbers, tags cannot be edited, and an absent identifier must not fail.
+    if (
+        "READTHEDOCS" in os.environ
+        and os.environ.get("READTHEDOCS_VERSION_TYPE") == "branch"
+        and os.environ.get("READTHEDOCS_GIT_IDENTIFIER")
+    ):
+        html_context["repo_branch"] = os.environ["READTHEDOCS_GIT_IDENTIFIER"]
 
 
 def _configure_notfound(config: Config) -> None:
@@ -629,7 +657,7 @@ def _html_page_context(
     if "toc" in context:
         context["toc"] = modify_local_toc(context["toc"])
         context["toc"] = truncate_local_toc(
-            context["toc"], getattr(app.config, "localtoc_max_depth", -1)
+            context["toc"], getattr(app.config, "localtoc_max_depth", 3)
         )
 
     # Build navigation breadcrumb mapping for search

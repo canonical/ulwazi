@@ -93,8 +93,7 @@ def test_sidebar_active_item_indicator_gap():
             active_selector, "el => window.getComputedStyle(el).paddingLeft"
         )
         assert padding_left == NAV_TEXT_INSET, (
-            f"Active nav link padding-left is {padding_left}, "
-            f"expected {NAV_TEXT_INSET}"
+            f"Active nav link padding-left is {padding_left}, expected {NAV_TEXT_INSET}"
         )
 
         indicator = page.eval_on_selector(
@@ -114,9 +113,7 @@ def test_sidebar_active_item_indicator_gap():
 
         # The gap between the indicator bar and the text must be exactly 16px:
         # 19px inset - 3px bar = 16px.
-        gap_px = int(padding_left.rstrip("px")) - int(
-            indicator["width"].rstrip("px")
-        )
+        gap_px = int(padding_left.rstrip("px")) - int(indicator["width"].rstrip("px"))
         assert gap_px == 16, f"Indicator-to-text gap is {gap_px}px, expected 16px"
 
         # Active and inactive links at the same level must stay left-aligned.

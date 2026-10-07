@@ -9,10 +9,18 @@ import pytest
 import yaml
 from bs4 import BeautifulSoup
 from sphinx.application import Sphinx
+from sphinx.util.docutils import docutils_namespace, patch_docutils
 
 DOCS = Path(__file__).resolve().parents[1] / "docs"
 FEATURES_MANIFEST = Path(__file__).parent / "features.yaml"
 FEATURE_STATE = Path("results/feature-coverage.json")
+
+
+@pytest.fixture
+def isolated_sphinx_build():
+    """Restore docutils registrations after an in-process fixture build."""
+    with patch_docutils(str(DOCS)), docutils_namespace():
+        yield
 
 
 class BuiltSite:
@@ -62,7 +70,8 @@ def built_site(tmp_path_factory):
     output = root / "html"
     status, warnings = StringIO(), StringIO()
     try:
-        app = _build_site(output, root, status, warnings)
+        with patch_docutils(str(DOCS)), docutils_namespace():
+            app = _build_site(output, root, status, warnings)
     except (OSError, RuntimeError, ImportError) as exc:
         pytest.fail(
             f"Sphinx build failed in {output}: {exc}\n"

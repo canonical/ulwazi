@@ -21,6 +21,7 @@ from typing import Any
 
 import pytest
 from sphinx.application import Sphinx
+from sphinx.util.docutils import docutils_namespace, patch_docutils
 
 CONF_TEMPLATE = """
 project = "bundling-test"
@@ -56,16 +57,17 @@ def _build(
     (srcdir / "index.rst").write_text(INDEX_RST, encoding="utf-8")
 
     outdir = tmp_path / "out"
-    app = Sphinx(
-        srcdir=str(srcdir),
-        confdir=str(srcdir),
-        outdir=str(outdir),
-        doctreedir=str(tmp_path / "doctrees"),
-        buildername="dirhtml",
-        confoverrides=overrides,
-        warningiserror=False,
-    )
-    app.build()
+    with patch_docutils(str(srcdir)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(srcdir),
+            confdir=str(srcdir),
+            outdir=str(outdir),
+            doctreedir=str(tmp_path / "doctrees"),
+            buildername="dirhtml",
+            confoverrides=overrides,
+            warningiserror=False,
+        )
+        app.build()
     return app, outdir
 
 

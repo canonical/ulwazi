@@ -3,10 +3,7 @@ orphan: true
 myst:
     substitutions:
       reuse_key: "This is **included** text."
-      advanced_reuse_key: "This is a substitution that includes a code block:
-                         ```
-                         code block
-                         ```"
+      advanced_reuse_key: "This is a substitution with inline code: `code block`."
 ---
 
 (myst-ref)=
@@ -31,6 +28,7 @@ Also see the [MyST documentation](https://myst-parser.readthedocs.io/en/latest/i
 
 - {guilabel}`UI element`
 - `code`
+- {file}`file path`
 - {command}`command`
 - {kbd}`Key`
 - *Italic*
@@ -43,20 +41,16 @@ Start a code block:
     code:
       - example: true
 
-```text
-# Demonstrate a code block w/o syntax highlighting
-code:
-  - example: true
-```
-
-```yaml
+```{code-block} text
 # Demonstrate a code block
 code:
   - example: true
 ```
 
-```{code-block}
-test code
+```text
+# Demonstrate a code block
+code:
+  - example: true
 ```
 
 ### Syntax highlighting
@@ -152,10 +146,14 @@ The HTML pages are in _build.
 ## Links
 
 - [Canonical website](https://canonical.com/)
+- [Canonical website][canonical-website] (defined in `reuse/links.txt` or at the bottom of the page)
+- <https://canonical.com/>
 - {ref}`a_section_target_myst`
 - {ref}`Link text <a_section_target_myst>`
 - {doc}`../../index`
 - {doc}`Link text <../../index>`
+
+[canonical-website]: https://canonical.com/
 
 ## Navigation
 
@@ -189,7 +187,7 @@ Term 1
 Term 2
 : Definition
 
-## Task lists
+## Task lists (MyST-specific)
 
 - [ ] Unchecked.
 
@@ -209,21 +207,21 @@ Small grid table, default aligned:
 
 | Header 1                           | Header 2 |
 |------------------------------------|----------|
-| [1,1]<br>Second paragraph          |  [1,2]   |
+| [1,1]<br>Second line               |  [1,2]   |
 | [2,1]                              |  [2,2]   |
 
 Small grid table, right aligned:
 
 | Header 1                           | Header 2 |
 |-----------------------------------:|---------:|
-| [1,1]<br>Second paragraph          |  [1,2]   |
+| [1,1]<br>Second line               |  [1,2]   |
 | [2,1]                              |  [2,2]   |
 
 Wide grid table, default aligned:
 
 | Header 1                   | Header 2   |     Header 3  | Header 4  | Header 5   | Header 6    | Header 7  | Header 8  | Header 9   |
 |----------------------------|------------|---------------|-----------|------------|-------------|-----------|-----------|------------|
-| [1,1]<br>Second paragraph  | [1,2]      |   [1,3]       | [1,4]     | [1,5]      | [1,6]       | [1,7]     | [1,8]     | [1,9]      |
+| [1,1]<br>Second line       | [1,2]      |   [1,3]       | [1,4]     | [1,5]      | [1,6]       | [1,7]     | [1,8]     | [1,9]      |
 | [2,1]                      | [2,2]      |   [2,3]       | [2,4]     | [2,5]      | [2,6]       | [2,7]     | [2,8]     | [2,9]      |
 
 Grid table with table directive, default aligned:
@@ -232,7 +230,7 @@ Grid table with table directive, default aligned:
 
   | Header 1                           | Header 2 |
   |------------------------------------|----------|
-  | [1,1]<br>Second paragraph          | [1,2]    |
+  | [1,1]<br>Second line               | [1,2]    |
   | [2,1]                              | [2,2]    |
 ```
 
@@ -243,7 +241,7 @@ Grid table with table directive, right aligned:
 
   | Header 1                           | Header 2 |
   |------------------------------------|----------|
-  | [1,1]<br>Second paragraph          | [1,2]    |
+  | [1,1]<br>Second line               | [1,2]    |
   | [2,1]                              | [2,2]    |
 ```
 
@@ -473,25 +471,24 @@ Keys can be defined at the top of a file, or in a `myst_substitutions` option in
 Ulwazi supports the sphinx-design extension for tabs.
 **Support for the sphinx-tabs extension has been [dropped](https://documentation.ubuntu.com/sphinx-stack/latest/reference/myst-syntax/#tabs).**
 
-
-
 `````{tab-set}
 
 ```{tab-item} Tab 1
 :sync: key1
 
-Content Tab 1
+Content for tab 1
 ```
 
 ```{tab-item} Tab 2
 :sync: key2
 
-Content Tab 2
+Content for tab 2
 ```
 
 ```{tab-item} Tab 3
 :sync: key3
-Content Tab 3
+
+Content for tab 3
 ```
 
 ````{tab-item} Long code
@@ -543,7 +540,14 @@ some term
 ## More useful markup
 
 - ```{versionadded} X.Y
+  ```
 - {abbr}`API (Application Programming Interface)`
+
+## Custom roles
+
+Terms that should not be checked by the spelling checker: {spellexception}`PurposelyWrong`.
+
+Use {literalref}`link text <https://canonical.com>` for a monospaced link.
 
 ## Structured tables of contents
 
@@ -619,8 +623,6 @@ Related links at the top of the page (surrounded by `---`):
 
     relatedlinks: https://github.com/canonical/lxd-sphinx-extensions, [RTFM](https://www.google.com)
     discourse: 12345 -->
-
-<!-- Terms that should not be checked by the spelling checker: {spellexception}`PurposelyWrong` -->
 
 <!-- A single-line terminal view that separates input from output:
 

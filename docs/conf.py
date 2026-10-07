@@ -14,9 +14,8 @@ import yaml
 # A complete list of built-in Sphinx configuration values:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 #
-# Our starter pack uses the custom Canonical Sphinx extension
-# to keep all documentation based on it consistent and on brand:
-# https://github.com/canonical/canonical-sphinx
+# Ulwazi provides Canonical configuration defaults directly; it does not
+# require the canonical-sphinx-config extension.
 
 
 #######################
@@ -110,9 +109,12 @@ github_repo = "https://github.com/canonical/ulwazi"
 repo_default_branch = "main"
 
 # Determine the source branch for GitHub links (view/edit source, license, etc.)
-# On Read the Docs, use the actual git branch/tag being built;
-# fall back to the default branch for local builds.
-source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER", repo_default_branch)
+# On Read the Docs, the Git identifier is a branch only for branch builds;
+# for PR previews it is a number, and tags cannot be edited on GitHub.
+if os.environ.get("READTHEDOCS_VERSION_TYPE") == "branch":
+    source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER") or repo_default_branch
+else:
+    source_branch = repo_default_branch
 
 # TODO: Select the default syntax for docs source files.
 # This is for a fallback view/edit source code buttons.
@@ -185,7 +187,11 @@ html_context = {
     # Valid options: none, prev, next, both
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
-    "display_contributors": False,
+    # Enabled for the extension compatibility tests (sphinx_contributor_listing).
+    "display_contributors": True,
+    # Alias expected by sphinx_contributor_listing (it reads github_folder,
+    # while the rest of the theme uses repo_folder).
+    "github_folder": "/docs/",
     # Required for feedback button
     "feedback": True,
     "github_issues": "enabled",
@@ -264,6 +270,7 @@ sitemap_show_lastmod = True
 
 sitemap_excludes = [
     "404/",
+    "404.html",
 ]
 
 #######################
@@ -288,7 +295,24 @@ templates_path = ["_templates"]
 # NOTE: If undefined, set to None, or empty,
 #       the sphinx_reredirects extension will be disabled.
 
-redirects = {}
+redirects = {
+    "content/extensions-old": "content/tests/extension-compatibility/",
+}
+
+rediraffe_redirects = "redirects.txt"
+rediraffe_dir_only = True
+
+############################
+# sphinx-llm configuration #
+############################
+
+# This description is included in llms.txt to provide some initial context
+# for LLMs reading the generated Markdown artifacts.
+
+llms_txt_description = (
+    "This is the sample documentation for the Ulwazi Sphinx theme, "
+    "which provides Canonical Vanilla Framework styling for Sphinx projects."
+)
 
 
 ###########################
@@ -349,11 +373,32 @@ extensions = [
     "myst_parser",
     "sphinxcontrib.jquery",
     "sphinx_design",
+    # Remaining Sphinx Stack default extensions, enabled for testing:
+    "notfound.extension",
+    "sphinx_reredirects",
+    "sphinx_rerediraffe",
+    "sphinx_config_options",
+    "sphinx_contributor_listing",
+    "sphinx_filtered_toctree",
+    "sphinx_llm.txt",
+    "sphinx_related_links",
+    "sphinx_roles",
+    "sphinx_ubuntu_images",
+    "sphinx_youtube_links",
 ]
 
 # Excludes files or directories from processing
 
-exclude_patterns = ["doc-cheat-sheet*", ".venv*", "_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = [
+    "doc-cheat-sheet*",
+    ".venv*",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    # sphinx-llm pulls in sphinx-markdown-builder, which emits .md artifacts
+    # into the build directory; keep Sphinx from re-reading them as source.
+    "_build/**",
+]
 
 # Adds custom CSS files, located under 'html_static_path'
 
@@ -423,7 +468,18 @@ if os.path.exists("./reuse/substitutions.yaml"):
 
 # Add configuration for intersphinx mapping
 
-intersphinx_mapping = {}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+}
+
+#####################################
+# sphinx-filtered-toctree configuration #
+#####################################
+
+# Tags listed here are filtered out of filtered-toctree entries.
+# Used by the sample on docs/content/tests/extension-compatibility.md
+# to demonstrate that excluded entries are dropped from the output.
+toc_filter_exclude = ["toc-filter-demo"]
 
 # PDF
 

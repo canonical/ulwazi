@@ -11,9 +11,8 @@ import yaml
 # A complete list of built-in Sphinx configuration values:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 #
-# Our starter pack uses the custom Canonical Sphinx extension
-# to keep all documentation based on it consistent and on brand:
-# https://github.com/canonical/canonical-sphinx
+# Ulwazi provides Canonical configuration defaults directly; it does not
+# require the canonical-sphinx-config extension.
 
 
 #######################
@@ -107,9 +106,12 @@ github_repo = "https://github.com/canonical/sphinx-docs-starter-pack"
 repo_default_branch = "main"
 
 # Determine the source branch for GitHub links (view/edit source, license, etc.)
-# On Read the Docs, use the actual git branch/tag being built;
-# fall back to the default branch for local builds.
-source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER", repo_default_branch)
+# On Read the Docs, the Git identifier is a branch only for branch builds;
+# for PR previews it is a number, and tags cannot be edited on GitHub.
+if os.environ.get("READTHEDOCS_VERSION_TYPE") == "branch":
+    source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER") or repo_default_branch
+else:
+    source_branch = repo_default_branch
 
 # TODO: Select the default syntax for docs source files.
 # This is for a fallback view/edit source code buttons.
@@ -134,13 +136,13 @@ html_context = {
     #
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
-    # 
+    #
     # Inherit project name
-    "project": project, 
+    "project": project,
     # Inherit the author value
     "author": author,
     # Licensing information
-    # 
+    #
     # TODO: Change your product's license name and a link to its file.
     # For the name, we recommend using the standard shorthand identifier from
     # https://spdx.org/licenses
@@ -184,31 +186,34 @@ html_context = {
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
     "display_contributors": False,
-
-    # Required for feedback button    
+    # Required for feedback button
     "feedback": True,
     "github_issues": "enabled",
     "default_source_extension": default_source_extension,
-    "default_edit_url": github_repo + "/edit/" + source_branch + "/docs/index" + default_source_extension,
-    "default_view_url": github_repo + "/blob/" + source_branch + "/docs/index" + default_source_extension,
-
+    "default_edit_url": github_repo
+    + "/edit/"
+    + source_branch
+    + "/docs/index"
+    + default_source_extension,
+    "default_view_url": github_repo
+    + "/blob/"
+    + source_branch
+    + "/docs/index"
+    + default_source_extension,
     # Horizontal Nav Menu
     "company": "Canonical",
     # "link1_URL": "https://canonical-starter-pack.readthedocs-hosted.com/",
     # "link1_name": "First optional link",
     # "link2_URL": "https://canonical-starter-pack.readthedocs-hosted.com/",
     # "link2_name": "Second optional link",
-
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
     # "add_product_menu": True,
-    
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "https://documentation.ubuntu.com",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Canonical",
-
     # TODO: Customize the footer.
     "footer": {
         # Whether to add the product name as the first entry.
@@ -218,8 +223,8 @@ html_context = {
         # List your footer entries. Accepts HTML tags.
         "entries": [
             '<a class="js-revoke-cookie-manager" href="#tracker-settings">Manage your tracker settings</a>',
-        ]
-    }
+        ],
+    },
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a
@@ -233,11 +238,10 @@ html_context = {
 # 'source_edit_link': 'https://github.com/canonical/sphinx-docs-starter-pack',
 # }
 
-# Project slug: the path segment of the docs site URL, e.g. "ulwazi" in
-# https://documentation.ubuntu.com/ulwazi/. Used by the Ulwazi theme to
-# compute notfound_urls_prefix for sphinx-notfound-page.
-
-slug = "ulwazi"
+# TODO: Set the path segment for your own project's docs site. For example,
+# "ulwazi" corresponds to https://documentation.ubuntu.com/ulwazi/.
+# Ulwazi uses this to compute the bundled 404 page's URL prefix.
+# slug = "your-product"
 
 # Limit the number of levels for Table of contents
 localtoc_max_depth = 3
@@ -302,10 +306,7 @@ redirects = {}
 #
 # TODO: Remove or adjust the ACME entry after you update the contributing guide
 
-linkcheck_ignore = [
-    "http://127.0.0.1:8000",
-    "https://github.com/canonical/ACME/*"
-    ]
+linkcheck_ignore = ["http://127.0.0.1:8000", "https://github.com/canonical/ACME/*"]
 
 
 # A regex list of URLs where anchors are ignored by 'make linkcheck'
@@ -326,12 +327,7 @@ linkcheck_retries = 3
 # NOTE: By default, the following MyST extensions are enabled:
 #       substitution, deflist, linkify
 
-myst_enable_extensions = {
-    "colon_fence",
-    "deflist",
-    "substitution",
-    "tasklist"
-}
+myst_enable_extensions = {"colon_fence", "deflist", "substitution", "tasklist"}
 
 
 # Custom Sphinx extensions; see
@@ -359,12 +355,7 @@ extensions = [
 
 # Excludes files or directories from processing
 
-exclude_patterns = [
-    "doc-cheat-sheet*",
-    "_build", 
-    "Thumbs.db", 
-    ".DS_Store"
-]
+exclude_patterns = ["doc-cheat-sheet*", "_build", "Thumbs.db", ".DS_Store"]
 
 # Adds custom CSS files, located under 'html_static_path'
 
@@ -378,9 +369,9 @@ exclude_patterns = [
 
 # Syntax highlighting settings
 
-highlight_language = "none" # default
-pygments_style = "autumn" # see https://pygments.org/styles for more
-pygments_dark_style = "github-dark" # see https://pygments.org/styles for more
+highlight_language = "none"  # default
+pygments_style = "autumn"  # see https://pygments.org/styles for more
+pygments_dark_style = "github-dark"  # see https://pygments.org/styles for more
 
 # Specifies a reST snippet to be appended to each .rst file
 

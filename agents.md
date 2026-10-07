@@ -51,9 +51,12 @@ Available tests:
 - **test_features.py**: Checks theme markup (fast) and browser interactions (slow)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_layout_smoke.py**: Checks every built page renders its article inside `main.l-docs__main`, and (in Chromium at 1440px) that no page overflows the viewport and no element spills out of the main column _(browser check is slow)_
 - **test_seo_metadata.py**: Verifies SEO/metadata tags (title, description, canonical, favicon, Open Graph) on built pages
 - **test_structured_toc.py**: Verifies domain/slice markup and ARIA in RST and MyST HTML (fast test); browser styling and LaTeX content from both cheat sheets are grouped into a single slow test _(partially slow)_
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
+- **test_config_robustness.py**: Checks minimal and maximum configurations, defaults, and legacy aliases (fast)
+- **test_extension_compatibility.py**: Verifies the theme renders correctly with Sphinx Stack default extensions enabled (grouped fast checks and a slow PDF check). See `docs/content/tests/extension-compatibility.md`
 
 #### When adding or changing a theme feature
 
