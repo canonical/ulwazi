@@ -45,7 +45,9 @@ def test_rendered_color():
         assert browser, "Failed to launch Chromium browser"
         page = browser.new_page()
         assert page, "Failed to create a new browser page"
-        page.goto(f"file://{index_path}")
+        # External analytics and cookie assets may never finish loading in CI.
+        # The computed style only needs the local HTML and CSS.
+        page.goto(index_path.as_uri(), wait_until="domcontentloaded")
         assert page.content(), "Page failed to load content"
 
         # Check if element exists
@@ -81,7 +83,7 @@ def test_sidebar_active_item_indicator_gap():
         assert browser, "Failed to launch Chromium browser"
         page = browser.new_page()
         assert page, "Failed to create a new browser page"
-        page.goto(f"file://{index_path}")
+        page.goto(index_path.as_uri(), wait_until="domcontentloaded")
         assert page.content(), "Page failed to load content"
 
         active_selector = "a.p-side-navigation__link.is-active"
@@ -149,7 +151,7 @@ def test_ordered_list_marker_matches_text_size():
         assert browser, "Failed to launch Chromium browser"
         page = browser.new_page()
         assert page, "Failed to create a new browser page"
-        page.goto(f"file://{typography_path}")
+        page.goto(typography_path.as_uri(), wait_until="domcontentloaded")
         assert page.content(), "Page failed to load content"
 
         # Check if list element exists
