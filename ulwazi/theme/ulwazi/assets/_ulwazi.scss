@@ -585,6 +585,42 @@ kbd.compound {
     margin-right: 0;
   }
 
+  // Feedback button with orange bg and near-black text for acceptable contrast
+  .p-button--orange {
+    background-color: $color-brand-orange;
+    border-color: $color-brand-orange;
+    color: $color-dark;
+    font-size: $font-size-p;
+    font-weight: bold;
+
+    &:visited {
+      color: $color-dark;
+    }
+
+    &:hover {
+      background-color: adjust-color($color-brand-orange, $lightness: -10%);
+      border-color: adjust-color($color-brand-orange, $lightness: -10%);
+      color: $color-dark;
+    }
+
+    &:active,
+    &[aria-pressed=true],
+    &[aria-selected=true],
+    &[aria-expanded=true] {
+      background-color: adjust-color($color-brand-orange, $lightness: -15%);
+      border-color: adjust-color($color-brand-orange, $lightness: -15%);
+      color: $color-dark;
+      transition-duration: 0s;
+    }
+
+    &:disabled,
+    &.is-disabled {
+      background-color: $color-brand-orange;
+      border-color: $color-brand-orange;
+      color: $color-dark;
+    }
+  }
+
   .edit-this-page,
   .view-source {
     display: inline-flex;

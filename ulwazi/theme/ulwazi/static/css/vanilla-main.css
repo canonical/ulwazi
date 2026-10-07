@@ -14646,6 +14646,32 @@ kbd.compound {
   margin-bottom: 0;
   margin-right: 0;
 }
+.content-icon-container .p-button--orange {
+  background-color: #e95420;
+  border-color: #e95420;
+  color: #111;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+.content-icon-container .p-button--orange:visited {
+  color: #111;
+}
+.content-icon-container .p-button--orange:hover {
+  background-color: rgb(194.7836734694, 64.6367346939, 19.2163265306);
+  border-color: rgb(194.7836734694, 64.6367346939, 19.2163265306);
+  color: #111;
+}
+.content-icon-container .p-button--orange:active, .content-icon-container .p-button--orange[aria-pressed=true], .content-icon-container .p-button--orange[aria-selected=true], .content-icon-container .p-button--orange[aria-expanded=true] {
+  background-color: rgb(171.5734693878, 56.9346938776, 16.9265306122);
+  border-color: rgb(171.5734693878, 56.9346938776, 16.9265306122);
+  color: #111;
+  transition-duration: 0s;
+}
+.content-icon-container .p-button--orange:disabled, .content-icon-container .p-button--orange.is-disabled {
+  background-color: #e95420;
+  border-color: #e95420;
+  color: #111;
+}
 .content-icon-container .edit-this-page,
 .content-icon-container .view-source {
   display: inline-flex;
