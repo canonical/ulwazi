@@ -297,12 +297,12 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   404 page). Explicit `notfound_urls_prefix` and `notfound_template` settings
   in conf.py or `-D` also take precedence over the theme defaults. When the
   theme is selected only via `html_theme`, Sphinx loads it after
-  `config-inited`; the theme sets up these 404 defaults during late loading
-  too, but other Ulwazi config-inited features still require `"ulwazi"` in
-  `extensions`. `tests/test_notfound_bundling.py` keeps the shared activation,
-  ordering, theme-only, and opt-out build scenarios in a documented
-  `ACTIVATION_CASES` table; separate tests cover RTD prefixes and explicit
-  settings. `tests/test_notfound_prefix.py` tests the prefix helper directly.
+   `config-inited`; the theme sets up these 404 defaults during late loading
+   too, but other Ulwazi config-inited features still require `"ulwazi"` in
+   `extensions`. `tests/test_notfound_bundling.py` keeps activation, ordering,
+   and theme-only build scenarios in a documented `ACTIVATION_CASES` table;
+   separate tests cover opt-out, RTD prefixes, and explicit settings.
+   `tests/test_notfound_prefix.py` tests the prefix helper directly.
 - **notfound prefix schema detection**: `_notfound_urls_prefix` detects the
   URL schema from the _path_ of `READTHEDOCS_CANONICAL_URL` — the version
   segment is the last path segment, the language segment the one before it,

@@ -5,10 +5,10 @@ The theme activates ``sphinx-notfound-page`` automatically via
 also list ``notfound.extension`` in ``extensions`` are unaffected), and
 provides an opt-out via the ``notfound_enabled`` config value.
 
-The ``ACTIVATION_CASES`` table covers normal activation, extension ordering,
-theme-only entry-point loading, and opt-out. Each case has a descriptive ID
-and a nearby comment explaining why it matters. Separate tests cover RTD
-prefixes, command-line opt-out, and project-supplied overrides.
+The ``ACTIVATION_CASES`` table covers automatic and explicit activation,
+extension ordering, and theme-only entry-point loading. Each case has a
+descriptive ID and a nearby comment explaining why it matters. Separate
+tests cover opt-out, RTD prefixes, and project-supplied overrides.
 
 Each build uses a tiny throwaway source directory under ``tmp_path`` so the
 developer's environment and the sample docs are never touched.
@@ -100,10 +100,6 @@ ACTIVATION_CASES = [
     # Selecting only html_theme loads Ulwazi after config-inited; the 404
     # integration must still get its defaults at this later entry point.
     pytest.param([], "", "404.html", "", id="theme-only"),
-    # The flag must prevent automatic activation when Ulwazi is an extension.
-    pytest.param(["ulwazi"], "notfound_enabled = False", None, None, id="opt-out"),
-    # The same flag must work when Ulwazi is selected only through html_theme.
-    pytest.param([], "notfound_enabled = False", None, None, id="theme-only-opt-out"),
     # An explicit notfound entry remains active when Ulwazi's integration is
     # disabled; it retains the extension's own template and prefix defaults.
     pytest.param(
@@ -125,21 +121,32 @@ def test_notfound_activation(
     monkeypatch: pytest.MonkeyPatch,
     extensions: list[str],
     extra_config: str,
-    expected_template: str | None,
-    expected_prefix: str | None,
+    expected_template: str,
+    expected_prefix: str,
 ) -> None:
-    """Build each adoption scenario and check the resulting 404 integration."""
+    """Active extensions generate a 404 page with the expected defaults."""
     monkeypatch.delenv("READTHEDOCS_CANONICAL_URL", raising=False)
     app, outdir = _build(tmp_path, extensions=extensions, extra_config=extra_config)
     page = _page_404(outdir)
-    assert ("notfound.extension" in app.extensions) == (expected_template is not None)
-    assert page.exists() == (expected_template is not None)
-    if expected_template is not None:
-        assert app.config.notfound_template == expected_template
-        assert app.config.notfound_urls_prefix == expected_prefix
-        assert ("404.svg" in page.read_text(encoding="utf-8")) == (
-            expected_template == "404.html"
-        )
+    assert "notfound.extension" in app.extensions
+    assert page.exists()
+    assert app.config.notfound_template == expected_template
+    assert app.config.notfound_urls_prefix == expected_prefix
+    assert ("404.svg" in page.read_text(encoding="utf-8")) == (
+        expected_template == "404.html"
+    )
+
+
+@pytest.mark.parametrize(
+    "extensions", [["ulwazi"], []], ids=["extension", "theme-only"]
+)
+def test_notfound_opt_out(tmp_path: Path, extensions: list[str]) -> None:
+    """Opting out prevents automatic activation via either Ulwazi entry point."""
+    app, outdir = _build(
+        tmp_path, extensions=extensions, extra_config="notfound_enabled = False"
+    )
+    assert "notfound.extension" not in app.extensions
+    assert not _page_404(outdir).exists()
 
 
 def test_theme_entry_point_rtd_prefix(
