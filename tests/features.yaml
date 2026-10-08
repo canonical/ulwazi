@@ -73,6 +73,10 @@ site:
     source: docs/_build index, contribute and tests/seo-metadata pages
     checks:
       - tests/test_seo_metadata.py::test_seo_metadata
+  - name: WCAG AA colour contrast in light and dark themes
+    source: docs/content/myst-cheat-sheet.md axe-core color-contrast scan in Chromium
+    checks:
+      - tests/test_accessibility.py::test_color_contrast_meets_wcag_aa
   - name: SCSS propagation
     source: docs/index.md heading-test-scss fixture (markup and computed colour)
     checks:

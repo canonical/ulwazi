@@ -22,6 +22,9 @@ not every check proposed there is implemented yet.
 - {doc}`Theme features <features>` (`tests/test_features.py`, **fast and
 	slow**) checks generated markup and browser interactions, including tabs,
 	dark mode, and search.
+- **Accessibility** (`tests/test_accessibility.py`, **fast**) scans the MyST
+	cheat sheet in Chromium, in both light and dark themes, for axe-core
+	WCAG AA colour contrast violations.
 - **Configuration robustness** (`tests/test_config_robustness.py`, **fast**)
 	groups minimal builds, local TOC depth defaults and overrides, and feedback
 	links with omitted or deprecated repository settings into one reported test.

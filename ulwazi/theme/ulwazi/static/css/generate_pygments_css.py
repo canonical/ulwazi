@@ -34,8 +34,8 @@ from pygments.formatters.html import HtmlFormatter
 
 # (output file name, Pygments style name, theme class to scope under)
 STYLES: list[tuple[str, str, str]] = [
-    ("pygments-light.css", "autumn", "body.is-light"),
-    ("pygments-dark.css", "github-dark", "body.is-dark"),
+    ("pygments-light.css", "xcode", "body.is-light"),
+    ("pygments-dark.css", "native", "body.is-dark"),
 ]
 
 # Rules that set an opaque background on the code-block surface. The theme
