@@ -54,8 +54,10 @@ the other slow tests. To select only these cases without Make's older
 `uv run --group docs pytest -m 'not slow' tests/test_features.py` or
 `uv run --group docs pytest -m slow tests/test_features.py`.
 
-Each tier contributes **one pytest result** for this module. The passing
-recap names the pair explicitly:
+Each tier contributes **one pytest result** for this module. By default, the
+terminal shows a single category line with separate tier statuses shared with
+other feature tests. Run with
+`-vv` to see the individual passing cases:
 
 ```text
 PASSED tests/test_features.py::test_features_fast

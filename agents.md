@@ -58,6 +58,31 @@ Available tests:
 - **test_config_robustness.py**: Checks minimal and maximum configurations, defaults, and legacy aliases (fast)
 - **test_extension_compatibility.py**: Verifies the theme renders correctly with Sphinx Stack default extensions enabled (grouped fast checks and a slow PDF check). See `docs/content/tests/extension-compatibility.md`
 
+#### Test category reporting when adding tests
+
+When adding tests:
+
+1. Prefer an existing `tests/test_*.py` module for the same behavior. For a
+   new file, choose its **primary** category from
+   `docs/content/testing-strategy.md` and add `"test_new.py": "4 Features and
+   regressions"` (for example) to `TEST_CATEGORIES` in `tests/conftest.py`.
+   Coverage/reporting tests belong to `Test infrastructure`. Use
+   `SLOW_CATEGORY_OVERRIDES` only if a file's slow tests need a *different*
+   category (see `test_layout_smoke.py`). An unmapped test still runs and
+   prints its full pytest ID/result rather than disappearing in a total.
+2. Fast is the default; mark PDF, browser, network, or otherwise expensive
+   cases `@pytest.mark.slow`. Preserve distinct tests, parameter IDs, and
+   fixture isolation—grouping changes output only. For feature checks, also
+   follow the `tests/features.yaml` instructions below; category mapping
+   does **not** grant feature coverage.
+3. Update `docs/content/tests/index.md` when adding a suite. Run `make test`,
+   relevant slow tests, and `make test-coverage` for feature mappings. Check
+   that the recap shows the right category/tier and failures retain pytest
+   IDs. Change `tests/test_test_reporting.py` if changing the reporter itself.
+
+See the [test output convention](docs/content/tests/index.md#test-output-convention)
+for the compact recap and `uv run pytest -vv` for per-test results.
+
 #### When adding or changing a theme feature
 
 1. Update representative fixtures in `docs/content/myst-cheat-sheet.md` and
@@ -76,9 +101,9 @@ Available tests:
 4. Ensure mapped tests run in `make test-coverage`: fast tests are selected;
    slow tests need an explicit coverage marker **and** inclusion in the
    `Makefile` marker expression. Run `make test-coverage` and check the final
-   summary and `results/feature-coverage.json`: a new entry adds **one to
-   total**, and **one to checked** only when every mapped test is selected
-   and passes. Run `make lint` and rebuild the docs after changing fixtures.
+   summary and `results/feature-coverage.json`; all mapped tests must be
+   selected and pass. Run `make lint` and rebuild the docs after changing
+   fixtures.
 
 See `docs/content/tests/coverage.md` for scope and limitations of all three
 coverage metrics; do not confuse the curated feature percentage with Python

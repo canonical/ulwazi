@@ -24,8 +24,9 @@ so theme hooks are included in test coverage. Run it with `make test` or,
 without the Makefile's legacy build step, with
 `uv run --group docs pytest tests/test_smoke.py`.
 
-The normal pytest recap identifies the passing case as
-`PASSED tests/test_smoke.py::test_smoke_fast`. On failure, the same case
+The category recap identifies a passing smoke case as
+`2 Smoke: fast PASSED (1/1 passed)`; use `-vv` to see its pytest ID.
+On failure, the same case
 lists each broken contract beneath its category and tier, for example:
 
 ```text

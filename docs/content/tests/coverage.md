@@ -98,34 +98,28 @@ review its manifest mapping; avoid mapping a feature merely because it
 appears in a fixture page. Results for this run are stored in
 `results/feature-coverage.json`.
 
-## Add a theme feature to the coverage manifest
+## Map a theme feature to coverage
 
-1. Add a small example to `docs/content/myst-cheat-sheet.md` and
-  `docs/content/rst-cheat-sheet.rst` when the feature has equivalent markup.
-  Keep the two cheat sheets in sync. If an improtant feature does not
-  fit a cheat sheet, you can use a dedicated sample page.
-2. Add a test that **asserts the rendered result or user interaction** in
-  `tests/test_features.py` or another relevant test module. Merely building
-  the page or loading a script is not proof that its behavior works. For a
-  grouped test, add an explicit assertion for the new feature.
-3. Add one narrowly named entry under `markup` or `site` in
-  `tests/features.yaml`. Set `source` to the fixture being checked. Under
-  `checks`, list the full pytest test IDs that assert it, such as
-  `tests/test_features.py::test_features_fast`. If separate tests check
-  markup and browser behavior, list **both** IDs; they must both pass. If no
-  qualifying test yet, use `checks: []` instead of claiming coverage.
-4. Run `make test-coverage` and read its **final summary** and
-  `results/feature-coverage.json`. A new entry increases the **total** by
-  one; the **checked** count also increases by one only if all listed tests
-  are selected by this command and pass. An empty `checks` list, a failing
-  test, or an excluded slow test leaves it unverified. To include a relevant
-  slow test, register a coverage marker in `pyproject.toml`, apply it to the
-  test, and add it to the `Makefile` marker expression; `slow` alone does not
-  select it.
+First add the test and its **reporting category/fast-or-slow tier** using the
+{ref}`test-addition checklist <test-addition-checklist>`. The reporting
+category does not affect feature coverage; the slow marker *does* affect
+whether `make test-coverage` selects the test. Then:
 
-For a change to an **existing** feature, update its example, assertions, and
-manifest entry rather than adding a duplicate just to raise the count. Keep
-the entry name and `source` limited to what the tests actually check.
+1. Add an example in both `docs/content/myst-cheat-sheet.md` and
+   `docs/content/rst-cheat-sheet.rst` when equivalent syntax exists. Use a
+   dedicated sample page for site-level features.
+2. Assert the **rendered result or interaction** in a relevant test. A build
+   or script load alone is not an assertion of behavior.
+3. In `tests/features.yaml`, add or update **one** narrowly named `markup` or
+   `site` entry. Set `source` to the fixture and `checks` to *every* pytest
+   node ID required (for example,
+   `tests/test_features.py::test_features_fast`). Use `checks: []` if there
+   is no qualifying assertion. Do not duplicate an existing feature entry.
+4. Run `make test-coverage`; check its final summary and
+   `results/feature-coverage.json`. The entry counts as checked only when
+   **all** listed tests are selected and pass. Fast tests are selected by
+   default; slow tests need a coverage marker in `pyproject.toml`, that marker
+   on the test, **and** inclusion in the `Makefile` marker expression.
 
 ## Reading the final summary
 

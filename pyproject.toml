@@ -145,8 +145,9 @@ markers = [
     "coverage_js: browser journey used for JS coverage",
     "coverage_style: computed SCSS colour check included in coverage run",
 ]
-# Show each test's result, but only repeat failures and errors in the summary.
-addopts = "-v --tb=short -rfE"
+# The category/tier recap in tests/conftest.py replaces per-test progress.
+# Pass -vv to see individual test results when debugging.
+addopts = "-q --tb=short -rfE"
 
 [tool.coverage.run]
 branch = true

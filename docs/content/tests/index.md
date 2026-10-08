@@ -45,7 +45,12 @@ not every check proposed there is implemented yet.
       (`tests/test_extension_compatibility.py`, **fast and slow**) checks that
       the theme renders correctly with every Sphinx Stack default extension
       enabled, plus the PDF build.
-link in the site; it does not replace Sphinx's build warnings.
+- **Bundled 404 integration** (`tests/test_notfound_bundling.py` and
+  `tests/test_notfound_prefix.py`, **fast**) checks automatic extension
+  activation, opt-outs, 404 output, and Read the Docs URL prefixes.
+- **Test infrastructure** (`tests/test_coverage_metrics.py` and
+  `tests/test_test_reporting.py`, **fast**) checks the coverage calculations
+  and the accuracy of the category/tier recap.
 
 ## Running the tests
 
@@ -54,8 +59,33 @@ link in the site; it does not replace Sphinx's build warnings.
 	these need additional dependencies.
 - `make test-all` runs both tiers.
 - `make test-python-versions` runs the Python version checks in parallel.
-- `make test-coverage` runs fast tests plus the slow browser feature journey;
-	see {doc}`test coverage <coverage>` for its three metrics and limitations.
+- `make test-coverage` runs fast tests plus the slow browser feature journey
+	and the computed-colour check; see {doc}`test coverage <coverage>` for its
+	three metrics and limitations.
+
+(test-addition-checklist)=
+## Add a test
+
+1. Add a `test_*` function in the relevant `tests/test_*.py` file, or create a
+	new file. Keep parametrized cases independent; do not merge them for output.
+2. Choose its **primary reporting category** from {doc}`../testing-strategy`.
+	For a new file, map its filename in `TEST_CATEGORIES` in
+	`tests/conftest.py` (for example, `"test_new_feature.py": "4 Features and
+	regressions"`). Use `"Test infrastructure"` for coverage/reporter tests.
+	If a file's slow tests belong to a *different* category, add its filename
+	to `SLOW_CATEGORY_OVERRIDES`; otherwise one file mapping covers both tiers.
+3. Leave quick tests unmarked (**fast**). Add `@pytest.mark.slow` for PDF,
+	browser, network, or otherwise expensive tests. `make test` selects fast;
+	`make test-slow` and `make test-all` include slow tests. If a new check
+	verifies a theme feature, follow {doc}`coverage` to map its exact pytest
+	ID in `tests/features.yaml` (separate from the reporting category).
+4. Run `make test` and, for slow tests,
+	`uv run pytest -m slow tests/test_new_feature.py`. Run `make test-coverage`
+	if you changed a feature mapping. Confirm the expected category and tier
+	in the recap; update this page's inventory when adding a suite.
+
+Mapping is optional for execution: a new, unmapped file still runs, and every
+selected case appears by full pytest ID and result, including parameter IDs.
 
 ### Shared test setup
 
@@ -82,27 +112,22 @@ Test coverage <coverage>
 (test-output-convention)=
 ## Test output convention
 
-Tests are grouped so that their pytest output stays minimal when everything
-passes, but pinpoints every problem when something fails:
-
-- **When green:** all checks of a test run inside a single pytest test case,
-  so a passing run reports one `PASSED` line per test. A test file with both
-  a fast and a slow test reports one line per tier it runs in (two lines in
-  `make test-all`).
-- **When red:** the test collects every failed check it can safely run --
-  across all checked pages and parts -- and lists them all in one failure
-  message, each tagged by page and checked part. A failure on one page or
-  part does not hide problems found elsewhere.
-
-For example, a failing structured-TOC run reports which of the RST or MyST
-fixture pages broke and which check failed on it:
+The default recap shows one line per selected category, with separate results
+for the fast and/or slow tiers, plus a line for test infrastructure:
 
 ```text
-structured-TOC slow checks failed:
-  - [rst] slice items are not rendered inline (y positions: [11031, 11051])
-  - [rst] domain-aria-target span not found
+4 Features and regressions: fast PASSED (7/7 passed) · slow PASSED (4/4 passed)
 ```
 
-The exception is tests that are parametrized on purpose, such as the
-{ref}`Python version tests <python-version-tests>`, where each parameter
-value is an independently reported result.
+`PASSED` requires every selected case in that tier to pass. Failures, fixture
+errors, skips, and unfinished cases show `FAILED` or `INCOMPLETE`; pytest still
+prints the exact failing ID and traceback. Unmapped cases print their IDs in
+the recap instead of a category total. The run also shows `Running N selected
+tests...` and pytest progress dots/percentage (xdist shows worker startup).
+Progress advances when a test finishes. For individual `PASSED` lines use
+`uv run pytest -vv` (or `PYTEST_ADDOPTS=-vv` with Make).
+
+Only selected tiers/categories appear. Code quality (category 8) runs via
+`make lint`; existing accessibility checks (category 9) are included in other
+tests. Grouping changes *only the output*, not pytest IDs, fixtures,
+parametrization, or the {ref}`Python-version tests <python-version-tests>`.
