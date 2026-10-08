@@ -166,15 +166,15 @@ browsers.
 These tests use Playwright to load the built site in a real browser and check
 layout, computed styles, and interactive behaviour.
 
-The tests use the following screen classes. The width ranges follow the
-breakpoints at which the theme's layout changes, and each class is tested at
-one representative width.
+These broad screen classes follow the main Vanilla layout breakpoints. Each
+required class has one representative test width; the large-desktop width is
+an optional goal. Component-specific breakpoints are not all covered.
 
 | Screen class  | Width range    | Tested at | Required |
 | ------------- | -------------- | --------- | -------- |
 | Mobile        | below 620 px   | 375 px    | Yes      |
 | Tablet        | 620 to 1035 px | 768 px    | Yes      |
-| Desktop       | 1036 px and up | 1280 px   | Yes      |
+| Desktop       | 1036 to 1680 px | 1280 px  | Yes      |
 | Large desktop | 1681 px and up | 1920 px   | Optional |
 
 What to check:

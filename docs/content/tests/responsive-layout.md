@@ -6,6 +6,17 @@ cases use Playwright with Chromium and the **pre-built sample home page** at
 `docs/_build/index.html`. The two small-screen tests each run at 375px
 (mobile) and 768px (tablet); the desktop test runs at 1280px.
 
+## Screen classes
+
+The {doc}`testing strategy <../testing-strategy>` defines the broad mobile,
+tablet, desktop and optional large-desktop width ranges. This suite samples
+only 375px, 768px and 1280px. It does **not** test the optional 1920px width
+or the boundaries between classes. The ranges are not an exhaustive list of
+component breakpoints: for example, the side drawer changes maximum width
+at 460px, and Ulwazi's custom full-width grid starts at
+`calc(1036px + 15rem)` (1276px at a 16px root font size). Neither transition
+is tested at its boundary here.
+
 ## What is checked
 
 | Test case | Viewport | Checks |
