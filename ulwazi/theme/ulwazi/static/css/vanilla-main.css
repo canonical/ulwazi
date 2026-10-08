@@ -14575,7 +14575,7 @@ div.terminal > div.input > button.copybtn svg {
 }
 
 .p-search-box .p-search-box__button {
-  background-color: #e95420 !important;
+  background-color: #c13f0b !important;
   border-left: none !important;
   height: calc(2rem - 1.5px) !important;
   margin: 0 0 1.5px 0 !important;
@@ -14587,7 +14587,7 @@ div.terminal > div.input > button.copybtn svg {
   filter: brightness(0) invert(1);
 }
 .p-search-box .p-search-box__button:hover {
-  background-color: var(--ulwazi-color-brand-hover) !important;
+  background-color: #b73500 !important;
 }
 
 .p-search-box__input {
@@ -14647,30 +14647,30 @@ kbd.compound {
   margin-right: 0;
 }
 .content-icon-container .p-button--orange {
-  background-color: #e95420;
-  border-color: #e95420;
-  color: #111;
+  background-color: #c13f0b;
+  border-color: #c13f0b;
+  color: #fff;
   font-size: 0.875rem;
   font-weight: bold;
 }
 .content-icon-container .p-button--orange:visited {
-  color: #111;
+  color: #fff;
 }
 .content-icon-container .p-button--orange:hover {
-  background-color: rgb(194.7836734694, 64.6367346939, 19.2163265306);
-  border-color: rgb(194.7836734694, 64.6367346939, 19.2163265306);
-  color: #111;
+  background-color: #b73500;
+  border-color: #b73500;
+  color: #fff;
 }
 .content-icon-container .p-button--orange:active, .content-icon-container .p-button--orange[aria-pressed=true], .content-icon-container .p-button--orange[aria-selected=true], .content-icon-container .p-button--orange[aria-expanded=true] {
-  background-color: rgb(171.5734693878, 56.9346938776, 16.9265306122);
-  border-color: rgb(171.5734693878, 56.9346938776, 16.9265306122);
-  color: #111;
+  background-color: #b73500;
+  border-color: #b73500;
+  color: #fff;
   transition-duration: 0s;
 }
 .content-icon-container .p-button--orange:disabled, .content-icon-container .p-button--orange.is-disabled {
-  background-color: #e95420;
-  border-color: #e95420;
-  color: #111;
+  background-color: #c13f0b;
+  border-color: #c13f0b;
+  color: #fff;
 }
 .content-icon-container .edit-this-page,
 .content-icon-container .view-source {

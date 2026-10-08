@@ -11,6 +11,13 @@
 //   font-size: 16px;
 // }
 
+// Darker accent orange used on brand call-to-action buttons (feedback,
+// search) instead of $color-brand-orange: white text/icons against it hold
+// WCAG AA text contrast (5.27:1 normal, 5.96:1 hover), not just the lower
+// 3:1 non-text threshold that $color-brand-orange only just cleared.
+$color-accent-orange: #c13f0b;
+$color-accent-orange-hover: #b73500;
+
 :root {
   // Canonical brand orange (Ubuntu orange)
   --ulwazi-color-brand: #{$color-brand-orange};
@@ -508,7 +515,9 @@ div.terminal > div.input > button.copybtn svg {
 }
 
 .p-search-box .p-search-box__button {
-  background-color: $color-brand-orange !important;
+  // Matches the feedback button's darker accent for visual consistency,
+  // though the icon-only button only needs the lower 3:1 non-text ratio.
+  background-color: $color-accent-orange !important;
   border-left: none !important;
   height: calc(2rem - 1.5px) !important;
   margin: 0 0 1.5px 0 !important;
@@ -520,7 +529,7 @@ div.terminal > div.input > button.copybtn svg {
   }
 
   &:hover {
-    background-color: var(--ulwazi-color-brand-hover) !important;
+    background-color: $color-accent-orange-hover !important;
   }
 }
 
@@ -585,39 +594,42 @@ kbd.compound {
     margin-right: 0;
   }
 
-  // Feedback button with orange bg and near-black text for acceptable contrast
+  // Feedback button: darker orange with white text for WCAG AA contrast
+  // (5.27:1 normal, 5.96:1 hover/active against #ffffff). Same in both
+  // light and dark themes -- the shade is dark enough to hold contrast
+  // against either background, so no theme-scoped overrides are needed.
   .p-button--orange {
-    background-color: $color-brand-orange;
-    border-color: $color-brand-orange;
-    color: $color-dark;
+    background-color: $color-accent-orange;
+    border-color: $color-accent-orange;
+    color: $color-x-light;
     font-size: $font-size-p;
     font-weight: bold;
 
     &:visited {
-      color: $color-dark;
+      color: $color-x-light;
     }
 
     &:hover {
-      background-color: adjust-color($color-brand-orange, $lightness: -10%);
-      border-color: adjust-color($color-brand-orange, $lightness: -10%);
-      color: $color-dark;
+      background-color: $color-accent-orange-hover;
+      border-color: $color-accent-orange-hover;
+      color: $color-x-light;
     }
 
     &:active,
     &[aria-pressed=true],
     &[aria-selected=true],
     &[aria-expanded=true] {
-      background-color: adjust-color($color-brand-orange, $lightness: -15%);
-      border-color: adjust-color($color-brand-orange, $lightness: -15%);
-      color: $color-dark;
+      background-color: $color-accent-orange-hover;
+      border-color: $color-accent-orange-hover;
+      color: $color-x-light;
       transition-duration: 0s;
     }
 
     &:disabled,
     &.is-disabled {
-      background-color: $color-brand-orange;
-      border-color: $color-brand-orange;
-      color: $color-dark;
+      background-color: $color-accent-orange;
+      border-color: $color-accent-orange;
+      color: $color-x-light;
     }
   }
 
