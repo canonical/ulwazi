@@ -98,7 +98,10 @@ def test_color_contrast_meets_wcag_aa():
         for page_name, path in PAGES.items():
             for theme, needs_toggle in THEMES.items():
                 page = browser.new_page()
-                page.goto(f"file://{path.resolve()}")
+                # Remote analytics and cookie assets can stall the full load
+                # event; local styles are ready by DOMContentLoaded, and the
+                # theme-settle pause below covers the subsequent transition.
+                page.goto(path.resolve().as_uri(), wait_until="domcontentloaded")
                 if needs_toggle:
                     page.click(".theme-toggle")
                 page.wait_for_timeout(THEME_SETTLE_SECONDS * 1000)

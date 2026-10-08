@@ -88,6 +88,9 @@ jobs:
           # file:// load event can hang on external assets even when its HTML
           # and CSS are ready; the PR's DOM-ready check avoids that timeout.
           cp tests/test_scss_propagation.py "$RUNNER_TEMP/coverage-base/tests/test_scss_propagation.py"
+          # Keep the contrast browser harness identical too: the base still
+          # waits for the full load event and can time out on remote assets.
+          cp tests/test_accessibility.py "$RUNNER_TEMP/coverage-base/tests/test_accessibility.py"
           cd "$RUNNER_TEMP/coverage-base" || exit 1
           make vanilla-main
           make test-coverage
