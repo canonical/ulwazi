@@ -2,7 +2,14 @@ __pycache__/
 ulwazi.egg-info/
 dist/
 .venv/
+.tox/
 docs/_build
 node_modules/
-*.lock
 /.vscode
+.*_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+results/
+**/_version.py

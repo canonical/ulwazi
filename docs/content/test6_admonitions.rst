@@ -37,3 +37,20 @@ such there is no one to one mapping. Below shows each of the admonitions and how
 
     Generic admonitions map to information notifications.
     NOTE: currently requires a blank line between title and text
+
+.. important::
+    If any of your slices' paths are architecture-specific, you must add the
+    ``arch`` field. For
+    `example <https://github.com/canonical/chisel-releases/blob/main/slices/libc6.yaml#L29>`_:
+
+    ..
+
+        ``/usr/lib/*-linux-*/libmvec.so.*: {arch: [amd64, arm64]}``
+
+.. important::
+    An admonition ending with a code block must not show a trailing blank
+    line inside the box (the code block's own bottom margin is reset).
+
+    .. code-block:: python
+
+        print("last element in the notification")

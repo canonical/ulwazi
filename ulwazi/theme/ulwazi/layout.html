@@ -13,12 +13,21 @@
 
   {% endblock head_meta -%}
 
-  <title>{% block head_title %}{{ title|striptags|e }}{% endblock head_title %}</title>
+  {%- if not embedded and docstitle %}
+    {%- set titlesuffix = " &#8212; "|safe + docstitle|e %}
+  {%- else %}
+    {%- set titlesuffix = "" %}
+  {%- endif %}
+
+  <title>{% block head_title %}{{ title|striptags|e }}{{ titlesuffix }}{% endblock head_title %}</title>
 
   {%- block head_links -%}
 
-  {% if favicon -%}
-    <link rel="shortcut icon" href="{{ pathto('_static/' + favicon, 1)|e }}"/>
+  {% if favicon_url -%}
+    <link rel="shortcut icon" href="{{ favicon_url|e }}"/>
+  {%- endif -%}
+  {% if pageurl -%}
+    <link rel="canonical" href="{{ pageurl|e }}" />
   {%- endif -%}
   {% if hasdoc('about') -%}
     <link rel="author" title="{{ _('About these documents') }}" href="{{ pathto('about') }}" />

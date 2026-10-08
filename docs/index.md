@@ -2,37 +2,45 @@
 
 This site previews the Ulwazi Sphinx theme:
 a Vanilla Framework-based theme built for Canonical’s
-[Starter Pack](https://github.com/canonical/starter-pack).
+[Sphinx stack](https://github.com/canonical/sphinx-stack).
 
 - Want to help? See {doc}`content/contribute`.
-- Want to use it? Start with {doc}`content/use`.
+- Want to use it? Start with [Use Ulwazi in your documentation](https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/).
+- Want the full list of settings and their defaults? See {doc}`content/configuration`.
 
 ## Build and test locally
 
 The included Makefile builds the theme and a sample documentation set so you can inspect
 changes quickly.
 
-To build and serve the sample documentation:
+To build the sample documentation:
+
+```shell
+make docs
+```
+
+To build the sample documentation in an interactive preview, run:
 
 ```shell
 make run
 ```
 
-This sets up a virtual environment, installs dependencies, builds the theme, builds the documentation,
-and serves it locally. Content edits rebuild automatically; theme edits usually require
-a full rebuild:
+This uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, builds the documentation,
+and serves it locally. Content and theme edits rebuild automatically; SCSS changes
+are compiled before the rebuild. See {doc}`content/preview-workflow` for details.
+If you change dependencies or need to reset a stale build, use:
 
 ```shell
 make rebuild
 ```
 
-The `make rebuild` command runs `make clean` before `make run`.
+The `make rebuild` command runs `make clean` before `make docs`.
 
-If you change dependencies (for example, if you add a new Sphinx extension to
-`docs/requirements.txt`), you should rebuild the virtual environment:
+If you change dependencies (for example, if you add a new package to
+`pyproject.toml`), you should rebuild the virtual environment:
 
 ```shell
-make fclean
+make clean
 ```
 
 ## Contribute
@@ -66,9 +74,19 @@ This is a test about SCSS propagation.
 
 ```{toctree}
 :hidden:
-
+:caption: Sample content
 Home <self>
 content/test
+content/rst-cheat-sheet.rst
+content/myst-cheat-sheet.md
+```
+
+```{toctree}
+:hidden:
+:caption: Ulwazi documentation
+content/configuration
 content/contribute
-content/use
+content/preview-workflow
+content/tests/index
+Use Ulwazi in your documentation <https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/>
 ```

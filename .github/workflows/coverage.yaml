@@ -1,0 +1,100 @@
+name: Coverage
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    name: Measure coverage
+    runs-on: ubuntu-latest
+    outputs:
+      title: ${{ steps.report.outputs.title }}
+      schema: ${{ steps.report.outputs.schema }}
+      artifact: ${{ steps.identify.outputs.artifact }}
+    steps:
+      - name: Check out PR code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Identify artifact
+        id: identify
+        run: echo "artifact=coverage-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+
+      - name: Compile theme CSS
+        run: make vanilla-main
+
+      - name: Run selected tests and collect coverage
+        run: make test-coverage
+
+      - name: Report PR percentages
+        id: report
+        run: |
+          uv run python tests/pr_coverage.py \
+            --current "$GITHUB_WORKSPACE" \
+            --summary "$GITHUB_STEP_SUMMARY" \
+            --output "$GITHUB_OUTPUT"
+
+      - name: Upload coverage data for comparison
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ${{ steps.identify.outputs.artifact }}
+          path: results/
+          if-no-files-found: error
+
+  compare:
+    name: ${{ needs.measure.outputs.title || 'Compare coverage' }}
+    needs: measure
+    if: github.event_name == 'pull_request' && needs.measure.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Download PR coverage data
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ${{ needs.measure.outputs.artifact }}
+          path: results
+
+      - name: Check for compatible baseline
+        id: baseline
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          METRIC_SCHEMA: ${{ needs.measure.outputs.schema }}
+        run: |
+          if git show "$BASE_SHA:tests/coverage_summary.py" > "$RUNNER_TEMP/base-summary.py" 2>/dev/null \
+            && grep -Fq "METRIC_SCHEMA = \"$METRIC_SCHEMA\"" "$RUNNER_TEMP/base-summary.py"; then
+            echo 'available=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'available=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build comparable base report
+        if: steps.baseline.outputs.available == 'true'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/coverage-base" "$BASE_SHA"
+          cd "$RUNNER_TEMP/coverage-base" || exit 1
+          make vanilla-main
+          make test-coverage
+
+      - name: Compare and publish PR coverage
+        env:
+          BASE_AVAILABLE: ${{ steps.baseline.outputs.available }}
+        run: |
+          args=(--current "$GITHUB_WORKSPACE" \
+                --summary "$GITHUB_STEP_SUMMARY" --output "$GITHUB_OUTPUT")
+          if [[ "$BASE_AVAILABLE" == true ]]; then
+            args+=(--baseline "$RUNNER_TEMP/coverage-base")
+          fi
+          python3 tests/pr_coverage.py "${args[@]}"

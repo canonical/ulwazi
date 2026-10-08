@@ -17,14 +17,14 @@ ReStructuredText cheat sheet
 This file contains the syntax for commonly used reST markup.
 Open it in your text editor to quickly copy and paste the markup you need.
 
-.. See the :ref:`reStructuredText style guide <style-guide>` for detailed information and conventions.
+See the `reStructuredText syntax reference <https://documentation.ubuntu.com/sphinx-stack/latest/reference/rst-syntax/>`_ for detailed information and conventions.
 
 Also see the `Sphinx reStructuredText Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_ for more details on reST, and the `Canonical Documentation Style Guide <https://docs.ubuntu.com/styleguide/en>`_ for general style conventions.
 
 H2 heading
 ----------
 
-:h2:`H2 heading without TOC entry`
+:h2:`H2 heading without TOC entry (reST-specific)`
 
 H3 heading
 ~~~~~~~~~~
@@ -60,7 +60,7 @@ Start a code block::
      code:
        - example: true
 
-.. code-block:: yaml
+.. code-block:: text
 
      # Demonstrate a code block
      code:
@@ -149,7 +149,7 @@ Terminal blocks are useful when specific emphasis is needed, such as the user na
   :host: vm
 
   make run
-  
+
   [sphinx-autobuild] Starting initial build
   [sphinx-autobuild] > python -m sphinx build -b dirhtml . _build -c . -d .sphinx/.doctrees -j auto
   build succeeded.
@@ -165,7 +165,7 @@ Links
 
 - `Canonical website <https://canonical.com/>`_
 - `Canonical website`_ (defined in ``reuse/links.txt`` or at the bottom of the page)
-- https:\ //canonical.com/
+- https://canonical.com/
 - :ref:`a_section_target`
 - :ref:`Link text <a_section_target>`
 - :doc:`../../index`
@@ -194,11 +194,11 @@ Lists
      * Sub-item
    - Item 2
 
-     i. Sub-step 1
+     #. Sub-step 1
      #. Sub-step 2
 #. Step 2
 
-   a. Sub-step 1
+   #. Sub-step 1
 
       - Item
    #. Sub-step 2
@@ -206,9 +206,9 @@ Lists
 Definition lists
 ~~~~~~~~~~~~~~~~
 
-Term 1:
+Term 1
   Definition
-Term 2:
+Term 2
   Definition
 
 Tables
@@ -226,7 +226,7 @@ Small grid table, default aligned (no alignment options):
 +------------------------------------+----------+
 | Header 1                           | Header 2 |
 +====================================+==========+
-| [1,1] |br| Second paragraph        |  [1,2]   |
+| [1,1] |br| Second line             |  [1,2]   |
 +------------------------------------+----------+
 | [2,1]                              |  [2,2]   |
 +------------------------------------+----------+
@@ -272,7 +272,7 @@ Grid table with table directive, right aligned:
   | [2,1]                | [2,2]            |
   +----------------------+------------------+
 
-Grid table with rst-class directive, default aligned:
+Grid table with rst-class directive, default aligned (reST-specific):
 
 .. rst-class:: align-default
 
@@ -286,7 +286,7 @@ Grid table with rst-class directive, default aligned:
   | [2,1]                | [2,2]            |
   +----------------------+------------------+
 
-Grid table with rst-class directive, right aligned:
+Grid table with rst-class directive, right aligned (reST-specific):
 
 .. rst-class:: align-right
 
@@ -355,8 +355,8 @@ CSV table, right aligned:
   "[1,1]", "[1,2]"
   "[2,1]", "[2,2]"
 
-Simple tables
-~~~~~~~~~~~~~
+Simple tables (reST-specific)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simple table, default aligned (no alignment options):
 
@@ -364,7 +364,7 @@ Simple table, default aligned (no alignment options):
 Header 1 Header 2
 ======== ========
 [1,1]    [1,2]
-[1,2]    [2,2]
+[2,1]    [2,2]
 ======== ========
 
 Simple with table directive, default aligned:
@@ -376,7 +376,7 @@ Simple with table directive, default aligned:
   Header 1 Header 2
   ======== ========
   [1,1]    [1,2]
-  [1,2]    [2,2]
+  [2,1]    [2,2]
   ======== ========
 
 Simple with table directive, right aligned:
@@ -389,7 +389,7 @@ Simple with table directive, right aligned:
   Header 1 Header 2
   ======== ========
   [1,1]    [1,2]
-  [1,2]    [2,2]
+  [2,1]    [2,2]
   ======== ========
 
 Simple table with rst-class directive, default aligned:
@@ -400,7 +400,7 @@ Simple table with rst-class directive, default aligned:
   Header 1 Header 2
   ======== ========
   [1,1]    [1,2]
-  [1,2]    [2,2]
+  [2,1]    [2,2]
   ======== ========
 
 Simple table with rst-class directive, right aligned:
@@ -411,7 +411,7 @@ Simple table with rst-class directive, right aligned:
   Header 1 Header 2
   ======== ========
   [1,1]    [1,2]
-  [1,2]    [2,2]
+  [2,1]    [2,2]
   ======== ========
 
 
@@ -444,11 +444,115 @@ Notes
 .. caution::
    This might damage your hardware!
 
+
+Expandable blocks
+-----------------
+
+Use raw HTML ``<details>`` tags to create a collapsible section, for example to hide the output of a command:
+
+.. code-block:: shell
+
+   juju version
+
+The following tabs show the rendered block and its source:
+
+.. tab-set::
+
+    .. tab-item:: Rendered
+
+        .. raw:: html
+
+            <details>
+            <summary>Output example</summary>
+
+        .. code-block:: text
+
+            3.5.4-genericlinux-amd64
+
+        .. raw:: html
+
+            </details>
+
+    .. tab-item:: Source
+
+        .. code-block:: rst
+
+            .. raw:: html
+
+               <details>
+               <summary>Output example</summary>
+
+            .. code-block:: text
+
+               3.5.4-genericlinux-amd64
+
+            .. raw:: html
+
+               </details>
+
+Split the opening and closing tags into separate ``raw`` directives so that the content in between is rendered as reStructuredText. Any markup can go inside, for example a list:
+
+.. tab-set::
+
+    .. tab-item:: Rendered
+
+        .. raw:: html
+
+            <details>
+            <summary>More details</summary>
+
+        - Item 1
+        - Item 2
+
+        .. raw:: html
+
+            </details>
+
+    .. tab-item:: Source
+
+        .. code-block:: rst
+
+            .. raw:: html
+
+               <details>
+               <summary>More details</summary>
+
+            - Item 1
+            - Item 2
+
+            .. raw:: html
+
+               </details>
+
+
+Dropdowns
+~~~~~~~~~
+
+The Sphinx Design ``dropdown`` directive provides a styled alternative to raw HTML ``<details>`` tags, and is the recommended way to add collapsible content:
+
+.. dropdown:: Output example
+
+    The content of the dropdown, revealed when the header is clicked.
+
+A dropdown with an icon and an open-by-default variant:
+
+.. dropdown:: Dropdown with an icon
+    :icon: light-bulb
+
+    The content of the dropdown.
+
+.. dropdown:: Open dropdown
+    :open:
+
+    This dropdown is open by default.
+
+
 Images
 ------
 Use ``.. image::`` for simple images without captions.
 
 .. image:: https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png
+  :alt: Alt text
 
 Use ``.. figure::`` to include a caption, and to reference the image in text.
 
@@ -466,9 +570,20 @@ Images can be inserted in-line |logo| via a substitution.
 Reuse
 -----
 
+Keys
+~~~~
+
+Keys can be defined in substitutions at the top of a file.
+
 .. |reuse_key| replace:: This is **included** text.
+.. |advanced_reuse_key| replace:: This is a substitution with inline code: ``code block``.
 
 |reuse_key|
+
+|advanced_reuse_key|
+
+File inclusion
+~~~~~~~~~~~~~~
 
 .. include:: include.txt
    :start-after: [include_start]
@@ -477,26 +592,59 @@ Reuse
 Tabs
 ----
 
-Sphinx-design tabs
-~~~~~~~~~~~~~~~~~~
-
-.. Tabs
-.. ----
+Ulwazi supports the sphinx-design extension for tabs.
+**Support for the sphinx-tabs extension has been
+`dropped <https://documentation.ubuntu.com/sphinx-stack/latest/reference/rst-syntax/#tabs>`_.**
 
 .. tab-set::
 
     .. tab-item:: Tab 1
+        :sync: key1
 
         Content for tab 1
 
     .. tab-item:: Tab 2
+        :sync: key2
 
         Content for tab 2
 
     .. tab-item:: Tab 3
+        :sync: key3
 
         Content for tab 3
 
+    .. tab-item:: Long code
+
+        .. code-block:: yaml
+
+            path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
+
+
+Metadata
+--------
+
+Optional. Every page gets working metadata by default; only add these fields
+to override them for a specific page.
+
+Open Graph tags (placed before the title, no special syntax needed):
+
+.. code-block:: rst
+
+   :og:title: Custom title for social media previews
+   :og:description: Custom description for social media previews
+   :og:image: https://example.com/preview-image.png
+
+   Page title
+   ==========
+
+Page description (unrelated to ``og:description``):
+
+.. code-block:: rst
+
+   .. meta::
+      :description: A one- or two-sentence summary of this page.
+
+See :doc:`the contribution guide <contribute>` for defaults and details.
 
 Glossary
 --------
@@ -512,13 +660,75 @@ More useful markup
 ------------------
 
 - .. versionadded:: X.Y
-- | Line 1
+- | Line 1 (reST-specific line block)
   | Line 2
   | Line 3
-- .. This is a comment
 - :abbr:`API (Application Programming Interface)`
 
-----
+Custom roles
+------------
+
+Terms that should not be checked by the spelling checker: :spellexception:`PurposelyWrong`.
+
+Use :literalref:`link text <https://canonical.com>` for a monospaced link.
+
+Structured tables of contents
+-----------------------------
+
+Use the ``domain`` and ``slice`` directives (from the
+`sphinx-structured-toc <https://github.com/canonical/sphinx-structured-toc>`_
+extension) to build compact, accessible tables of contents, independent of
+Sphinx ``toctree``\ s.
+
+A *domain* is a named group of related documentation links. A *slice* is one
+subsection of that group; the domain shown here, for example, groups links
+into "Syntax references" and "Guides" slices. Each slice holds one ``:doc:``
+link per line.
+
+The extension renders these links in HTML and PDF. HTML adds ARIA attributes
+for users of screen readers; PDF displays bold slice names and linked items,
+without HTML-only ARIA attributes.
+
+Domain named after a section heading
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With no argument, the domain takes its *derived name* from the nearest
+enclosing section heading, and items keep their visible text as their
+accessible name:
+
+.. domain::
+   :suppress-warnings:
+
+   .. slice:: Syntax references
+
+      :doc:`This page <rst-cheat-sheet>`
+      :doc:`MyST cheat sheet <myst-cheat-sheet>`
+
+   .. slice:: Guides
+
+      :doc:`Contribution guide <contribute>`
+      :doc:`Testing strategy <testing-strategy>`
+
+Explicit domain name
+~~~~~~~~~~~~~~~~~~~~
+
+An argument overrides the derived name. The trailing ``slice`` and ``domain``
+keywords add that context to an item's accessible name, so links that share
+visible text (``Overview`` below) stay distinguishable for users of screen
+readers. ``:suppress-warnings:`` silences the resulting ambiguity warnings:
+
+.. domain:: Ulwazi cheat sheet links
+   :suppress-warnings:
+
+   .. slice:: Reference
+
+      :doc:`Overview <../index>` slice
+      :doc:`Roadmap <roadmap>` slice
+
+   .. slice:: Meta
+
+      :doc:`Overview <testing-strategy>` domain
+      :doc:`Tests <tests/index>` domain
 
 .. Custom extensions
 .. -----------------
@@ -527,8 +737,6 @@ More useful markup
 
 ..   :relatedlinks: https://github.com/canonical/lxd-sphinx-extensions, [RTFM](https://www.google.com)
 ..   :discourse: 12345
-
-.. Terms that should not be checked by the spelling checker: :spellexception:`PurposelyWrong`
 
 .. A single-line terminal view that separates input from output:
 

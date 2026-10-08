@@ -8,7 +8,7 @@
 #search-results ul.search > li {
   margin: 0;
   padding: 0.9rem 0;
-  border-top: 1px solid rgba(0,0,0,0.12); /* divider */
+  border-top: 1px solid var(--vf-color-border-low-contrast, rgba(0,0,0,0.12)); /* divider */
 }
 
 #search-results ul.search > li:first-child {
@@ -30,7 +30,7 @@
 .search-result-breadcrumb {
   margin: 0 0 0.1rem;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--vf-color-text-muted, #666);
   display: block;
 }
 
@@ -55,13 +55,13 @@
 .search-breadcrumb-item:not(:last-child)::after {
   content: " › ";
   margin: 0 0.35rem;
-  color: #999;
+  color: var(--vf-color-text-muted, #999);
   user-select: none;
 }
 
 /* Style for the final separator that leads to the page title */
 .search-breadcrumb-separator-final {
-  color: #999;
+  color: var(--vf-color-text-muted, #999);
   font-size: 0.8rem;
   user-select: none;
   margin-left: 0.35rem;
@@ -83,26 +83,26 @@
 }
 
 .search-breadcrumb-item a {
-  color: #0066cc;
+  color: var(--vf-color-link-default, #0066cc);
   text-decoration: none;
   font-size: 0.8rem;
   transition: color 0.2s ease;
 }
 
 .search-breadcrumb-item a:hover {
-  color: #004999;
+  color: var(--vf-color-link-visited, #004999);
   text-decoration: underline;
 }
 
 /* Style for current page (non-linked) */
 .search-breadcrumb-item.search-breadcrumb-current {
-  color: #666;
+  color: var(--vf-color-text-muted, #666);
   font-size: 0.8rem;
 }
 
 .search-breadcrumb-separator {
   margin: 0 0.25rem;
-  color: #999;
+  color: var(--vf-color-text-muted, #999);
   user-select: none;
 }
 
@@ -124,6 +124,8 @@
   background-color: #fef3b5;
   border-radius: 2px;
   padding: 0.05em 0.15em;
+  /* Keep text readable on the light-yellow highlight in both themes */
+  color: #000;
 }
 
 /* Optional: indent sections */

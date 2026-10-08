@@ -1,5 +1,8 @@
 import datetime
 import os
+import sys
+from pathlib import Path
+
 import yaml
 
 # Configuration for the Sphinx documentation builder.
@@ -11,9 +14,8 @@ import yaml
 # A complete list of built-in Sphinx configuration values:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 #
-# Our starter pack uses the custom Canonical Sphinx extension
-# to keep all documentation based on it consistent and on brand:
-# https://github.com/canonical/canonical-sphinx
+# Ulwazi provides Canonical configuration defaults directly; it does not
+# require the canonical-sphinx-config extension.
 
 
 #######################
@@ -24,7 +26,7 @@ import yaml
 #
 # TODO: Update with the official name of your project or product
 
-project = "The Ulwazi theme sample - some very long phrase here to test the wrapping of the title in the header"
+project = "The Ulwazi theme sample"
 author = "Canonical Ltd."
 
 
@@ -71,7 +73,7 @@ copyright = f"{datetime.date.today().year}"
 # NOTE: The Open Graph Protocol (OGP) enhances page display in a social graph
 #       and is used by social media platforms; see https://ogp.me/
 
-ogp_site_url = "https://canonical-ulwazi.readthedocs-hosted.com/"
+ogp_site_url = "https://documentation.ubuntu.com/ulwazi/"
 
 
 # Preview name of the documentation website
@@ -92,7 +94,7 @@ ogp_image = "https://assets.ubuntu.com/v1/253da317-image-document-ubuntudocs.svg
 
 # TODO: To customise the favicon, uncomment and update as needed.
 
-# html_favicon = ".sphinx/_static/favicon.png"
+html_favicon = "_static/favicon.png"
 
 
 # Dictionary of values to pass into the Sphinx context for all pages:
@@ -107,9 +109,12 @@ github_repo = "https://github.com/canonical/ulwazi"
 repo_default_branch = "main"
 
 # Determine the source branch for GitHub links (view/edit source, license, etc.)
-# On Read the Docs, use the actual git branch/tag being built;
-# fall back to the default branch for local builds.
-source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER", repo_default_branch)
+# On Read the Docs, the Git identifier is a branch only for branch builds;
+# for PR previews it is a number, and tags cannot be edited on GitHub.
+if os.environ.get("READTHEDOCS_VERSION_TYPE") == "branch":
+    source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER") or repo_default_branch
+else:
+    source_branch = repo_default_branch
 
 # TODO: Select the default syntax for docs source files.
 # This is for a fallback view/edit source code buttons.
@@ -134,13 +139,13 @@ html_context = {
     #
     # TODO: To add a tag image, uncomment and update as needed.
     # 'product_tag': '_static/tag.png',
-    # 
+    #
     # Inherit project name
-    "project": project, 
+    "project": project,
     # Inherit the author value
     "author": author,
     # Licensing information
-    # 
+    #
     # TODO: Change your product's license name and a link to its file.
     # For the name, we recommend using the standard shorthand identifier from
     # https://spdx.org/licenses
@@ -182,32 +187,31 @@ html_context = {
     # Valid options: none, prev, next, both
     # "sequential_nav": "both",
     # TODO: To enable listing contributors on individual pages, set to True
-    "display_contributors": False,
-
-    # Required for feedback button    
+    # Enabled for the extension compatibility tests (sphinx_contributor_listing).
+    "display_contributors": True,
+    # Alias expected by sphinx_contributor_listing (it reads github_folder,
+    # while the rest of the theme uses repo_folder).
+    "github_folder": "/docs/",
+    # Required for feedback button
     "feedback": True,
     "github_issues": "enabled",
     "default_source_extension": default_source_extension,
-    "default_edit_url": github_repo + "/edit/" + source_branch + "/docs/index" + default_source_extension,
-    "default_view_url": github_repo + "/blob/" + source_branch + "/docs/index" + default_source_extension,
-
+    "default_edit_url": f"{github_repo}/edit/{source_branch}/docs/index{default_source_extension}",
+    "default_view_url": f"{github_repo}/blob/{source_branch}/docs/index{default_source_extension}",
     # Horizontal Nav Menu
     "company": "Canonical",
     "link1_URL": "https://snapcraft.io/",
     "link1_name": "First optional link",
     "link2_URL": "https://snapcraft.io/",
     "link2_name": "Second optional link",
-
     # Canonical Product menu
     # Uncomment if you need a product menu added on the top of every page
-    "add_product_menu": True,
-    
+    "add_product_menu": False,
     # Main Horizontal menu
     # "is_docs": False, # Purpose unknown
     "logo_link_URL": "/",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Ulwazi",
-
     # TODO: Customize the footer.
     "footer": {
         # Whether to add the product name as the first entry.
@@ -217,8 +221,8 @@ html_context = {
         # List your footer entries. Accepts HTML tags.
         "entries": [
             '<a href="#tracker-settings" class="js-revoke-cookie-manager muted-link">Manage your tracker settings</a>',
-        ]
-    }
+        ],
+    },
 }
 
 # TODO: To enable the edit button on pages, uncomment and change the link to a
@@ -232,12 +236,11 @@ html_context = {
 # 'source_edit_link': 'https://github.com/canonical/sphinx-docs-starter-pack',
 # }
 
-# Project slug; see https://meta.discourse.org/t/what-is-category-slug/87897
-#
-# TODO: If your documentation is hosted on https://docs.ubuntu.com/,
-#       uncomment and update as needed.
+# Project slug: the path segment of the docs site URL, e.g. "ulwazi" in
+# https://documentation.ubuntu.com/ulwazi/. Used by the Ulwazi theme to
+# compute notfound_urls_prefix for sphinx-notfound-page.
 
-# slug = ''
+slug = "ulwazi"
 
 # Limit the number of levels for Table of contents
 localtoc_max_depth = 3
@@ -248,7 +251,7 @@ localtoc_max_depth = 3
 
 # Base URL of RTD hosted project
 
-html_baseurl = "https://canonical-starter-pack.readthedocs-hosted.com/"
+html_baseurl = "https://documentation.ubuntu.com/ulwazi/"
 
 # URL scheme. Add language and version scheme elements.
 # When configured with RTD variables, check for RTD environment so manual runs succeed:
@@ -262,6 +265,13 @@ else:
 # Include `lastmod` dates in the sitemap:
 
 sitemap_show_lastmod = True
+
+# Exclude the generated 404 page from the sitemap:
+
+sitemap_excludes = [
+    "404/",
+    "404.html",
+]
 
 #######################
 # Template and asset locations
@@ -285,7 +295,24 @@ templates_path = ["_templates"]
 # NOTE: If undefined, set to None, or empty,
 #       the sphinx_reredirects extension will be disabled.
 
-redirects = {}
+redirects = {
+    "content/extensions-old": "content/tests/extension-compatibility/",
+}
+
+rediraffe_redirects = "redirects.txt"
+rediraffe_dir_only = True
+
+############################
+# sphinx-llm configuration #
+############################
+
+# This description is included in llms.txt to provide some initial context
+# for LLMs reading the generated Markdown artifacts.
+
+llms_txt_description = (
+    "This is the sample documentation for the Ulwazi Sphinx theme, "
+    "which provides Canonical Vanilla Framework styling for Sphinx projects."
+)
 
 
 ###########################
@@ -296,10 +323,7 @@ redirects = {}
 #
 # TODO: Remove or adjust the ACME entry after you update the contributing guide
 
-linkcheck_ignore = [
-    "http://127.0.0.1:8000",
-    "https://github.com/canonical/ACME/*"
-    ]
+linkcheck_ignore = ["http://127.0.0.1:8000", "https://github.com/canonical/ACME/*"]
 
 
 # A regex list of URLs where anchors are ignored by 'make linkcheck'
@@ -320,31 +344,21 @@ linkcheck_retries = 3
 # NOTE: By default, the following MyST extensions are enabled:
 #       substitution, deflist, linkify
 
-myst_enable_extensions = {
-    "colon_fence",
-    "deflist",
-    "substitution",
-    "tasklist"
-}
+myst_enable_extensions = {"colon_fence", "deflist", "substitution", "tasklist"}
 
 
 # Custom Sphinx extensions; see
 # https://www.sphinx-doc.org/en/master/usage/extensions/index.html
 
-# NOTE: The canonical_sphinx extension is required for the starter pack.
-#       It automatically enables the following extensions:
-#       - custom-rst-roles
-#       - myst_parser
-#       - notfound.extension
-#       - related-links
-#       - sphinx_copybutton
-#       - sphinx_design
-#       - sphinx_reredirects
-#       - sphinx_tabs.tabs
-#       - sphinxcontrib.jquery
-#       - sphinxext.opengraph
-#       - terminal-output
-#       - youtube-links
+# NOTE: The Ulwazi theme ("ulwazi") provides the Canonical configuration
+#       defaults that used to come from the canonical_sphinx_config extension.
+#
+# NOTE: "ulwazi" must stay listed before "sphinx_modern_pdf_style": Sphinx fires
+#       'config-inited' in registration order, and the theme injects the
+#       Canonical PDF branding defaults that sphinx_modern_pdf_style reads.
+
+ext_source = Path(__file__).parents[1].resolve()
+sys.path.insert(0, str(ext_source.absolute()))
 
 extensions = [
     "sphinx_terminal",
@@ -352,22 +366,38 @@ extensions = [
     "sphinx_last_updated_by_git",
     "sphinx.ext.intersphinx",
     "sphinx_sitemap",
+    "sphinx_structured_toc",
+    "sphinxext.opengraph",
     "ulwazi",
     "sphinx_modern_pdf_style",
-    "canonical_sphinx_config",
     "myst_parser",
     "sphinxcontrib.jquery",
-    "sphinx_tabs.tabs",
     "sphinx_design",
+    # Remaining Sphinx Stack default extensions, enabled for testing:
+    "notfound.extension",
+    "sphinx_reredirects",
+    "sphinx_rerediraffe",
+    "sphinx_config_options",
+    "sphinx_contributor_listing",
+    "sphinx_filtered_toctree",
+    "sphinx_llm.txt",
+    "sphinx_related_links",
+    "sphinx_roles",
+    "sphinx_ubuntu_images",
+    "sphinx_youtube_links",
 ]
 
 # Excludes files or directories from processing
 
 exclude_patterns = [
     "doc-cheat-sheet*",
-    "_build", 
-    "Thumbs.db", 
-    ".DS_Store"
+    ".venv*",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    # sphinx-llm pulls in sphinx-markdown-builder, which emits .md artifacts
+    # into the build directory; keep Sphinx from re-reading them as source.
+    "_build/**",
 ]
 
 # Adds custom CSS files, located under 'html_static_path'
@@ -381,10 +411,7 @@ html_js_files = ["https://assets.ubuntu.com/v1/287a5e8f-bundle.js"]
 
 
 # Syntax highlighting settings
-
-highlight_language = "none" # default
-pygments_style = "autumn"
-pygments_dark_style = "github-dark" # see https://pygments.org/styles for more
+highlight_language = "none"  # default
 
 # Specifies a reST snippet to be appended to each .rst file
 
@@ -431,7 +458,7 @@ rst_prolog = """
 # Workaround for https://github.com/canonical/canonical-sphinx/issues/34
 
 if "discourse_prefix" not in html_context and "discourse" in html_context:
-    html_context["discourse_prefix"] = html_context["discourse"] + "/t/"
+    html_context["discourse_prefix"] = f"{html_context['discourse']}/t/"
 
 # Workaround for substitutions.yaml
 
@@ -441,7 +468,18 @@ if os.path.exists("./reuse/substitutions.yaml"):
 
 # Add configuration for intersphinx mapping
 
-intersphinx_mapping = {}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+}
+
+#####################################
+# sphinx-filtered-toctree configuration #
+#####################################
+
+# Tags listed here are filtered out of filtered-toctree entries.
+# Used by the sample on docs/content/tests/extension-compatibility.md
+# to demonstrate that excluded entries are dropped from the output.
+toc_filter_exclude = ["toc-filter-demo"]
 
 # PDF
 

@@ -15,19 +15,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          # Full history is required: setuptools_scm derives the version
+          # from git tags, and sphinx_last_updated_by_git reads commit times.
           fetch-depth: 0
-
-      - name: Install PDF dependencies
-        run: sudo make pdf-prep-force
 
       - name: Build SCSS
         run: make vanilla-main
-      
-      - name: Build HTML
-        run: make html
 
-      - name: Build PDF
-        run: make pdf
-
-      - name: Run tests
+      - name: Run fast tests
         run: make test

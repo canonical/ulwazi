@@ -3,10 +3,7 @@ orphan: true
 myst:
     substitutions:
       reuse_key: "This is **included** text."
-      advanced_reuse_key: "This is a substitution that includes a code block:
-                         ```
-                         code block
-                         ```"
+      advanced_reuse_key: "This is a substitution with inline code: `code block`."
 ---
 
 (myst-ref)=
@@ -31,6 +28,7 @@ Also see the [MyST documentation](https://myst-parser.readthedocs.io/en/latest/i
 
 - {guilabel}`UI element`
 - `code`
+- {file}`file path`
 - {command}`command`
 - {kbd}`Key`
 - *Italic*
@@ -43,20 +41,16 @@ Start a code block:
     code:
       - example: true
 
-```text
-# Demonstrate a code block w/o syntax highlighting
-code:
-  - example: true
-```
-
-```yaml
+```{code-block} text
 # Demonstrate a code block
 code:
   - example: true
 ```
 
-```{code-block}
-test code
+```text
+# Demonstrate a code block
+code:
+  - example: true
 ```
 
 ### Syntax highlighting
@@ -152,10 +146,14 @@ The HTML pages are in _build.
 ## Links
 
 - [Canonical website](https://canonical.com/)
+- [Canonical website][canonical-website] (defined in `reuse/links.txt` or at the bottom of the page)
+- <https://canonical.com/>
 - {ref}`a_section_target_myst`
 - {ref}`Link text <a_section_target_myst>`
 - {doc}`../../index`
 - {doc}`Link text <../../index>`
+
+[canonical-website]: https://canonical.com/
 
 ## Navigation
 
@@ -189,7 +187,7 @@ Term 1
 Term 2
 : Definition
 
-## Task lists
+## Task lists (MyST-specific)
 
 - [ ] Unchecked.
 
@@ -209,43 +207,43 @@ Small grid table, default aligned:
 
 | Header 1                           | Header 2 |
 |------------------------------------|----------|
-| [1,1]<br>Second paragraph          |  [1,2]   |
+| [1,1]<br>Second line               |  [1,2]   |
 | [2,1]                              |  [2,2]   |
 
 Small grid table, right aligned:
 
 | Header 1                           | Header 2 |
 |-----------------------------------:|---------:|
-| [1,1]<br>Second paragraph          |  [1,2]   |
+| [1,1]<br>Second line               |  [1,2]   |
 | [2,1]                              |  [2,2]   |
 
 Wide grid table, default aligned:
 
 | Header 1                   | Header 2   |     Header 3  | Header 4  | Header 5   | Header 6    | Header 7  | Header 8  | Header 9   |
 |----------------------------|------------|---------------|-----------|------------|-------------|-----------|-----------|------------|
-| [1,1]<br>Second paragraph  | [1,2]      |   [1,3]       | [1,4]     | [1,5]      | [1,6]       | [1,7]     | [1,8]     | [1,9]      |
+| [1,1]<br>Second line       | [1,2]      |   [1,3]       | [1,4]     | [1,5]      | [1,6]       | [1,7]     | [1,8]     | [1,9]      |
 | [2,1]                      | [2,2]      |   [2,3]       | [2,4]     | [2,5]      | [2,6]       | [2,7]     | [2,8]     | [2,9]      |
 
 Grid table with table directive, default aligned:
 
-:::{table}
+```{table}
 
   | Header 1                           | Header 2 |
   |------------------------------------|----------|
-  | [1,1]<br>Second paragraph          | [1,2]    |
+  | [1,1]<br>Second line               | [1,2]    |
   | [2,1]                              | [2,2]    |
-:::
+```
 
 Grid table with table directive, right aligned:
 
-:::{table}
+```{table}
 :align: right
 
   | Header 1                           | Header 2 |
   |------------------------------------|----------|
-  | [1,1]<br>Second paragraph          | [1,2]    |
+  | [1,1]<br>Second line               | [1,2]    |
   | [2,1]                              | [2,2]    |
-:::
+```
 
 ### List tables
 
@@ -284,22 +282,22 @@ List table, right aligned:
 
 CSV table, default aligned:
 
-:::{csv-table}
+```{csv-table}
 :header: >
 :  "Header 1", "Header 2"
 "[1,1]", "[1,2]"
 "[2,1]", "[2,2]"
-:::
+```
 
 CSV table, right aligned:
 
-:::{csv-table}
+```{csv-table}
 :align: right
 :header: >
 :  "Header 1", "Header 2"
 "[1,1]", "[1,2]"
 "[2,1]", "[2,2]"
-:::
+```
 
 ## Notes
 
@@ -334,6 +332,103 @@ Important information
 ```{caution}
 This might damage your hardware!
 ```
+
+## Expandable blocks
+
+Use HTML `<details>` tags to create a collapsible section, for example to hide the output of a command:
+
+```shell
+juju version
+```
+
+The following tabs show the rendered block and its source.
+Note that a backtick fence must be longer than any fence nested inside it:
+
+``````{tab-set}
+
+`````{tab-item} Rendered
+
+<details>
+<summary>Output example</summary>
+
+```text
+3.5.4-genericlinux-amd64
+```
+
+</details>
+`````
+
+`````{tab-item} Source
+
+````markdown
+<details>
+<summary>Output example</summary>
+
+```text
+3.5.4-genericlinux-amd64
+```
+
+</details>
+````
+`````
+
+``````
+
+Keep a blank line between the HTML tags and the content so that the content is parsed as MyST. Any markup can go inside, for example a list:
+
+`````{tab-set}
+
+````{tab-item} Rendered
+
+<details>
+<summary>More details</summary>
+
+- Item 1
+- Item 2
+
+</details>
+````
+
+````{tab-item} Source
+
+```markdown
+<details>
+<summary>More details</summary>
+
+- Item 1
+- Item 2
+
+</details>
+```
+````
+
+`````
+
+### Dropdowns
+
+The Sphinx Design `{dropdown}` directive provides a styled alternative to raw HTML `<details>` tags, and is the recommended way to add collapsible content:
+
+:::{dropdown} Output example
+
+The content of the dropdown, revealed when the header is clicked.
+
+:::
+
+A dropdown with an icon and an open-by-default variant:
+
+:::{dropdown} Dropdown with an icon
+:icon: light-bulb
+
+The content of the dropdown.
+
+:::
+
+:::{dropdown} Open dropdown
+:open:
+
+This dropdown is open by default.
+
+:::
 
 ## Images
 
@@ -373,30 +468,64 @@ Keys can be defined at the top of a file, or in a `myst_substitutions` option in
 
 ## Tabs
 
+Ulwazi supports the sphinx-design extension for tabs.
+**Support for the sphinx-tabs extension has been [dropped](https://documentation.ubuntu.com/sphinx-stack/latest/reference/myst-syntax/#tabs).**
 
-### Sphinx-design tabs
-
-
-````{tab-set}
+`````{tab-set}
 
 ```{tab-item} Tab 1
 :sync: key1
 
-Content Tab 1
+Content for tab 1
 ```
 
 ```{tab-item} Tab 2
 :sync: key2
 
-Content Tab 2
+Content for tab 2
 ```
 
 ```{tab-item} Tab 3
 :sync: key3
-Content Tab 3
+
+Content for tab 3
 ```
 
+````{tab-item} Long code
+
+```yaml
+path: /usr/share/doc/a-package-with-a-long-name/that-needs-horizontal-scrolling/to-remain-readable/and-demonstrate-that-the-entire-line-is-reachable
+```
 ````
+
+`````
+
+## Metadata
+
+Optional. Every page gets working metadata by default; only add these fields
+to override them for a specific page.
+
+Open Graph tags (top-level front matter keys, no special syntax needed):
+
+```markdown
+---
+og:title: "Custom title for social media previews"
+og:description: "Custom description for social media previews"
+og:image: "https://example.com/preview-image.png"
+---
+```
+
+Page description (unrelated to `og:description`), nested under `myst.html_meta`:
+
+```markdown
+---
+myst:
+  html_meta:
+    description: "A one- or two-sentence summary of this page."
+---
+```
+
+See [the contribution guide](contribute) for defaults and details.
 
 ## Glossary
 
@@ -411,8 +540,82 @@ some term
 ## More useful markup
 
 - ```{versionadded} X.Y
+  ```
 - {abbr}`API (Application Programming Interface)`
 
+## Custom roles
+
+Terms that should not be checked by the spelling checker: {spellexception}`PurposelyWrong`.
+
+Use {literalref}`link text <https://canonical.com>` for a monospaced link.
+
+## Structured tables of contents
+
+Use the `domain` and `slice` directives (from the
+[sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)
+extension) to build compact, accessible tables of contents, independent of
+Sphinx `toctree`s.
+
+A *domain* is a named group of related documentation links. A *slice* is one
+subsection of that group; the domain shown here, for example, groups links
+into "Syntax references" and "Guides" slices. Each slice holds one `{doc}`
+link per line.
+
+The extension renders these links in HTML and PDF. HTML adds ARIA attributes
+for users of screen readers; PDF displays bold slice names and linked items,
+without HTML-only ARIA attributes. Nested MyST fences need different lengths:
+`{domain}` uses four backticks and `{slice}` uses three.
+
+### Domain named after a section heading
+
+With no argument, the domain takes its *derived name* from the nearest
+enclosing section heading, and items keep their visible text as their
+accessible name:
+
+````{domain}
+:suppress-warnings:
+
+```{slice} Syntax references
+
+{doc}`This page <myst-cheat-sheet>`
+{doc}`RST cheat sheet <rst-cheat-sheet>`
+
+```
+
+```{slice} Guides
+
+{doc}`Contribution guide <contribute>`
+{doc}`Testing strategy <testing-strategy>`
+
+```
+
+````
+
+### Explicit domain name
+
+An argument overrides the derived name. The trailing `slice` and `domain`
+keywords add that context to an item's accessible name, so links that share
+visible text (`Overview` below) stay distinguishable for users of screen
+readers. `:suppress-warnings:` silences the resulting ambiguity warnings:
+
+````{domain} Ulwazi cheat sheet links
+:suppress-warnings:
+
+```{slice} Reference
+
+{doc}`Overview <../index>` slice
+{doc}`Roadmap <roadmap>` slice
+
+```
+
+```{slice} Meta
+
+{doc}`Overview <testing-strategy>` domain
+{doc}`Tests <tests/index>` domain
+
+```
+
+````
 
 <!-- ## Custom extensions
 
@@ -420,8 +623,6 @@ Related links at the top of the page (surrounded by `---`):
 
     relatedlinks: https://github.com/canonical/lxd-sphinx-extensions, [RTFM](https://www.google.com)
     discourse: 12345 -->
-
-<!-- Terms that should not be checked by the spelling checker: {spellexception}`PurposelyWrong` -->
 
 <!-- A single-line terminal view that separates input from output:
 
