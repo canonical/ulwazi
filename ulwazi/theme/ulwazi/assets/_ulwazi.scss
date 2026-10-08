@@ -11,13 +11,6 @@
 //   font-size: 16px;
 // }
 
-// Darker accent orange used on brand call-to-action buttons (feedback,
-// search) instead of $color-brand-orange: white text/icons against it hold
-// WCAG AA text contrast (5.27:1 normal, 5.96:1 hover), not just the lower
-// 3:1 non-text threshold that $color-brand-orange only just cleared.
-$color-accent-orange: #c13f0b;
-$color-accent-orange-hover: #b73500;
-
 :root {
   // Canonical brand orange (Ubuntu orange)
   --ulwazi-color-brand: #{$color-brand-orange};
@@ -528,7 +521,8 @@ div.terminal > div.input > button.copybtn svg {
     filter: brightness(0) invert(1); // Makes the icon white
   }
 
-  &:hover {
+  &:hover,
+  &:active {
     background-color: $color-accent-orange-hover !important;
   }
 }

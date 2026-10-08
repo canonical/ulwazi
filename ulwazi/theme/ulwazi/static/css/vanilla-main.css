@@ -14586,7 +14586,7 @@ div.terminal > div.input > button.copybtn svg {
 .p-search-box .p-search-box__button .p-icon--search {
   filter: brightness(0) invert(1);
 }
-.p-search-box .p-search-box__button:hover {
+.p-search-box .p-search-box__button:hover, .p-search-box .p-search-box__button:active {
   background-color: #b73500 !important;
 }
 
