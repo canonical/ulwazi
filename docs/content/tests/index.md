@@ -39,6 +39,9 @@ not every check proposed there is implemented yet.
       that every built page renders its article inside the main docs column,
       and, in a browser at 1440px, that no page is wider than the viewport and
       no element (like an unsized icon) spills out of the main column.
+- {doc}`Responsive layout <responsive-layout>` (`tests/test_responsive.py`,
+	**slow**) checks the home page in Chromium at 375px, 768px, and 1280px,
+	including the top-bar menu and small-screen side-navigation drawer.
 - **PDF generation** (`tests/test_pdf_generation.py`, **slow**) checks that
       the PDF build produces its expected output file.
 - {doc}`Python version compatibility <python-versions>`
@@ -77,6 +80,7 @@ Assets and structure <assets-structure>
 SEO and metadata <seo-metadata>
 Structured TOC <structured-toc>
 Theme features <features>
+Responsive layout <responsive-layout>
 Python versions <python-versions>
 Extension compatibility <extension-compatibility>
 Test coverage <coverage>
