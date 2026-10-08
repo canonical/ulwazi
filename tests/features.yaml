@@ -65,6 +65,10 @@ site:
     source: side navigation drawer browser interaction
     checks:
       - tests/test_features.py::test_features_slow
+  - name: Side navigation drawer opens and closes on small screens
+    source: hamburger menu browser interaction at tablet width
+    checks:
+      - tests/test_features.py::test_features_slow
   - name: Sampled local assets and control wiring
     source: representative built pages (home, both cheat sheets, code headings, search)
     checks:

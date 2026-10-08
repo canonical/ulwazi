@@ -333,6 +333,60 @@ def test_features_slow(built_site):  # noqa: PLR0915
                 expect(checkbox).not_to_be_checked()
                 expect(children).to_be_hidden()
 
+            def drawer():
+                # The hamburger menu only shows on small screens, so shrink
+                # the page for this journey and restore it afterwards.
+                page.set_viewport_size({"width": 768, "height": 900})
+                try:
+                    navigation = page.locator("#drawer")
+                    panel = navigation.locator(".p-side-navigation__drawer")
+                    opener = page.locator("button.has-icon.js-drawer-toggle")
+                    close = panel.locator("button.p-side-navigation__toggle--in-drawer")
+                    expanded = re.compile(r"\bis-drawer-expanded\b")
+                    expect(panel).to_be_hidden()
+                    opener.click()
+                    expect(navigation).to_have_class(expanded)
+                    expect(panel).to_be_visible()
+                    expect(close).to_be_focused()
+                    page.keyboard.press("Shift+Tab")
+                    expect(panel.locator("a[href]").last).to_be_focused()
+                    page.keyboard.press("Tab")
+                    expect(close).to_be_focused()
+                    page.keyboard.press("Escape")
+                    expect(navigation).not_to_have_class(expanded)
+                    expect(panel).to_be_hidden()
+                    assert opener.evaluate("el => document.activeElement === el"), (
+                        "Escape did not return focus to the opener"
+                    )
+
+                    opener.click()
+                    close.click()
+                    expect(panel).to_be_hidden()
+                    assert opener.evaluate("el => document.activeElement === el"), (
+                        "Drawer close button did not return focus to the opener"
+                    )
+
+                    page.emulate_media(reduced_motion="reduce")
+                    opener.click()
+                    page.keyboard.press("Escape")
+                    expect(navigation).to_have_class(
+                        re.compile(r"\bis-drawer-hidden\b")
+                    )
+                    expect(panel).to_be_hidden()
+                    assert opener.evaluate("el => document.activeElement === el"), (
+                        "Reduced-motion close did not return focus to the opener"
+                    )
+                    page.emulate_media(reduced_motion="no-preference")
+
+                    opener.click()
+                    page.set_viewport_size({"width": 1280, "height": 900})
+                    expect(navigation).not_to_have_class(expanded)
+                    page.set_viewport_size({"width": 768, "height": 900})
+                    expect(panel).to_be_hidden()
+                finally:
+                    page.emulate_media(reduced_motion="no-preference")
+                    page.set_viewport_size({"width": 1280, "height": 900})
+
             def tabs():
                 tabset = (
                     page.locator("main .p-tabs")
@@ -419,6 +473,7 @@ def test_features_slow(built_site):  # noqa: PLR0915
             for label, check, start in (
                 ("cookie consent", cookie_consent, ""),
                 ("navigation", navigation, "content/myst-cheat-sheet/"),
+                ("side navigation drawer", drawer, "content/myst-cheat-sheet/"),
                 ("tabs", tabs, "content/myst-cheat-sheet/"),
                 ("copy button", copy_button, "content/myst-cheat-sheet/"),
                 ("dark mode", theme, "content/myst-cheat-sheet/"),
