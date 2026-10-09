@@ -32,8 +32,10 @@ TEST_CATEGORIES = {
     "test_notfound_bundling.py": "5 Extension compatibility",
     "test_extension_compatibility.py": "5 Extension compatibility",
     "test_structured_toc.py": "5 Extension compatibility",
+    "test_responsive.py": "6 Responsive layout",
     "test_notfound_prefix.py": "7 Python and environments",
     "test_python_versions.py": "7 Python and environments",
+    "test_accessibility.py": "9 Accessibility",
     "test_coverage_metrics.py": "Test infrastructure",
     "test_test_reporting.py": "Test infrastructure",
 }

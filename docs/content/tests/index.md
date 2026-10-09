@@ -135,6 +135,7 @@ Progress advances when a test finishes. For individual `PASSED` lines use
 `uv run pytest -vv` (or `PYTEST_ADDOPTS=-vv` with Make).
 
 Only selected tiers/categories appear. Code quality (category 8) runs via
-`make lint`; existing accessibility checks (category 9) are included in other
-tests. Grouping changes *only the output*, not pytest IDs, fixtures,
+`make lint`; the contrast check reports under category 9 Accessibility (fast),
+and the responsive browser cases under category 6 Responsive layout (slow).
+Grouping changes *only the output*, not pytest IDs, fixtures,
 parametrization, or the {ref}`Python-version tests <python-version-tests>`.

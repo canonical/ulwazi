@@ -15,14 +15,41 @@ def _report(nodeid: str, when: str = "call", **attributes):
 
 
 def test_reporting_category_matches_test_and_tier():
-    """Layout checks split by tier; new suites remain unregistered."""
+    """Layout checks split by tier; accessibility and responsive suites map."""
     layout = "tests/test_layout_smoke.py::test_article_inside_docs_main"
     assert _category(layout, slow=False) == ("3 Assets and structure", "fast")
     assert _category(layout, slow=True) == ("6 Responsive layout", "slow")
+    assert _category(
+        "tests/test_accessibility.py::test_color_contrast_meets_wcag_aa", slow=False
+    ) == ("9 Accessibility", "fast")
+    assert _category(
+        "tests/test_responsive.py::test_small_screen_layout[mobile-375]", slow=True
+    ) == ("6 Responsive layout", "slow")
     assert _category("tests/test_new_suite.py::test_new", slow=False) == (
         "Other tests",
         "fast",
     )
+
+
+def test_responsive_recap_counts_each_parameter_and_accessibility_separately():
+    """Five browser cases share category 6; contrast has its own category 9."""
+    responsive = [
+        "tests/test_responsive.py::test_desktop_layout",
+        "tests/test_responsive.py::test_small_screen_layout[mobile-375]",
+        "tests/test_responsive.py::test_small_screen_layout[tablet-768]",
+        "tests/test_responsive.py::test_small_screen_side_navigation[mobile-375]",
+        "tests/test_responsive.py::test_small_screen_side_navigation[tablet-768]",
+    ]
+    contrast = "tests/test_accessibility.py::test_color_contrast_meets_wcag_aa"
+    selected = {nodeid: _category(nodeid, slow=True) for nodeid in responsive} | {
+        contrast: _category(contrast, slow=False)
+    }
+    stats = {"passed": [_report(nodeid) for nodeid in selected]}
+
+    assert list(_category_results(selected, stats)) == [
+        ("PASSED", "6 Responsive layout: slow PASSED (5/5 passed)"),
+        ("PASSED", "9 Accessibility: fast PASSED (1/1 passed)"),
+    ]
 
 
 def test_category_recap_mixed_outcomes():
