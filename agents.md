@@ -81,6 +81,15 @@ When adding tests:
    that the recap shows the right category/tier and failures retain pytest
    IDs. Change `tests/test_test_reporting.py` if changing the reporter itself.
 
+The **Test inventory** table in `docs/content/tests/index.md` must match the
+actual collected cases and CLI groups in `tests/conftest.py` exactly, not just
+list representative suites. When adding, removing, parametrizing, re-tiering,
+or regrouping tests (even within an existing module), update the corresponding
+row, fast/slow counts, and verified-behavior description. Account for every
+selected pytest case once, including `SLOW_CATEGORY_OVERRIDES` and parameters;
+compare the table totals with `make test-all` and `uv run pytest --collect-only`.
+Do not claim behaviors that tests do not assert. Category 8 is lint, not pytest.
+
 See the [test output convention](docs/content/tests/index.md#test-output-convention)
 for the compact recap and `uv run pytest -vv` for per-test results.
 

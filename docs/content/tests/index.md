@@ -6,57 +6,63 @@ not every check proposed there is implemented yet.
 
 ## Test inventory
 
-- {doc}`Smoke <smoke>` (`tests/test_smoke.py`, **fast**) checks the home-page
-	content and essential theme layout.
-- {doc}`Assets and structure <assets-structure>`
-	(`tests/test_assets_structure.py`, **fast and slow**) checks local assets
-	and theme-generated controls, plus advisory remote availability on
-	representative pages.
-- {doc}`SEO and metadata <seo-metadata>` (`tests/test_seo_metadata.py`, **fast**)
-	checks page titles, descriptions, canonical links, favicons, and Open Graph
-	tags.
-- {doc}`Structured TOC <structured-toc>`
-	(`tests/test_structured_toc.py`, **fast and slow**) checks the
-	sphinx-structured-toc extension's domain/slice markup and ARIA in both
-	cheat sheets, plus browser styling and LaTeX output.
-- {doc}`Theme features <features>` (`tests/test_features.py`, **fast and
-	slow**) checks generated markup and browser interactions, including tabs,
-	dark mode, and search.
-- **Accessibility** (`tests/test_accessibility.py`, **fast**) scans the MyST
-	cheat sheet in Chromium, in both light and dark themes, for axe-core
-	WCAG AA colour contrast violations.
-- **Configuration robustness** (`tests/test_config_robustness.py`, **fast**)
-	groups minimal builds, local TOC depth defaults and overrides, and feedback
-	links with omitted or deprecated repository settings into one reported test.
-	The maximum-configuration fixture overrides all defaults in the
-	{doc}`configuration reference <../configuration>`, checks supported settings
-	in the rendered page, and exercises fallback edit/view URLs. Settings not yet
-	supported are checked only for value preservation in `html_context`.
-- **SCSS propagation** (`tests/test_scss_propagation.py`, **fast and slow**)
-	checks the presence of custom styling in built HTML and selected rendered
-	styles in a browser.
-- **Layout smoke** (`tests/test_layout_smoke.py`, **fast and slow**) checks
-      that every built page renders its article inside the main docs column,
-      and, in a browser at 1440px, that no page is wider than the viewport and
-      no element (like an unsized icon) spills out of the main column.
-- {doc}`Responsive layout <responsive-layout>` (`tests/test_responsive.py`,
-	**slow**) checks the home page in Chromium at 375px, 768px, and 1280px,
-	including the top-bar menu and small-screen side-navigation drawer.
-- **PDF generation** (`tests/test_pdf_generation.py`, **slow**) checks that
-      the PDF build produces its expected output file.
-- {doc}`Python version compatibility <python-versions>`
-      (`tests/test_python_versions.py`, **slow**) checks installation and the
-      documentation build on supported Python versions.
-- {doc}`Extension compatibility <extension-compatibility>`
-      (`tests/test_extension_compatibility.py`, **fast and slow**) checks that
-      the theme renders correctly with every Sphinx Stack default extension
-      enabled, plus the PDF build.
-- **Bundled 404 integration** (`tests/test_notfound_bundling.py` and
-  `tests/test_notfound_prefix.py`, **fast**) checks automatic extension
-  activation, opt-outs, 404 output, and Read the Docs URL prefixes.
-- **Test infrastructure** (`tests/test_coverage_metrics.py` and
-  `tests/test_test_reporting.py`, **fast**) checks the coverage calculations
-  and the accuracy of the category/tier recap.
+Each row is one **exact CLI group**. Entries in the second column account for
+its test modules (`test_layout_smoke.py` is split between groups 3 and 6).
+Counts are **selected pytest cases**: parameters count separately; many
+assertions inside one grouped case do not.
+
+```{list-table}
+:widths: 26 74
+:header-rows: 1
+
+* - CLI group
+  - Test module, selected cases and verified behavior
+* - 1 Build process
+  - `test_preview_theme.py` (**1 fast**) — preview invalidation for theme versus content changes; changed SCSS compiles before invalidation.
+
+    `test_pdf_generation.py` (**1 slow**) — the PDF produced by the build prerequisite exists; its contents are not checked.
+* - 2 Smoke
+  - `test_smoke.py` (**1 fast**, {doc}`details <smoke>`) — home-page content, header/navigation/footer, skip link, active Home link, and no visible template delimiters.
+* - 3 Assets and structure
+  - `test_assets_structure.py` (**1 fast, 1 slow**, {doc}`details <assets-structure>`) — representative built assets and theme controls; the slow remote-asset probe reports availability **advisorially**, not as a release gate.
+
+    `test_seo_metadata.py` (**1 fast**, {doc}`details <seo-metadata>`) — titles, descriptions, canonical URLs, favicons and Open Graph tags on three sample pages, including overrides.
+
+    `test_layout_smoke.py` (**1 fast**) — every built page's article is inside the docs main column.
+* - 4 Features and regressions
+  - `test_config_robustness.py` (**5 fast**) — four Read the Docs branch-selection cases; one grouped case for minimal, default, depth, legacy, maximum and fallback configuration.
+
+    `test_features.py` (**1 fast, 1 slow**, {doc}`details <features>`) — grouped theme markup (TOCs, tabs, headings, admonitions, lists, tables, code, search mapping) and browser journeys (consent, navigation, drawer, tabs, copy, theme, search).
+
+    `test_scss_propagation.py` (**1 fast, 3 slow**) — SCSS fixture markup; computed colour, sidebar indicator spacing, and ordered-list marker size in Chromium.
+* - 5 Extension compatibility
+  - `test_extension_compatibility.py` (**1 fast, 1 slow**, {doc}`details <extension-compatibility>`) — grouped Sphinx Stack extension markup/artifact checks; the slow case checks the expected PDF exists. Not every extension has an asserted rendered feature.
+
+    `test_structured_toc.py` (**1 fast, 1 slow**, {doc}`details <structured-toc>`) — RST/MyST domain/slice markup, links and ARIA; Chromium styling and generated LaTeX content.
+
+    `test_notfound_bundling.py` (**14 fast**) — bundled 404 activation/order, opt-outs and overrides, rendered 404 shell/asset, and sitemap exclusion across parametrized cases.
+* - 6 Responsive layout
+  - `test_layout_smoke.py` (**1 slow**) — all built pages at 1440px: no viewport overflow or unclipped spill from the main column.
+
+    `test_responsive.py` (**5 slow**, {doc}`details <responsive-layout>`) — home-page columns and top bar at 1280px; top-bar menu and side drawer at 375px and 768px.
+* - 7 Python and environments
+  - `test_notfound_prefix.py` (**9 fast**) — 404 URL prefixes across local, single/versioned/translated Read the Docs URLs, mismatches and slug normalization.
+
+    `test_python_versions.py` (**5 slow**, {doc}`details <python-versions>`) — isolated installs and warning-free documentation builds on Python 3.10–3.14.
+* - 9 Accessibility
+  - `test_accessibility.py` (**1 fast**) — axe **colour-contrast violations only** on the MyST cheat sheet in light and dark Chromium themes.
+* - Test infrastructure
+  - `test_coverage_metrics.py` (**7 fast**) — V8 line accounting, weighted coverage summaries, missing-report rejection and PR baseline comparisons.
+
+    `test_test_reporting.py` (**9 fast**) — CLI category/tier assignments, parameter and outcome accounting, and unmapped-case visibility.
+```
+
+**Full selection:** 73 cases across 18 modules (54 fast, 19 slow); each case
+belongs to exactly one CLI group. Category 8 (code quality) is run by
+`make lint`, not pytest, so it does not appear in the test recap. CLI grouping
+is separate from the curated {doc}`feature coverage <coverage>` metric and
+does not imply every feature in a module is fully tested. See
+{doc}`../testing-strategy` for goals beyond these implemented checks.
 
 ## Running the tests
 
