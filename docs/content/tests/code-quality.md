@@ -91,7 +91,7 @@ that runner has no linter snaps installed, so most of them are skipped there.
 ## Example output
 
 ```text
-8 Code quality: fast PASSED (6/6 passed) · slow PASSED (8/8 passed)
+8. Code quality: Fast(6/6): PASSED · Slow(8/8): PASSED
 ```
 
 A failing check lists each problem on its own line:

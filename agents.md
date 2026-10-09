@@ -67,7 +67,7 @@ When adding tests:
 1. Prefer an existing `tests/test_*.py` module for the same behavior. For a
    new file, choose its **primary** category from
    `docs/content/testing-strategy.md` and add
-   `"test_new.py": "4 Features and regressions"` (for example) to
+   `"test_new.py": "4. Features and regressions"` (for example) to
    `TEST_CATEGORIES` in `tests/conftest.py`.
    Coverage/reporting tests belong to `Test infrastructure`. Use
    `SLOW_CATEGORY_OVERRIDES` only if a file's slow tests need a _different_
@@ -94,7 +94,7 @@ Do not claim behaviors that tests do not assert.
 `test_inventory_counts_match_collection` (fast, in `tests/test_code_quality.py`)
 enforces the counts and totals; `test_test_bookkeeping_in_sync` enforces
 `TEST_CATEGORIES`, `features.yaml` node IDs, and `REQUIRED_TOOLS` for every
-`make lint` target. Category 8 linters report under `8 Code quality` (slow);
+`make lint` target. Category 8 linters report under `8. Code quality` (slow);
 `make lint` remains the CI entry point.
 
 `docs/content/testing-strategy.md` is a design document (the vision). Do not

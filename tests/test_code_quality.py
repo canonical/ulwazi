@@ -310,7 +310,8 @@ def _documented_inventory() -> tuple[dict[tuple[str, str, str], int], dict[str, 
     group = ""
     for line in table.splitlines():
         if line.startswith("* - "):
-            group = line[4:].strip()
+            # "1\. Build process": the backslash stops MyST from starting a list.
+            group = line[4:].strip().replace("\\.", ".", 1)
         elif entry := MODULE_ENTRY.search(line):
             for count, tier in re.findall(r"(\d+) (fast|slow)", entry["counts"]):
                 counts[(group, entry["file"], tier)] = int(count)
