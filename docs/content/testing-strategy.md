@@ -275,7 +275,14 @@ To run only the slow tests:
 make test-slow
 ```
 
-To run all tests (fast and slow) together with a coverage report:
+To run all tests (fast and slow):
+
+```shell
+make test-all
+```
+
+To run fast tests plus the designated browser and style checks with a coverage
+report (not the entire slow suite):
 
 ```shell
 make test-coverage
@@ -317,10 +324,11 @@ what a good test in this project looks like:
 - [ ] It is marked `slow` if it needs extra system dependencies (e.g., LaTeX,
       Playwright) or takes long to run; otherwise it stays in the fast
       tier.
-- [ ] It groups all of its checks into a single test case (one per tier, if it
-      has both fast and slow checks), so a green run reports one `PASSED`
-      line, and a red run lists every failed check tagged by page and part
-      in one failure message. See the
+- [ ] It groups related checks within a test when practical, but preserves
+  independent test cases (for example, parametrized environments).
+  The terminal recap reports one line per category with separate statuses
+  for its selected fast and slow tiers, while individual
+  failures still identify their test and checked page or part. See the
       {ref}`test output convention <test-output-convention>`.
 - [ ] It uses the right tool for the layer: Beautiful Soup for HTML structure,
       Playwright for rendered appearance and interaction.
