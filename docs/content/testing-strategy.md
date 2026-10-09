@@ -166,14 +166,23 @@ browsers.
 These tests use Playwright to load the built site in a real browser and check
 layout, computed styles, and interactive behaviour.
 
+These broad screen classes follow the main Vanilla layout breakpoints. Each
+required class has one representative test width; the large-desktop width is
+an optional goal. Component-specific breakpoints are not all covered.
+
+| Screen class  | Width range    | Tested at | Required |
+| ------------- | -------------- | --------- | -------- |
+| Mobile        | below 620 px   | 375 px    | Yes      |
+| Tablet        | 620 to 1035 px | 768 px    | Yes      |
+| Desktop       | 1036 to 1680 px | 1280 px  | Yes      |
+| Large desktop | 1681 px and up | 1920 px   | Optional |
+
 What to check:
 
-- **Mobile** (375 px width) -- navigation collapses, content reflows, no
-  horizontal scroll.
-- **Tablet** (768 px) -- layout adjusts correctly, side navigation behaves.
-- **Desktop** (1280 px) -- full layout with side navigation and local TOC.
-- **Large desktop** (1920 px) -- typography and spacing match the design
-  specification.
+- **Mobile** -- navigation collapses, content reflows, no horizontal scroll.
+- **Tablet** -- layout adjusts correctly, side navigation behaves.
+- **Desktop** -- full layout with side navigation and local TOC.
+- **Large desktop** -- typography and spacing match the design specification.
 - **Theme toggle** -- light/dark mode toggle works and persists.
 - **Keyboard navigation** -- focus styles are visible and logical.
 - **Cross-browser** -- run key visual checks in Chromium and Firefox.

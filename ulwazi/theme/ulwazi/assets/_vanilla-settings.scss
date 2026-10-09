@@ -6,6 +6,14 @@
 // Canonical brand orange (Ubuntu orange)
 $color-brand-orange: #e95420;
 
+// Darker accent orange used on brand call-to-action buttons (feedback,
+// search) instead of $color-brand-orange for contrast reasons.
+$color-accent-orange: #c13f0b;
+$color-accent-orange-hover: #b73500;
+
+// Darker dark-mode code-block background so pygments-dark.css token colours meet WCAG AA contrast
+$colors--dark-theme--background-code: rgba($color-x-light, 0.05);
+
 $text-max-width: 100%;
 $font-base-family: 'Ubuntu, Arial, "libra sans", sans-serif';
 $font-monospace: '"Ubuntu Mono", Consolas, Monaco, Courier, monospace';

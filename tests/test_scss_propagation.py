@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 from bs4 import BeautifulSoup
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 
 INDEX_PATH = "docs/_build/index.html"
@@ -16,6 +17,23 @@ TYPOGRAPHY_PATH = "docs/_build/content/typography-verification/index.html"
 # be exactly 16px, so the link text inset is 3px + 16px = 19px.
 NAV_INDICATOR_WIDTH = "3px"
 NAV_TEXT_INSET = "19px"
+PAGE_LOAD_ATTEMPTS = 3
+PAGE_LOAD_TIMEOUT_MS = 15000
+
+
+def _open_page(browser, path):
+    """Retry a full page load with a fresh page after a transient timeout."""
+    for attempt in range(PAGE_LOAD_ATTEMPTS):
+        page = browser.new_page()
+        try:
+            page.goto(path.as_uri(), wait_until="load", timeout=PAGE_LOAD_TIMEOUT_MS)
+        except PlaywrightTimeoutError:
+            page.close()
+            if attempt == PAGE_LOAD_ATTEMPTS - 1:
+                raise
+        else:
+            return page
+    raise AssertionError("No page load was attempted")
 
 
 def test_scss_styles_propagation():
@@ -43,9 +61,8 @@ def test_rendered_color():
     with sync_playwright() as p:
         browser = p.chromium.launch()
         assert browser, "Failed to launch Chromium browser"
-        page = browser.new_page()
+        page = _open_page(browser, index_path)
         assert page, "Failed to create a new browser page"
-        page.goto(f"file://{index_path}")
         assert page.content(), "Page failed to load content"
 
         # Check if element exists
@@ -79,9 +96,8 @@ def test_sidebar_active_item_indicator_gap():
     with sync_playwright() as p:
         browser = p.chromium.launch()
         assert browser, "Failed to launch Chromium browser"
-        page = browser.new_page()
+        page = _open_page(browser, index_path)
         assert page, "Failed to create a new browser page"
-        page.goto(f"file://{index_path}")
         assert page.content(), "Page failed to load content"
 
         active_selector = "a.p-side-navigation__link.is-active"
@@ -147,9 +163,8 @@ def test_ordered_list_marker_matches_text_size():
     with sync_playwright() as p:
         browser = p.chromium.launch()
         assert browser, "Failed to launch Chromium browser"
-        page = browser.new_page()
+        page = _open_page(browser, typography_path)
         assert page, "Failed to create a new browser page"
-        page.goto(f"file://{typography_path}")
         assert page.content(), "Page failed to load content"
 
         # Check if list element exists

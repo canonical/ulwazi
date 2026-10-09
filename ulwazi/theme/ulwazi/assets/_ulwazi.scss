@@ -361,6 +361,16 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+body.is-dark .highlight,
+body.is-dark code:not(pre code) {
+  background-color: $colors--dark-theme--background-code;
+}
+
+a code:not(pre code),
+body.is-dark a code:not(pre code) {
+  background-color: transparent;
+}
+
 // A trailing block element (blockquote, list, table, nested admonition)
 // keeps its own bottom margin, showing as a blank line inside the box.
 .p-notification__message > :last-child {
@@ -498,7 +508,9 @@ div.terminal > div.input > button.copybtn svg {
 }
 
 .p-search-box .p-search-box__button {
-  background-color: $color-brand-orange !important;
+  // Matches the feedback button's darker accent for visual consistency,
+  // though the icon-only button only needs the lower 3:1 non-text ratio.
+  background-color: $color-accent-orange !important;
   border-left: none !important;
   height: calc(2rem - 1.5px) !important;
   margin: 0 0 1.5px 0 !important;
@@ -509,8 +521,9 @@ div.terminal > div.input > button.copybtn svg {
     filter: brightness(0) invert(1); // Makes the icon white
   }
 
-  &:hover {
-    background-color: var(--ulwazi-color-brand-hover) !important;
+  &:hover,
+  &:active {
+    background-color: $color-accent-orange-hover !important;
   }
 }
 
@@ -565,53 +578,53 @@ kbd.compound {
   Feedback section.
 */
 
-// Orange button variant for the "Give feedback" call-to-action.
-// Inherits base styles from p-button--positive.
-.p-button--orange {
-  background-color: $color-brand-orange;
-  border-color: $color-brand-orange;
-  color: #fff;
-  font-size: $font-size-p;
-  font-weight: bold;
-
-  &:visited {
-    color: #fff;
-  }
-
-  &:hover {
-    background-color: adjust-color($color-brand-orange, $lightness: -10%);
-    border-color: adjust-color($color-brand-orange, $lightness: -10%);
-  }
-
-  &:active,
-  &[aria-pressed=true],
-  &[aria-selected=true],
-  &[aria-expanded=true] {
-    background-color: adjust-color($color-brand-orange, $lightness: -15%);
-    border-color: adjust-color($color-brand-orange, $lightness: -15%);
-    transition-duration: 0s;
-  }
-
-  &:disabled,
-  &.is-disabled {
-    background-color: $color-brand-orange;
-    border-color: $color-brand-orange;
-  }
-
-  &:focus-visible {
-    outline: 0.1875rem solid adjust-color($color-brand-orange, $lightness: -20%);
-    outline-offset: -0.1875rem;
-  }
-}
-
 // Icon links (edit / view-source) aligned next to the Give feedback button.
 .content-icon-container {
   gap: 0.5rem; // uniform spacing: button→icon and icon→icon are equal
 
   // Neutralise Vanilla's default button margins so gap alone controls spacing.
-  .p-button--positive {
+  .p-button {
     margin-bottom: 0;
     margin-right: 0;
+  }
+
+  // Feedback button: darker orange with white text for WCAG AA contrast
+  // (5.27:1 normal, 5.96:1 hover/active against #ffffff). Same in both
+  // light and dark themes -- the shade is dark enough to hold contrast
+  // against either background, so no theme-scoped overrides are needed.
+  .p-button--orange {
+    background-color: $color-accent-orange;
+    border-color: $color-accent-orange;
+    color: $color-x-light;
+    font-size: $font-size-p;
+    font-weight: bold;
+
+    &:visited {
+      color: $color-x-light;
+    }
+
+    &:hover {
+      background-color: $color-accent-orange-hover;
+      border-color: $color-accent-orange-hover;
+      color: $color-x-light;
+    }
+
+    &:active,
+    &[aria-pressed=true],
+    &[aria-selected=true],
+    &[aria-expanded=true] {
+      background-color: $color-accent-orange-hover;
+      border-color: $color-accent-orange-hover;
+      color: $color-x-light;
+      transition-duration: 0s;
+    }
+
+    &:disabled,
+    &.is-disabled {
+      background-color: $color-accent-orange;
+      border-color: $color-accent-orange;
+      color: $color-x-light;
+    }
   }
 
   .edit-this-page,

@@ -51,6 +51,7 @@ Available tests:
 - **test_features.py**: Checks theme markup (fast) and browser interactions (slow)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_accessibility.py**: Scans the MyST cheat sheet in both themes for axe-core WCAG AA colour contrast violations using Playwright (fast, ~7s)
 - **test_layout_smoke.py**: Checks every built page renders its article inside `main.l-docs__main`, and (in Chromium at 1440px) that no page overflows the viewport and no element spills out of the main column _(browser check is slow)_
 - **test_seo_metadata.py**: Verifies SEO/metadata tags (title, description, canonical, favicon, Open Graph) on built pages
 - **test_structured_toc.py**: Verifies domain/slice markup and ARIA in RST and MyST HTML (fast test); browser styling and LaTeX content from both cheat sheets are grouped into a single slow test _(partially slow)_
