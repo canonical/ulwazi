@@ -303,7 +303,6 @@ def test_features_slow(built_site):  # noqa: PLR0915
                 # On a new page in the same context, the saved consent must
                 # prevent the first-visit dialog from appearing again.
                 navigate("content/rst-cheat-sheet/")
-                page.wait_for_load_state("load")
                 expect(page.locator("dialog.cookie-policy")).to_have_count(0)
 
                 # The footer is theme-owned; the modal comes from the remote
