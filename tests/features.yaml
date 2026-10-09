@@ -55,6 +55,11 @@ markup:
     source: docs/content/myst-cheat-sheet.md and rst-cheat-sheet.rst (grid, list and CSV header and first row)
     checks:
       - tests/test_features.py::test_features_fast
+  - name: Structured-TOC separator colour and visited-link styling
+    source: myst-cheat-sheet.md and rst-cheat-sheet.rst "Structured tables of contents" (markup); light/dark separator colour and visited-link override in Chromium
+    checks:
+      - tests/test_structured_toc.py::test_structured_toc_markup
+      - tests/test_structured_toc.py::test_structured_toc_styling_slow
 
 site:
   - name: Home page shell
@@ -101,3 +106,7 @@ site:
   - name: Styled 404 page
     source: planned 404 page (testing-strategy.md); not configured in docs/conf.py
     checks: []
+  - name: Structured-TOC styling opt-out and separator colour overrides
+    source: ulwazi_structured_toc_styling and _separator_color_light/_dark conf.py values
+    checks:
+      - tests/test_structured_toc.py::test_structured_toc_styling_config

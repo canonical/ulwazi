@@ -63,6 +63,12 @@
     {%- endif -%}
   {% endfor -%}
 
+  {%- if ulwazi_structured_toc_css -%}
+    {#- Project overrides for the ulwazi_structured_toc_separator_color_light/_dark
+    conf.py values; see _structured_toc_color_css in ulwazi/__init__.py. -#}
+    <style id="ulwazi-structured-toc-colors">{{ ulwazi_structured_toc_css }}</style>
+  {%- endif -%}
+
   {%- endblock head_stylesheets -%}
 
   {% block head_javascript %}

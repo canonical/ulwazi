@@ -147,7 +147,7 @@ xfail_strict = true
 markers = [
     "slow: slow tests",
     "coverage_js: browser journey used for JS coverage",
-    "coverage_style: computed SCSS colour check included in coverage run",
+    "coverage_style: computed theme colour (SCSS/CSS) check included in coverage run",
 ]
 # The category/tier recap in tests/conftest.py replaces per-test progress.
 # Pass -vv to see individual test results when debugging.
