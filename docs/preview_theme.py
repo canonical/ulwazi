@@ -2,6 +2,7 @@
 
 import hashlib
 import subprocess
+from collections.abc import Iterable
 from pathlib import Path
 
 DOCS = Path(__file__).resolve().parent
@@ -12,7 +13,7 @@ CSS = THEME / "theme/ulwazi/static/css/vanilla-main.css"
 STATE = DOCS / "_build/.preview-theme-digest"
 
 
-def _sources():
+def _sources() -> list[Path]:
     """Hash all theme inputs, including images/fonts, but not generated outputs."""
     return sorted(
         path
@@ -24,7 +25,7 @@ def _sources():
     )
 
 
-def _digest(paths):
+def _digest(paths: Iterable[Path]) -> str:
     digest = hashlib.sha256()
     for path in paths:
         digest.update(path.relative_to(ROOT).as_posix().encode())
@@ -32,7 +33,7 @@ def _digest(paths):
     return digest.hexdigest()
 
 
-def prepare():
+def prepare() -> None:
     """Compile changed SCSS, then invalidate only theme-dependent HTML output."""
     scss = list(SCSS.rglob("*.scss"))
     if not CSS.is_file() or any(

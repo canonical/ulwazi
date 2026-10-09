@@ -25,7 +25,7 @@ without the Makefile's legacy build step, with
 `uv run --group docs pytest tests/test_smoke.py`.
 
 The category recap identifies a passing smoke case as
-`2 Smoke: fast PASSED (1/1 passed)`; use `-vv` to see its pytest ID.
+`2. Smoke: Fast(1/1): PASSED`; use `-vv` to see its pytest ID.
 On failure, the same case
 lists each broken contract beneath its category and tier, for example:
 

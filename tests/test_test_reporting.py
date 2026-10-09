@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from conftest import _category, _category_results
+from conftest import LiveProgress, _category, _category_recap, _category_results
 
 pytest_plugins = ("pytester",)
 
@@ -17,14 +17,17 @@ def _report(nodeid: str, when: str = "call", **attributes):
 def test_reporting_category_matches_test_and_tier():
     """Layout checks split by tier; accessibility and responsive suites map."""
     layout = "tests/test_layout_smoke.py::test_article_inside_docs_main"
-    assert _category(layout, slow=False) == ("3 Assets and structure", "fast")
-    assert _category(layout, slow=True) == ("6 Responsive layout", "slow")
+    assert _category(layout, slow=False) == ("3. Assets and structure", "fast")
+    assert _category(layout, slow=True) == ("6. Responsive layout", "slow")
     assert _category(
         "tests/test_accessibility.py::test_color_contrast_meets_wcag_aa", slow=False
-    ) == ("9 Accessibility", "fast")
+    ) == ("9. Accessibility", "fast")
     assert _category(
         "tests/test_responsive.py::test_small_screen_layout[mobile-375]", slow=True
-    ) == ("6 Responsive layout", "slow")
+    ) == ("6. Responsive layout", "slow")
+    assert _category(
+        "tests/test_code_quality.py::test_make_lint_target[lint-ruff]", slow=True
+    ) == ("8. Code quality", "slow")
     assert _category("tests/test_new_suite.py::test_new", slow=False) == (
         "Other tests",
         "fast",
@@ -47,15 +50,15 @@ def test_responsive_recap_counts_each_parameter_and_accessibility_separately():
     stats = {"passed": [_report(nodeid) for nodeid in selected]}
 
     assert list(_category_results(selected, stats)) == [
-        ("PASSED", "6 Responsive layout: slow PASSED (5/5 passed)"),
-        ("PASSED", "9 Accessibility: fast PASSED (1/1 passed)"),
+        ("PASSED", "6. Responsive layout: Slow(5/5): PASSED"),
+        ("PASSED", "9. Accessibility: Fast(1/1): PASSED"),
     ]
 
 
 def test_category_recap_mixed_outcomes():
     """Failures, fixture errors, skips, and interrupted items stay visible."""
     selected = {
-        f"tests/test_smoke.py::{case}": ("2 Smoke", "fast")
+        f"tests/test_smoke.py::{case}": ("2. Smoke", "fast")
         for case in ("pass", "failure", "error", "skip", "unfinished")
     }
     stats = {
@@ -68,7 +71,7 @@ def test_category_recap_mixed_outcomes():
     assert list(_category_results(selected, stats)) == [
         (
             "FAILED",
-            "2 Smoke: fast FAILED (1/5 passed; 2 failed, 1 skipped, 1 not run)",
+            "2. Smoke: Fast(1/5): FAILED (2 failed, 1 skipped, 1 not run)",
         )
     ]
 
@@ -76,8 +79,8 @@ def test_category_recap_mixed_outcomes():
 def test_category_recap_separates_tiers_and_does_not_count_xfails_as_passes():
     """Only ordinary call-phase successes can make a tier green."""
     selected = {
-        "tests/test_features.py::fast": ("4 Features and regressions", "fast"),
-        "tests/test_features.py::slow": ("4 Features and regressions", "slow"),
+        "tests/test_features.py::fast": ("4. Features and regressions", "fast"),
+        "tests/test_features.py::slow": ("4. Features and regressions", "slow"),
     }
     stats = {
         "passed": [
@@ -91,8 +94,8 @@ def test_category_recap_separates_tiers_and_does_not_count_xfails_as_passes():
         (
             "INCOMPLETE",
             (
-                "4 Features and regressions: fast PASSED (1/1 passed) · "
-                "slow INCOMPLETE (0/1 passed; 1 skipped)"
+                "4. Features and regressions: Fast(1/1): PASSED · "
+                "Slow(0/1): INCOMPLETE (1 skipped)"
             ),
         ),
     ]
@@ -101,19 +104,16 @@ def test_category_recap_separates_tiers_and_does_not_count_xfails_as_passes():
 def test_category_recap_combines_successful_tiers():
     """Both selected tiers appear on one line, even with multiple cases."""
     selected = {
-        "tests/test_features.py::first": ("4 Features and regressions", "fast"),
-        "tests/test_features.py::second": ("4 Features and regressions", "fast"),
-        "tests/test_features.py::browser": ("4 Features and regressions", "slow"),
+        "tests/test_features.py::first": ("4. Features and regressions", "fast"),
+        "tests/test_features.py::second": ("4. Features and regressions", "fast"),
+        "tests/test_features.py::browser": ("4. Features and regressions", "slow"),
     }
     stats = {"passed": [_report(nodeid) for nodeid in selected]}
 
     assert list(_category_results(selected, stats)) == [
         (
             "PASSED",
-            (
-                "4 Features and regressions: fast PASSED (2/2 passed) · "
-                "slow PASSED (1/1 passed)"
-            ),
+            ("4. Features and regressions: Fast(2/2): PASSED · Slow(1/1): PASSED"),
         )
     ]
 
@@ -123,8 +123,8 @@ def test_category_recap_failure_in_one_tier_keeps_other_tier_green():
     fast = "tests/test_features.py::fast"
     slow = "tests/test_features.py::slow"
     selected = {
-        fast: ("4 Features and regressions", "fast"),
-        slow: ("4 Features and regressions", "slow"),
+        fast: ("4. Features and regressions", "fast"),
+        slow: ("4. Features and regressions", "slow"),
     }
     stats = {"passed": [_report(fast)], "failed": [_report(slow)]}
 
@@ -132,8 +132,8 @@ def test_category_recap_failure_in_one_tier_keeps_other_tier_green():
         (
             "FAILED",
             (
-                "4 Features and regressions: fast PASSED (1/1 passed) · "
-                "slow FAILED (0/1 passed; 1 failed)"
+                "4. Features and regressions: Fast(1/1): PASSED · "
+                "Slow(0/1): FAILED (1 failed)"
             ),
         )
     ]
@@ -158,10 +158,10 @@ def test_unregistered_cases_report_individual_ids_and_outcomes():
     }
 
     assert list(_category_results(selected, stats)) == [
-        ("FAILED", f"FAILED {failed} [fast] (1 failed)"),
-        ("PASSED", f"PASSED {passed} [fast]"),
-        ("INCOMPLETE", f"INCOMPLETE {skipped} [slow] (1 skipped)"),
-        ("INCOMPLETE", f"INCOMPLETE {unfinished} [fast] (1 not run)"),
+        ("FAILED", f"{failed}: Fast(0/1): FAILED (1 failed)"),
+        ("PASSED", f"{passed}: Fast(1/1): PASSED"),
+        ("INCOMPLETE", f"{skipped}: Slow(0/1): INCOMPLETE (1 skipped)"),
+        ("INCOMPLETE", f"{unfinished}: Fast(0/1): INCOMPLETE (1 not run)"),
     ]
 
 
@@ -176,9 +176,44 @@ def test_unregistered_cases_do_not_change_registered_category_count():
     stats = {"passed": [_report(registered), _report(unregistered)]}
 
     assert list(_category_results(selected, stats)) == [
-        ("PASSED", "2 Smoke: fast PASSED (1/1 passed)"),
-        ("PASSED", f"PASSED {unregistered} [fast]"),
+        ("PASSED", "2. Smoke: Fast(1/1): PASSED"),
+        ("PASSED", f"{unregistered}: Fast(1/1): PASSED"),
     ]
+
+
+def test_recap_reserves_green_for_passing_results():
+    """Only the PASSED word and its count are green; failures stay red."""
+    fast = "tests/test_features.py::fast"
+    slow = "tests/test_features.py::slow"
+    selected = {
+        fast: ("4. Features and regressions", "fast"),
+        slow: ("4. Features and regressions", "slow"),
+    }
+    stats = {"passed": [_report(fast)], "failed": [_report(slow)]}
+
+    [(_, segments)] = _category_recap(selected, stats)
+    green = [text for text, markup in segments if markup.get("green")]
+    red = [text for text, markup in segments if markup.get("red")]
+    assert green == ["1/1", "PASSED"]
+    assert red == ["FAILED", "1 failed"]
+    assert ("4. Features and regressions", {"bold": True}) in segments
+
+
+def test_live_progress_estimates_time_left_from_previous_durations():
+    """Known tests use last run's time; new tests use this run's average."""
+    cache = SimpleNamespace(get=lambda key, default: {"build": 50.0, "quick": 2.0})
+    progress = LiveProgress(SimpleNamespace(cache=cache))
+    progress.pending = {"build", "quick", "new"}
+    # 50s + 2s + 26s (the history mean, for the test with no history)
+    assert progress.status() == (" 0%", " (~1m 18s left)")
+
+    progress.done = 1
+    progress.durations["first"] = 4.0
+    assert progress.status() == (" 25%", " (~56s left)")
+
+    progress.history = {}
+    progress.durations.clear()
+    assert progress.status() == (" 25%", "")  # nothing to estimate from
 
 
 def test_new_file_appears_by_name_in_actual_pytest_output(pytester: pytest.Pytester):
@@ -204,7 +239,10 @@ def test_new_file_appears_by_name_in_actual_pytest_output(pytester: pytest.Pytes
 
     result.assert_outcomes(passed=2, failed=1, skipped=1)
     lines = result.stdout.str().splitlines()
-    assert "PASSED test_new_suite.py::test_parameterized[0] [fast]" in lines
-    assert "FAILED test_new_suite.py::test_parameterized[1] [fast] (1 failed)" in lines
-    assert "PASSED test_new_suite.py::test_simple [fast]" in lines
-    assert "INCOMPLETE test_new_suite.py::test_skipped [fast] (1 skipped)" in lines
+    assert "test_new_suite.py::test_parameterized[0]: Fast(1/1): PASSED" in lines
+    assert (
+        "test_new_suite.py::test_parameterized[1]: Fast(0/1): FAILED (1 failed)"
+        in lines
+    )
+    assert "test_new_suite.py::test_simple: Fast(1/1): PASSED" in lines
+    assert "test_new_suite.py::test_skipped: Fast(0/1): INCOMPLETE (1 skipped)" in lines

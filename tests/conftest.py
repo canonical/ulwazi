@@ -2,6 +2,7 @@
 
 import json
 import os
+import time
 from collections import defaultdict
 from io import StringIO
 from pathlib import Path
@@ -20,26 +21,27 @@ FEATURE_STATE = Path("results/feature-coverage.json")
 # run independently (including each parameter and its fixtures); only the CLI
 # recap is grouped. A few checks also cover other categories, documented there.
 TEST_CATEGORIES = {
-    "test_preview_theme.py": "1 Build process",
-    "test_pdf_generation.py": "1 Build process",
-    "test_smoke.py": "2 Smoke",
-    "test_assets_structure.py": "3 Assets and structure",
-    "test_seo_metadata.py": "3 Assets and structure",
-    "test_layout_smoke.py": "3 Assets and structure",
-    "test_features.py": "4 Features and regressions",
-    "test_config_robustness.py": "4 Features and regressions",
-    "test_scss_propagation.py": "4 Features and regressions",
-    "test_notfound_bundling.py": "5 Extension compatibility",
-    "test_extension_compatibility.py": "5 Extension compatibility",
-    "test_structured_toc.py": "5 Extension compatibility",
-    "test_responsive.py": "6 Responsive layout",
-    "test_notfound_prefix.py": "7 Python and environments",
-    "test_python_versions.py": "7 Python and environments",
-    "test_accessibility.py": "9 Accessibility",
+    "test_preview_theme.py": "1. Build process",
+    "test_pdf_generation.py": "1. Build process",
+    "test_smoke.py": "2. Smoke",
+    "test_assets_structure.py": "3. Assets and structure",
+    "test_seo_metadata.py": "3. Assets and structure",
+    "test_layout_smoke.py": "3. Assets and structure",
+    "test_features.py": "4. Features and regressions",
+    "test_config_robustness.py": "4. Features and regressions",
+    "test_scss_propagation.py": "4. Features and regressions",
+    "test_notfound_bundling.py": "5. Extension compatibility",
+    "test_extension_compatibility.py": "5. Extension compatibility",
+    "test_structured_toc.py": "5. Extension compatibility",
+    "test_responsive.py": "6. Responsive layout",
+    "test_notfound_prefix.py": "7. Python and environments",
+    "test_python_versions.py": "7. Python and environments",
+    "test_code_quality.py": "8. Code quality",
+    "test_accessibility.py": "9. Accessibility",
     "test_coverage_metrics.py": "Test infrastructure",
     "test_test_reporting.py": "Test infrastructure",
 }
-SLOW_CATEGORY_OVERRIDES = {"test_layout_smoke.py": "6 Responsive layout"}
+SLOW_CATEGORY_OVERRIDES = {"test_layout_smoke.py": "6. Responsive layout"}
 SELECTED_TESTS: dict[str, tuple[str, str]] = {}
 
 
@@ -87,8 +89,165 @@ def pytest_runtest_logreport(report) -> None:
         )
 
 
-def _category_results(selected, stats):
-    """Group registered suites and show every unregistered test by node ID."""
+DURATIONS_CACHE_KEY = "ulwazi/test-durations"
+
+
+def _format_seconds(seconds: float) -> str:
+    seconds = max(1, round(seconds))
+    return f"{seconds}s" if seconds < 60 else f"{seconds // 60}m {seconds % 60:02d}s"
+
+
+class LiveProgress:
+    """Show `` 45% (~12s left)`` after pytest's progress dots in a terminal.
+
+    The estimate adds up each remaining test's duration from the previous run
+    (stored in the pytest cache), falling back to this run's average. The status
+    is drawn between save/restore-cursor escapes, so pytest's next dot or final
+    ``[100%]`` overwrites it. Disable with ``-p no:ulwazi-live-progress``.
+    """
+
+    def __init__(self, config) -> None:
+        self.config = config
+        # No cache with `-p no:cacheprovider`: estimate from this run only.
+        self.cache = getattr(config, "cache", None)
+        self.history: dict[str, float] = (
+            self.cache.get(DURATIONS_CACHE_KEY, {}) if self.cache else {}
+        )
+        self.durations: dict[str, float] = defaultdict(float)
+        self.pending: set[str] = set()
+        self.done = 0
+        self.writer = None
+        self.drawn = False
+
+    def estimate(self) -> float | None:
+        """Seconds left: previous durations, else the average so far."""
+        known = self.durations or self.history
+        fallback = sum(known.values()) / len(known) if known else None
+        remaining = [self.history.get(nodeid, fallback) for nodeid in self.pending]
+        return None if None in remaining else sum(remaining)  # type: ignore[arg-type]
+
+    def status(self) -> tuple[str, str]:
+        """Percentage and optional time-left text, kept separate for styling."""
+        percent = 100 * self.done // (self.done + len(self.pending))
+        eta = self.estimate()
+        return f" {percent}%", "" if eta is None else f" (~{_format_seconds(eta)} left)"
+
+    def _draw(self) -> None:
+        writer = self.writer
+        if writer is None or not self.pending:
+            return
+        percent, eta = self.status()
+        room = writer.fullwidth - writer.width_of_current_line - 1
+        if len(percent + eta) > room:
+            eta = ""
+        if len(percent) > room:
+            return
+        if writer.hasmarkup:
+            percent = f"\x1b[36m{percent}\x1b[0m"
+            eta = f"\x1b[2m{eta}\x1b[0m" if eta else ""
+        writer._file.write(f"\x1b7\x1b[K{percent}{eta}\x1b8")
+        writer.flush()
+        self.drawn = True
+
+    def _clear(self) -> None:
+        if self.drawn and self.writer is not None:
+            self.writer._file.write("\x1b[K")
+            self.writer.flush()
+            self.drawn = False
+
+    def pytest_collection_finish(self, session) -> None:
+        self.pending = {item.nodeid for item in session.items}
+        reporter = self.config.pluginmanager.get_plugin("terminalreporter")
+        if (
+            reporter is not None
+            and reporter.isatty()
+            and os.environ.get("TERM") != "dumb"
+            and not self.config.option.collectonly
+        ):
+            self.writer = reporter._tw
+
+    @pytest.hookimpl(trylast=True)
+    def pytest_runtest_logstart(self, nodeid) -> None:
+        if not self.done:
+            self._draw()  # 0% and the estimate while the first test runs
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_runtest_logreport(self, report) -> None:
+        self.durations[report.nodeid] += report.duration
+        if report.when == "call" or not report.passed:
+            self._clear()  # pytest is about to print this test's letter
+
+    @pytest.hookimpl(trylast=True)
+    def pytest_runtest_logfinish(self, nodeid) -> None:
+        self.done += 1
+        self.pending.discard(nodeid)
+        self._draw()
+
+    def pytest_keyboard_interrupt(self) -> None:
+        self._clear()
+
+    def pytest_sessionfinish(self) -> None:
+        if self.cache is not None and self.durations:
+            self.cache.set(DURATIONS_CACHE_KEY, {**self.history, **self.durations})
+
+
+def pytest_configure(config) -> None:
+    """Add live progress for plain local runs; xdist and -v print their own."""
+    if (
+        config.option.verbose <= 0
+        and not hasattr(config, "workerinput")
+        and not getattr(config.option, "numprocesses", None)
+    ):
+        config.pluginmanager.register(LiveProgress(config), "ulwazi-live-progress")
+
+
+# Recap styling (pytest TerminalWriter markup; dropped without a colour TTY or
+# with NO_COLOR). Green is reserved for passing results; structure is muted.
+STATE_STYLE = {
+    "PASSED": {"green": True, "bold": True},
+    "FAILED": {"red": True, "bold": True},
+    "INCOMPLETE": {"yellow": True, "bold": True},
+}
+PASSED_COUNT_STYLE = {"green": True}
+DETAIL_STYLE = {
+    "failed": {"red": True},
+    "skipped": {"yellow": True},
+    "not run": {"yellow": True},
+}
+CATEGORY_STYLE = {"bold": True}
+TIER_STYLE = {"cyan": True}
+MUTED_STYLE = {"light": True}
+PLAIN: dict[str, bool] = {}
+
+Segment = tuple[str, dict[str, bool]]
+
+
+def _tier_segments(tier, state, good, total, details) -> list[Segment]:
+    """Render ``Fast(7/7): PASSED`` or ``Slow(1/3): FAILED (1 failed, ...)``."""
+    segments: list[Segment] = [
+        (tier.capitalize(), TIER_STYLE),
+        ("(", MUTED_STYLE),
+        (f"{good}/{total}", PASSED_COUNT_STYLE if state == "PASSED" else PLAIN),
+        (")", MUTED_STYLE),
+        (": ", PLAIN),
+        (state, STATE_STYLE[state]),
+    ]
+    if details:
+        segments.append((" (", MUTED_STYLE))
+        for index, (count, label) in enumerate(details):
+            if index:
+                segments.append((", ", MUTED_STYLE))
+            segments.append((f"{count} {label}", DETAIL_STYLE[label]))
+        segments.append((")", MUTED_STYLE))
+    return segments
+
+
+def _category_recap(selected, stats):
+    """Group registered suites and show every unregistered test by node ID.
+
+    Yields ``(overall state, segments)``, where each segment is ``(text,
+    markup)`` so the terminal summary can colour parts of one line.
+    """
     groups: dict[str, dict[str, set[str]]] = defaultdict(lambda: defaultdict(set))
     unregistered: dict[str, str] = {}
     for nodeid, (name, tier) in selected.items():
@@ -108,34 +267,35 @@ def _category_results(selected, stats):
     failed = reported("failed") | reported("error") | reported("xpassed")
     skipped = reported("skipped") | reported("xfailed")
 
-    def outcome(nodeids: set[str]) -> tuple[str, int, str]:
+    def outcome(nodeids: set[str]) -> tuple[str, int, list[tuple[int, str]]]:
         """Count call-phase passes, failures, skips and unfinished cases."""
         good = len(nodeids & (passed - failed - skipped))
         bad = len(nodeids & failed)
         omitted = len(nodeids & (skipped - failed))
         remaining = len(nodeids) - good - bad - omitted
         state = "FAILED" if bad else "PASSED" if good == len(nodeids) else "INCOMPLETE"
-        details = ", ".join(
-            f"{count} {label}"
+        details = [
+            (count, label)
             for count, label in (
                 (bad, "failed"),
                 (omitted, "skipped"),
                 (remaining, "not run"),
             )
             if count
-        )
+        ]
         return state, good, details
 
     for name, tiers in sorted(groups.items()):
-        parts = []
+        segments: list[Segment] = [(name, CATEGORY_STYLE), (": ", PLAIN)]
         states = []
         for tier in ("fast", "slow"):
             if tier not in tiers:
                 continue
             nodeids = tiers[tier]
             state, good, details = outcome(nodeids)
-            suffix = f"; {details}" if details else ""
-            parts.append(f"{tier} {state} ({good}/{len(nodeids)} passed{suffix})")
+            if states:
+                segments.append((" · ", MUTED_STYLE))
+            segments += _tier_segments(tier, state, good, len(nodeids), details)
             states.append(state)
         overall = (
             "FAILED"
@@ -144,12 +304,24 @@ def _category_results(selected, stats):
             if "INCOMPLETE" in states
             else "PASSED"
         )
-        yield overall, f"{name}: {' · '.join(parts)}"
+        yield overall, segments
 
     for nodeid, tier in sorted(unregistered.items()):
-        state, _, details = outcome({nodeid})
-        suffix = f" ({details})" if details else ""
-        yield state, f"{state} {nodeid} [{tier}]{suffix}"
+        state, good, details = outcome({nodeid})
+        yield (
+            state,
+            [
+                (nodeid, PLAIN),
+                (": ", PLAIN),
+                *_tier_segments(tier, state, good, 1, details),
+            ],
+        )
+
+
+def _category_results(selected, stats):
+    """Plain-text recap lines, as they appear without colour."""
+    for state, segments in _category_recap(selected, stats):
+        yield state, "".join(text for text, _ in segments)
 
 
 @pytest.fixture
@@ -229,20 +401,14 @@ def built_site(tmp_path_factory):
 def pytest_terminal_summary(config, terminalreporter) -> None:
     """Recap selected test categories; report feature checks on coverage runs."""
     if not config.option.collectonly and config.option.verbose <= 0:
-        results = list(_category_results(SELECTED_TESTS, terminalreporter.stats))
+        results = list(_category_recap(SELECTED_TESTS, terminalreporter.stats))
         if results:
             terminalreporter.section("test results (selected cases)")
-        for state, line in results:
-            terminalreporter.write_line(
-                line,
-                **(
-                    {"green": True}
-                    if state == "PASSED"
-                    else {"red": True}
-                    if state == "FAILED"
-                    else {"yellow": True}
-                ),
-            )
+        for _, segments in results:
+            terminalreporter.ensure_newline()
+            for text, markup in segments:
+                terminalreporter.write(text, **markup)
+            terminalreporter.write("\n")
 
     if (
         os.environ.get("ULWAZI_COVERAGE_REPORT") != "1"

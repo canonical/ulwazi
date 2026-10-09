@@ -37,9 +37,12 @@ currently tested versions are:
 - Python 3.14
 
 The authoritative list lives in `SUPPORTED_PYTHON_VERSIONS` in
-`tests/test_python_versions.py`. The GitHub Actions matrix in
-`.github/workflows/test-python-versions.yaml` mirrors this list and must be
-kept in sync.
+`tests/test_python_versions.py`. The fast
+{doc}`code quality check <code-quality>` `test_python_versions_in_sync` fails
+if the list disagrees with the GitHub Actions matrix in
+`.github/workflows/test-python-versions.yaml`, the `requires-python` floor,
+the Python classifiers, or the ruff, mypy and pyright target versions in
+`pyproject.toml`.
 
 ```{note}
 The supported range is defined by `requires-python` in `pyproject.toml`.
