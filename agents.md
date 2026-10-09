@@ -392,6 +392,45 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   each sheet trigger ambiguity warnings -- use `:suppress-warnings:` on
   their domains; (3) keep `:suppress-warnings:` for the deliberately
   ambiguous links in the explicitly named domains as well.
+- **Temporary structured-TOC styling** (added 2026-10-09, remove once the
+  extension styles its own blocks): the extension's `domain-list.css`
+  deliberately ships minimal styling only (inline flow + a
+  `border-left: 1px solid currentColor` separator; see its own
+  `docs/reference.rst` "CSS" section) and explicitly leaves bullets,
+  indent, and colour to the theme. Ulwazi fills that gap with
+  `ulwazi/theme/ulwazi/static/css/structured-toc.css` (NOT listed in
+  `theme.toml`, since that stylesheet list loads at Sphinx's priority 200,
+  before extensions' CSS at 500): it removes the slice list's bullets and
+  indent, recolours the separator (Ubuntu orange in light mode, white in
+  dark, via `--ulwazi-structured-toc-separator-color{,-light,-dark}`
+  custom properties and the theme's `.is-dark` class -- no
+  `prefers-color-scheme` auto mode exists in Ulwazi), and overrides
+  `--vf-color-link-visited` to the default link colour, all scoped under
+  `nav.domain-list` only. `ulwazi/__init__.py`'s `_setup_structured_toc_styling`
+  (connected to `builder-inited`, like `_copy_pdf_assets`, so it still runs
+  when Ulwazi is selected only via `html_theme`) links it at CSS priority
+  600 -- after the extension's domain-list.css, before a project's own
+  `html_css_files` (800) -- and only when `sphinx_structured_toc` is in
+  `app.extensions` and the new `ulwazi_structured_toc_styling` config value
+  (default `True`) is left on. The two
+  `ulwazi_structured_toc_separator_color_light`/`_dark` config values
+  (`_structured_toc_color_css`) inject a validated `<style>` in
+  `layout.html` (`ulwazi_structured_toc_css` in `html_context`); invalid
+  values are dropped with a build warning rather than failing the build.
+  Separator colour recolouring deliberately sets only `border-left-color`
+  (not the shorthand), so it keeps composing if the extension changes how
+  it draws the border. Both cheat sheets' "Structured tables of contents"
+  sections link to the new "Structured-TOC styling" section of
+  `docs/content/configuration.md`. Covered by the same
+  `tests/test_structured_toc.py` (now 2 fast + 2 slow;
+  `test_structured_toc_styling_config` builds tiny fixtures for the
+  opt-out/colour/extension-absent/theme-only scenarios,
+  `test_structured_toc_styling_slow` -- marked `coverage_style` -- checks
+  the rendered bullets/indent/colour/visited-link result in Chromium by
+  reading CSS custom properties, since browsers hide `:visited` colours
+  from scripts). Update `docs/content/tests/index.md` counts
+  (`test_inventory_counts_match_collection` enforces them) and
+  `tests/features.yaml` when touching this area.
 
 ## Testing Locations
 

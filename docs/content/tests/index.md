@@ -39,7 +39,7 @@ assertions inside one grouped case do not.
 * - 5\. Extension compatibility
   - `test_extension_compatibility.py` (**1 fast, 1 slow**, {doc}`details <extension-compatibility>`) — grouped Sphinx Stack extension markup/artifact checks; the slow case checks the expected PDF exists. Not every extension has an asserted rendered feature.
 
-    `test_structured_toc.py` (**1 fast, 1 slow**, {doc}`details <structured-toc>`) — RST/MyST domain/slice markup, links and ARIA; Chromium styling and generated LaTeX content.
+    `test_structured_toc.py` (**2 fast, 2 slow**, {doc}`details <structured-toc>`) — RST/MyST domain/slice markup, links and ARIA; Chromium styling and generated LaTeX content; Ulwazi's temporary structured-TOC styling options and its rendered appearance.
 
     `test_notfound_bundling.py` (**14 fast**) — bundled 404 activation/order, opt-outs and overrides, rendered 404 shell/asset, and sitemap exclusion across parametrized cases.
 * - 6\. Responsive layout
@@ -60,7 +60,7 @@ assertions inside one grouped case do not.
     `test_test_reporting.py` (**11 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, and the live time-left estimate.
 ```
 
-**Full selection:** 89 cases across 19 modules (62 fast, 27 slow); each case
+**Full selection:** 91 cases across 19 modules (63 fast, 28 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and

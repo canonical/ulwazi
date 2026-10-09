@@ -127,7 +127,7 @@ The available tests are:
 - **test_notfound_prefix.py** — checks URL prefixes for Read the Docs hosting layouts (fast)
 - **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
 - **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
-- **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML (fast test); browser styling and linked LaTeX slice lists are grouped into a single slow test _(partially slow)_
+- **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML and Ulwazi's temporary structured-TOC styling options (fast tests); the extension's own browser rendering and linked LaTeX slice lists, and Ulwazi's styling in the browser, are each grouped into a slow test _(partially slow)_
 - **test_layout_smoke.py** — checks every built page renders its article inside the main docs column, and (in a browser at 1440px) that nothing overflows the viewport or spills out of the main column _(browser check is slow)_
 - **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
 - **test_config_robustness.py** — checks minimal and maximum configuration, defaults, and legacy aliases (fast)
@@ -174,6 +174,21 @@ loading theme entry points and would warn that the flag is unknown. Projects
 that already list `notfound.extension` may keep that entry: Sphinx loads it
 only once. In such projects, the opt-out skips **Ulwazi's** 404 defaults but
 does not disable the explicitly enabled extension or its 404 page.
+
+## Structured-TOC styling (temporary)
+
+If your project uses [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc),
+Ulwazi temporarily styles its `domain`/`slice` blocks -- removing bullets
+and indent from the slice list, colouring the vertical separators between
+slice items in the brand colour, and normalizing visited-link colour --
+until the extension ships equivalent styling of its own. Nothing outside a
+`domain`/`slice` block is affected.
+
+Set `ulwazi_structured_toc_styling = False` in `conf.py` to opt out, or
+`ulwazi_structured_toc_separator_color_light` / `_dark` to override either
+separator colour. See the
+[configuration reference](docs/content/configuration.md#structured-toc-styling-temporary)
+for details.
 
 ## Contributing
 
