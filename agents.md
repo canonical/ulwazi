@@ -58,6 +58,7 @@ Available tests:
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
 - **test_config_robustness.py**: Checks minimal and maximum configurations, defaults, and legacy aliases (fast)
 - **test_extension_compatibility.py**: Verifies the theme renders correctly with Sphinx Stack default extensions enabled (grouped fast checks and a slow PDF check). See `docs/content/tests/extension-compatibility.md`
+- **test_code_quality.py**: Category 8. Fast consistency checks (Python version declarations, prettier pins, Jinja/JS syntax, test bookkeeping, inventory counts vs. collection) and one slow case per `make lint` target, skipped when its tool is missing. Run both tiers with `make test-code-quality`. See `docs/content/tests/code-quality.md`
 
 #### Test category reporting when adding tests
 
@@ -65,10 +66,11 @@ When adding tests:
 
 1. Prefer an existing `tests/test_*.py` module for the same behavior. For a
    new file, choose its **primary** category from
-   `docs/content/testing-strategy.md` and add `"test_new.py": "4 Features and
-   regressions"` (for example) to `TEST_CATEGORIES` in `tests/conftest.py`.
+   `docs/content/testing-strategy.md` and add
+   `"test_new.py": "4 Features and regressions"` (for example) to
+   `TEST_CATEGORIES` in `tests/conftest.py`.
    Coverage/reporting tests belong to `Test infrastructure`. Use
-   `SLOW_CATEGORY_OVERRIDES` only if a file's slow tests need a *different*
+   `SLOW_CATEGORY_OVERRIDES` only if a file's slow tests need a _different_
    category (see `test_layout_smoke.py`). An unmapped test still runs and
    prints its full pytest ID/result rather than disappearing in a total.
 2. Fast is the default; mark PDF, browser, network, or otherwise expensive
@@ -88,7 +90,16 @@ or regrouping tests (even within an existing module), update the corresponding
 row, fast/slow counts, and verified-behavior description. Account for every
 selected pytest case once, including `SLOW_CATEGORY_OVERRIDES` and parameters;
 compare the table totals with `make test-all` and `uv run pytest --collect-only`.
-Do not claim behaviors that tests do not assert. Category 8 is lint, not pytest.
+Do not claim behaviors that tests do not assert.
+`test_inventory_counts_match_collection` (fast, in `tests/test_code_quality.py`)
+enforces the counts and totals; `test_test_bookkeeping_in_sync` enforces
+`TEST_CATEGORIES`, `features.yaml` node IDs, and `REQUIRED_TOOLS` for every
+`make lint` target. Category 8 linters report under `8 Code quality` (slow);
+`make lint` remains the CI entry point.
+
+`docs/content/testing-strategy.md` is a design document (the vision). Do not
+edit it to describe implemented tests; document facts in
+`docs/content/tests/` instead.
 
 See the [test output convention](docs/content/tests/index.md#test-output-convention)
 for the compact recap and `uv run pytest -vv` for per-test results.
@@ -324,7 +335,7 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   theme's `setup()` (idempotent — projects that also list
   `notfound.extension` in `extensions` are unaffected). The theme ships a
   `404.html` template and a `static/404.svg` asset. Opt out with
-   `notfound_enabled = False` in conf.py, or `-D notfound_enabled=0` when
+  `notfound_enabled = False` in conf.py, or `-D notfound_enabled=0` when
   `"ulwazi"` is in `extensions`. For theme-only loading, Sphinx checks `-D`
   overrides before registering theme config values and warns about an unknown
   setting. When the extension is listed explicitly, the flag only skips
@@ -332,12 +343,12 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   404 page). Explicit `notfound_urls_prefix` and `notfound_template` settings
   in conf.py or `-D` also take precedence over the theme defaults. When the
   theme is selected only via `html_theme`, Sphinx loads it after
-   `config-inited`; the theme sets up these 404 defaults during late loading
-   too, but other Ulwazi config-inited features still require `"ulwazi"` in
-   `extensions`. `tests/test_notfound_bundling.py` keeps activation, ordering,
-   and theme-only build scenarios in a documented `ACTIVATION_CASES` table;
-   separate tests cover opt-out, RTD prefixes, and explicit settings.
-   `tests/test_notfound_prefix.py` tests the prefix helper directly.
+  `config-inited`; the theme sets up these 404 defaults during late loading
+  too, but other Ulwazi config-inited features still require `"ulwazi"` in
+  `extensions`. `tests/test_notfound_bundling.py` keeps activation, ordering,
+  and theme-only build scenarios in a documented `ACTIVATION_CASES` table;
+  separate tests cover opt-out, RTD prefixes, and explicit settings.
+  `tests/test_notfound_prefix.py` tests the prefix helper directly.
 - **notfound prefix schema detection**: `_notfound_urls_prefix` detects the
   URL schema from the _path_ of `READTHEDOCS_CANONICAL_URL` — the version
   segment is the last path segment, the language segment the one before it,

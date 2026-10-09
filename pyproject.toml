@@ -18,6 +18,9 @@ classifiers = [
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
     'Topic :: Documentation',
     'Topic :: Software Development :: Documentation',
 ]
@@ -339,6 +342,9 @@ max-args = 8
     "PLR2004", # Allow magic values in tests
     "SLF",     # Allow accessing private members from tests.
     "INP001",  # Allow fixture conf.py files without __init__.py (they're Sphinx confdirs, not packages).
+]
+"docs/*.py" = [
+    "INP001",  # Sphinx confdir scripts are run directly, not imported as a package.
 ]
 "__init__.py" = [
     "I001", # isort leaves init files alone by default, this makes ruff ignore them too.

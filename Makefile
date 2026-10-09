@@ -6,11 +6,14 @@ UV_TICS_GROUPS := "--group=tics"
 
 include common.mk
 
+DOCS_SCRIPTS_TO_LINT := docs/preview_theme.py
+SOURCES += $(DOCS_SCRIPTS_TO_LINT)
+
 .PHONY: format
 format: format-ruff format-codespell format-prettier format-pre-commit  ## Run all automatic formatters
 
 .PHONY: lint
-lint: lint-ruff lint-codespell lint-mypy lint-prettier lint-pyright lint-shellcheck lint-twine  ## Run all linters
+lint: lint-ruff lint-codespell lint-mypy lint-prettier lint-pyright lint-shellcheck lint-twine lint-uv-lockfile  ## Run all linters
 
 .PHONY: pack
 pack: pack-pip  ## Build all packages
@@ -86,6 +89,10 @@ test-slow: docs-html docs-pdf-prep docs-pdf   ##- Run slow tests only (PDF build
 .PHONY: test-all
 test-all: docs-html docs-pdf-prep docs-pdf  ##- Run all tests (fast and slow)
 	uv run pytest
+
+.PHONY: test-code-quality
+test-code-quality:  ##- Run the code quality checks, including each linter
+	uv run pytest tests/test_code_quality.py
 
 # Build the theme and sample docs on every supported Python version.
 #

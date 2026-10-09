@@ -25,4 +25,4 @@ repos:
       - id: prettier
         files: ^(.\/?)*\.(yaml|yml|json|json5|css|md)$
         additional_dependencies:
-          - prettier@3.4.2
+          - prettier@3.6.0

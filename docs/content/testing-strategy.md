@@ -5,10 +5,15 @@ It defines **what** we test, **why** we test it, and **how** the tests are
 organised, so that every contributor understands the goals and can help move
 towards them.
 
+```{note}
+This page is a design document: it describes the testing we aim for, not the
+tests that exist today. For the tests actually implemented, what each one
+verifies, and how to run them, see {doc}`tests/index`.
+```
+
 This is a target to aim for, not a detailed implementation plan.
 Some of the tests described here already exist; others are planned work that
 aligns with the goals in the [roadmap](roadmap.md).
-For the current test inventory and actual coverage, see {doc}`tests/index`.
 
 ## Guiding principles
 

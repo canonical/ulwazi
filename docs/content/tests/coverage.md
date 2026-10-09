@@ -30,6 +30,10 @@ The other `slow` tests are **not** run by `make test-coverage`:
 - The list-marker browser check verifies a rendered typography detail, not
   Python or theme-JavaScript execution. The computed-colour SCSS check **is**
   included to substantiate the SCSS propagation manifest entry.
+- The {doc}`code quality <code-quality>` linter cases run `make lint` targets
+  in subprocesses that don't load the theme. The fast code quality checks do
+  run, but they have no `tests/features.yaml` entries because they check
+  repository consistency, not theme features.
 
 These tests remain useful and are available via `make test-slow` and
 `make test-all`. The coverage command is **not** a replacement for either:

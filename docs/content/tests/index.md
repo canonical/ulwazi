@@ -4,6 +4,7 @@ These are the tests currently available in Ulwazi. The
 {doc}`testing strategy <../testing-strategy>` describes the broader goals;
 not every check proposed there is implemented yet.
 
+(test-inventory)=
 ## Test inventory
 
 Each row is one **exact CLI group**. Entries in the second column account for
@@ -49,6 +50,8 @@ assertions inside one grouped case do not.
   - `test_notfound_prefix.py` (**9 fast**) — 404 URL prefixes across local, single/versioned/translated Read the Docs URLs, mismatches and slug normalization.
 
     `test_python_versions.py` (**5 slow**, {doc}`details <python-versions>`) — isolated installs and warning-free documentation builds on Python 3.10–3.14.
+* - 8 Code quality
+  - `test_code_quality.py` (**6 fast, 8 slow**, {doc}`details <code-quality>`) — Python version declarations, prettier pins, Jinja template and theme JavaScript syntax, test bookkeeping, and this inventory against pytest collection; one slow case per `make lint` target, skipped when its tool is missing.
 * - 9 Accessibility
   - `test_accessibility.py` (**1 fast**) — axe **colour-contrast violations only** on the MyST cheat sheet in light and dark Chromium themes.
 * - Test infrastructure
@@ -57,9 +60,9 @@ assertions inside one grouped case do not.
     `test_test_reporting.py` (**9 fast**) — CLI category/tier assignments, parameter and outcome accounting, and unmapped-case visibility.
 ```
 
-**Full selection:** 73 cases across 18 modules (54 fast, 19 slow); each case
-belongs to exactly one CLI group. Category 8 (code quality) is run by
-`make lint`, not pytest, so it does not appear in the test recap. CLI grouping
+**Full selection:** 87 cases across 19 modules (60 fast, 27 slow); each case
+belongs to exactly one CLI group. `test_inventory_counts_match_collection`
+fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and
 does not imply every feature in a module is fully tested. See
 {doc}`../testing-strategy` for goals beyond these implemented checks.
@@ -71,6 +74,9 @@ does not imply every feature in a module is fully tested. See
 	these need additional dependencies.
 - `make test-all` runs both tiers.
 - `make test-python-versions` runs the Python version checks in parallel.
+- `make test-code-quality` runs the {doc}`code quality checks <code-quality>`,
+	including one case per linter. `make lint` still runs the linters on their
+	own and is what CI uses.
 - `make test-coverage` runs fast tests plus the slow browser feature journey
 	and the computed-colour check; see {doc}`test coverage <coverage>` for its
 	three metrics and limitations.
@@ -96,6 +102,10 @@ does not imply every feature in a module is fully tested. See
 	if you changed a feature mapping. Confirm the expected category and tier
 	in the recap; update this page's inventory when adding a suite.
 
+`make test` fails if a test file is missing from `TEST_CATEGORIES`, if a
+`tests/features.yaml` check names no test, or if the inventory above no longer
+matches the collected cases; see {doc}`code-quality`.
+
 Mapping is optional for execution: a new, unmapped file still runs, and every
 selected case appears by full pytest ID and result, including parameter IDs.
 
@@ -119,6 +129,7 @@ Theme features <features>
 Responsive layout <responsive-layout>
 Python versions <python-versions>
 Extension compatibility <extension-compatibility>
+Code quality <code-quality>
 Test coverage <coverage>
 ```
 
@@ -140,8 +151,9 @@ tests...` and pytest progress dots/percentage (xdist shows worker startup).
 Progress advances when a test finishes. For individual `PASSED` lines use
 `uv run pytest -vv` (or `PYTEST_ADDOPTS=-vv` with Make).
 
-Only selected tiers/categories appear. Code quality (category 8) runs via
-`make lint`; the contrast check reports under category 9 Accessibility (fast),
+Only selected tiers/categories appear. The linters report under category 8
+Code quality (slow), one case per `make lint` target; the contrast check
+reports under category 9 Accessibility (fast),
 and the responsive browser cases under category 6 Responsive layout (slow).
 Grouping changes *only the output*, not pytest IDs, fixtures,
 parametrization, or the {ref}`Python-version tests <python-version-tests>`.

@@ -25,6 +25,9 @@ def test_reporting_category_matches_test_and_tier():
     assert _category(
         "tests/test_responsive.py::test_small_screen_layout[mobile-375]", slow=True
     ) == ("6 Responsive layout", "slow")
+    assert _category(
+        "tests/test_code_quality.py::test_make_lint_target[lint-ruff]", slow=True
+    ) == ("8 Code quality", "slow")
     assert _category("tests/test_new_suite.py::test_new", slow=False) == (
         "Other tests",
         "fast",
