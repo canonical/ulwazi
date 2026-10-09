@@ -52,7 +52,7 @@ assertions inside one grouped case do not.
 * - 9 Accessibility
   - `test_accessibility.py` (**1 fast**) — axe **colour-contrast violations only** on the MyST cheat sheet in light and dark Chromium themes.
 * - Test infrastructure
-  - `test_coverage_metrics.py` (**7 fast**) — V8 line accounting, weighted coverage summaries, missing-report rejection and PR baseline comparisons.
+  - `test_coverage_metrics.py` (**7 fast**) — V8 line accounting, aggregate coverage summaries, missing-report rejection and PR baseline comparisons.
 
     `test_test_reporting.py` (**9 fast**) — CLI category/tier assignments, parameter and outcome accounting, and unmapped-case visibility.
 ```

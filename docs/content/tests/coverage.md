@@ -63,8 +63,8 @@ The browser journey records Chromium V8 execution ranges for scripts under
 executed range; the denominator is code lines in **all shipped theme JS
 files**, including scripts not executed by the journey. Blank and
 comment-only lines and third-party assets are excluded. The final percentage
-weights files by their number of code lines rather than averaging the
-per-file percentages. See `results/js-coverage.json` for per-file lines and
+pools line counts across files rather than averaging the per-file
+percentages. See `results/js-coverage.json` for per-file lines and
 percentages.
 
 This is **Chromium execution coverage**, not proof that each executed branch
