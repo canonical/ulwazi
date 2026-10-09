@@ -2,6 +2,7 @@
 
 import json
 import os
+import time
 from collections import defaultdict
 from io import StringIO
 from pathlib import Path
@@ -86,6 +87,118 @@ def pytest_runtest_logreport(report) -> None:
         SELECTED_TESTS[report.nodeid] = _category(
             report.nodeid, slow="slow" in report.keywords
         )
+
+
+DURATIONS_CACHE_KEY = "ulwazi/test-durations"
+
+
+def _format_seconds(seconds: float) -> str:
+    seconds = max(1, round(seconds))
+    return f"{seconds}s" if seconds < 60 else f"{seconds // 60}m {seconds % 60:02d}s"
+
+
+class LiveProgress:
+    """Show `` 45% (~12s left)`` after pytest's progress dots in a terminal.
+
+    The estimate adds up each remaining test's duration from the previous run
+    (stored in the pytest cache), falling back to this run's average. The status
+    is drawn between save/restore-cursor escapes, so pytest's next dot or final
+    ``[100%]`` overwrites it. Disable with ``-p no:ulwazi-live-progress``.
+    """
+
+    def __init__(self, config) -> None:
+        self.config = config
+        # No cache with `-p no:cacheprovider`: estimate from this run only.
+        self.cache = getattr(config, "cache", None)
+        self.history: dict[str, float] = (
+            self.cache.get(DURATIONS_CACHE_KEY, {}) if self.cache else {}
+        )
+        self.durations: dict[str, float] = defaultdict(float)
+        self.pending: set[str] = set()
+        self.done = 0
+        self.writer = None
+        self.drawn = False
+
+    def estimate(self) -> float | None:
+        """Seconds left: previous durations, else the average so far."""
+        known = self.durations or self.history
+        fallback = sum(known.values()) / len(known) if known else None
+        remaining = [self.history.get(nodeid, fallback) for nodeid in self.pending]
+        return None if None in remaining else sum(remaining)  # type: ignore[arg-type]
+
+    def status(self) -> tuple[str, str]:
+        """Percentage and optional time-left text, kept separate for styling."""
+        percent = 100 * self.done // (self.done + len(self.pending))
+        eta = self.estimate()
+        return f" {percent}%", "" if eta is None else f" (~{_format_seconds(eta)} left)"
+
+    def _draw(self) -> None:
+        writer = self.writer
+        if writer is None or not self.pending:
+            return
+        percent, eta = self.status()
+        room = writer.fullwidth - writer.width_of_current_line - 1
+        if len(percent + eta) > room:
+            eta = ""
+        if len(percent) > room:
+            return
+        if writer.hasmarkup:
+            percent = f"\x1b[36m{percent}\x1b[0m"
+            eta = f"\x1b[2m{eta}\x1b[0m" if eta else ""
+        writer._file.write(f"\x1b7\x1b[K{percent}{eta}\x1b8")
+        writer.flush()
+        self.drawn = True
+
+    def _clear(self) -> None:
+        if self.drawn and self.writer is not None:
+            self.writer._file.write("\x1b[K")
+            self.writer.flush()
+            self.drawn = False
+
+    def pytest_collection_finish(self, session) -> None:
+        self.pending = {item.nodeid for item in session.items}
+        reporter = self.config.pluginmanager.get_plugin("terminalreporter")
+        if (
+            reporter is not None
+            and reporter.isatty()
+            and os.environ.get("TERM") != "dumb"
+            and not self.config.option.collectonly
+        ):
+            self.writer = reporter._tw
+
+    @pytest.hookimpl(trylast=True)
+    def pytest_runtest_logstart(self, nodeid) -> None:
+        if not self.done:
+            self._draw()  # 0% and the estimate while the first test runs
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_runtest_logreport(self, report) -> None:
+        self.durations[report.nodeid] += report.duration
+        if report.when == "call" or not report.passed:
+            self._clear()  # pytest is about to print this test's letter
+
+    @pytest.hookimpl(trylast=True)
+    def pytest_runtest_logfinish(self, nodeid) -> None:
+        self.done += 1
+        self.pending.discard(nodeid)
+        self._draw()
+
+    def pytest_keyboard_interrupt(self) -> None:
+        self._clear()
+
+    def pytest_sessionfinish(self) -> None:
+        if self.cache is not None and self.durations:
+            self.cache.set(DURATIONS_CACHE_KEY, {**self.history, **self.durations})
+
+
+def pytest_configure(config) -> None:
+    """Add live progress for plain local runs; xdist and -v print their own."""
+    if (
+        config.option.verbose <= 0
+        and not hasattr(config, "workerinput")
+        and not getattr(config.option, "numprocesses", None)
+    ):
+        config.pluginmanager.register(LiveProgress(config), "ulwazi-live-progress")
 
 
 # Recap styling (pytest TerminalWriter markup; dropped without a colour TTY or

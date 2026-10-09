@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from conftest import _category, _category_recap, _category_results
+from conftest import LiveProgress, _category, _category_recap, _category_results
 
 pytest_plugins = ("pytester",)
 
@@ -197,6 +197,23 @@ def test_recap_reserves_green_for_passing_results():
     assert green == ["1/1", "PASSED"]
     assert red == ["FAILED", "1 failed"]
     assert ("4. Features and regressions", {"bold": True}) in segments
+
+
+def test_live_progress_estimates_time_left_from_previous_durations():
+    """Known tests use last run's time; new tests use this run's average."""
+    cache = SimpleNamespace(get=lambda key, default: {"build": 50.0, "quick": 2.0})
+    progress = LiveProgress(SimpleNamespace(cache=cache))
+    progress.pending = {"build", "quick", "new"}
+    # 50s + 2s + 26s (the history mean, for the test with no history)
+    assert progress.status() == (" 0%", " (~1m 18s left)")
+
+    progress.done = 1
+    progress.durations["first"] = 4.0
+    assert progress.status() == (" 25%", " (~56s left)")
+
+    progress.history = {}
+    progress.durations.clear()
+    assert progress.status() == (" 25%", "")  # nothing to estimate from
 
 
 def test_new_file_appears_by_name_in_actual_pytest_output(pytester: pytest.Pytester):

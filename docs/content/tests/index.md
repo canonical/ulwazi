@@ -55,12 +55,12 @@ assertions inside one grouped case do not.
 * - 9\. Accessibility
   - `test_accessibility.py` (**1 fast**) — axe **colour-contrast violations only** on the MyST cheat sheet in light and dark Chromium themes.
 * - Test infrastructure
-  - `test_coverage_metrics.py` (**7 fast**) — V8 line accounting, aggregate coverage summaries, missing-report rejection and PR baseline comparisons.
+  - `test_coverage_metrics.py` (**7 fast**, {doc}`details <infrastructure>`) — V8 line accounting, aggregate coverage summaries, missing-report rejection and PR baseline comparisons.
 
-    `test_test_reporting.py` (**10 fast**) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, and green reserved for passing results.
+    `test_test_reporting.py` (**11 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, and the live time-left estimate.
 ```
 
-**Full selection:** 88 cases across 19 modules (61 fast, 27 slow); each case
+**Full selection:** 89 cases across 19 modules (62 fast, 27 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and
@@ -130,6 +130,7 @@ Responsive layout <responsive-layout>
 Python versions <python-versions>
 Extension compatibility <extension-compatibility>
 Code quality <code-quality>
+Test infrastructure <infrastructure>
 Test coverage <coverage>
 ```
 
@@ -152,9 +153,28 @@ failures, yellow marks skipped or unfinished cases, and category names are
 bold, tiers cyan and punctuation dimmed. `NO_COLOR=1` or `--color=no` turns
 colour off. Unmapped cases print their IDs in
 the recap instead of a category total. The run also shows `Running N selected
-tests...` and pytest progress dots/percentage (xdist shows worker startup).
+tests...` and pytest progress dots (xdist shows worker startup).
 Progress advances when a test finishes. For individual `PASSED` lines use
 `uv run pytest -vv` (or `PYTEST_ADDOPTS=-vv` with Make).
+
+(test-progress-estimate)=
+### Progress and time left
+
+In a terminal, the progress dots are followed by a live status such as
+`45% (~12s left)`. Once the run ends, pytest's `[100%]` replaces it.
+
+- **Estimate:** the sum of each remaining test's duration from the previous
+  run, stored in `.pytest_cache`. Tests with no recorded time count as this
+  run's average.
+- **Accuracy:** close once a previous run exists. The first run, a run after
+  `.pytest_cache` is deleted, and a run with `-p no:cacheprovider` estimate
+  from averages only, which can be badly off. For example, the fast suite's
+  first case also builds the docs.
+- **Not shown:** when output is piped or redirected, which includes CI logs;
+  with `-v`/`-vv`, `-n` (xdist), `--collect-only` or `TERM=dumb`. In a narrow
+  terminal, only the percentage is shown.
+- **Turn off:** `-p no:ulwazi-live-progress`, or
+  `PYTEST_ADDOPTS="-p no:ulwazi-live-progress"` with Make.
 
 Only selected tiers/categories appear. The linters report under category 8
 Code quality (slow), one case per `make lint` target; the contrast check
