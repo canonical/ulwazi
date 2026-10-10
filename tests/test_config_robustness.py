@@ -141,6 +141,9 @@ def _check_minimal(output: Path) -> None:
     assert soup.select_one('link[href*="vanilla-main.css"]') is not None, (
         "Built page does not load the Ulwazi stylesheet"
     )
+    assert soup.select_one(
+        ".p-toc-feedback-block .content-icon-container.navigation-only button.js-drawer-toggle"
+    ), "Pages without feedback still need a mobile navigation opener"
 
 
 def _check_depth(output: Path, warnings: str, *, includes_h5: bool) -> None:

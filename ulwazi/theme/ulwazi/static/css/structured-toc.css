@@ -1,0 +1,77 @@
+/*
+  Temporary styling for sphinx-structured-toc's domain/slice blocks.
+
+  sphinx-structured-toc ships a minimal domain-list.css that only provides
+  the inline flow for slice items and a default `border-left: 1px solid
+  currentColor` separator; it deliberately leaves bullets, spacing, and
+  colour to the theme (see the extension's docs/reference.rst "CSS"
+  section). This file is Ulwazi's theme-level opinion on those details,
+  until the extension grows equivalent styling of its own:
+
+  https://github.com/canonical/sphinx-structured-toc
+
+  Design intentionally stays minimal and defensive against that future
+  change:
+  - Every selector is scoped under "nav.domain-list" (the extension's own
+    class), so nothing outside structured-TOC blocks is affected.
+  - The separator rule sets only the longhand "border-left-color", leaving
+    "border-left-width"/"border-left-style" (and the ":first-child { border-
+    left: none }" reset) to the extension's own domain-list.css. If the
+    extension ever changes HOW it draws the separator, this rule still only
+    recolours it instead of fighting a second border declaration.
+  - This stylesheet is linked (ulwazi/__init__.py, _setup_structured_toc_styling)
+    at CSS priority 600 -- after the extension's domain-list.css (which
+    Sphinx links at the default extension priority of 500) and before a
+    project's own html_css_files (800) -- so project overrides still win
+    without needing "!important" here.
+
+  Once the extension ships its own equivalent styling (bullets, indent,
+  themeable separator colour, visited-link handling), delete this file, its
+  <link> in layout.html, and the three "ulwazi_structured_toc_*" config
+  values in ulwazi/__init__.py.
+*/
+
+/* 2. Remove the bullets and the default list indent on the outer slice list. */
+nav.domain-list > ul {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/*
+  3. Vertical slice separators in the brand colour: Ubuntu orange in light
+  mode, white in dark mode. Projects can override either shade with the
+  ulwazi_structured_toc_separator_color_light/_dark conf.py values (see
+  the <style id="ulwazi-structured-toc-colors"> block injected by
+  layout.html), which set these same custom properties with higher
+  specificity than the fallbacks here.
+*/
+nav.domain-list {
+  --ulwazi-structured-toc-separator-color: var(
+    --ulwazi-structured-toc-separator-color-light,
+    var(--ulwazi-color-brand, #e95420)
+  );
+}
+
+.is-dark nav.domain-list {
+  --ulwazi-structured-toc-separator-color: var(
+    --ulwazi-structured-toc-separator-color-dark,
+    #fff
+  );
+}
+
+nav.domain-list > ul > li > ul > li {
+  border-left-color: var(--ulwazi-structured-toc-separator-color);
+}
+
+/*
+  1. Remove the visited-link colour inside structured-TOC blocks only, so
+  links stay the same whether or not they have been visited. Vanilla's
+  "a:visited" rule reads "--vf-color-link-visited"; redefining it locally
+  (rather than overriding "a:visited" directly) means a future extension
+  rule for the same selector still composes instead of needing a specificity
+  fight.
+*/
+nav.domain-list {
+  --vf-color-link-visited: var(--vf-color-link-default);
+}

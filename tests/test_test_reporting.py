@@ -1,0 +1,248 @@
+"""Keep the compact category recap honest without coupling test outcomes."""
+
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from conftest import LiveProgress, _category, _category_recap, _category_results
+
+pytest_plugins = ("pytester",)
+
+
+def _report(nodeid: str, when: str = "call", **attributes):
+    return SimpleNamespace(nodeid=nodeid, when=when, **attributes)
+
+
+def test_reporting_category_matches_test_and_tier():
+    """Layout checks split by tier; accessibility and responsive suites map."""
+    layout = "tests/test_layout_smoke.py::test_article_inside_docs_main"
+    assert _category(layout, slow=False) == ("3. Assets and structure", "fast")
+    assert _category(layout, slow=True) == ("6. Responsive layout", "slow")
+    assert _category(
+        "tests/test_accessibility.py::test_color_contrast_meets_wcag_aa", slow=False
+    ) == ("9. Accessibility", "fast")
+    assert _category(
+        "tests/test_responsive.py::test_small_screen_layout[mobile-375]", slow=True
+    ) == ("6. Responsive layout", "slow")
+    assert _category(
+        "tests/test_code_quality.py::test_make_lint_target[lint-ruff]", slow=True
+    ) == ("8. Code quality", "slow")
+    assert _category("tests/test_new_suite.py::test_new", slow=False) == (
+        "Other tests",
+        "fast",
+    )
+
+
+def test_responsive_recap_counts_each_parameter_and_accessibility_separately():
+    """Five browser cases share category 6; contrast has its own category 9."""
+    responsive = [
+        "tests/test_responsive.py::test_desktop_layout",
+        "tests/test_responsive.py::test_small_screen_layout[mobile-375]",
+        "tests/test_responsive.py::test_small_screen_layout[tablet-768]",
+        "tests/test_responsive.py::test_small_screen_side_navigation[mobile-375]",
+        "tests/test_responsive.py::test_small_screen_side_navigation[tablet-768]",
+    ]
+    contrast = "tests/test_accessibility.py::test_color_contrast_meets_wcag_aa"
+    selected = {nodeid: _category(nodeid, slow=True) for nodeid in responsive} | {
+        contrast: _category(contrast, slow=False)
+    }
+    stats = {"passed": [_report(nodeid) for nodeid in selected]}
+
+    assert list(_category_results(selected, stats)) == [
+        ("PASSED", "6. Responsive layout: Slow(5/5): PASSED"),
+        ("PASSED", "9. Accessibility: Fast(1/1): PASSED"),
+    ]
+
+
+def test_category_recap_mixed_outcomes():
+    """Failures, fixture errors, skips, and interrupted items stay visible."""
+    selected = {
+        f"tests/test_smoke.py::{case}": ("2. Smoke", "fast")
+        for case in ("pass", "failure", "error", "skip", "unfinished")
+    }
+    stats = {
+        "passed": [_report("tests/test_smoke.py::pass")],
+        "failed": [_report("tests/test_smoke.py::failure")],
+        "error": [_report("tests/test_smoke.py::error", "setup")],
+        "skipped": [_report("tests/test_smoke.py::skip", "setup")],
+    }
+
+    assert list(_category_results(selected, stats)) == [
+        (
+            "FAILED",
+            "2. Smoke: Fast(1/5): FAILED (2 failed, 1 skipped, 1 not run)",
+        )
+    ]
+
+
+def test_category_recap_separates_tiers_and_does_not_count_xfails_as_passes():
+    """Only ordinary call-phase successes can make a tier green."""
+    selected = {
+        "tests/test_features.py::fast": ("4. Features and regressions", "fast"),
+        "tests/test_features.py::slow": ("4. Features and regressions", "slow"),
+    }
+    stats = {
+        "passed": [
+            _report("tests/test_features.py::fast", "setup"),
+            _report("tests/test_features.py::fast"),
+        ],
+        "xfailed": [_report("tests/test_features.py::slow", wasxfail="expected")],
+    }
+
+    assert list(_category_results(selected, stats)) == [
+        (
+            "INCOMPLETE",
+            (
+                "4. Features and regressions: Fast(1/1): PASSED · "
+                "Slow(0/1): INCOMPLETE (1 skipped)"
+            ),
+        ),
+    ]
+
+
+def test_category_recap_combines_successful_tiers():
+    """Both selected tiers appear on one line, even with multiple cases."""
+    selected = {
+        "tests/test_features.py::first": ("4. Features and regressions", "fast"),
+        "tests/test_features.py::second": ("4. Features and regressions", "fast"),
+        "tests/test_features.py::browser": ("4. Features and regressions", "slow"),
+    }
+    stats = {"passed": [_report(nodeid) for nodeid in selected]}
+
+    assert list(_category_results(selected, stats)) == [
+        (
+            "PASSED",
+            ("4. Features and regressions: Fast(2/2): PASSED · Slow(1/1): PASSED"),
+        )
+    ]
+
+
+def test_category_recap_failure_in_one_tier_keeps_other_tier_green():
+    """A failure must not erase the independently passing fast tier."""
+    fast = "tests/test_features.py::fast"
+    slow = "tests/test_features.py::slow"
+    selected = {
+        fast: ("4. Features and regressions", "fast"),
+        slow: ("4. Features and regressions", "slow"),
+    }
+    stats = {"passed": [_report(fast)], "failed": [_report(slow)]}
+
+    assert list(_category_results(selected, stats)) == [
+        (
+            "FAILED",
+            (
+                "4. Features and regressions: Fast(1/1): PASSED · "
+                "Slow(0/1): FAILED (1 failed)"
+            ),
+        )
+    ]
+
+
+def test_unregistered_cases_report_individual_ids_and_outcomes():
+    """A naively added file exposes each case, including parameter IDs."""
+    passed = "tests/test_new_suite.py::test_simple"
+    failed = "tests/test_new_suite.py::test_parameterized[bad]"
+    skipped = "tests/test_new_suite.py::test_skipped"
+    unfinished = "tests/test_new_suite.py::test_unfinished"
+    selected = {
+        passed: _category(passed, slow=False),
+        failed: _category(failed, slow=False),
+        skipped: _category(skipped, slow=True),
+        unfinished: _category(unfinished, slow=False),
+    }
+    stats = {
+        "passed": [_report(passed)],
+        "failed": [_report(failed)],
+        "skipped": [_report(skipped, "setup")],
+    }
+
+    assert list(_category_results(selected, stats)) == [
+        ("FAILED", f"{failed}: Fast(0/1): FAILED (1 failed)"),
+        ("PASSED", f"{passed}: Fast(1/1): PASSED"),
+        ("INCOMPLETE", f"{skipped}: Slow(0/1): INCOMPLETE (1 skipped)"),
+        ("INCOMPLETE", f"{unfinished}: Fast(0/1): INCOMPLETE (1 not run)"),
+    ]
+
+
+def test_unregistered_cases_do_not_change_registered_category_count():
+    """One unmapped case must not conceal or inflate registered summaries."""
+    registered = "tests/test_smoke.py::test_smoke_fast"
+    unregistered = "tests/test_new_suite.py::test_simple"
+    selected = {
+        registered: _category(registered, slow=False),
+        unregistered: _category(unregistered, slow=False),
+    }
+    stats = {"passed": [_report(registered), _report(unregistered)]}
+
+    assert list(_category_results(selected, stats)) == [
+        ("PASSED", "2. Smoke: Fast(1/1): PASSED"),
+        ("PASSED", f"{unregistered}: Fast(1/1): PASSED"),
+    ]
+
+
+def test_recap_reserves_green_for_passing_results():
+    """Only the PASSED word and its count are green; failures stay red."""
+    fast = "tests/test_features.py::fast"
+    slow = "tests/test_features.py::slow"
+    selected = {
+        fast: ("4. Features and regressions", "fast"),
+        slow: ("4. Features and regressions", "slow"),
+    }
+    stats = {"passed": [_report(fast)], "failed": [_report(slow)]}
+
+    [(_, segments)] = _category_recap(selected, stats)
+    green = [text for text, markup in segments if markup.get("green")]
+    red = [text for text, markup in segments if markup.get("red")]
+    assert green == ["1/1", "PASSED"]
+    assert red == ["FAILED", "1 failed"]
+    assert ("4. Features and regressions", {"bold": True}) in segments
+
+
+def test_live_progress_estimates_time_left_from_previous_durations():
+    """Known tests use last run's time; new tests use this run's average."""
+    cache = SimpleNamespace(get=lambda key, default: {"build": 50.0, "quick": 2.0})
+    progress = LiveProgress(SimpleNamespace(cache=cache))
+    progress.pending = {"build", "quick", "new"}
+    # 50s + 2s + 26s (the history mean, for the test with no history)
+    assert progress.status() == (" 0%", " (~1m 18s left)")
+
+    progress.done = 1
+    progress.durations["first"] = 4.0
+    assert progress.status() == (" 25%", " (~56s left)")
+
+    progress.history = {}
+    progress.durations.clear()
+    assert progress.status() == (" 25%", "")  # nothing to estimate from
+
+
+def test_new_file_appears_by_name_in_actual_pytest_output(pytester: pytest.Pytester):
+    """A new, unregistered test file needs no bookkeeping for useful output."""
+    pytester.makeconftest(Path(__file__).with_name("conftest.py").read_text())
+    pytester.makepyfile(
+        test_new_suite="""
+        import pytest
+
+        def test_simple():
+            assert True
+
+        @pytest.mark.parametrize("value", [0, 1])
+        def test_parameterized(value):
+            assert value == 0
+
+        def test_skipped():
+            pytest.skip("not available")
+        """
+    )
+
+    result = pytester.runpytest_subprocess("-q")
+
+    result.assert_outcomes(passed=2, failed=1, skipped=1)
+    lines = result.stdout.str().splitlines()
+    assert "test_new_suite.py::test_parameterized[0]: Fast(1/1): PASSED" in lines
+    assert (
+        "test_new_suite.py::test_parameterized[1]: Fast(0/1): FAILED (1 failed)"
+        in lines
+    )
+    assert "test_new_suite.py::test_simple: Fast(1/1): PASSED" in lines
+    assert "test_new_suite.py::test_skipped: Fast(0/1): INCOMPLETE (1 skipped)" in lines

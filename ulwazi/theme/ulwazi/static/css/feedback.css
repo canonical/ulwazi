@@ -138,3 +138,15 @@ svg:not(:root) {
 .p-toc-feedback-block .content-icon-container button {
   flex-shrink: 0;
 }
+
+/* Side navigation icon on the far left; the rest of the row on the right. */
+.p-toc-feedback-block .content-icon-container .js-drawer-toggle {
+  margin-right: auto;
+  padding-left: 0;
+}
+
+@media (min-width: 1036px) {
+  .p-toc-feedback-block .content-icon-container.navigation-only {
+    display: none;
+  }
+}

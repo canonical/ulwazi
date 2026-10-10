@@ -1,11 +1,12 @@
+<div class="content-icon-container{% if not feedback %} navigation-only{% endif %}">
+  {%- include "components/toggle-sidebar-primary.html" %}
 {% if feedback %}
-<div class="content-icon-container">
   {%- if github_url and pagename -%}
     {%- if page_source_suffix is defined -%}
       {%- set source_file_extension = page_source_suffix -%}
     {%- else -%}
       {%- set source_file_extension = default_source_extension -%}
-    {%- endif -%} 
+    {%- endif -%}
     {%- set edit_url = github_url + "/edit/" + repo_branch + repo_folder + pagename + source_file_extension -%}
     {%- set view_url = github_url + "/blob/" + repo_branch + repo_folder + pagename + source_file_extension -%}
   {%- else -%}
@@ -14,7 +15,7 @@
     <!-- Warning: lacking parameters in conf.py: guthub_url or pagename -->
   {%- endif -%}
   <a href="{{ github_url }}/issues/new?title=docs%3A+TYPE+YOUR+QUESTION+HERE&amp;body=*Please describe the question or issue you're facing with {{ project }} documentation.*%0A%0A%0A%0A%0A---%0A*Reported+from%3A+{{ pagename }}"
-       target="_blank" class="p-button--positive p-button--orange">Give feedback</a>
+       target="_blank" class="p-button p-button--positive p-button--orange">Give feedback</a>
 
   <div class="edit-this-page muted-link">
     <a class="p-icon--edit"
@@ -51,5 +52,5 @@
     <div class="visually-hidden">Toggle table of contents sidebar</div>
     <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
   </label> -->
-</div>
 {% endif %}
+</div>

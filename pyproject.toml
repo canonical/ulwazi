@@ -18,6 +18,9 @@ classifiers = [
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
     'Topic :: Documentation',
     'Topic :: Software Development :: Documentation',
 ]
@@ -41,6 +44,7 @@ types = [
     "types-Pygments>=2.19.0.20250615",
 ]
 dev = [
+    "axe-playwright-python>=0.1.8",
     "beautifulsoup4>=4.14.3",
     "coverage[toml]>=7.13.5",
     "lxml>=6.0.2",
@@ -143,11 +147,11 @@ xfail_strict = true
 markers = [
     "slow: slow tests",
     "coverage_js: browser journey used for JS coverage",
-    "coverage_style: computed SCSS colour check included in coverage run",
+    "coverage_style: computed theme colour (SCSS/CSS) check included in coverage run",
 ]
-# -rfE: only list failures and errors in the summary (passing tests are
-# grouped per file in the progress line, not listed one by one).
-addopts = "--tb=short -rfE"
+# The category/tier recap in tests/conftest.py replaces per-test progress.
+# Pass -vv to see individual test results when debugging.
+addopts = "-q --tb=short -rfE"
 
 [tool.coverage.run]
 branch = true
@@ -338,6 +342,9 @@ max-args = 8
     "PLR2004", # Allow magic values in tests
     "SLF",     # Allow accessing private members from tests.
     "INP001",  # Allow fixture conf.py files without __init__.py (they're Sphinx confdirs, not packages).
+]
+"docs/*.py" = [
+    "INP001",  # Sphinx confdir scripts are run directly, not imported as a package.
 ]
 "__init__.py" = [
     "I001", # isort leaves init files alone by default, this makes ruff ignore them too.

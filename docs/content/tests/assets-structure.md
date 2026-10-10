@@ -76,6 +76,6 @@ Assets and structure [fast] checks failed:
 - [search] breadcrumb script: expected 1, got 2
 ```
 
-When green, the normal pytest recap lists
-`test_assets_structure_fast` and, in a slow run,
-`test_assets_structure_slow` separately.
+When green, the category recap groups these tests with other asset/structure
+checks on one line, with separate fast and slow statuses. Use `-vv` to see
+individual test IDs.

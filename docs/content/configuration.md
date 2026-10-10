@@ -42,6 +42,18 @@ These are set directly in `conf.py`.
     - `notfound_enabled`
     - `True`
     - Set to `False` to opt out of Ulwazi's automatic `sphinx-notfound-page` activation and 404 defaults. If `notfound.extension` is also explicitly listed, it remains active.
+*
+    - `ulwazi_structured_toc_styling`
+    - `True`
+    - Set to `False` to opt out of Ulwazi's temporary styling for [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)'s `domain`/`slice` blocks (see below). Only applies when that extension is loaded.
+*
+    - `ulwazi_structured_toc_separator_color_light`
+    - `""`
+    - Overrides the light-theme vertical separator colour drawn between slice items (default: Ubuntu orange). Accepts any valid CSS colour (hex, named, `rgb()`, etc.).
+*
+    - `ulwazi_structured_toc_separator_color_dark`
+    - `""`
+    - Same as above, for the dark theme (default: white).
 ```
 
 Ulwazi also supplies a `404.html` template and chooses the 404 URL prefix from
@@ -49,6 +61,32 @@ the Read the Docs canonical URL when available. Explicit `notfound_template`
 and `notfound_urls_prefix` settings take precedence. List `"ulwazi"` before
 `"sphinx_modern_pdf_style"` in `extensions` to enable Canonical PDF branding;
 Ulwazi stages the logo in the LaTeX output directory.
+
+### Structured-TOC styling (temporary)
+
+[sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)'s
+`domain`/`slice` blocks ship with only minimal CSS -- no bulleted-list
+removal, indentation, or themed separator colour; see the extension's own
+[CSS reference](https://github.com/canonical/sphinx-structured-toc/blob/main/docs/reference.rst).
+Until the extension grows equivalent styling of its own, Ulwazi fills that
+gap: it removes the bullets and indent from the slice list, draws the
+vertical separators between slice items in the brand colour, and keeps
+visited links looking the same as unvisited ones, inside these blocks only.
+Nothing outside a `domain`/`slice` block is affected.
+
+This styling is on by default and loads only when
+`sphinx_structured_toc` is in `extensions`. Set
+`ulwazi_structured_toc_styling = False` in `conf.py` to opt out and keep the
+extension's own unstyled rendering instead. An invalid value for either
+separator-colour option is ignored (with a build warning) and the default
+takes over.
+
+```{note}
+If Ulwazi is selected only through `html_theme` (without `"ulwazi"` in
+`extensions`), these three values can't be set with Sphinx's `-D`
+command-line option -- use `conf.py` instead. The same restriction already
+applies to `notfound_enabled`; see above.
+```
 
 ## HTML context
 

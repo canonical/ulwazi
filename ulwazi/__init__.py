@@ -20,6 +20,7 @@ import importlib.util
 import json
 import logging
 import os
+import re
 import shutil
 from pathlib import Path
 from typing import Any, cast
@@ -57,6 +58,17 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     # setup. Explicitly listing "notfound.extension" in extensions still
     # works and only skips Ulwazi's overrides.
     app.add_config_value("notfound_enabled", default=True, rebuild="env")
+    # Temporary theme-level styling for sphinx-structured-toc's domain/slice
+    # blocks (bullets, indent, separator colour, visited-link colour); see
+    # ulwazi/theme/ulwazi/static/css/structured-toc.css for the rationale
+    # and the removal plan once the extension ships equivalent styling.
+    app.add_config_value("ulwazi_structured_toc_styling", default=True, rebuild="html")
+    app.add_config_value(
+        "ulwazi_structured_toc_separator_color_light", default="", rebuild="html"
+    )
+    app.add_config_value(
+        "ulwazi_structured_toc_separator_color_dark", default="", rebuild="html"
+    )
     # sphinx-notfound-page is a bundled dependency: the theme ships a 404
     # template, a 404.svg asset, and the prefix computation, so the
     # extension is activated by default. setup_extension is idempotent
@@ -75,6 +87,9 @@ def setup(app: Sphinx) -> ExtensionMetadata:
         config_inited,
     )
     app.connect("builder-inited", _copy_pdf_assets)  # pyright: ignore [reportUnknownMemberType]
+    app.connect(  # pyright: ignore [reportUnknownMemberType]
+        "builder-inited", _setup_structured_toc_styling
+    )
     app.connect("html-page-context", _html_page_context)  # pyright: ignore [reportUnknownMemberType]
 
     return {
@@ -333,6 +348,93 @@ def _copy_pdf_assets(app: Sphinx) -> None:
         app.outdir,
         dirs_exist_ok=True,
     )
+
+
+# Loads after the extension's own domain-list.css (Sphinx's default
+# extension priority, 500) and before a project's html_css_files (800), so
+# project overrides still take effect without "!important".
+_STRUCTURED_TOC_CSS_PRIORITY = 600
+
+# Conservative allow-list for a user-supplied CSS colour value: letters,
+# digits, and the punctuation used by hex/named/function colour syntax
+# (e.g. "#E95420", "rebeccapurple", "rgb(0, 0, 0)", "var(--my-color)").
+# Rejects ";{}<>'\"" and other characters that could break out of the
+# injected <style> block.
+_CSS_COLOR_PATTERN = re.compile(r"^[A-Za-z0-9#%().,/+\- ]+$")
+
+
+def _setup_structured_toc_styling(app: Sphinx) -> None:
+    """Link Ulwazi's temporary structured-TOC stylesheet, if applicable.
+
+    Only applies to HTML builds, only when the project has
+    sphinx-structured-toc loaded, and only while the opt-out config value
+    (``ulwazi_structured_toc_styling``) is left at its default of ``True``.
+    See ``ulwazi/theme/ulwazi/static/css/structured-toc.css`` for what the
+    stylesheet does and why it is temporary.
+
+    Connected to ``builder-inited`` (like :func:`_copy_pdf_assets`) rather
+    than ``config-inited``, so this still runs when Ulwazi is selected only
+    via ``html_theme`` (that entry point loads after ``config-inited`` has
+    already fired).
+
+    :param app: The Sphinx application instance
+    """
+    config = app.config
+    if (
+        app.builder.format != "html"
+        or not config.ulwazi_structured_toc_styling
+        or "sphinx_structured_toc" not in app.extensions
+    ):
+        return
+
+    app.add_css_file(  # pyright: ignore [reportUnknownMemberType]
+        "css/structured-toc.css", priority=_STRUCTURED_TOC_CSS_PRIORITY
+    )
+    config.html_context["ulwazi_structured_toc_css"] = _structured_toc_color_css(config)
+
+
+def _structured_toc_color_css(config: Config) -> str:
+    """Build the ``:root`` override for the separator colour options.
+
+    Only valid colour values (see :data:`_CSS_COLOR_PATTERN`) are included;
+    an invalid value is dropped with a build warning and the stylesheet's
+    own default takes over instead.
+
+    :param config: The Sphinx build configuration
+
+    :returns: A ``:root { ... }`` CSS declaration with the valid overrides,
+        or an empty string if neither colour was set (or both were invalid)
+    """
+    # (conf.py setting name, CSS custom property it overrides)
+    overrides = [
+        (
+            "ulwazi_structured_toc_separator_color_light",
+            "--ulwazi-structured-toc-separator-color-light",
+        ),
+        (
+            "ulwazi_structured_toc_separator_color_dark",
+            "--ulwazi-structured-toc-separator-color-dark",
+        ),
+    ]
+
+    declarations: list[str] = []
+    for setting_name, css_property in overrides:
+        value = getattr(config, setting_name)
+        if not value:
+            continue
+        if not _CSS_COLOR_PATTERN.match(value):
+            logger.warning(
+                f"conf.py setting '{setting_name}' has an invalid colour "
+                f"value {value!r} and will be ignored.",
+                type="ulwazi",
+                subtype="structured_toc",
+            )
+            continue
+        declarations.append(f"{css_property}: {value};")
+
+    if not declarations:
+        return ""
+    return ":root{" + " ".join(declarations) + "}"
 
 
 def _compute_navigation_tree(context: dict[str, Any]) -> str:

@@ -51,12 +51,58 @@ Available tests:
 - **test_features.py**: Checks theme markup (fast) and browser interactions (slow)
 - **test_pdf_generation.py**: Verifies PDF generation produces expected output file _(slow)_
 - **test_scss_propagation.py**: Tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
+- **test_accessibility.py**: Scans the MyST cheat sheet in both themes for axe-core WCAG AA colour contrast violations using Playwright (fast, ~7s)
 - **test_layout_smoke.py**: Checks every built page renders its article inside `main.l-docs__main`, and (in Chromium at 1440px) that no page overflows the viewport and no element spills out of the main column _(browser check is slow)_
 - **test_seo_metadata.py**: Verifies SEO/metadata tags (title, description, canonical, favicon, Open Graph) on built pages
 - **test_structured_toc.py**: Verifies domain/slice markup and ARIA in RST and MyST HTML (fast test); browser styling and LaTeX content from both cheat sheets are grouped into a single slow test _(partially slow)_
 - **test_python_versions.py**: Builds the theme and sample docs on every supported Python version _(slow)_
 - **test_config_robustness.py**: Checks minimal and maximum configurations, defaults, and legacy aliases (fast)
 - **test_extension_compatibility.py**: Verifies the theme renders correctly with Sphinx Stack default extensions enabled (grouped fast checks and a slow PDF check). See `docs/content/tests/extension-compatibility.md`
+- **test_code_quality.py**: Category 8. Fast consistency checks (Python version declarations, prettier pins, Jinja/JS syntax, test bookkeeping, inventory counts vs. collection) and one slow case per `make lint` target, skipped when its tool is missing. Run both tiers with `make test-code-quality`. See `docs/content/tests/code-quality.md`
+
+#### Test category reporting when adding tests
+
+When adding tests:
+
+1. Prefer an existing `tests/test_*.py` module for the same behavior. For a
+   new file, choose its **primary** category from
+   `docs/content/testing-strategy.md` and add
+   `"test_new.py": "4. Features and regressions"` (for example) to
+   `TEST_CATEGORIES` in `tests/conftest.py`.
+   Coverage/reporting tests belong to `Test infrastructure`. Use
+   `SLOW_CATEGORY_OVERRIDES` only if a file's slow tests need a _different_
+   category (see `test_layout_smoke.py`). An unmapped test still runs and
+   prints its full pytest ID/result rather than disappearing in a total.
+2. Fast is the default; mark PDF, browser, network, or otherwise expensive
+   cases `@pytest.mark.slow`. Preserve distinct tests, parameter IDs, and
+   fixture isolation—grouping changes output only. For feature checks, also
+   follow the `tests/features.yaml` instructions below; category mapping
+   does **not** grant feature coverage.
+3. Update `docs/content/tests/index.md` when adding a suite. Run `make test`,
+   relevant slow tests, and `make test-coverage` for feature mappings. Check
+   that the recap shows the right category/tier and failures retain pytest
+   IDs. Change `tests/test_test_reporting.py` if changing the reporter itself.
+
+The **Test inventory** table in `docs/content/tests/index.md` must match the
+actual collected cases and CLI groups in `tests/conftest.py` exactly, not just
+list representative suites. When adding, removing, parametrizing, re-tiering,
+or regrouping tests (even within an existing module), update the corresponding
+row, fast/slow counts, and verified-behavior description. Account for every
+selected pytest case once, including `SLOW_CATEGORY_OVERRIDES` and parameters;
+compare the table totals with `make test-all` and `uv run pytest --collect-only`.
+Do not claim behaviors that tests do not assert.
+`test_inventory_counts_match_collection` (fast, in `tests/test_code_quality.py`)
+enforces the counts and totals; `test_test_bookkeeping_in_sync` enforces
+`TEST_CATEGORIES`, `features.yaml` node IDs, and `REQUIRED_TOOLS` for every
+`make lint` target. Category 8 linters report under `8. Code quality` (slow);
+`make lint` remains the CI entry point.
+
+`docs/content/testing-strategy.md` is a design document (the vision). Do not
+edit it to describe implemented tests; document facts in
+`docs/content/tests/` instead.
+
+See the [test output convention](docs/content/tests/index.md#test-output-convention)
+for the compact recap and `uv run pytest -vv` for per-test results.
 
 #### When adding or changing a theme feature
 
@@ -76,9 +122,9 @@ Available tests:
 4. Ensure mapped tests run in `make test-coverage`: fast tests are selected;
    slow tests need an explicit coverage marker **and** inclusion in the
    `Makefile` marker expression. Run `make test-coverage` and check the final
-   summary and `results/feature-coverage.json`: a new entry adds **one to
-   total**, and **one to checked** only when every mapped test is selected
-   and passes. Run `make lint` and rebuild the docs after changing fixtures.
+   summary and `results/feature-coverage.json`; all mapped tests must be
+   selected and pass. Run `make lint` and rebuild the docs after changing
+   fixtures.
 
 See `docs/content/tests/coverage.md` for scope and limitations of all three
 coverage metrics; do not confuse the curated feature percentage with Python
@@ -289,7 +335,7 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   theme's `setup()` (idempotent — projects that also list
   `notfound.extension` in `extensions` are unaffected). The theme ships a
   `404.html` template and a `static/404.svg` asset. Opt out with
-   `notfound_enabled = False` in conf.py, or `-D notfound_enabled=0` when
+  `notfound_enabled = False` in conf.py, or `-D notfound_enabled=0` when
   `"ulwazi"` is in `extensions`. For theme-only loading, Sphinx checks `-D`
   overrides before registering theme config values and warns about an unknown
   setting. When the extension is listed explicitly, the flag only skips
@@ -297,12 +343,12 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   404 page). Explicit `notfound_urls_prefix` and `notfound_template` settings
   in conf.py or `-D` also take precedence over the theme defaults. When the
   theme is selected only via `html_theme`, Sphinx loads it after
-   `config-inited`; the theme sets up these 404 defaults during late loading
-   too, but other Ulwazi config-inited features still require `"ulwazi"` in
-   `extensions`. `tests/test_notfound_bundling.py` keeps activation, ordering,
-   and theme-only build scenarios in a documented `ACTIVATION_CASES` table;
-   separate tests cover opt-out, RTD prefixes, and explicit settings.
-   `tests/test_notfound_prefix.py` tests the prefix helper directly.
+  `config-inited`; the theme sets up these 404 defaults during late loading
+  too, but other Ulwazi config-inited features still require `"ulwazi"` in
+  `extensions`. `tests/test_notfound_bundling.py` keeps activation, ordering,
+  and theme-only build scenarios in a documented `ACTIVATION_CASES` table;
+  separate tests cover opt-out, RTD prefixes, and explicit settings.
+  `tests/test_notfound_prefix.py` tests the prefix helper directly.
 - **notfound prefix schema detection**: `_notfound_urls_prefix` detects the
   URL schema from the _path_ of `READTHEDOCS_CANONICAL_URL` — the version
   segment is the last path segment, the language segment the one before it,
@@ -346,6 +392,45 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   each sheet trigger ambiguity warnings -- use `:suppress-warnings:` on
   their domains; (3) keep `:suppress-warnings:` for the deliberately
   ambiguous links in the explicitly named domains as well.
+- **Temporary structured-TOC styling** (added 2026-10-09, remove once the
+  extension styles its own blocks): the extension's `domain-list.css`
+  deliberately ships minimal styling only (inline flow + a
+  `border-left: 1px solid currentColor` separator; see its own
+  `docs/reference.rst` "CSS" section) and explicitly leaves bullets,
+  indent, and colour to the theme. Ulwazi fills that gap with
+  `ulwazi/theme/ulwazi/static/css/structured-toc.css` (NOT listed in
+  `theme.toml`, since that stylesheet list loads at Sphinx's priority 200,
+  before extensions' CSS at 500): it removes the slice list's bullets and
+  indent, recolours the separator (Ubuntu orange in light mode, white in
+  dark, via `--ulwazi-structured-toc-separator-color{,-light,-dark}`
+  custom properties and the theme's `.is-dark` class -- no
+  `prefers-color-scheme` auto mode exists in Ulwazi), and overrides
+  `--vf-color-link-visited` to the default link colour, all scoped under
+  `nav.domain-list` only. `ulwazi/__init__.py`'s `_setup_structured_toc_styling`
+  (connected to `builder-inited`, like `_copy_pdf_assets`, so it still runs
+  when Ulwazi is selected only via `html_theme`) links it at CSS priority
+  600 -- after the extension's domain-list.css, before a project's own
+  `html_css_files` (800) -- and only when `sphinx_structured_toc` is in
+  `app.extensions` and the new `ulwazi_structured_toc_styling` config value
+  (default `True`) is left on. The two
+  `ulwazi_structured_toc_separator_color_light`/`_dark` config values
+  (`_structured_toc_color_css`) inject a validated `<style>` in
+  `layout.html` (`ulwazi_structured_toc_css` in `html_context`); invalid
+  values are dropped with a build warning rather than failing the build.
+  Separator colour recolouring deliberately sets only `border-left-color`
+  (not the shorthand), so it keeps composing if the extension changes how
+  it draws the border. Both cheat sheets' "Structured tables of contents"
+  sections link to the new "Structured-TOC styling" section of
+  `docs/content/configuration.md`. Covered by the same
+  `tests/test_structured_toc.py` (now 2 fast + 2 slow;
+  `test_structured_toc_styling_config` builds tiny fixtures for the
+  opt-out/colour/extension-absent/theme-only scenarios,
+  `test_structured_toc_styling_slow` -- marked `coverage_style` -- checks
+  the rendered bullets/indent/colour/visited-link result in Chromium by
+  reading CSS custom properties, since browsers hide `:visited` colours
+  from scripts). Update `docs/content/tests/index.md` counts
+  (`test_inventory_counts_match_collection` enforces them) and
+  `tests/features.yaml` when touching this area.
 
 ## Testing Locations
 

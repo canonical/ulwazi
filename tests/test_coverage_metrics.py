@@ -44,7 +44,7 @@ def test_js_report_includes_unvisited_theme_scripts(tmp_path):
     }
 
 
-def test_final_summary_uses_weighted_js_and_python_line_rates(tmp_path):
+def test_final_summary_uses_aggregate_js_and_python_line_rates(tmp_path):
     """Never average per-file percentages or conflate lines with branches."""
     scripts = tmp_path / "ulwazi/theme/ulwazi/static/js"
     scripts.mkdir(parents=True)
