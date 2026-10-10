@@ -7,6 +7,7 @@ docs/_build
 node_modules/
 /.vscode
 .*_cache/
+.workshop.lock
 htmlcov/
 .coverage
 .coverage.*

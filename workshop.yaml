@@ -1,0 +1,15 @@
+name: ulwazi
+base: ubuntu@24.04
+sdks:
+  - name: system
+    plugs:
+      sphinx:
+        interface: tunnel
+        endpoint: 8001
+  - name: vscode-remote
+    channel: latest/stable
+  - name: node
+    channel: latest/stable
+  - name: uv
+    channel: latest/stable
+  - name: project-ulwazi-libs

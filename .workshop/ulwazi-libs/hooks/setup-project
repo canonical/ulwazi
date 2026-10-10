@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Install the JavaScript dependencies from the committed lockfile.
+npm ci
