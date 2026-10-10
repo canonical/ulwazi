@@ -190,6 +190,30 @@ separator colour. See the
 [configuration reference](docs/content/configuration.md#structured-toc-styling-temporary)
 for details.
 
+## Optional: Workshop development environment
+
+As an alternative to installing the prerequisites locally, you can develop
+Ulwazi inside a [Workshop](https://ubuntu.com/workshop) container. The
+repository ships a workshop definition (`workshop.yaml`) that provides
+Node.js, uv, and VS Code Remote, and forwards the documentation preview to
+your host.
+
+After [installing Workshop](https://ubuntu.com/workshop/docs/tutorial/part-1-get-started/)
+(including its LXD prerequisite), launch the workshop and open a shell in it:
+
+```shell
+workshop launch ulwazi
+workshop shell ulwazi
+```
+
+From there, use the ordinary build commands, for example `make run` to start
+the interactive preview. The preview is forwarded to
+`http://localhost:8001` on your host, so it doesn't conflict with a local
+(non-Workshop) preview on port 8000.
+
+Workshop is entirely optional; the local setup described above remains the
+default way to contribute.
+
 ## Contributing
 
 The theme files are located in the `ulwazi` folder:

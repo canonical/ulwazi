@@ -5,7 +5,7 @@ sdks:
     plugs:
       sphinx:
         interface: tunnel
-        endpoint: 8000
+        endpoint: 8001
   - name: vscode-remote
     channel: latest/stable
   - name: node
@@ -13,5 +13,3 @@ sdks:
   - name: uv
     channel: latest/stable
   - name: project-ulwazi-libs
-
-connections:

@@ -1,5 +1,3 @@
-# Install yarn (idempotent — npm skips if already present)
-npm install -g --prefer-offline yarn
-
-# Install dependencies
-yarn install
+#!/usr/bin/env bash
+# Install the JavaScript dependencies from the committed lockfile.
+npm ci
