@@ -16,7 +16,9 @@ happens if you skip it.
 ```{note}
 For a baseline example with explanatory comments, see
 [`docs/default-conf.py`](https://github.com/canonical/ulwazi/blob/main/docs/default-conf.py)
-in the repository -- this is easiest way to start using Ulwazi.
+in the repository -- this is the easiest way to start using Ulwazi. It enables
+optional Sphinx extensions; install their packages in your documentation
+environment too.
 ```
 
 ## Top-level configuration values
@@ -131,6 +133,10 @@ If you don't set them, Ulwazi uses the defaults below.
     - `discourse`
     - `"https://discourse.ubuntu.com"`
     - Base URL for the Discourse link shown in the header's community-links menu (only shown if this is set to a non-empty value).
+*
+    - `tag_id`
+    - `"GTM-N384JMX2"`
+    - Google Tag Manager container ID used by the analytics snippet included on HTML pages. Set your own container ID to replace Canonical's default. Ulwazi has no setting to omit the snippet.
 ```
 
 ### Without defaults

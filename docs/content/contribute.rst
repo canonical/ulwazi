@@ -2,70 +2,127 @@ Contribution guide
 ==================
 
 Thank you for your interest in contributing to the Ulwazi Sphinx theme!
-This guide will help you get started with building, testing, and developing the theme.
+This guide covers the basic workflow for changing the theme, its sample
+documentation, and its tests.
 
-Prerequisites
--------------
+If you only want to use Ulwazi in another documentation project, start with
+the :doc:`home page <../index>` and the :doc:`configuration reference
+<configuration>`.
 
-Install `npm <https://docs.npmjs.com/downloading-and-installing-node-js-and-npm>`_:
+Before you start
+----------------
+
+You need:
+
+- Git and ``make``
+- Python 3.10 or later (3.11 is recommended)
+- `uv <https://docs.astral.sh/uv/>`_ -- the Make targets install it if it is
+  missing
+- Node.js and npm only when compiling SCSS -- ``make vanilla-main`` tries to
+  install Node.js if ``npm`` is missing
+
+The setup targets may use ``snap``, Homebrew, or the uv installer to install
+missing tools. Install them yourself first if you prefer not to grant
+``sudo`` access during setup.
+
+Alternatively, use the optional Workshop environment described in the
+`README <https://github.com/canonical/ulwazi/blob/main/README.md#optional-workshop-development-environment>`_.
+
+Build and preview
+-----------------
+
+Clone the repository and run the commands from its root directory:
 
 .. code-block:: shell
 
-   sudo apt install npm
+   git clone https://github.com/canonical/ulwazi.git
+   cd ulwazi
+   make docs
 
-Setup
------
+``make docs`` creates the ``.venv`` virtual environment, installs the theme and
+documentation dependencies, and builds the sample site with warnings treated
+as errors.
 
-1. Install Node.js dependencies (if you don't have a ``node_modules`` directory):
+To preview the site while you edit it:
 
-   .. code-block:: shell
+.. code-block:: shell
 
-      npm install
+   make run
 
-2. Build the sample documentation with the theme:
+The preview runs at ``http://127.0.0.1:8000``. To use a different address,
+run, for example, ``make run SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080``. Stop the
+preview with :kbd:`Ctrl+C` when you finish.
 
-   .. code-block:: shell
-
-      make docs
-
-   This uses `uv <https://docs.astral.sh/uv/>`_ to set up a virtual environment,
-   installs dependencies, and builds the sample docs.
-
-During development, ``make run`` watches theme files and recompiles changed
-SCSS before rebuilding the preview. Ordinary content edits remain incremental.
-See :doc:`preview-workflow` for how the change detection works.
-To reset an existing build or after changing dependencies, rebuild from scratch:
+The preview rebuilds after content, theme, and SCSS changes. See
+:doc:`preview-workflow` for how it detects them. If shared navigation appears
+stale, or after changing dependencies in ``pyproject.toml``, rebuild from
+scratch:
 
 .. code-block:: shell
 
    make rebuild
 
-This does a clean build. If a change to a shared table of contents leaves older,
-unchanged pages showing stale navigation, use this command to refresh them.
+``make rebuild`` runs ``make clean``, which removes build output and the
+``.venv`` virtual environment, and then runs ``make docs``.
 
-Reset the environment
-*********************
+Make a change
+-------------
 
-Some changes to the environment (for example, if you add a new package to ``pyproject.toml``)
-may require a complete reset by deleting the virtual environment. To reset the virtual environment:
+Use this table to find the files and checks that usually apply:
 
-1. Delete the ``.venv`` folder manually or run:
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
 
-   .. code-block:: shell
+   * - Change
+     - What to update and check
+   * - Python hooks or templates
+     - Edit ``ulwazi/`` or ``ulwazi/theme/ulwazi/``. Run ``make test`` and
+       inspect the affected pages in ``make run``.
+   * - SCSS
+     - Edit ``ulwazi/theme/ulwazi/assets/``. The preview compiles changed SCSS;
+       run ``make vanilla-main`` to compile it explicitly. Commit
+       ``ulwazi/theme/ulwazi/static/css/vanilla-main.css`` and its map.
+   * - Rendered markup or theme features
+     - Update both :ref:`reST <rst_ref>` and :ref:`MyST <myst-ref>` cheat sheets
+       when equivalent syntax exists. Add a test assertion and follow
+       :doc:`tests/coverage` to map the feature.
+   * - Configuration values
+     - Update :doc:`configuration` and, for recommended starter settings,
+       ``docs/default-conf.py``. Add a configuration test where possible.
+   * - Tests
+     - Follow :ref:`the test checklist <test-addition-checklist>` and update the
+       :ref:`test inventory <test-inventory>` when collected cases change.
+   * - Documentation only
+     - Run ``make docs`` and check the changed pages in the preview.
 
-      make clean
+Run checks
+----------
 
-2. Build the documentation from scratch with ``make docs``.
-
-Rebuild CSS
-***********
-
-To rebuild the ``theme/ulwazi/static/css/vanilla-main.css`` css file after
-making any changes to the SCSS files it consists of:
+Before opening a pull request, run the checks that match your change:
 
 .. code-block:: shell
 
-   make vanilla-main
+   make test              # Fast tests; run for every code or docs change
+   make lint              # Linters used by CI
+   make test-slow         # Browser and PDF tests; needs extra dependencies
+   make test-coverage     # Coverage metrics; run after feature mappings change
+
+``make test`` builds the sample HTML first. See the :doc:`test overview
+<tests/index>` for every suite, :doc:`tests/code-quality` for linter tool
+requirements, and :doc:`tests/coverage` for the three coverage metrics.
+
+Open a pull request
+-------------------
+
+Keep each pull request focused, explain the user-visible effect, and list the
+checks you ran. Update documentation in the same pull request when you change
+behavior or configuration. For visual changes, include before-and-after
+screenshots or point reviewers to representative pages in the preview.
+
+Pull requests run automated tests, linters, and the coverage comparison.
+Recent pull request titles commonly start with a type such as ``feat:``,
+``fix:``, ``test:``, or ``chore:``.
 
 Theme files layout
 ------------------
@@ -75,47 +132,37 @@ when contributing to this theme:
 
 - ``ulwazi/__init__.py``  -- Theme initialization and core hooks
 - ``ulwazi/navigation.py``  -- Manages the global TOC navigation tree
+- ``ulwazi/tabs.py``        -- Converts ``sphinx-design`` tabs to Vanilla markup
 - ``ulwazi/theme/ulwazi/`` -- Contains all theme files:
 
   - ``theme.toml``         -- Theme configuration
-  - ``static/``            -- Static assets (CSS, JS, images)
-  - HTML files         -- Jinja templates used by Sphinx (look for ``.html`` files)
+  - ``assets/``            -- SCSS sources compiled into ``static/css/vanilla-main.css``
+  - ``components/`` and ``sections/`` -- Reusable Jinja template fragments
+  - ``static/``            -- Static assets (CSS, JS, fonts, images)
+  - HTML files             -- Jinja templates used by Sphinx
 
 Other files of interest for development:
 
 - ``ulwazi/product_menu_gen.py`` -- Product menu generation logic
-- ``tests/``                     -- Automated tests for the theme
+- ``docs/conf.py``                 -- Configuration for this sample site
+- ``docs/default-conf.py``         -- Starter configuration for adopters
+- ``tests/``                       -- Automated tests for the theme
 
-Running tests
--------------
+To modify the HTML of pages generated by Sphinx before the theme templates use
+it, see the ``_html_page_context`` function in ``ulwazi/__init__.py``.
 
-The test suite is split into fast and slow tests. See the
-`Tests documentation <https://documentation.ubuntu.com/ulwazi/content/tests/>`_
-for details on each test.
-
-.. code-block:: shell
-
-   make test              # Run fast tests only
-   make test-fast         # Same as 'make test'
-   make test-slow         # Run slow tests only (PDF builds, browser checks)
-   make test-all          # Run all tests (fast and slow)
-   make test-python-versions  # Build on every supported Python version (slow)
-   make test-coverage     # Run tests and generate coverage report
-
-HTML customization
-------------------
-
-To modify the HTML of pages generated by Sphinx (before the theme is applied),
-see the ``_html_page_context`` function in ``ulwazi/__init__.py``.
+To upgrade the Vanilla Framework, follow the
+`README upgrade steps <https://github.com/canonical/ulwazi/blob/main/README.md#upgrade-the-vanilla-framework>`_.
 
 Page metadata and SEO
 ----------------------
 
-**You don't need to add any metadata.** Every page automatically gets a
-working ``<title>``, description, Open Graph tags, canonical link, and
-favicon -- courtesy of Sphinx and the ``sphinxext-opengraph`` extension
-declared in ``docs/conf.py``. The table below shows where each default comes
-from if you add nothing:
+**You don't need to add metadata to sample pages.** In this sample site,
+every page gets a working ``<title>``, description, Open Graph tags,
+canonical link, and favicon from Sphinx, Ulwazi's templates, and the
+``sphinxext-opengraph`` settings in ``docs/conf.py``. Another project needs
+equivalent extension and ``conf.py`` settings. The table below shows where
+each default comes from if you add nothing:
 
 .. list-table::
    :header-rows: 1
@@ -128,7 +175,7 @@ from if you add nothing:
      - Page heading
    * - ``<meta name="description">`` and ``og:description``
      - First ~200 characters of the page's own text (generated
-       *independently* for each -- see note below)
+       *independently* for each -- see the description override below)
    * - ``og:image``
      - The ``ogp_image`` setting in ``conf.py``
    * - ``rel="canonical"``, favicon
