@@ -19,15 +19,6 @@ yet in the latest PyPI release.
    ```python
    extensions = ["ulwazi"]
    html_theme = "ulwazi"
-   localtoc_max_depth = 3
-   ```
-
-   Ulwazi requires `localtoc_max_depth`, `3` is the default.
-
-3. Build your documentation:
-
-   ```shell
-   make docs
    ```
 
 To adapt a complete Canonical-style configuration, start with
@@ -46,7 +37,13 @@ pip install "ulwazi @ git+https://github.com/canonical/ulwazi.git@main"
 
 ## Work on Ulwazi
 
-To build and preview this sample site from a clone of the repository, run:
+From a clone of this repository, build the theme and sample documentation:
+
+```shell
+make docs
+```
+
+To preview changes as you make them, run:
 
 ```shell
 make run

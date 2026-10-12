@@ -34,7 +34,7 @@ author = "Canonical Ltd."
 # Sidebar documentation title; best kept reasonably short
 #
 # TODO: To include a version number, add it here (hardcoded or automated).
-version = "beta"
+version = "1.0.0"
 
 
 # TODO: To disable the title, set to an empty string.

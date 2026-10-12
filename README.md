@@ -23,15 +23,6 @@ The theme will default to a generic Vanilla Framework style but will have option
    ```python
    extensions = ["ulwazi"]
    html_theme = "ulwazi"
-   localtoc_max_depth = 3
-   ```
-
-   Ulwazi requires `localtoc_max_depth`, `3` is the default.
-
-3. Build the documentation:
-
-   ```shell
-   make docs
    ```
 
 The [documentation site](https://documentation.ubuntu.com/ulwazi/) describes
