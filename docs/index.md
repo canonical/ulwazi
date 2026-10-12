@@ -21,16 +21,6 @@ yet in the latest PyPI release.
    html_theme = "ulwazi"
    ```
 
-3. To build the theme and sample documentation from this repository's root, use
-   its Makefile target:
-
-   ```shell
-   make docs
-   ```
-
-   In another Sphinx project, use that project's own Makefile target (often
-   `make -C docs html`); `make docs` is specific to this repository.
-
 To adapt a complete Canonical-style configuration, start with
 [`docs/default-conf.py`](https://github.com/canonical/ulwazi/blob/main/docs/default-conf.py).
 It enables optional extensions, so add the corresponding Python packages to your
@@ -47,7 +37,13 @@ pip install "ulwazi @ git+https://github.com/canonical/ulwazi.git@main"
 
 ## Work on Ulwazi
 
-To build and preview this sample site from a clone of the repository, run:
+From a clone of this repository, build the theme and sample documentation:
+
+```shell
+make docs
+```
+
+To preview changes as you make them, run:
 
 ```shell
 make run
