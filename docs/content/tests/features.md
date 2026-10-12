@@ -9,7 +9,8 @@ sheets, the code-heading page, and the two admonition example pages.
 One grouped fast case, `test_features_fast`, checks document heading classes
 and inline code, plain-text global navigation titles, Vanilla body-list and
 local-TOC markup,
-the configured TOC depth, and notification type mappings. It also checks that
+the configured TOC depth, notification type mappings, and the configured Get
+help panel below the Global ToC. It also checks that
 named admonition targets survive, each converted tab set has reciprocal
 button/panel references and one initially selected panel, and a highlighted
 code block and copy script are wired in. The search page must include a
@@ -27,8 +28,12 @@ site through a local HTTP server. In a new browser context it checks that the
 cookie-consent notification appears on first visit, closes after **Accept
 all** and saves the consent cookie, stays closed on another page in the same
 browser context, and reopens from the footer's **Manage your tracker
-settings** link. It then expands and collapses the global navigation,
-selects tabs by click and arrow key, checks that dark mode persists between
+settings** link. It then expands and collapses the global navigation and, at
+768px, opens the side-navigation drawer. The drawer check covers initial focus,
+keyboard focus wrapping through the Get help links, closing with **Escape** or
+the close button, returning focus to the opener, reduced motion, and resetting
+after a desktop resize. The journey also selects tabs by click and arrow key,
+checks that dark mode persists between
 pages, clicks a code-block copy button and verifies the clipboard text, and
 submits a search and follows a result with the correct breadcrumb.
 Chromium is installed on demand; the case needs browser dependencies, so it

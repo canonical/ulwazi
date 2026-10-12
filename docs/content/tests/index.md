@@ -79,9 +79,9 @@ does not imply every feature in a module is fully tested. See
 - `make test-code-quality` runs the {doc}`code quality checks <code-quality>`,
 	including one case per linter. `make lint` still runs the linters on their
 	own and is what CI uses.
-- `make test-coverage` runs fast tests plus the slow browser feature journey
-	and the computed-colour check; see {doc}`test coverage <coverage>` for its
-	three metrics and limitations.
+- `make test-coverage` runs fast tests plus the slow browser feature journey,
+	the computed-colour check, and the structured-TOC styling check; see
+	{doc}`test coverage <coverage>` for its three metrics and limitations.
 
 (test-addition-checklist)=
 ## Add a test

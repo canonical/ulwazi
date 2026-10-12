@@ -9,12 +9,15 @@ single score. Run `make test-all` for the complete test suite instead.
 
 The coverage target first builds the sample HTML, then runs pytest once under
 coverage.py with `-m 'not slow or coverage_js or coverage_style'`. This
-selects **all fast tests and two slow tests**. The `coverage_js` browser
+selects **all fast tests and three slow tests**. The `coverage_js` browser
 journey (`tests/test_features.py::test_features_slow`) visits the built site
-in Chromium and tests cookie consent, navigation, tabs, copying code to the
-clipboard, dark mode, and search; it also collects JavaScript execution data.
-The `coverage_style` check (`tests/test_scss_propagation.py::test_rendered_color`)
-verifies a computed colour in Chromium. The shared `built_site` fixture builds
+in Chromium and tests cookie consent, navigation, the small-screen drawer,
+tabs, copying code to the clipboard, dark mode, and search; it also collects
+JavaScript execution data. Two `coverage_style` checks run in Chromium:
+`tests/test_scss_propagation.py::test_rendered_color` verifies the SCSS
+fixture's computed colour, and
+`tests/test_structured_toc.py::test_structured_toc_styling_slow` verifies
+Ulwazi's structured-TOC styling. The shared `built_site` fixture builds
 the sample docs **inside pytest**, so the theme's Sphinx hooks contribute to
 Python coverage. A separate HTML build remains a prerequisite for tests that
 still read `docs/_build`.
@@ -27,9 +30,10 @@ The other `slow` tests are **not** run by `make test-coverage`:
   their subprocesses are not instrumented by this coverage run.
 - The remote-asset check is network-dependent and advisory. It checks
   availability, not theme code-line execution.
-- The list-marker browser check verifies a rendered typography detail, not
-  Python or theme-JavaScript execution. The computed-colour SCSS check **is**
-  included to substantiate the SCSS propagation manifest entry.
+- The other browser styling checks, such as list-marker size and sidebar
+  spacing, verify rendered details without a feature-manifest mapping. The
+  two `coverage_style` checks **are** included because manifest entries depend
+  on them.
 - The {doc}`code quality <code-quality>` linter cases run `make lint` targets
   in subprocesses that don't load the theme. The fast code quality checks do
   run, but they have no `tests/features.yaml` entries because they check
@@ -90,8 +94,9 @@ The manifest describes **specific checks**, not whole Sphinx components. For
 example, the TOC check verifies Vanilla markup and H4/H5 depth on the two
 cheat sheets, not every navigation variant; the asset check inspects a small
 set of pages, not the entire site. A feature with both markup and browser
-checks lists both pytest IDs so that both must pass. An item that is planned
-but not configured (such as the styled 404 page) remains unverified.
+checks lists both pytest IDs so that both must pass. A known behavior without
+a qualifying assertion (such as tab synchronization across sets) remains
+unverified.
 
 This is **not** an automatic count of all cheatsheet sections or all possible
 theme behavior. In particular, a grouped test such as `test_features_fast`

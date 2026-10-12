@@ -112,8 +112,9 @@ site:
     checks:
       - tests/test_features.py::test_features_slow
   - name: Styled 404 page
-    source: planned 404 page (testing-strategy.md); not configured in docs/conf.py
-    checks: []
+    source: generated sample-site 404 page (Ulwazi header/footer, message, penguin image and bundled asset)
+    checks:
+      - tests/test_notfound_bundling.py::test_built_404_page
   - name: Structured-TOC styling opt-out and separator colour overrides
     source: ulwazi_structured_toc_styling and _separator_color_light/_dark conf.py values
     checks:
