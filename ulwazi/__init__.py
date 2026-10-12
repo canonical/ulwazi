@@ -451,12 +451,12 @@ def _setup_help_links(app: Sphinx) -> None:
     """
     if app.builder.format != "html":
         return
-    app._ulwazi_help_links = validate_help_links(  # pyright: ignore [reportAttributeAccessIssue]
+    app._ulwazi_help_links = validate_help_links(  # type: ignore[attr-defined] # noqa: SLF001 # pyright: ignore [reportAttributeAccessIssue]
         app.config.html_context.get("help_links")
     )
     # Mark validation as done even when the result is None (off/invalid),
     # so _compute_navigation_tree never re-validates or re-warns per page.
-    app._ulwazi_help_links_validated = True  # pyright: ignore [reportAttributeAccessIssue]
+    app._ulwazi_help_links_validated = True  # type: ignore[attr-defined] # noqa: SLF001 # pyright: ignore [reportAttributeAccessIssue]
 
 
 def _compute_navigation_tree(app: Sphinx, context: dict[str, Any]) -> str:

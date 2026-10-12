@@ -176,7 +176,7 @@ def get_navigation_tree(toctree_html: str) -> str:
     return str(soup)
 
 
-def validate_help_links(help_links: Any) -> dict[str, Any] | None:
+def validate_help_links(help_links: Any) -> dict[str, Any] | None:  # noqa: ANN401, PLR0911
     """Normalise the conf.py ``html_context["help_links"]`` value.
 
     ``None``, ``False``, or an empty mapping mean the block is off. A
@@ -209,7 +209,7 @@ def validate_help_links(help_links: Any) -> dict[str, Any] | None:
         _warn_help_links("'links' must be a non-empty list")
         return None
 
-    links = cast("list[Any]", raw_links)
+    links = cast("list[Any]", raw_links)  # type: ignore[redundant-cast]
     normalised_links: list[dict[str, str]] = []
     for index, link in enumerate(links):
         if not isinstance(link, dict):
