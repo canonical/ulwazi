@@ -25,11 +25,15 @@ The theme will default to a generic Vanilla Framework style but will have option
    html_theme = "ulwazi"
    ```
 
-3. Build the documentation (with `conf.py` in `docs/`):
+3. To build the theme and sample documentation from this repository's root, use
+   its Makefile target:
 
    ```shell
-   sphinx-build -b dirhtml docs docs/_build/html
+   make docs
    ```
+
+   In another Sphinx project, use that project's own Makefile target (often
+   `make -C docs html`); `make docs` is specific to this repository.
 
 The [documentation site](https://documentation.ubuntu.com/ulwazi/) describes
 the current `main` branch, which can include changes not yet released on PyPI.
