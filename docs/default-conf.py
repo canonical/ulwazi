@@ -31,8 +31,8 @@ author = "Canonical Ltd."
 
 # Sidebar documentation title; best kept reasonably short
 #
-# TODO: To include your project's version number, set it here or derive it.
-# version = "your-project-version"
+# TODO: To include a version number, add it here (hardcoded or automated).
+# version = "beta"
 
 
 # TODO: To disable the title, set to an empty string.

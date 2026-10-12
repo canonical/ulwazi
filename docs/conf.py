@@ -33,7 +33,7 @@ author = "Canonical Ltd."
 
 # Sidebar documentation title; best kept reasonably short
 #
-# Display the intended stable release version on the sample site's footer.
+# TODO: To include a version number, add it here (hardcoded or automated).
 version = "1.0.0"
 
 
