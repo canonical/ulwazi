@@ -22,12 +22,13 @@ yet in the latest PyPI release.
    localtoc_max_depth = 3
    ```
 
-   Ulwazi requires `localtoc_max_depth`, `3` is the default.
+   The 0.6 PyPI release requires `localtoc_max_depth` explicitly. In 1.0.0,
+   it defaults to `3`; keep the setting only if you want a different depth.
 
-3. Build your documentation:
+3. Build your documentation (with `conf.py` in `docs/`):
 
    ```shell
-   make docs
+   sphinx-build -b dirhtml docs docs/_build/html
    ```
 
 To adapt a complete Canonical-style configuration, start with

@@ -26,12 +26,13 @@ The theme will default to a generic Vanilla Framework style but will have option
    localtoc_max_depth = 3
    ```
 
-   Ulwazi requires `localtoc_max_depth`, `3` is the default.
+   The 0.6 PyPI release requires `localtoc_max_depth` explicitly. In 1.0.0,
+   it defaults to `3`; keep the setting only if you want a different depth.
 
-3. Build the documentation:
+3. Build the documentation (with `conf.py` in `docs/`):
 
    ```shell
-   make docs
+   sphinx-build -b dirhtml docs docs/_build/html
    ```
 
 The [documentation site](https://documentation.ubuntu.com/ulwazi/) describes

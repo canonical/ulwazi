@@ -11,7 +11,7 @@ keywords = ["sphinx", "theme", "documentation", "vanilla", "canonical"]
 classifiers = [
     'Framework :: Sphinx',
     'Framework :: Sphinx :: Theme',
-    'Development Status :: 4 - Beta',
+    'Development Status :: 5 - Production/Stable',
     'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Environment :: Console',
     'Environment :: Web Environment',

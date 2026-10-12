@@ -85,7 +85,7 @@ YAML:
        post_create_environment:
        - pip install sphinx build
        - python -m build
-       - pip install dist/ulwazi-0.2.tar.gz
+      - pip install dist/ulwazi-*.tar.gz
        post_checkout:
        - git fetch --unshallow || true
 
@@ -124,12 +124,19 @@ Python:
    import datetime
    import os
    import yaml
+     from urllib.parse import urlsplit
 
    copyright = "%s CC-BY-SA, %s" % (datetime.date.today().year, author)
 
    if "READTHEDOCS_VERSION" in os.environ:
        version = os.environ["READTHEDOCS_VERSION"]
-       sitemap_url_scheme = "{version}{link}"
+       path = urlsplit(os.environ.get("READTHEDOCS_CANONICAL_URL", "")).path
+       segments = [segment for segment in path.split("/") if segment]
+       sitemap_url_scheme = "{link}"
+       if segments[-1:] == [version]:
+         sitemap_url_scheme = "{version}{link}"
+         if segments[-2:-1] == [os.environ.get("READTHEDOCS_LANGUAGE")]:
+           sitemap_url_scheme = segments[-2] + "/{version}{link}"
    else:
        sitemap_url_scheme = "MANUAL/{link}"
 
