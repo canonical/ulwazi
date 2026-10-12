@@ -15,7 +15,7 @@ the URL schema, so the helper detects the schema from
 
 The prefix must start and end with a slash so that links on the 404 page
 resolve regardless of the depth at which the 404 page is served (see the
-sphinx-stack production bug where a missing slug produced broken links on
+Sphinx Stack production bug where a missing slug produced broken links on
 every 404 page).
 
 All scenarios run through a single parametrised test: each case in

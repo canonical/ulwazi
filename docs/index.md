@@ -2,7 +2,7 @@
 
 This site previews the Ulwazi Sphinx theme:
 a Vanilla Framework-based theme built for Canonical’s
-[Sphinx stack](https://github.com/canonical/sphinx-stack).
+[Sphinx Stack](https://github.com/canonical/sphinx-stack).
 It documents the current `main` branch, which can include changes that are not
 yet in the latest PyPI release.
 
