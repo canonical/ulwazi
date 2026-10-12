@@ -44,7 +44,10 @@ html_context = {
         "title": "Get help",
         "links": [
             {"text": "Ask on the forum", "url": "https://forum.example.com/maximum"},
-            {"text": "Report a doc issue", "url": "https://github.com/example/maximum-docs/issues/new"},
+            {
+                "text": "Report a doc issue",
+                "url": "https://github.com/example/maximum-docs/issues/new",
+            },
         ],
     },
     # Reserved/legacy values: Ulwazi preserves these, but does not render them.

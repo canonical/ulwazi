@@ -151,6 +151,35 @@ def _check_inline_code_and_tables(name, soup):
     return errors
 
 
+def _check_help_links(name, soup):
+    """The configured Get help panel renders without toctree link classes."""
+    # CI also runs this file against the base revision, whose sample docs may
+    # not opt in, so only verify the panel when it is present
+    # (test_config_robustness hard-asserts the sample docs render it).
+    panel = soup.select_one("nav#drawer div.p-help-links")
+    if panel is None:
+        return []
+    errors = []
+    heading = panel.select_one("p.caption span.caption-text")
+    if not heading or heading.get_text(strip=True) != "Get help":
+        errors.append(f"[{name}] help links: heading must read 'Get help'")
+    links = panel.select("a.p-help-links__link")
+    hrefs = [link.get("href") for link in links]
+    for href, label in (
+        ("https://discourse.ubuntu.com/c/documentation/7", "Discourse"),
+        ("https://github.com/canonical/ulwazi/issues/new", "issue-tracker"),
+    ):
+        if href not in hrefs:
+            errors.append(f"[{name}] help links: {label} link missing")
+    if any(
+        {"p-side-navigation__link", "is-active"} & set(link.get_attribute_list("class"))
+        or link.get("aria-current") is not None
+        for link in links
+    ):
+        errors.append(f"[{name}] help links: must not inherit toctree link classes")
+    return errors
+
+
 def test_features_fast(built_site):
     """One grouped fast result for Python post-processing and theme markup."""
     errors = []
@@ -183,33 +212,9 @@ def test_features_fast(built_site):
         errors.append(f"[{name}] headings: missing main article")
 
     # The sample docs opt into the Get help panel (docs/conf.py); it must
-    # render below the Global ToC, without toctree link classes. CI also runs
-    # this file against the base revision, whose sample docs do not opt in,
-    # so only verify the panel when it is present (test_config_robustness
-    # hard-asserts the sample docs render it).
+    # render below the Global ToC.
     name = "content/myst-cheat-sheet"
-    soup = built_site.page(name)
-    panel = soup.select_one("nav#drawer div.p-help-links")
-    if panel is not None:
-        heading = panel.select_one("p.caption span.caption-text")
-        if not heading or heading.get_text(strip=True) != "Get help":
-            errors.append(f"[{name}] help links: heading must read 'Get help'")
-        links = panel.select("a.p-help-links__link")
-        hrefs = [link.get("href") for link in links]
-        if "https://discourse.ubuntu.com/c/documentation/7" not in hrefs:
-            errors.append(f"[{name}] help links: Discourse link missing")
-        if "https://github.com/canonical/ulwazi/issues/new" not in hrefs:
-            errors.append(f"[{name}] help links: issue-tracker link missing")
-        for link in links:
-            classes = link.get("class", [])
-            if (
-                "p-side-navigation__link" in classes
-                or "is-active" in classes
-                or link.get("aria-current") is not None
-            ):
-                errors.append(
-                    f"[{name}] help links: must not inherit toctree link classes"
-                )
+    errors.extend(_check_help_links(name, built_site.page(name)))
 
     for name in CHEAT_SHEETS:
         soup = built_site.page(name)
@@ -384,11 +389,8 @@ def test_features_slow(built_site):  # noqa: PLR0915
                     expect(last_link).to_be_focused()
                     help_link = panel.locator("a.p-help-links__link").last
                     if help_link.count():
-                        assert last_link.evaluate(
-                            "el => el === document.activeElement"
-                        ) and last_link.get_attribute("class"), (
-                            "Get help links must stay inside the drawer focus order"
-                        )
+                        # Get help links must stay inside the drawer focus order.
+                        expect(help_link).to_be_focused()
                     page.keyboard.press("Tab")
                     expect(close).to_be_focused()
                     page.keyboard.press("Escape")

@@ -20,6 +20,7 @@ Each fixture build runs through Sphinx's Python API. Independent checks report
 their failures together under one pytest result, without hiding later cases.
 """
 
+import copy
 import io
 import runpy
 from collections.abc import Callable
@@ -181,7 +182,8 @@ def _check_sample_docs() -> None:
     panel = soup.select_one("nav#drawer div.p-help-links")
     assert panel is not None, "Get help panel missing from the sample docs"
     heading = panel.select_one("p.caption span.caption-text")
-    assert heading is not None and heading.get_text(strip=True) == "Get help"
+    assert heading is not None, "Get help panel heading missing from the sample docs"
+    assert heading.get_text(strip=True) == "Get help"
     hrefs = [link.get("href") for link in panel.select("a.p-help-links__link")]
     assert "https://discourse.ubuntu.com/c/documentation/7" in hrefs
     assert "https://github.com/canonical/ulwazi/issues/new" in hrefs
@@ -294,7 +296,9 @@ def _check_maximum_help_links(page: BeautifulSoup) -> None:
     heading = panel.select_one("p.caption span.caption-text")
     assert heading is not None, "Get help panel heading missing"
     assert heading.get_text(strip=True) == "Get help"
-    links = panel.select("ul.p-help-links__list li.p-help-links__item a.p-help-links__link")
+    links = panel.select(
+        "ul.p-help-links__list li.p-help-links__item a.p-help-links__link"
+    )
     assert len(links) == 2, "Expected the two configured help links"
     assert links[0].get("href") == "https://forum.example.com/maximum"
     assert links[0].get_text(strip=True) == "Ask on the forum"
@@ -303,7 +307,7 @@ def _check_maximum_help_links(page: BeautifulSoup) -> None:
     for link in links:
         # Help links are external resources, not toctree entries: they must
         # not pick up navigation-link or current-page classes.
-        classes = link.get("class", [])
+        classes = link.get_attribute_list("class")
         assert "p-side-navigation__link" not in classes
         assert "is-active" not in classes
         assert link.get("aria-current") is None
@@ -460,7 +464,10 @@ def test_config_robustness(tmp_path: Path) -> None:
         ({"title": "Get help"}, "'links'"),
         ({"links": [{"text": "a", "url": "https://example.com"}]}, "'title'"),
         # Empty values
-        ({"title": "  ", "links": [{"text": "a", "url": "https://example.com"}]}, "'title'"),
+        (
+            {"title": "  ", "links": [{"text": "a", "url": "https://example.com"}]},
+            "'title'",
+        ),
         ({"title": "Get help", "links": []}, "'links'"),
         # Malformed links
         (
@@ -473,7 +480,10 @@ def test_config_robustness(tmp_path: Path) -> None:
         ),
         # Unsafe or non-absolute URLs
         (
-            {"title": "Get help", "links": [{"text": "a", "url": "javascript:alert(1)"}]},
+            {
+                "title": "Get help",
+                "links": [{"text": "a", "url": "javascript:alert(1)"}],
+            },
             "http(s)",
         ),
         (
@@ -489,8 +499,6 @@ def test_help_links_invalid_config(
     tmp_path: Path, help_links: object, expected_warning: str
 ) -> None:
     """Invalid help_links values warn once and render no panel, without crashing."""
-    import copy
-
     snapshot = copy.deepcopy(help_links)
 
     app, output, warnings = _build(
