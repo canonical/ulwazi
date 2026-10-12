@@ -80,6 +80,28 @@ def test_rendered_color():
             f"Color is not correct (check SCSS properties propagation): {color}"
         )
 
+        # List styles remove the code block's bottom margin; the following
+        # notification still needs the standard 1.5rem (24px) vertical gap.
+        for source in ("test6_admonitions", "test7_admonitionsMD"):
+            sample = _open_page(
+                browser,
+                Path(f"docs/_build/content/{source}/index.html").resolve(),
+            )
+            try:
+                selector = (
+                    "article li.p-list__item > .highlight-yaml "
+                    "+ .p-notification--positive"
+                )
+                notice = sample.locator(selector)
+                assert notice.count() == 1, f"{source}: missing list-item tip fixture"
+                gap = notice.evaluate(
+                    "el => el.getBoundingClientRect().top - "
+                    "el.previousElementSibling.getBoundingClientRect().bottom"
+                )
+                assert gap == 24, f"{source}: code-to-tip gap is {gap}px, not 24px"
+            finally:
+                sample.close()
+
         browser.close()
 
 

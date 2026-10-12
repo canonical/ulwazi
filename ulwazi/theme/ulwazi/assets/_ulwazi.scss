@@ -361,6 +361,12 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+// List items remove the code block's bottom margin; restore the gap before
+// a following notification without changing spacing outside lists.
+.p-list__item div[class*="highlight-"] + [class^="p-notification"] {
+  margin-top: 1.5rem;
+}
+
 body.is-dark .highlight,
 body.is-dark code:not(pre code) {
   background-color: $colors--dark-theme--background-code;

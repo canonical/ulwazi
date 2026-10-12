@@ -33,9 +33,9 @@ assertions inside one grouped case do not.
 * - 4\. Features and regressions
   - `test_config_robustness.py` (**16 fast**) — four Read the Docs branch-selection cases; one grouped case for minimal, default, depth, legacy, maximum and fallback configuration; ten parametrized invalid `help_links` cases plus one theme-only loading case for the Get help panel.
 
-    `test_features.py` (**1 fast, 1 slow**, {doc}`details <features>`) — grouped theme markup (TOCs, tabs, headings, admonitions, lists, tables, code, search mapping, Get help panel) and browser journeys (consent, navigation, drawer, tabs, copy, theme, search).
+    `test_features.py` (**1 fast, 1 slow**, {doc}`details <features>`) — grouped theme markup (TOCs, tabs, headings, admonitions including list-item code/tip adjacency, lists, tables, code, search mapping, Get help panel) and browser journeys (consent, navigation, drawer, tabs, copy, theme, search).
 
-    `test_scss_propagation.py` (**1 fast, 3 slow**) — SCSS fixture markup; computed colour, sidebar indicator spacing, and ordered-list marker size in Chromium.
+    `test_scss_propagation.py` (**1 fast, 3 slow**) — SCSS fixture markup; computed colour and list-item code-to-tip spacing in both reST and MyST, sidebar indicator spacing, and ordered-list marker size in Chromium.
 * - 5\. Extension compatibility
   - `test_extension_compatibility.py` (**1 fast, 1 slow**, {doc}`details <extension-compatibility>`) — grouped Sphinx Stack extension markup/artifact checks; the slow case checks the expected PDF exists. Not every extension has an asserted rendered feature.
 

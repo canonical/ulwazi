@@ -54,3 +54,16 @@ such there is no one to one mapping. Below shows each of the admonitions and how
     .. code-block:: python
 
         print("last element in the notification")
+
+*   A code block followed by a tip inside a list item:
+
+    .. code-block:: yaml
+
+            slices:
+                bins:
+                    essential:
+                        - libc6_libs
+
+    .. tip::
+
+            This tip keeps the standard gap after the code block inside a list item.

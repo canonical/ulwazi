@@ -14457,6 +14457,10 @@ button.copybtn:hover {
   color: var(--vf-color-text-default);
 }
 
+.p-list__item div[class*=highlight-] + [class^=p-notification] {
+  margin-top: 1.5rem;
+}
+
 body.is-dark .highlight,
 body.is-dark code:not(pre code) {
   background-color: rgba(255, 255, 255, 0.05);
