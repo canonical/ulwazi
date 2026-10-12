@@ -2,56 +2,58 @@
 
 This site previews the Ulwazi Sphinx theme:
 a Vanilla Framework-based theme built for Canonical’s
-[Sphinx stack](https://github.com/canonical/sphinx-stack).
+[Sphinx Stack](https://github.com/canonical/sphinx-stack).
+It documents the current `main` branch, which can include changes that are not
+yet in the latest PyPI release.
 
-- Want to help? See {doc}`content/contribute`.
-- Want to use it? Start with [Use Ulwazi in your documentation](https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/).
-- Want the full list of settings and their defaults? See {doc}`content/configuration`.
+## Use Ulwazi
 
-## Build and test locally
+1. Install the theme in the Python environment that builds your documentation:
 
-The included Makefile builds the theme and a sample documentation set so you can inspect
-changes quickly.
+   ```shell
+   pip install ulwazi
+   ```
 
-To build the sample documentation:
+2. Enable the theme in your `conf.py`:
+
+   ```python
+   extensions = ["ulwazi"]
+   html_theme = "ulwazi"
+   localtoc_max_depth = 3
+   ```
+
+   Ulwazi requires `localtoc_max_depth`, `3` is the default.
+
+3. Build your documentation:
+
+   ```shell
+   make docs
+   ```
+
+To adapt a complete Canonical-style configuration, start with
+[`docs/default-conf.py`](https://github.com/canonical/ulwazi/blob/main/docs/default-conf.py).
+It enables optional extensions, so add the corresponding Python packages to your
+documentation requirements as well. See {doc}`content/configuration` for
+settings and defaults. For an existing Sphinx Stack project, follow
+[Switch to the Ulwazi theme](https://documentation.ubuntu.com/sphinx-stack/latest/how-to/switch-to-ulwazi/).
+
+To try features from `main` before the next release, install the theme from
+GitHub:
 
 ```shell
-make docs
+pip install "ulwazi @ git+https://github.com/canonical/ulwazi.git@main"
 ```
 
-To build the sample documentation in an interactive preview, run:
+## Work on Ulwazi
+
+To build and preview this sample site from a clone of the repository, run:
 
 ```shell
 make run
 ```
 
-This uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, builds the documentation,
-and serves it locally. Content and theme edits rebuild automatically; SCSS changes
-are compiled before the rebuild. See {doc}`content/preview-workflow` for details.
-If you change dependencies or need to reset a stale build, use:
-
-```shell
-make rebuild
-```
-
-The `make rebuild` command runs `make clean` before `make docs`.
-
-If you change dependencies (for example, if you add a new package to
-`pyproject.toml`), you should rebuild the virtual environment:
-
-```shell
-make clean
-```
-
-## Contribute
-
-Core theme files live in the `ulwazi` package:
-
-- `__init__.py` — theme initialization and hooks
-- `navigation.py` — global TOC shaping
-- `theme/ulwazi/` — Jinja templates, `theme.toml` configuration file, and unprocessed `static/` assets
-
-To tweak the HTML before theming, see the `_html_page_context` in `__init__.py`.
+The preview runs at `http://127.0.0.1:8000`. For setup, tests, and pull
+request guidance, see {doc}`content/contribute`.
 
 ## Sample section
 
@@ -88,5 +90,5 @@ content/configuration
 content/contribute
 content/preview-workflow
 content/tests/index
-Use Ulwazi in your documentation <https://documentation.ubuntu.com/sphinx-stack/latest/contribute/test-ulwazi-theme/>
+Use Ulwazi in your documentation<https://documentation.ubuntu.com/sphinx-stack/latest/how-to/switch-to-ulwazi/>
 ```

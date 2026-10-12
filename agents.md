@@ -44,7 +44,8 @@ make test-all     # Run all fast and slow tests (includes PDF and Playwright)
 make test-coverage # Run tests and report Python, JS, and feature coverage
 ```
 
-Available tests:
+Common test suites are listed below. The authoritative list, with exact fast
+and slow case counts, is the test inventory in `docs/content/tests/index.md`.
 
 - **test_smoke.py**: Checks the home-page shell and navigation (fast)
 - **test_assets_structure.py**: Checks representative built assets and theme controls (fast)

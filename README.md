@@ -1,33 +1,177 @@
 # Ulwazi Sphinx theme
 
-Ulwazi, Xhosa for information, is a work-in-progress Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
+Ulwazi, Xhosa for information, is a Sphinx theme based on [Vanilla design](https://github.com/canonical/vanilla-framework).
 
-[Demo website](https://documentation.ubuntu.com/ulwazi/)
+[Documentation and demo](https://documentation.ubuntu.com/ulwazi/) |
+[PyPI](https://pypi.org/project/ulwazi/) |
+[Issues](https://github.com/canonical/ulwazi/issues)
 
 Layout and functionality is derived from [sphinx-basic-ng](https://github.com/pradyunsg/sphinx-basic-ng), developed by [pradyunsg](https://github.com/pradyunsg) and [Alabaster](https://github.com/sphinx-doc/alabaster).
 
 The theme will default to a generic Vanilla Framework style but will have options for the specific Canonical theming to support the org's documentation needs.
 
-## Prerequisites
+## Use the theme
 
-- **Python**: `>=3.10` (managed by [uv](https://docs.astral.sh/uv/))
-- **Node.js** and **npm**: required only for compiling SCSS to CSS (see [Installing Node modules](#installing-node-modules))
+1. Install Ulwazi in the Python environment that builds your documentation:
 
-## Installing Node modules
+   ```shell
+   pip install ulwazi
+   ```
 
-Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed:
+2. Enable it in your Sphinx `conf.py`:
+
+   ```python
+   extensions = ["ulwazi"]
+   html_theme = "ulwazi"
+   localtoc_max_depth = 3
+   ```
+
+   Ulwazi requires `localtoc_max_depth`, `3` is the default.
+
+3. Build the documentation:
+
+   ```shell
+   make docs
+   ```
+
+The [documentation site](https://documentation.ubuntu.com/ulwazi/) describes
+the current `main` branch, which can include changes not yet released on PyPI.
+To try those changes, install the theme from GitHub:
 
 ```shell
-sudo apt install npm
+pip install "ulwazi @ git+https://github.com/canonical/ulwazi.git@main"
 ```
 
-If you do not have the `node_modules` directory (for example, after cloning the repository for the first time), install the JavaScript dependencies:
+For a fuller Canonical-style setup, adapt
+[`docs/default-conf.py`](docs/default-conf.py). It enables optional extensions,
+so add their packages to your documentation requirements too. See the
+[configuration reference](https://documentation.ubuntu.com/ulwazi/content/configuration/)
+for every Ulwazi-specific setting. If you are migrating a Sphinx Stack project,
+see [Switch to the Ulwazi theme](https://documentation.ubuntu.com/sphinx-stack/latest/how-to/switch-to-ulwazi/).
+
+## Configuration notes
+
+### Metadata and SEO
+
+Ulwazi's templates render the page `<title>`, a canonical link when
+`html_baseurl` is set, and a favicon link when `html_favicon` is set.
+Descriptions and Open Graph tags come from
+[sphinxext-opengraph](https://github.com/sphinx-doc/sphinxext-opengraph):
+install `sphinxext-opengraph`, add `"sphinxext.opengraph"` to `extensions`,
+and configure `ogp_site_url`, `ogp_site_name`, and `ogp_image` as needed.
+The sample [`docs/conf.py`](docs/conf.py) shows a complete setup. Once that
+is in place, overriding a page's social-preview title or description is
+optional. See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
+for defaults and override syntax.
+
+### Analytics
+
+On `main`, Ulwazi includes Canonical's Google Tag Manager container
+(`GTM-N384JMX2`) on HTML pages by default. Set
+`html_context["tag_id"]` to use a different container. See the
+[configuration reference](https://documentation.ubuntu.com/ulwazi/content/configuration/#with-defaults).
+
+### 404 page
+
+The theme bundles the [sphinx-notfound-page](https://github.com/readthedocs/sphinx-notfound-page)
+extension and activates it automatically when Ulwazi is enabled -- **you do
+not need to list `notfound.extension` separately.** A styled 404 page (with
+the Canonical penguin) is generated for HTML builds, and links on it resolve
+correctly on Read the Docs.
+
+Set the `slug` config value in your `conf.py` to the path segment of your
+docs site URL (e.g. `slug = "ulwazi"` for `https://documentation.ubuntu.com/ulwazi/`)
+so that links on the 404 page resolve correctly when hosted on Read the Docs.
+If your project sets `notfound_urls_prefix` or `notfound_template` explicitly,
+Ulwazi leaves those settings unchanged.
+
+To opt out of the 404-page integration, set `notfound_enabled = False` in your
+`conf.py`. If `"ulwazi"` is in `extensions`, you can also pass
+`-D notfound_enabled=0` on the command line. With `html_theme = "ulwazi"`
+alone, use the `conf.py` flag: Sphinx processes command-line overrides before
+loading theme entry points and would warn that the flag is unknown. Projects
+that already list `notfound.extension` may keep that entry: Sphinx loads it
+only once. In such projects, the opt-out skips **Ulwazi's** 404 defaults but
+does not disable the explicitly enabled extension or its 404 page.
+
+### Structured-TOC styling (temporary)
+
+If your project uses [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc),
+Ulwazi temporarily styles its `domain`/`slice` blocks -- removing bullets
+and indent from the slice list, colouring the vertical separators between
+slice items in the brand colour, and normalizing visited-link colour --
+until the extension ships equivalent styling of its own. Nothing outside a
+`domain`/`slice` block is affected.
+
+Set `ulwazi_structured_toc_styling = False` in `conf.py` to opt out, or
+`ulwazi_structured_toc_separator_color_light` / `_dark` to override either
+separator colour. See the
+[configuration reference](docs/content/configuration.md#structured-toc-styling-temporary)
+for details.
+
+## Develop Ulwazi
+
+See the [contribution guide](https://documentation.ubuntu.com/ulwazi/content/contribute/)
+for the full workflow, including checks and pull request guidance.
+
+### Prerequisites
+
+- **Git**, **make**, and **Python** `>=3.10` (`3.11` is recommended)
+- **uv**: the Make targets install it if it is missing
+- **Node.js** and **npm**: required only when compiling SCSS to CSS; `make vanilla-main`
+  tries to install Node.js if `npm` is missing
+
+The setup targets may use `snap`, Homebrew, or the uv installer when a required
+tool is missing. Install the tools yourself first if you prefer not to grant
+`sudo` access during setup.
+
+### Build and preview
+
+From the repository root, build the sample documentation:
 
 ```shell
-npm install
+make docs
 ```
 
-## Upgrading the Vanilla Framework
+Start the live preview:
+
+```shell
+make run
+```
+
+The preview runs at `http://127.0.0.1:8000`. To use another address, run, for
+example, `make run SPHINX_HOST=0.0.0.0 SPHINX_PORT=8080`. Stop it with
+`Ctrl+C`.
+
+The preview tracks sample content and theme files. On a theme change it
+rebuilds the HTML; SCSS changes are compiled to CSS before Sphinx runs. See
+the [preview workflow](https://documentation.ubuntu.com/ulwazi/content/preview-workflow/)
+for details. After dependency changes, or to clear a stale build, run:
+
+```shell
+make rebuild
+```
+
+This deletes earlier build output and the `.venv` virtual environment, then
+builds the docs again.
+
+### Run checks
+
+```shell
+make test              # Run fast tests
+make test-slow         # Run slow tests (PDF builds, browser checks)
+make test-all          # Run fast and slow tests
+make test-coverage     # Report Python, JS, and feature coverage
+make lint              # Run the linters used by CI
+```
+
+Slow tests need extra system dependencies. See the
+[test inventory](https://documentation.ubuntu.com/ulwazi/content/tests/#test-inventory)
+for every suite and the
+[coverage guide](https://documentation.ubuntu.com/ulwazi/content/tests/coverage/)
+for what the three coverage numbers mean.
+
+### Upgrade the Vanilla Framework
 
 The theme styles are built on the [Vanilla Framework](https://vanillaframework.io/).
 To upgrade it to a newer version:
@@ -68,129 +212,7 @@ To upgrade it to a newer version:
 Both `package.json` and `package-lock.json` are tracked in git, so commit the
 updated lock file together with the version bump.
 
-## Testing
-
-A Makefile includes some basic functionality to build the theme and then build and run the test content with the theme.
-
-To build the sample documentation using the theme, run:
-
-```shell
-make docs
-```
-
-To build the sample documentation in an interactive preview, run:
-
-```shell
-make run
-```
-
-This command uses [uv](https://docs.astral.sh/uv/) to set up a virtual environment, installs dependencies, builds the theme, then builds the documentation in this repo, and serves the result via a local web server.
-
-The preview tracks sample content and theme files. On a theme change it
-rebuilds the HTML; SCSS changes are compiled to CSS before Sphinx runs.
-Ordinary content edits still use Sphinx's incremental build. If you change
-dependencies or need to reset an existing stale build, use:
-
-```shell
-make rebuild
-```
-
-This command runs `make clean` to delete files built earlier, and then `make docs` again.
-
-If you change dependencies, you will need to re-build the virtual environment entirely.
-That can be done by manually deleting the `.venv` folder or with the `make clean`
-command.
-
-### Running the test suite
-
-The test suite is split into fast and slow tests, following the
-[testing strategy](docs/content/testing-strategy.md).
-Fast tests run on every change; slow tests (PDF generation, browser-based
-visual checks, and Python version compatibility) require extra system
-dependencies or take longer.
-
-```shell
-make test              # Run fast tests only
-make test-fast         # Same as 'make test'
-make test-slow         # Run slow tests only (PDF builds, browser checks)
-make test-all          # Run all tests (fast and slow)
-make test-python-versions  # Build theme and docs on every supported Python version (slow)
-make test-coverage     # Run tests and report Python, JS, and feature coverage
-```
-
-The available tests are:
-
-- **test_smoke.py** — checks the home-page shell and navigation (fast)
-- **test_assets_structure.py** — checks representative built assets and theme controls (fast)
-- **test_features.py** — checks theme markup (fast) and browser interactions _(slow)_
-- **test_notfound_bundling.py** — checks automatic 404 integration, explicit extensions, opt-out, and the built 404 page and sitemap (fast)
-- **test_notfound_prefix.py** — checks URL prefixes for Read the Docs hosting layouts (fast)
-- **test_pdf_generation.py** — verifies PDF generation produces the expected output file _(slow)_
-- **test_scss_propagation.py** — tests SCSS compilation and style propagation to rendered HTML using Playwright _(partially slow)_
-- **test_structured_toc.py** — checks accessible structured TOCs in both cheat sheets' HTML and Ulwazi's temporary structured-TOC styling options (fast tests); the extension's own browser rendering and linked LaTeX slice lists, and Ulwazi's styling in the browser, are each grouped into a slow test _(partially slow)_
-- **test_layout_smoke.py** — checks every built page renders its article inside the main docs column, and (in a browser at 1440px) that nothing overflows the viewport or spills out of the main column _(browser check is slow)_
-- **test_python_versions.py** — builds the theme and sample docs on every supported Python version _(slow)_
-- **test_config_robustness.py** — checks minimal and maximum configuration, defaults, and legacy aliases (fast)
-- **test_extension_compatibility.py** — verifies the theme renders correctly with [Sphinx Stack default extensions](https://documentation.ubuntu.com/sphinx-stack/latest/reference/default-extensions/) enabled (grouped fast checks and a slow PDF check)
-
-`make test-coverage` ends with a three-metric summary: Python line coverage
-of the `ulwazi` package, aggregate JavaScript code-line coverage of **all**
-theme scripts (`results/js-coverage.json`), and the fraction of curated
-features whose mapped checks all pass (`tests/features.yaml`). The feature
-percentage is not exhaustive coverage of every cheatsheet section; known
-unverified behaviors remain visible in the manifest and summary.
-
-See the [Tests documentation](https://documentation.ubuntu.com/ulwazi/content/tests/) for more details on the test suite.
-
-## Metadata and SEO
-
-Every page gets a complete, working set of SEO/social-preview metadata
-automatically -- `<title>`, `<meta name="description">`, Open Graph tags,
-`rel="canonical"`, and favicon. **You never need to add anything by hand.**
-Overriding a page's title or description for social previews is optional and
-only needed for pages you want to promote with custom text (e.g. a landing
-page). See [the contribution guide](docs/content/contribute.rst#page-metadata-and-seo)
-for defaults and override syntax.
-
-## 404 page
-
-The theme bundles the [sphinx-notfound-page](https://github.com/readthedocs/sphinx-notfound-page)
-extension and activates it automatically when Ulwazi is enabled -- **you do
-not need to list `notfound.extension` separately.** A styled 404 page (with
-the Canonical penguin) is generated for HTML builds, and links on it resolve
-correctly on Read the Docs.
-
-Set the `slug` config value in your `conf.py` to the path segment of your
-docs site URL (e.g. `slug = "ulwazi"` for `https://documentation.ubuntu.com/ulwazi/`)
-so that links on the 404 page resolve correctly when hosted on Read the Docs.
-If your project sets `notfound_urls_prefix` or `notfound_template` explicitly,
-Ulwazi leaves those settings unchanged.
-
-To opt out of the 404-page integration, set `notfound_enabled = False` in your
-`conf.py`. If `"ulwazi"` is in `extensions`, you can also pass
-`-D notfound_enabled=0` on the command line. With `html_theme = "ulwazi"`
-alone, use the `conf.py` flag: Sphinx processes command-line overrides before
-loading theme entry points and would warn that the flag is unknown. Projects
-that already list `notfound.extension` may keep that entry: Sphinx loads it
-only once. In such projects, the opt-out skips **Ulwazi's** 404 defaults but
-does not disable the explicitly enabled extension or its 404 page.
-
-## Structured-TOC styling (temporary)
-
-If your project uses [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc),
-Ulwazi temporarily styles its `domain`/`slice` blocks -- removing bullets
-and indent from the slice list, colouring the vertical separators between
-slice items in the brand colour, and normalizing visited-link colour --
-until the extension ships equivalent styling of its own. Nothing outside a
-`domain`/`slice` block is affected.
-
-Set `ulwazi_structured_toc_styling = False` in `conf.py` to opt out, or
-`ulwazi_structured_toc_separator_color_light` / `_dark` to override either
-separator colour. See the
-[configuration reference](docs/content/configuration.md#structured-toc-styling-temporary)
-for details.
-
-## Optional: Workshop development environment
+### Optional: Workshop development environment
 
 As an alternative to installing the prerequisites locally, you can develop
 Ulwazi inside a [Workshop](https://ubuntu.com/workshop) container. The
@@ -214,7 +236,7 @@ the interactive preview. The preview is forwarded to
 Workshop is entirely optional; the local setup described above remains the
 default way to contribute.
 
-## Contributing
+### Project layout
 
 The theme files are located in the `ulwazi` folder:
 
@@ -223,8 +245,10 @@ The theme files are located in the `ulwazi` folder:
 - `product_menu_gen.py` -- generates the Canonical product menu (optional)
 - `tabs.py` -- styles and structures sphinx-design tabs in accordance with Vanilla
 - `theme/ulwazi/` -- contains the theme files
-  - theme.toml -- theme configuration file
-  - static -- static content to be used by the theme without processing
-  - other files -- HTML templates for Sphinx using Jinja templating engine
+  - `theme.toml` -- theme configuration file
+  - `assets/` -- SCSS sources compiled into `static/css/vanilla-main.css`
+  - `components/` and `sections/` -- reusable Jinja template fragments
+  - `static/` -- CSS, JavaScript, fonts, and images used without processing
+  - other `.html` files -- page templates for Sphinx
 
 If you want to modify HTML code of a page generated by Sphinx before the theme gets applied, see the `_html_page_context` function definition in the initialization script.

@@ -35,6 +35,7 @@ TEST_CATEGORIES = {
     "test_structured_toc.py": "5. Extension compatibility",
     "test_responsive.py": "6. Responsive layout",
     "test_notfound_prefix.py": "7. Python and environments",
+    "test_sitemap_url_scheme.py": "7. Python and environments",
     "test_python_versions.py": "7. Python and environments",
     "test_code_quality.py": "8. Code quality",
     "test_accessibility.py": "9. Accessibility",

@@ -27,7 +27,7 @@ output.
 | `sphinx_config_options` | Config option renders with its fields table |
 | `sphinx_contributor_listing` | Build succeeds with the extension active (see known gaps) |
 | `sphinx_filtered_toctree` | Filtered toctree renders its entries |
-| `sphinx_last_updated_by_git` | Build succeeds with the extension active (see known gaps) |
+| `sphinx_last_updated_by_git` | Build succeeds with the extension active; visible dates are a known gap |
 | `sphinx_llm.txt` | `llms.txt` is generated in the build output |
 | `sphinx_related_links` | Build succeeds with the extension active (see known gaps) |
 | `sphinx_roles` | Custom roles (`spellexception`, `literalref`) render |
@@ -63,11 +63,10 @@ Supporting them in the theme is tracked as follow-up work:
 - `sphinx_related_links` exposes related-links context functions, but no
   Ulwazi template renders them yet.
 - `sphinx_last_updated_by_git` populates the `last_updated` page context
-  and (with `git_last_updated_metatags`, on by default) an
-  `article:modified_time` meta tag. The meta tag is currently not
-   emitted: Ulwazi sets `html_last_updated_fmt` to an
-  empty string, which makes the extension's page-context hook return
-  early. No Ulwazi template renders `last_updated` either.
+  and, with `git_last_updated_metatags` (on by default), adds an
+  `article:modified_time` meta tag. Ulwazi passes that metadata through, but no
+  Ulwazi template renders a visible `last_updated` date. The compatibility
+  test does not assert the meta tag.
 
 ## How it's tested
 
@@ -203,8 +202,10 @@ does not graft additional pages into the global navigation:
 ### Structured TOC (sphinx_structured_toc)
 
 The structured TOC below groups links into domains and slices with ARIA
-labels for accessibility. It is HTML-only output, so it is wrapped in an
-`only:: html` directive to keep LaTeX (PDF) builds working:
+labels for accessibility. This compatibility sample is wrapped in an
+`only:: html` directive so the HTML check stays isolated. The extension supports
+LaTeX output from version 0.2.0; the cheat sheets cover that path in the
+{doc}`structured TOC tests <structured-toc>`:
 
 ```{eval-rst}
 .. only:: html
