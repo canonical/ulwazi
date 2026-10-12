@@ -2,6 +2,7 @@ import datetime
 import os
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
 
@@ -268,12 +269,22 @@ localtoc_max_depth = 3
 
 html_baseurl = "https://documentation.ubuntu.com/ulwazi/"
 
-# URL scheme. Add language and version scheme elements.
-# When configured with RTD variables, check for RTD environment so manual runs succeed:
+# URL scheme: sphinx-sitemap appends it to html_baseurl, so it must contain
+# only the path segments that Read the Docs serves after the project root.
+# READTHEDOCS_VERSION and READTHEDOCS_LANGUAGE are set on every RTD build, even
+# for single-version projects (like this one) whose URLs have no version or
+# language segment, so check whether they end READTHEDOCS_CANONICAL_URL.
+# Manual (non-RTD) builds use a placeholder segment.
 
 if "READTHEDOCS_VERSION" in os.environ:
     version = os.environ["READTHEDOCS_VERSION"]
-    sitemap_url_scheme = "{version}{link}"
+    rtd_url_path = urlsplit(os.environ.get("READTHEDOCS_CANONICAL_URL", "")).path
+    rtd_url_segments = [segment for segment in rtd_url_path.split("/") if segment]
+    sitemap_url_scheme = "{link}"
+    if rtd_url_segments[-1:] == [version]:
+        sitemap_url_scheme = "{version}{link}"
+        if rtd_url_segments[-2:-1] == [os.environ.get("READTHEDOCS_LANGUAGE")]:
+            sitemap_url_scheme = rtd_url_segments[-2] + "/{version}{link}"
 else:
     sitemap_url_scheme = "MANUAL/{link}"
 
