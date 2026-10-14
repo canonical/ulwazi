@@ -14,7 +14,11 @@
 {% macro nav_items() %}
   <ul class="p-navigation__items">
     <li class="p-navigation__item">
+      {%- if product_page -%}
       <a class="p-navigation__link" href="https://{{ product_page }}">{{ project }}</a>
+      {%- else -%}
+      <a class="p-navigation__link" href="{{ pathto(root_doc)|e }}">{{ project }}</a>
+      {%- endif -%}
     </li>
 
     {% if link1_name and link1_URL %}
