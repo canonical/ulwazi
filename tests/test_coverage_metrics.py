@@ -1,8 +1,12 @@
 """Regressions for the three coverage summaries and V8 range conversion."""
 
 import json
+import os
+import subprocess
+from pathlib import Path
 
 import pytest
+import yaml
 
 from coverage_summary import summary
 from js_coverage import JSCoverageRecorder, _covered_lines
@@ -113,3 +117,82 @@ def test_pr_coverage_skips_unavailable_baseline():
     assert "baseline unavailable" in report
     assert "comparison is skipped" in report
     assert "Result: baseline unavailable (comparison skipped)" in report
+
+
+def test_coverage_workflow_builds_unmodified_base(tmp_path):
+    """PR tests must not replace the base's tests, fixtures or inventory."""
+    workflow_path = (
+        Path(__file__).resolve().parents[1] / ".github/workflows/coverage.yaml"
+    )
+    workflow = yaml.safe_load(workflow_path.read_text(encoding="utf-8"))
+    step = next(
+        step
+        for step in workflow["jobs"]["compare"]["steps"]
+        if step["name"] == "Build comparable base report"
+    )
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def git(*args):
+        return subprocess.run(
+            ["git", *args], cwd=repo, check=True, capture_output=True, text=True
+        ).stdout.strip()
+
+    git("init", "--quiet")
+    for name in (
+        "tests/test_features.py",
+        "tests/test_accessibility.py",
+        "tests/features.yaml",
+        "docs/content/tests/index.md",
+    ):
+        path = repo / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("base revision\n", encoding="utf-8")
+    git("add", ".")
+    git(
+        "-c",
+        "user.name=Coverage test",
+        "-c",
+        "user.email=coverage@example.com",
+        "-c",
+        "commit.gpgsign=false",
+        "commit",
+        "--quiet",
+        "-m",
+        "Baseline",
+    )
+    base_sha = git("rev-parse", "HEAD")
+    for path in repo.rglob("*"):
+        if path.is_file() and ".git" not in path.relative_to(repo).parts:
+            path.write_text("PR-only changes\n", encoding="utf-8")
+
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    make = bin_dir / "make"
+    make.write_text(
+        "#!/bin/bash\nset -eu\n"
+        "git diff --exit-code HEAD -- tests docs\n"
+        'printf "%s\\n" "$*" >> "$BUILD_LOG"\n',
+        encoding="utf-8",
+    )
+    make.chmod(0o755)
+    build_log = tmp_path / "build.log"
+    result = subprocess.run(
+        ["bash", "-e", "-o", "pipefail", "-c", step["run"]],
+        cwd=repo,
+        env={
+            **os.environ,
+            "BASE_SHA": base_sha,
+            "RUNNER_TEMP": str(tmp_path),
+            "BUILD_LOG": str(build_log),
+            "PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}",
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert build_log.read_text(encoding="utf-8").splitlines() == [
+        "vanilla-main",
+        "test-coverage",
+    ]

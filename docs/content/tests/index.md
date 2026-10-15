@@ -57,12 +57,12 @@ assertions inside one grouped case do not.
 * - 9\. Accessibility
   - `test_accessibility.py` (**1 fast**) — axe **colour-contrast violations only** on the MyST cheat sheet in light and dark Chromium themes.
 * - Test infrastructure
-  - `test_coverage_metrics.py` (**7 fast**, {doc}`details <infrastructure>`) — V8 line accounting, aggregate coverage summaries, missing-report rejection and PR baseline comparisons.
+  - `test_coverage_metrics.py` (**8 fast**, {doc}`details <infrastructure>`) — V8 line accounting, aggregate coverage summaries, missing-report rejection, PR baseline comparisons and workflow baseline revision isolation.
 
     `test_test_reporting.py` (**11 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, and the live time-left estimate.
 ```
 
-**Full selection:** 112 cases across 20 modules (84 fast, 28 slow); each case
+**Full selection:** 113 cases across 20 modules (85 fast, 28 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and
