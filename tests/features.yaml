@@ -62,6 +62,15 @@ markup:
       - tests/test_structured_toc.py::test_structured_toc_styling_slow
 
 site:
+  - name: Banner project link uses the product website or documentation root
+    source: header.html; temporary Sphinx site with root_doc=guide/home (root, nested, genindex and 404 pages; unset, empty and configured product_page; html and dirhtml)
+    checks:
+      - tests/test_features.py::test_banner_project_link[unset-html]
+      - tests/test_features.py::test_banner_project_link[unset-dirhtml]
+      - tests/test_features.py::test_banner_project_link[empty-html]
+      - tests/test_features.py::test_banner_project_link[empty-dirhtml]
+      - tests/test_features.py::test_banner_project_link[configured-html]
+      - tests/test_features.py::test_banner_project_link[configured-dirhtml]
   - name: Home page shell
     source: docs/index.md
     checks:

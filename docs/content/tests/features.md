@@ -18,8 +18,15 @@ breadcrumb-map entry for the code-heading page. The same case also checks the
 inline-code example and the first rendered header and data row of each grid,
 list, and CSV table in both cheat sheets.
 
-This verifies Ulwazi's conversions, not Sphinx's parsing and highlighting
-algorithms or the details of `sphinx-design` and other extensions.
+Six additional fast cases, `test_banner_project_link`, build a tiny temporary
+site with both `html` and `dirhtml`. They verify that the banner's project-name
+link points to the configured product website, or to a custom `root_doc` when
+`product_page` is unset or empty. Each case checks the link text and destination
+on the root, a nested page, `genindex`, and the bundled 404 page. Resolving links
+under a hosting subpath checks that the fallback remains site-relative.
+
+This verifies Ulwazi's conversions and navigation template, not Sphinx's parsing
+and highlighting algorithms or the details of `sphinx-design` and other extensions.
 
 ## Slow: user interactions
 
@@ -53,14 +60,14 @@ retain their own scopes.
 
 ## Running and reporting
 
-`make test` runs the fast case; `make test-slow` runs the slow case along with
+`make test` runs the fast cases; `make test-slow` runs the slow case along with
 the other slow tests. To select only these cases without Make's older
 `docs/_build` prerequisite, run
 `uv run --group docs pytest -m 'not slow' tests/test_features.py` or
 `uv run --group docs pytest -m slow tests/test_features.py`.
 
-Each tier contributes **one pytest result** for this module. By default, the
-terminal shows a single category line with separate tier statuses shared with
+This module contributes **seven fast results and one slow result**. By default,
+the terminal shows a single category line with separate tier statuses shared with
 other feature tests. Run with
 `-vv` to see the individual passing cases:
 

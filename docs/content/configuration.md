@@ -174,8 +174,8 @@ setting a value, so an incomplete setup can produce a broken link.
     - Adds a Matrix link to the header's community-links menu.
 *
     - `product_page`
-    - If unset, the project link in the header renders as `href="https://"`.
-    - Product website hostname shown in the header navigation, next to the project name.
+    - If unset or empty, the project-name link in the header points to the documentation root configured by Sphinx's `root_doc` (normally `index`).
+    - Product website hostname and optional path, without `https://` (e.g. `ubuntu.com/lxd`). When set, the project-name link points to `https://` plus this value instead of the documentation root.
 *
     - `add_product_menu`
     - Product menu doesn't render.
