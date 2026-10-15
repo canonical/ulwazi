@@ -33,7 +33,7 @@ assertions inside one grouped case do not.
 * - 4\. Features and regressions
   - `test_config_robustness.py` (**16 fast**) — four Read the Docs branch-selection cases; one grouped case for minimal, default, depth, legacy, maximum and fallback configuration; ten parametrized invalid `help_links` cases plus one theme-only loading case for the Get help panel.
 
-    `test_features.py` (**1 fast, 1 slow**, {doc}`details <features>`) — grouped theme markup (TOCs, tabs, headings, admonitions including list-item code/tip adjacency, lists, tables, code, search mapping, Get help panel) and browser journeys (consent, navigation, drawer, tabs, copy, theme, search).
+    `test_features.py` (**7 fast, 1 slow**, {doc}`details <features>`) — grouped theme markup (TOCs, tabs, headings, admonitions including list-item code/tip adjacency, lists, tables, code, search mapping, Get help panel); six banner project-link cases (unset/empty/configured product website, HTML/directory HTML, custom root and nested/generated pages); and browser journeys (consent, navigation, drawer, tabs, copy, theme, search).
 
     `test_scss_propagation.py` (**1 fast, 3 slow**) — SCSS fixture markup; computed colour and list-item code-to-tip spacing in both reST and MyST, sidebar indicator spacing, and ordered-list marker size in Chromium.
 * - 5\. Extension compatibility
@@ -57,12 +57,12 @@ assertions inside one grouped case do not.
 * - 9\. Accessibility
   - `test_accessibility.py` (**1 fast**) — axe **colour-contrast violations only** on the MyST cheat sheet in light and dark Chromium themes.
 * - Test infrastructure
-  - `test_coverage_metrics.py` (**7 fast**, {doc}`details <infrastructure>`) — V8 line accounting, aggregate coverage summaries, missing-report rejection and PR baseline comparisons.
+  - `test_coverage_metrics.py` (**8 fast**, {doc}`details <infrastructure>`) — V8 line accounting, aggregate coverage summaries, missing-report rejection, PR baseline comparisons and workflow baseline revision isolation.
 
     `test_test_reporting.py` (**11 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, and the live time-left estimate.
 ```
 
-**Full selection:** 106 cases across 20 modules (78 fast, 28 slow); each case
+**Full selection:** 113 cases across 20 modules (85 fast, 28 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and

@@ -2,16 +2,22 @@
 
 import functools
 import http.server
+import io
 import re
 import subprocess
 import sys
 import threading
 from collections import Counter
 from contextlib import contextmanager
+from pathlib import Path
+from urllib.parse import urldefrag, urljoin
 
 import pytest
+from bs4 import BeautifulSoup
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import expect, sync_playwright
+from sphinx.application import Sphinx
+from sphinx.util.docutils import docutils_namespace, patch_docutils
 
 from js_coverage import JSCoverageRecorder
 
@@ -258,6 +264,79 @@ def test_features_fast(built_site):
         )
 
     assert not errors, "Features [fast] checks failed:\n  - " + "\n  - ".join(errors)
+
+
+@pytest.mark.parametrize("builder", ["html", "dirhtml"])
+@pytest.mark.parametrize(
+    "product_page",
+    [None, "", "example.com/product"],
+    ids=["unset", "empty", "configured"],
+)
+def test_banner_project_link(
+    tmp_path: Path, builder: str, product_page: str | None
+) -> None:
+    """The project link uses the product website or the configured docs root."""
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "guide").mkdir()
+    (source / "nested").mkdir()
+    (source / "conf.py").write_text(
+        'project = "Banner test"\nextensions = ["ulwazi"]\n'
+        'html_theme = "ulwazi"\nroot_doc = "guide/home"\n',
+        encoding="utf-8",
+    )
+    (source / "guide/home.rst").write_text(
+        "Home\n====\n\n.. toctree::\n\n   /nested/page\n", encoding="utf-8"
+    )
+    (source / "nested/page.rst").write_text(
+        "Nested page\n===========\n", encoding="utf-8"
+    )
+    context = {} if product_page is None else {"product_page": product_page}
+    output = tmp_path / "html"
+    warnings = io.StringIO()
+    with patch_docutils(str(source)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(source),
+            confdir=str(source),
+            outdir=str(output),
+            doctreedir=str(tmp_path / "doctrees"),
+            buildername=builder,
+            confoverrides={
+                "html_context": context,
+                "notfound_urls_prefix": "/project/",
+            },
+            status=io.StringIO(),
+            warning=warnings,
+            warningiserror=True,
+        )
+        app.build(force_all=True)
+    assert app.statuscode == 0, warnings.getvalue()
+
+    base_url = "https://docs.example.com/project/"
+    for docname in ("guide/home", "nested/page", "genindex", "404"):
+        page_path = f"{docname}.html" if builder == "html" else f"{docname}/index.html"
+        soup = BeautifulSoup(
+            (output / page_path).read_text(encoding="utf-8"), "html.parser"
+        )
+        link = soup.select_one(
+            "header#navigation nav[aria-label='Main'] .p-navigation__items > li:first-child > a"
+        )
+        assert link is not None, f"{docname}: missing project link"
+        assert link.get_text(strip=True) == "Banner test"
+        href = link.get("href")
+        assert isinstance(href, str), f"{docname}: missing project href"
+        assert href, f"{docname}: empty project link"
+        expected = (
+            f"https://{product_page}"
+            if product_page
+            else base_url + ("guide/home.html" if builder == "html" else "guide/home/")
+        )
+        page_url = base_url + (
+            f"{docname}.html" if builder == "html" else f"{docname}/"
+        )
+        assert urldefrag(urljoin(page_url, href))[0] == expected, (
+            f"{docname}: incorrect project destination"
+        )
 
 
 @contextmanager

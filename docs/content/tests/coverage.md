@@ -154,3 +154,9 @@ three-metric reporting format. If it does not (for example, on the first PR
 introducing coverage), the check displays the PR numbers and says "baseline
 unavailable" rather than treating the missing baseline as 0%. The check
 summary is visible on the PR without posting or updating a comment.
+
+The baseline uses its own implementation, tests, fixtures and test inventory.
+PR test files are not copied into it: new regression assertions can require
+fixes absent from the base, and new test cases can invalidate its inventory.
+Local `make test-all` tests the current checkout; it does not run this separate
+baseline comparison.

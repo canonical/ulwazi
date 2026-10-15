@@ -84,14 +84,8 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           git worktree add --detach "$RUNNER_TEMP/coverage-base" "$BASE_SHA"
-          # Use the base's SCSS test: PR-only assertions may depend on fixtures
-          # that do not exist in the base revision.
-          # Keep the contrast browser harness identical too: the base still
-          # waits for the full load event and can time out on remote assets.
-          cp tests/test_accessibility.py "$RUNNER_TEMP/coverage-base/tests/test_accessibility.py"
-          # The base's cookie journey also waits for the full load event,
-          # which can stall after the cookie bundle itself is ready.
-          cp tests/test_features.py "$RUNNER_TEMP/coverage-base/tests/test_features.py"
+          # Keep the base's implementation, tests, fixtures and inventory together.
+          # Copying PR tests here can require fixes absent from the base revision.
           cd "$RUNNER_TEMP/coverage-base" || exit 1
           make vanilla-main
           make test-coverage

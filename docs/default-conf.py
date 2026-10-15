@@ -122,17 +122,15 @@ default_source_extension = ".md"
 
 # TODO: Change to your product website URL,
 #       dropping the 'https://' prefix, e.g. 'ubuntu.com/lxd'.
-#       If there is no such website - set to '/' or remove the {{ product_page }}
-#       link from the page header template.
+#       If there is no such website, leave empty or omit product_page from
+#       html_context to link the project name to the documentation root.
 
 product_page = "documentation.ubuntu.com"
 
 html_context = {
     # Product page URL; can be different from product docs URL
     #
-    # TODO: If there's no such website,
-    #       remove the {{ product_page }} link from the page header template
-    #       (usually .sphinx/_templates/header.html; also, see README.rst).
+    # Leave empty or omit this key to link to the documentation root.
     "product_page": product_page,
     # Product tag image; the orange part of your logo, shown in the page header
     #

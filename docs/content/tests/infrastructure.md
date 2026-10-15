@@ -35,7 +35,8 @@ or behaviour with xdist. To see the real output, run `make test` in a terminal.
 
 `tests/test_coverage_metrics.py` checks the helpers behind the three
 percentages described in {doc}`coverage`, using small sample files in a
-temporary folder.
+temporary folder. Its workflow regression executes the baseline-build step
+in a temporary Git repository with a stand-in for `make`.
 
 | Test | What it checks |
 | --- | --- |
@@ -46,6 +47,7 @@ temporary folder.
 | `test_final_summary_rejects_incomplete_js_report` | A JavaScript report that is missing a theme script stops the summary instead of producing a higher percentage. |
 | `test_pr_coverage_compares_unrounded_percentages` | A decrease hidden by rounding to one decimal place still fails the pull request check. |
 | `test_pr_coverage_skips_unavailable_baseline` | A missing baseline skips the comparison instead of counting as 0%. |
+| `test_coverage_workflow_builds_unmodified_base` | The workflow runs both build targets without replacing the base's tests, feature manifest or inventory with PR files. |
 
 These tests don't run Chromium or coverage.py; `make test-coverage` does.
 
