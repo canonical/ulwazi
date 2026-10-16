@@ -51,6 +51,27 @@ supported because `uv` will not install the package outside its
 declared `requires-python` range.
 ```
 
+## MyST runtime installation test
+
+A separate slow test, `test_myst_runtime_installation`, validates the
+theme's *runtime* dependency chain rather than a Python version: it stages
+the packaging inputs outside the checkout, installs the packaged theme
+(non-editably) into a fresh `pip` venv with **only** its runtime
+dependencies, and then adds plain `myst-parser~=4.0` -- no `linkify` extra,
+no manual `linkify-it-py` install. It verifies that:
+
+1. A reST-only build works without MyST installed or activated.
+2. The installed `ulwazi` distribution declares `linkify-it-py~=2.0`
+   (the dependency that makes the restored MyST `linkify` default work).
+3. A MyST fixture with **no** `myst_enable_extensions` assignment renders
+   all three restored defaults: substitution, definition lists, and
+   bare-URL linkification.
+
+This is the acceptance test for the MyST compatibility defaults restored
+from `canonical-sphinx`; see the "MyST syntax defaults" section of
+{doc}`../configuration`. It runs on the current
+interpreter and does not multiply the Python-version matrix.
+
 ## Running the tests locally
 
 The test is marked `slow`, so it is excluded from `make test` and

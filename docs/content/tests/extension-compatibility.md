@@ -38,6 +38,16 @@ output.
 | `sphinx_youtube_links` | YouTube link renders with the play icon |
 | `sphinxcontrib.cairosvgconverter` | PDF build succeeds *(slow)* |
 
+`myst_parser` is exercised separately: the MyST compatibility defaults that
+Ulwazi restores (substitution, deflist, linkify -- formerly provided by
+`canonical-sphinx`) are asserted by dedicated focused tests in
+`tests/test_config_robustness.py` against tiny generated sites, and by the
+staged fresh-runtime installation test described in
+{doc}`python-versions` ("MyST runtime installation test"). The aggregate
+compatibility test on this page's sample build does **not** verify them,
+because `docs/conf.py` sets `myst_enable_extensions` explicitly (which
+replaces the defaults by design).
+
 ## What is excluded
 
 `canonical_sphinx` is intentionally **not** tested: it is a Sphinx theme
