@@ -42,10 +42,14 @@ pytest-xdist) or directly with
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
+import sys
+import venv
 from pathlib import Path
 
 import pytest
+from bs4 import BeautifulSoup
 
 # ---------------------------------------------------------------------------
 # Single source of truth for the supported Python version range.
@@ -194,3 +198,223 @@ def test_theme_builds_on_supported_python(python_version: str, tmp_path: Path) -
         f"Built index.html for Python {python_version} does not reference "
         f"vanilla-main.css; the Ulwazi theme was not applied."
     )
+
+
+# A minimal MyST fixture exercising the three restored defaults:
+# substitution ({{ product }}), deflist (term/definition), and linkify
+# (bare URL). No myst_enable_extensions assignment: the defaults must apply.
+RUNTIME_CONF = """\
+project = "runtime-install"
+extensions = ["ulwazi", "myst_parser"]
+html_theme = "ulwazi"
+myst_substitutions = {"product": "Ulwazi"}
+"""
+
+RUNTIME_INDEX_MD = """\
+# MyST defaults
+
+Replacement: {{ product }}.
+
+Example term
+: A specific definition.
+
+Bare URL: https://example.com/myst-defaults
+"""
+
+RUNTIME_INDEX_RST = """\
+Test page
+=========
+
+Content.
+"""
+
+
+@pytest.mark.slow
+def test_myst_runtime_installation(tmp_path: Path) -> None:
+    """A normal Ulwazi install supplies the MyST linkify dependency.
+
+    Installs the *packaged* theme (not the editable checkout) into a fresh
+    venv with only its runtime dependencies, then adds plain
+    ``myst-parser~=4.0`` (no ``linkify`` extra, no manual linkify install).
+    This proves the dependency chain that Sphinx Stack relies on: existing
+    Stack requirements need no changes to recover the former MyST defaults.
+    """
+    # Stage packaging inputs outside the checkout so setuptools-scm cannot
+    # write into the source tree and the build is reproducible.
+    stage = tmp_path / "stage"
+    stage.mkdir()
+    for name in (
+        "pyproject.toml",
+        "README.md",
+        "LICENSE",
+        "MANIFEST.in",
+    ):
+        shutil.copy2(REPO_ROOT / name, stage / name)
+    shutil.copytree(
+        REPO_ROOT / "ulwazi",
+        stage / "ulwazi",
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
+
+    venv_dir = tmp_path / "venv"
+    venv.create(venv_dir, with_pip=True)
+
+    # A clean child environment: no PYTHON* or VIRTUAL_ENV leakage, no
+    # coverage/pytest plugins, and a pretend version so the staged copy
+    # builds without git metadata.
+    child_env = {
+        "PATH": f"{venv_dir / 'bin'}:{os.environ.get('PATH', '')}",
+        "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_ULWAZI": "0.0.0",
+    }
+
+    def vrun(cmd: list[str], label: str) -> subprocess.CompletedProcess[str]:
+        """Run a command in the fresh venv with bounded output."""
+        result = subprocess.run(
+            cmd,
+            cwd=str(tmp_path),
+            env=child_env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=600,
+        )
+        if result.returncode != 0:
+            tail = 30
+            stdout_tail = "\n".join(result.stdout.splitlines()[-tail:])
+            stderr_tail = "\n".join(result.stderr.splitlines()[-tail:])
+            pytest.fail(
+                f"{label} failed (exit {result.returncode}).\n"
+                f"Command: {' '.join(cmd)}\n"
+                f"--- stdout (tail) ---\n{stdout_tail}\n"
+                f"--- stderr (tail) ---\n{stderr_tail}",
+                pytrace=False,
+            )
+        return result
+
+    # 1. Install the staged package non-editably with only runtime deps.
+    vrun(
+        [str(venv_dir / "bin" / "pip"), "install", "--no-input", str(stage)],
+        "pip install staged ulwazi",
+    )
+
+    # 2. MyST is absent: a reST-only build works and activates nothing.
+    src_rst = tmp_path / "rst-site"
+    src_rst.mkdir()
+    (src_rst / "conf.py").write_text(
+        'project = "rst"\nextensions = ["ulwazi"]\nhtml_theme = "ulwazi"\n',
+        encoding="utf-8",
+    )
+    (src_rst / "index.rst").write_text(RUNTIME_INDEX_RST, encoding="utf-8")
+    vrun(
+        [
+            str(venv_dir / "bin" / "python"),
+            "-I",
+            "-m",
+            "sphinx",
+            "-b",
+            "html",
+            "--fail-on-warning",
+            "-c",
+            str(src_rst),
+            str(src_rst),
+            str(tmp_path / "rst-out"),
+        ],
+        "reST-only sphinx build",
+    )
+    assert (tmp_path / "rst-out" / "index.html").is_file()
+    vrun(
+        [
+            str(venv_dir / "bin" / "python"),
+            "-I",
+            "-c",
+            (
+                "import sys; sys.exit(0 if sys.modules.get('myst_parser') is None "
+                "and not __import__('importlib.util', fromlist=['x']).find_spec("
+                "'myst_parser') else 1)"
+            ),
+        ],
+        "myst_parser absent check",
+    )
+
+    # 3. The installed distribution declares the constrained linkify dep.
+    metadata = vrun(
+        [
+            str(venv_dir / "bin" / "python"),
+            "-I",
+            "-c",
+            (
+                "from importlib.metadata import requires; print('\\n'.join("
+                "r for r in requires('ulwazi') if 'linkify' in r))"
+            ),
+        ],
+        "ulwazi Requires-Dist check",
+    )
+    assert "linkify-it-py~=2.0" in metadata.stdout, (
+        f"Installed ulwazi does not declare linkify-it-py~=2.0: {metadata.stdout!r}"
+    )
+
+    # 4. Install plain myst-parser~=4.0: no extra, no manual linkify.
+    vrun(
+        [
+            str(venv_dir / "bin" / "pip"),
+            "install",
+            "--no-input",
+            "myst-parser~=4.0",
+        ],
+        "pip install myst-parser~=4.0",
+    )
+
+    # 5. Build the MyST fixture: all three defaults must render.
+    src_md = tmp_path / "md-site"
+    src_md.mkdir()
+    (src_md / "conf.py").write_text(RUNTIME_CONF, encoding="utf-8")
+    (src_md / "index.md").write_text(RUNTIME_INDEX_MD, encoding="utf-8")
+    vrun(
+        [
+            str(venv_dir / "bin" / "python"),
+            "-I",
+            "-m",
+            "sphinx",
+            "-b",
+            "html",
+            "--fail-on-warning",
+            "-c",
+            str(src_md),
+            str(src_md),
+            str(tmp_path / "md-out"),
+        ],
+        "MyST sphinx build",
+    )
+    page_path = tmp_path / "md-out" / "index.html"
+    assert page_path.is_file(), "MyST build produced no index.html"
+    soup = BeautifulSoup(page_path.read_text(encoding="utf-8"), "html.parser")
+    article = soup.select_one("main#content")
+    assert article is not None, "Built page has no main#content article"
+    text = article.get_text(" ", strip=True)
+    assert "Replacement: Ulwazi." in text, "substitution default not applied"
+    assert "{{ product }}" not in text, "literal substitution token remains"
+    assert article.select_one("dl dt") is not None, "deflist default not applied"
+    assert article.select_one("dl dd") is not None, "deflist definition missing"
+    anchor = article.select_one('a[href="https://example.com/myst-defaults"]')
+    assert anchor is not None, "linkify default not applied"
+    assert anchor.get_text(strip=True) == "https://example.com/myst-defaults", (
+        "linkify anchor text does not match the URL"
+    )
+
+    # 6. Record the resolved versions for the final report.
+    versions = vrun(
+        [
+            str(venv_dir / "bin" / "python"),
+            "-I",
+            "-c",
+            (
+                "from importlib.metadata import version; "
+                "print(version('ulwazi'), version('sphinx'), "
+                "version('myst-parser'), version('linkify-it-py'))"
+            ),
+        ],
+        "version report",
+    )
+    print(f"resolved versions: {versions.stdout.strip()}")
+    print(f"python: {sys.version.split()[0]}")

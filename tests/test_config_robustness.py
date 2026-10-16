@@ -23,11 +23,13 @@ their failures together under one pytest result, without hiding later cases.
 import copy
 import io
 import runpy
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from pathlib import Path
+from typing import cast
 
 import pytest
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 from sphinx.application import Sphinx
 from sphinx.util.docutils import docutils_namespace, patch_docutils
 from ulwazi import _configure_html_context
@@ -548,3 +550,423 @@ def test_help_links_theme_only_loading(tmp_path: Path) -> None:
     panel = page.select_one("nav#drawer div.p-help-links")
     assert panel is not None, "Get help panel missing in theme-only loading"
     assert panel.select_one("a.p-help-links__link") is not None
+
+
+# ---------------------------------------------------------------------------
+# MyST compatibility defaults (restored from canonical-sphinx)
+# ---------------------------------------------------------------------------
+
+# The three syntax extensions canonical-sphinx enabled by default.
+MYST_DEFAULT_EXTENSIONS = frozenset({"substitution", "deflist", "linkify"})
+
+MYST_CONF_TEMPLATE = """
+project = "myst-defaults"
+extensions = [{extensions}]
+html_theme = "ulwazi"
+{extra_config}
+"""
+
+MYST_INDEX_MD = """\
+# MyST defaults
+
+Replacement: {{ product }}.
+
+Example term
+: A specific definition.
+
+Bare URL: https://example.com/myst-defaults
+"""
+
+
+def _build_myst(
+    tmp_path: Path,
+    extensions: list[str],
+    extra_config: str = "",
+    overrides: dict | None = None,
+    *,
+    warningiserror: bool = True,
+) -> tuple[Sphinx, Path, str]:
+    """Build a tiny MyST site and return (app, outdir, warnings).
+
+    The site is generated under ``tmp_path`` so the developer environment,
+    the sample docs, and other tests' fixtures are never touched. Builds run
+    in-process (with docutils patched) so coverage observes the theme hooks.
+    """
+    srcdir = tmp_path / "src"
+    srcdir.mkdir(parents=True)
+    (srcdir / "conf.py").write_text(
+        MYST_CONF_TEMPLATE.format(
+            extensions=", ".join(f'"{ext}"' for ext in extensions),
+            extra_config=extra_config,
+        ),
+        encoding="utf-8",
+    )
+    (srcdir / "index.md").write_text(MYST_INDEX_MD, encoding="utf-8")
+
+    output = tmp_path / "_build"
+    warnings = io.StringIO()
+    with patch_docutils(str(srcdir)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(srcdir),
+            confdir=str(srcdir),
+            outdir=str(output),
+            doctreedir=str(tmp_path / "_doctrees"),
+            buildername="html",
+            confoverrides=overrides,
+            status=io.StringIO(),
+            warning=warnings,
+            warningiserror=warningiserror,
+        )
+        app.build()
+    assert app.statuscode == 0, (
+        f"Sphinx exited with status {app.statuscode}: {warnings.getvalue()}"
+    )
+    return app, output, warnings.getvalue()
+
+
+def _myst_page(output: Path) -> BeautifulSoup:
+    """Return the parsed article of the built MyST index page."""
+    path = output / "index.html"
+    assert path.is_file(), f"Built page not found: {path}"
+    return BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
+
+
+def _myst_env_extensions(app: Sphinx) -> set[str]:
+    """Return MyST's snapshot enable_extensions from the build environment.
+
+    myst_parser assigns ``app.env.myst_config`` dynamically at
+    ``builder-inited``; Sphinx's BuildEnvironment has no static attribute
+    for it, so ``getattr`` keeps pyright satisfied.
+    """
+    myst_config = getattr(app.env, "myst_config", None)
+    assert myst_config is not None, "myst_parser did not initialize env config"
+    return set(myst_config.enable_extensions)
+
+
+def _check_myst_rendering(
+    output: Path, enabled: frozenset[str] | set[str]
+) -> list[str]:
+    """Assert which MyST syntax features rendered; return labelled failures."""
+    page = _myst_page(output)
+    article = page.select_one("main#content")
+    assert article is not None, "Built page has no main#content article"
+    text = article.get_text(" ", strip=True)
+    return [
+        *(
+            _check_substitution(article, text)
+            if "substitution" in enabled
+            else _check_disabled(
+                "substitution rendered the configured value",
+                rendered="Replacement: Ulwazi." in text,
+            )
+        ),
+        *(
+            _check_deflist(article)
+            if "deflist" in enabled
+            else _check_disabled(
+                "deflist rendered a definition list",
+                rendered=article.select_one("dl.simple") is not None,
+            )
+        ),
+        *(
+            _check_linkify(article)
+            if "linkify" in enabled
+            else _check_disabled(
+                "linkify rendered a link",
+                rendered=article.select_one(
+                    'a[href="https://example.com/myst-defaults"]'
+                )
+                is not None,
+            )
+        ),
+    ]
+
+
+def _check_disabled(feature: str, *, rendered: bool) -> list[str]:
+    """A disabled feature must not render; report a labelled failure if it did."""
+    return [f"{feature} despite being disabled"] if rendered else []
+
+
+def _check_substitution(article: Tag, text: str) -> list[str]:
+    """substitution: {{ product }} is replaced by the configured value."""
+    failures: list[str] = []
+    if "Replacement: Ulwazi." not in text:
+        failures.append("substitution did not render the configured value")
+    if "{{ product }}" in text:
+        failures.append("literal {{ product }} remains; substitution inactive")
+    return failures
+
+
+def _check_deflist(article: Tag) -> list[str]:
+    """deflist: the term/definition pair becomes a definition list."""
+    deflist = article.select_one("dl.simple")
+    if deflist is None:
+        return ["deflist did not render a definition list"]
+    failures: list[str] = []
+    term = deflist.select_one("dt")
+    definition = deflist.select_one("dd")
+    if term is None or term.get_text(" ", strip=True) != "Example term":
+        failures.append("deflist term did not render")
+    if definition is None or (
+        "A specific definition" not in definition.get_text(" ", strip=True)
+    ):
+        failures.append("deflist definition did not render")
+    return failures
+
+
+def _check_linkify(article: Tag) -> list[str]:
+    """linkify: the bare URL becomes an anchor with the exact URL."""
+    anchor = article.select_one('a[href="https://example.com/myst-defaults"]')
+    if anchor is None:
+        return ["linkify did not render the bare URL as a link"]
+    if anchor.get_text(strip=True) != "https://example.com/myst-defaults":
+        return ["linkify anchor text does not match the URL"]
+    return []
+
+
+@pytest.mark.parametrize(
+    "extensions",
+    [["ulwazi", "myst_parser"], ["myst_parser", "ulwazi"]],
+    ids=["ulwazi-first", "myst-first"],
+)
+def test_myst_defaults_restored(tmp_path: Path, extensions: list[str]) -> None:
+    """Unset myst_enable_extensions gets the former canonical-sphinx defaults."""
+    app, output, warnings = _build_myst(
+        tmp_path,
+        extensions=extensions,
+        extra_config='myst_substitutions = {"product": "Ulwazi"}',
+    )
+    assert not warnings, f"Unexpected warnings:\n{warnings}"
+    assert app.config.myst_enable_extensions == MYST_DEFAULT_EXTENSIONS
+    assert _myst_env_extensions(app) == MYST_DEFAULT_EXTENSIONS
+    failures = _check_myst_rendering(output, MYST_DEFAULT_EXTENSIONS)
+    assert not failures, "; ".join(failures)
+
+
+# One representative value per distinct behaviour: an explicitly empty
+# collection disables the defaults, a custom collection is preserved
+# as-is, and selecting a single extension does not add the others. The
+# container type is irrelevant to the guard (it checks the key's absence
+# in _raw_config/overrides, never the value), and the extension order is
+# covered by test_myst_defaults_restored: Sphinx loads every extension
+# before any config-inited handler runs, so the guard sees the same
+# registered setting in both orders.
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ([], set()),
+        (["colon_fence", "tasklist"], {"colon_fence", "tasklist"}),
+        (["deflist"], {"deflist"}),
+    ],
+    ids=["empty-list", "custom-list", "singleton-deflist"],
+)
+def test_myst_explicit_extensions_preserved(
+    tmp_path: Path, value: object, expected: set[str]
+) -> None:
+    """Explicit myst_enable_extensions values replace the defaults, not extend."""
+    app, output, warnings = _build_myst(
+        tmp_path,
+        extensions=["ulwazi", "myst_parser"],
+        extra_config=(
+            f"myst_substitutions = {{'product': 'Ulwazi'}}\n"
+            f"myst_enable_extensions = {value!r}"
+        ),
+    )
+    assert not warnings, f"Unexpected warnings:\n{warnings}"
+    # The explicit value is preserved exactly: no defaults are added, the
+    # container type is not changed, and the project-owned collection in
+    # _raw_config is not replaced or mutated in place.
+    effective = app.config.myst_enable_extensions
+    owned = app.config._raw_config["myst_enable_extensions"]
+    assert isinstance(effective, type(value))
+    assert isinstance(owned, type(value))
+    assert [str(item) for item in cast("Iterable[object]", effective)] == [
+        str(item) for item in cast("Iterable[object]", owned)
+    ]
+    assert effective is owned
+    assert _myst_env_extensions(app) == expected
+    failures = _check_myst_rendering(output, expected)
+    assert not failures, "; ".join(failures)
+
+
+# override-only-empty proves Ulwazi's own overrides guard: with the setting
+# absent from conf.py, only the overrides check keeps the defaults out.
+# override-vs-file proves an override replaces a conflicting conf.py value
+# rather than falling back to it or unioning with it. Both use the typed
+# confoverrides API: Sphinx itself cannot convert string -D values for this
+# set-typed setting (see docs/content/configuration.md). A singleton override
+# adds nothing over override-vs-file, and the extension order is irrelevant
+# here for the same reason as in test_myst_explicit_extensions_preserved.
+@pytest.mark.parametrize(
+    ("overrides", "expected", "conf_sets_value"),
+    [
+        ({"myst_enable_extensions": []}, set(), False),
+        (
+            {"myst_enable_extensions": ["colon_fence", "tasklist"]},
+            {"colon_fence", "tasklist"},
+            True,
+        ),
+    ],
+    ids=["override-only-empty", "override-vs-file"],
+)
+def test_myst_overrides_take_precedence(
+    tmp_path: Path,
+    overrides: dict,
+    expected: set[str],
+    *,
+    conf_sets_value: bool,
+) -> None:
+    """Command-line overrides win over Ulwazi's defaults, even against conf.py."""
+    # In the override-vs-file case, conf.py sets a conflicting non-empty
+    # value: the override must replace it, proving precedence rather than
+    # fallback to the file value or a union.
+    extra_config = "myst_substitutions = {'product': 'Ulwazi'}"
+    if conf_sets_value:
+        extra_config += "\nmyst_enable_extensions = ['tasklist']"
+    app, output, warnings = _build_myst(
+        tmp_path,
+        extensions=["ulwazi", "myst_parser"],
+        extra_config=extra_config,
+        overrides=overrides,
+    )
+    assert not warnings, f"Unexpected warnings:\n{warnings}"
+    assert set(app.config.myst_enable_extensions) == expected
+    assert _myst_env_extensions(app) == expected
+    failures = _check_myst_rendering(output, expected)
+    assert not failures, "; ".join(failures)
+
+
+@pytest.mark.parametrize(
+    "extensions",
+    [["ulwazi", "myst_parser"], ["myst_parser", "ulwazi"]],
+    ids=["ulwazi-first", "myst-first"],
+)
+def test_myst_repeated_builds_stay_isolated(
+    tmp_path: Path, extensions: list[str]
+) -> None:
+    """Repeated and incremental builds neither accumulate nor leak defaults.
+
+    Three sequential builds over the same doctrees/output: unset (defaults),
+    explicit empty (features stop rendering), unset again (fresh defaults
+    return). This also proves the incremental cache is invalidated by the
+    setting change, and that one app's collection is never shared or
+    mutated in place.
+    """
+    srcdir = tmp_path / "src"
+    srcdir.mkdir(parents=True)
+    (srcdir / "index.md").write_text(MYST_INDEX_MD, encoding="utf-8")
+    output = tmp_path / "_build"
+    doctrees = tmp_path / "_doctrees"
+
+    def build(extra_config: str) -> tuple[Sphinx, str]:
+        """Rewrite conf.py and rebuild incrementally over the same doctrees."""
+        (srcdir / "conf.py").write_text(
+            MYST_CONF_TEMPLATE.format(
+                extensions=", ".join(f'"{ext}"' for ext in extensions),
+                extra_config=extra_config,
+            ),
+            encoding="utf-8",
+        )
+        warnings = io.StringIO()
+        with patch_docutils(str(srcdir)), docutils_namespace():
+            app = Sphinx(
+                srcdir=str(srcdir),
+                confdir=str(srcdir),
+                outdir=str(output),
+                doctreedir=str(doctrees),
+                buildername="html",
+                status=io.StringIO(),
+                warning=warnings,
+                warningiserror=True,
+            )
+            app.build()
+        assert app.statuscode == 0, warnings.getvalue()
+        return app, warnings.getvalue()
+
+    substitutions = 'myst_substitutions = {"product": "Ulwazi"}'
+
+    # 1. Unset: all three defaults render.
+    app1, warnings1 = build(substitutions)
+    assert not warnings1, f"Unexpected warnings:\n{warnings1}"
+    assert app1.config.myst_enable_extensions == MYST_DEFAULT_EXTENSIONS
+    assert not _check_myst_rendering(output, MYST_DEFAULT_EXTENSIONS)
+
+    # 2. Explicit empty: features stop rendering, cache invalidated.
+    app2, warnings2 = build(f"{substitutions}\nmyst_enable_extensions = []")
+    assert not warnings2, f"Unexpected warnings:\n{warnings2}"
+    assert set(app2.config.myst_enable_extensions) == set()
+    assert not _check_myst_rendering(output, set())
+
+    # 3. Unset again: fresh defaults return, not the previous explicit value.
+    app3, warnings3 = build(substitutions)
+    assert not warnings3, f"Unexpected warnings:\n{warnings3}"
+    assert app3.config.myst_enable_extensions == MYST_DEFAULT_EXTENSIONS
+    assert not _check_myst_rendering(output, MYST_DEFAULT_EXTENSIONS)
+    # Mutating one app's collection must not affect the others' defaults.
+    app1.config.myst_enable_extensions.add("tasklist")
+    assert app3.config.myst_enable_extensions == MYST_DEFAULT_EXTENSIONS
+
+
+def test_myst_defaults_require_registered_parser(tmp_path: Path) -> None:
+    """Without myst_parser in extensions, Ulwazi touches no MyST configuration."""
+    # MyST is installed in the test environment but deliberately unregistered.
+    # The site is reST-only: a .md source would fail without the parser.
+    srcdir = tmp_path / "src"
+    srcdir.mkdir(parents=True)
+    (srcdir / "conf.py").write_text(
+        MYST_CONF_TEMPLATE.format(
+            extensions='"ulwazi"',
+            extra_config='myst_substitutions = {"product": "Ulwazi"}',
+        ),
+        encoding="utf-8",
+    )
+    (srcdir / "index.rst").write_text(
+        "Test page\n=========\n\nContent.\n", encoding="utf-8"
+    )
+    output = tmp_path / "_build"
+    warnings = io.StringIO()
+    with patch_docutils(str(srcdir)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(srcdir),
+            confdir=str(srcdir),
+            outdir=str(output),
+            doctreedir=str(tmp_path / "_doctrees"),
+            buildername="html",
+            status=io.StringIO(),
+            warning=warnings,
+            warningiserror=True,
+        )
+        app.build()
+    assert app.statuscode == 0, warnings.getvalue()
+    assert not warnings.getvalue(), f"Unexpected warnings:\n{warnings.getvalue()}"
+    assert "myst_parser" not in app.extensions
+    # No MyST configuration value was registered by Ulwazi.
+    assert "myst_enable_extensions" not in app.config.values
+    # NOTE: ".md" in app.config.source_suffix is not asserted here: Sphinx
+    # shares the class-level source_suffix default dict across in-process
+    # applications, so a prior MyST build in the same process leaks the
+    # suffix into later apps (an upstream quirk, independent of Ulwazi).
+    assert (output / "index.html").is_file()
+
+
+def test_myst_theme_only_loading_keeps_myst_default(tmp_path: Path) -> None:
+    """Theme-only loading does not inject MyST defaults (documented limitation).
+
+    Ulwazi's config-inited hook never fires when "ulwazi" is absent from
+    extensions (the theme entry point loads later, during HTML builder
+    setup), so MyST keeps its own empty default. This is the documented
+    limitation: list "ulwazi" in extensions for the compatibility defaults.
+    """
+    app, output, warnings = _build_myst(
+        tmp_path,
+        extensions=["myst_parser"],
+        extra_config='myst_substitutions = {"product": "Ulwazi"}',
+    )
+    assert not warnings, f"Unexpected warnings:\n{warnings}"
+    # The theme entry point loads Ulwazi late (after config-inited), so the
+    # extension appears in app.extensions only via the theme, not the list.
+    assert "ulwazi" not in app.config.extensions
+    assert app.config.myst_enable_extensions == set()
+    assert _myst_env_extensions(app) == set()
+    failures = _check_myst_rendering(output, set())
+    assert not failures, "; ".join(failures)

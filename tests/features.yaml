@@ -128,3 +128,13 @@ site:
     source: ulwazi_structured_toc_styling and _separator_color_light/_dark conf.py values
     checks:
       - tests/test_structured_toc.py::test_structured_toc_styling_config
+  - name: MyST compatibility defaults and explicit-setting precedence
+    source: temporary Sphinx site with myst_parser registered (unset, explicit empty/custom/singleton, and override myst_enable_extensions; both extension orders)
+    checks:
+      - tests/test_config_robustness.py::test_myst_defaults_restored[ulwazi-first]
+      - tests/test_config_robustness.py::test_myst_defaults_restored[myst-first]
+      - tests/test_config_robustness.py::test_myst_explicit_extensions_preserved[empty-list]
+      - tests/test_config_robustness.py::test_myst_explicit_extensions_preserved[custom-list]
+      - tests/test_config_robustness.py::test_myst_explicit_extensions_preserved[singleton-deflist]
+      - tests/test_config_robustness.py::test_myst_overrides_take_precedence[override-only-empty]
+      - tests/test_config_robustness.py::test_myst_overrides_take_precedence[override-vs-file]
