@@ -160,6 +160,16 @@ def _check_minimal(output: Path) -> None:
     ), "Pages without feedback still need a mobile navigation opener"
 
 
+def _check_default_footer(output: Path) -> None:
+    """Without footer configuration, the documented defaults render."""
+    footer = _page(output).select_one('footer nav[aria-label="Footer"]')
+    assert footer is not None, "Footer nav missing from the built page"
+    tracker = footer.select_one("a.js-revoke-cookie-manager")
+    assert tracker is not None, "Default tracker-settings entry missing"
+    assert tracker.get("href") == "#tracker-settings"
+    assert tracker.get_text(strip=True) == "Manage your tracker settings"
+
+
 def _check_depth(output: Path, warnings: str, *, includes_h5: bool) -> None:
     toc_text = _local_toc_text((output / "index.html").read_text(encoding="utf-8"))
     failures = []
@@ -371,6 +381,39 @@ def test_rtd_source_branch(
     assert context["repo_folder"] == "/guides/"
 
 
+def test_footer_defaults() -> None:
+    """Unset and partial footer configs get the documented defaults per key."""
+    default_entries = [
+        (
+            '<a href="#tracker-settings" class="js-revoke-cookie-manager muted-link">'
+            "Manage your tracker settings</a>"
+        )
+    ]
+
+    # The whole footer dict is unset: every key gets its default.
+    unset: dict = {}
+    _configure_html_context(unset)
+    assert unset["footer"] == {
+        "product": True,
+        "license": True,
+        "entries": default_entries,
+    }
+
+    # A partial footer keeps its explicit value and fills in the rest.
+    partial: dict = {"footer": {"entries": ['<a href="https://example.com">Link</a>']}}
+    _configure_html_context(partial)
+    assert partial["footer"] == {
+        "product": True,
+        "license": True,
+        "entries": ['<a href="https://example.com">Link</a>'],
+    }
+
+    # An explicit footer is never overridden.
+    explicit: dict = {"footer": {"product": False, "license": False, "entries": []}}
+    _configure_html_context(explicit)
+    assert explicit["footer"] == {"product": False, "license": False, "entries": []}
+
+
 def test_config_robustness(tmp_path: Path) -> None:
     """Report one result, with separately labelled failures for each scenario."""
     errors: list[str] = []
@@ -387,6 +430,7 @@ def test_config_robustness(tmp_path: Path) -> None:
     minimal = run_build("minimal", "minimal-conf")
     if minimal is not None:
         _record(errors, "minimal page", lambda: _check_minimal(minimal[1]))
+        _record(errors, "default footer", lambda: _check_default_footer(minimal[1]))
         _record(
             errors,
             "TOC unset",
