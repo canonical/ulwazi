@@ -208,6 +208,22 @@ If you don't set them, Ulwazi uses the defaults below.
     - `tag_id`
     - `"GTM-N384JMX2"`
     - Google Tag Manager container ID used by the analytics snippet included on HTML pages. Set your own container ID to replace Canonical's default. Ulwazi has no setting to omit the snippet.
+*
+    - `footer`
+    - See sub-keys below.
+    - Dictionary controlling what appears in the page footer. Defaults are applied per key: a partially configured `footer` keeps its explicit values, and only the missing keys are filled in.
+*
+    - `footer.product`
+    - `True`
+    - Whether to add the product name as the footer's first entry.
+*
+    - `footer.license`
+    - `True`
+    - Whether to add the license as the footer's second entry (requires `license.name` to also be set).
+*
+    - `footer.entries`
+    - `['<a href="#tracker-settings" class="js-revoke-cookie-manager muted-link">Manage your tracker settings</a>']`
+    - List of raw HTML snippets appended to the footer. Accepts HTML tags.
 ```
 
 ### Without defaults
@@ -251,22 +267,6 @@ setting a value, so an incomplete setup can produce a broken link.
     - `add_product_menu`
     - Product menu doesn't render.
     - Set to `True` (or leave unset/`False`) to include or hide Canonical's generated product menu at the top of every page.
-*
-    - `footer`
-    - Footer product/license/custom-entries section doesn't render.
-    - Dictionary controlling what appears in the page footer; see sub-keys below.
-*
-    - `footer.product`
-    - Product name isn't shown in the footer.
-    - Set to `True` (or leave unset/`False`) to show or hide the product name as the footer's first entry.
-*
-    - `footer.license`
-    - License isn't shown in the footer.
-    - Set to `True` (or leave unset/`False`) to show or hide license info as the footer's second entry (requires `license.name` to also be set).
-*
-    - `footer.entries`
-    - No custom footer entries.
-    - A list of raw HTML snippets appended to the footer.
 *
     - `license`
     - No license shown (even if `footer.license` is `True`).

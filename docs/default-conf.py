@@ -218,6 +218,10 @@ html_context = {
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Canonical",
     # TODO: Customize the footer.
+    # NOTE: When "ulwazi" is in extensions, unset footer keys default to:
+    #       product: True, license: True, and the Canonical
+    #       "Manage your tracker settings" entry. This explicit assignment
+    #       replaces those defaults.
     "footer": {
         # Whether to add the product name as the first entry.
         "product": True,
