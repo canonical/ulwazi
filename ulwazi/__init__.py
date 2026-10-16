@@ -206,6 +206,24 @@ def _configure_html_context(html_context: dict[str, Any]) -> None:
     for value, default in values_and_defaults:
         html_context.setdefault(value, default)
 
+    # Footer defaults are applied per key: a partially configured footer
+    # keeps its explicit values and only the missing keys are filled in.
+    footer_defaults: dict[str, Any] = {
+        "product": True,
+        "license": True,
+        "entries": [
+            (
+                '<a href="#tracker-settings" '
+                'class="js-revoke-cookie-manager muted-link">'
+                "Manage your tracker settings</a>"
+            ),
+        ],
+    }
+    footer = html_context.setdefault("footer", footer_defaults)
+    if isinstance(footer, dict):
+        for key, default in footer_defaults.items():
+            cast("dict[str, Any]", footer).setdefault(key, default)
+
     folder = str(html_context["repo_folder"]).strip("/")
     html_context["repo_folder"] = f"/{folder}/" if folder else "/"
 
