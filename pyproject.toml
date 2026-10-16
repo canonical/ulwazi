@@ -31,9 +31,7 @@ dependencies = [
     "sphinxcontrib-jquery>=4.1",
     "beautifulsoup4",
     "sphinx-notfound-page~=1.1",
-    # Supplies the linkify-it-py dependency for the MyST "linkify" syntax
-    # extension that Ulwazi enables by default (myst-parser declares it only
-    # through its optional "linkify" extra). See docs/content/configuration.md.
+    # Supplies the linkify-it-py dependency for the MyST "linkify" syntax extension
     "linkify-it-py~=2.0",
 ]
 
