@@ -442,7 +442,9 @@ html_js_files = ["https://assets.ubuntu.com/v1/287a5e8f-bundle.js"]
 
 
 # Syntax highlighting settings
-highlight_language = "none"  # default
+# NOTE: Ulwazi defaults highlight_language to "none" when it is unset in
+#       conf.py or on the command line; this explicit assignment matches it.
+highlight_language = "none"
 
 # Specifies a reST snippet to be appended to each .rst file
 

@@ -56,6 +56,10 @@ These are set directly in `conf.py`.
     - `ulwazi_structured_toc_separator_color_dark`
     - `""`
     - Same as above, for the dark theme (default: white).
+*
+    - `highlight_language`
+    - `"none"`
+    - Sphinx's fallback language for code blocks without an explicit language. Ulwazi defaults it to `"none"` (plain, unhighlighted code) when unset in `conf.py` or on the command line.
 ```
 
 Ulwazi also supplies a `404.html` template and chooses the 404 URL prefix from

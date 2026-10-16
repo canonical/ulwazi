@@ -389,8 +389,9 @@ exclude_patterns = ["doc-cheat-sheet*", "_build", "Thumbs.db", ".DS_Store"]
 
 
 # Syntax highlighting settings
-
-highlight_language = "none"  # default
+# NOTE: Ulwazi defaults highlight_language to "none" when it is unset in
+#       conf.py or on the command line; this explicit assignment matches it.
+highlight_language = "none"
 pygments_style = "autumn"  # see https://pygments.org/styles for more
 pygments_dark_style = "github-dark"  # see https://pygments.org/styles for more
 
