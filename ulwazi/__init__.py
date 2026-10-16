@@ -158,6 +158,8 @@ def config_inited(app: Sphinx, config: Config) -> None:
     if config.notfound_enabled:
         _configure_notfound(config)
 
+    _configure_myst_defaults(app, config)
+
     if "sphinx_modern_pdf_style" in config.extensions:
         _setup_modern_pdf_style(config)
 
@@ -234,6 +236,36 @@ def _configure_notfound(config: Config) -> None:
         and "notfound_template" not in config.overrides
     ):
         config.notfound_template = "404.html"
+
+
+def _configure_myst_defaults(app: Sphinx, config: Config) -> None:
+    """Restore the MyST syntax defaults formerly provided by canonical-sphinx.
+
+    Projects that register ``myst_parser`` but do not configure
+    ``myst_enable_extensions`` get the former Canonical defaults:
+    ``substitution``, ``deflist``, and ``linkify``. Explicit settings always
+    win, including an explicitly empty collection (which disables all
+    optional syntax) and command-line overrides.
+
+    MyST is never imported or activated here: without ``myst_parser`` in
+    ``extensions`` this is a no-op, so reST-only projects work without it.
+    MyST snapshots its Sphinx settings at ``builder-inited``, after this
+    hook, so the defaults apply regardless of extension order.
+    """
+    if "myst_parser" not in app.extensions:
+        return
+    # The setting is registered by myst_parser's own setup(); without it
+    # there is nothing to default. (``in`` avoids reading an unset value.)
+    if "myst_enable_extensions" not in config:
+        return
+    # Same precedence rules as _configure_notfound: explicit conf.py
+    # assignments and command-line overrides are both left untouched.
+    if (
+        "myst_enable_extensions" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "myst_enable_extensions" not in config.overrides
+    ):
+        # A fresh set: never mutate a project-owned collection in place.
+        config.myst_enable_extensions = {"substitution", "deflist", "linkify"}
 
 
 def _setup_modern_pdf_style(config: Config) -> None:
