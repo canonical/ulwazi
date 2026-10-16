@@ -144,6 +144,14 @@ def config_inited(app: Sphinx, config: Config) -> None:
     config.html_last_updated_fmt = ""
     config.html_permalinks_icon = "¶"
 
+    # Default the code-block highlight language to "none" (plain, unhighlighted
+    # code) unless explicitly set in conf.py or on the command line.
+    if (
+        "highlight_language" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "highlight_language" not in config.overrides
+    ):
+        config.highlight_language = "none"
+
     _configure_html_context(config.html_context)
 
     _configure_html_title(config)
