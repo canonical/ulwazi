@@ -68,6 +68,28 @@ run: install
 	  --pre-build '$(abspath $(DOCS_VENVDIR))/bin/python preview_theme.py' \
 	  "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)
 
+# Internal manual testing only: like `run`, but builds with default-conf.py
+# (the Sphinx Stack template config) instead of conf.py.
+#
+# Sphinx only loads a file literally named conf.py, so default-conf.py is
+# copied into _dev/default-conf/ and used as the config directory. The build
+# output and doctrees also live under _dev/ (already excluded by
+# default-conf.py's exclude_patterns), so the two configs don't clobber each
+# other and the generated output is never re-read as source.
+.PHONY: run-default
+run-default: install
+	mkdir -p $(DEV_DIR)/default-conf
+	cp default-conf.py $(DEV_DIR)/default-conf/conf.py
+	. $(DOCS_VENV); $(DOCS_VENVDIR)/bin/sphinx-autobuild -b dirhtml \
+	  --host $(SPHINX_HOST) --port $(SPHINX_PORT) \
+	  --watch ../ulwazi \
+	  --ignore ../ulwazi/theme/ulwazi/static/css/vanilla-main.css \
+	  --ignore ../ulwazi/theme/ulwazi/static/css/vanilla-main.css.map \
+	  --pre-build '$(abspath $(DOCS_VENVDIR))/bin/python preview_theme.py' \
+	  -c $(DEV_DIR)/default-conf \
+	  "$(DOCS_SOURCEDIR)" "$(DEV_DIR)/build-default" \
+	  -d $(DEV_DIR)/.doctrees-default -j auto
+
 # Does not depend on $(DOCS_BUILDDIR) to rebuild properly at every run.
 html: install
 	. $(DOCS_VENV); $(SPHINX_BUILD) --fail-on-warning --keep-going -b dirhtml "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" -w $(DEV_DIR)/warnings.txt $(SPHINX_OPTS)

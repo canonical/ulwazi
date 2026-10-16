@@ -429,6 +429,10 @@ exclude_patterns = [
     # sphinx-llm pulls in sphinx-markdown-builder, which emits .md artifacts
     # into the build directory; keep Sphinx from re-reading them as source.
     "_build/**",
+    # _dev holds doctrees, warnings, and the run-default build output; never
+    # treat it as source (the sphinx-llm markdown subprocess loads this
+    # conf.py and would otherwise re-read those generated .md files).
+    "_dev",
 ]
 
 # Adds custom CSS files, located under 'html_static_path'
