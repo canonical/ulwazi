@@ -146,6 +146,8 @@ def config_inited(app: Sphinx, config: Config) -> None:
 
     _configure_html_context(config.html_context)
 
+    _configure_html_title(config)
+
     # NOTE: This assigns the whole dict and would wipe any user-provided
     # html_theme_options. It also sets "sidebar_hide_name", which is not yet
     # an Ulwazi theme option (no template reads it). Mirrors the behaviour
@@ -266,6 +268,37 @@ def _configure_myst_defaults(app: Sphinx, config: Config) -> None:
     ):
         # A fresh set: never mutate a project-owned collection in place.
         config.myst_enable_extensions = {"substitution", "deflist", "linkify"}
+
+
+def _configure_html_title(config: Config) -> None:
+    """Provide a clean default ``html_title`` without duplicated words.
+
+    Sphinx's own default is ``'{project} {release} documentation'`` with
+    ``release`` defaulting to ``''``, which duplicates the word for projects
+    named like ``project = "Project documentation"`` (rendering "Project
+    documentation  documentation"). Ulwazi instead computes the default from
+    ``project`` (plus ``release`` when set) and appends the " documentation"
+    suffix only when the project name does not already end with it.
+
+    Explicit settings always win, including command-line overrides: same
+    precedence rules as :func:`_configure_notfound`. Sphinx does not expose
+    a public API for checking raw conf.py assignments.
+    """
+    if (
+        "html_title" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "html_title" not in config.overrides
+    ):
+        project = str(config.project).strip()
+        release = str(config.release).strip()
+        title = project
+        if release:
+            title += f" {release}"
+        # The suffix rule is tied to the project name, not the joined title:
+        # a release must not reintroduce the suffix for projects that
+        # already end with "documentation".
+        if not project.endswith("documentation"):
+            title += " documentation"
+        config.html_title = title
 
 
 def _setup_modern_pdf_style(config: Config) -> None:
