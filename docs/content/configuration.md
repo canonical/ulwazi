@@ -64,6 +64,25 @@ and `notfound_urls_prefix` settings take precedence. List `"ulwazi"` before
 `"sphinx_modern_pdf_style"` in `extensions` to enable Canonical PDF branding;
 Ulwazi stages the logo in the LaTeX output directory.
 
+### Default HTML title
+
+When `html_title` is unset, Sphinx's own default is
+`"{project} {release} documentation"` with `release` defaulting to an empty
+string -- which duplicates the word for projects named like
+`project = "Project documentation"` (rendering "Project documentation
+ documentation"). Ulwazi instead computes the default from `project` (plus
+`release` when set) and appends the `" documentation"` suffix only when the
+project name does not already end with it:
+
+```python
+# project = "Project documentation", release unset
+html_title == "Project documentation"  # not "Project documentation  documentation"
+```
+
+Explicit `html_title` settings always win, including Sphinx's `-D`
+command-line option (the value is a plain string, so `-D html_title=...`
+works here, unlike the set-typed MyST setting above).
+
 ### Structured-TOC styling (temporary)
 
 [sphinx-structured-toc](https://github.com/canonical/sphinx-structured-toc)'s

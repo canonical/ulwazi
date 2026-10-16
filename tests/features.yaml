@@ -138,3 +138,12 @@ site:
       - tests/test_config_robustness.py::test_myst_explicit_extensions_preserved[singleton-deflist]
       - tests/test_config_robustness.py::test_myst_overrides_take_precedence[override-only-empty]
       - tests/test_config_robustness.py::test_myst_overrides_take_precedence[override-vs-file]
+  - name: Default html_title without duplicated documentation suffix
+    source: temporary Sphinx site conf.py project/release values (unset html_title; explicit conf.py and CLI settings)
+    checks:
+      - tests/test_config_robustness.py::test_html_title_default_computed[regression-baseline]
+      - tests/test_config_robustness.py::test_html_title_default_computed[plain-default]
+      - tests/test_config_robustness.py::test_html_title_default_computed[with-release]
+      - tests/test_config_robustness.py::test_html_title_default_computed[release-no-suffix]
+      - tests/test_config_robustness.py::test_html_title_explicit_settings_preserved[conf-py-explicit]
+      - tests/test_config_robustness.py::test_html_title_explicit_settings_preserved[cli-override]
