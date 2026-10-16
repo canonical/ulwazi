@@ -90,6 +90,58 @@ command-line option -- use `conf.py` instead. The same restriction already
 applies to `notfound_enabled`; see above.
 ```
 
+### MyST syntax defaults
+
+Ulwazi does **not** install or activate
+[MyST Markdown](https://myst-parser.readthedocs.io/) for you: add
+`"myst_parser"` to `extensions` yourself if you want Markdown sources. But
+when MyST *is* registered alongside `"ulwazi"`, Ulwazi restores the syntax
+defaults that projects previously got from `canonical-sphinx`:
+
+```python
+myst_enable_extensions = {"substitution", "deflist", "linkify"}
+```
+
+This applies only when `myst_enable_extensions` is **unset** in `conf.py`
+and on the command line. Explicit settings always replace the defaults --
+including an explicitly empty collection, which disables all optional syntax:
+
+```python
+myst_enable_extensions = []  # no optional syntax at all
+```
+
+A custom collection is used as-is; the defaults are *not* merged in, so
+selecting one extension does not silently enable the others:
+
+```python
+myst_enable_extensions = ["colon_fence"]  # only colon_fence
+```
+
+`{{ key }}` [substitutions](https://myst-parser.readthedocs.io/en/latest/syntax/optional.html#substitutions)
+still need their values defined in `myst_substitutions` -- Ulwazi only
+enables the syntax.
+
+The `linkify` extension needs the `linkify-it-py` package, which
+`myst-parser` ships only through its optional `linkify` extra. Ulwazi
+depends on `linkify-it-py` directly, so a normal Ulwazi installation
+supplies it -- you do not need to install the extra or add anything to your
+requirements.
+
+```{note}
+These MyST defaults require `"ulwazi"` in `extensions`. If Ulwazi is
+selected only through `html_theme`, its configuration hook never runs and
+MyST keeps its own empty default.
+```
+
+```{note}
+Sphinx itself cannot convert a string `-D myst_enable_extensions=...`
+command-line override for this set-typed setting: it warns
+(`cannot override config setting ... with unsupported type, ignoring`) and
+keeps the `conf.py` value -- with or without Ulwazi. Use the `conf.py`
+setting, or a typed override via Sphinx's Python API
+(`confoverrides={"myst_enable_extensions": [...]}`), which Ulwazi honours.
+```
+
 ## HTML context
 
 Sphinx makes values in the `html_context` dictionary available to HTML

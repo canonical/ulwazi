@@ -365,8 +365,11 @@ linkcheck_retries = 3
 # Custom MyST syntax extensions; see
 # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
 #
-# NOTE: By default, the following MyST extensions are enabled:
-#       substitution, deflist, linkify
+# NOTE: When "ulwazi" is in extensions and myst_enable_extensions is left
+#       unset, Ulwazi restores the former canonical-sphinx defaults:
+#       substitution, deflist, linkify. This explicit assignment replaces
+#       those defaults (it does not extend them), so linkify is disabled
+#       here by design.
 
 myst_enable_extensions = {"colon_fence", "deflist", "substitution", "tasklist"}
 
