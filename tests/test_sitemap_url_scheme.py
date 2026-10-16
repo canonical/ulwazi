@@ -5,12 +5,18 @@ sphinx-sitemap builds each URL as ``html_baseurl`` followed by
 ``docs/conf.py`` and the copyable ``docs/default-conf.py`` must therefore add
 only the path segments that Read the Docs actually serves.
 
-Like the 404 prefix (see ``tests/test_notfound_prefix.py``), both files detect
-those segments from ``READTHEDOCS_CANONICAL_URL``. ``READTHEDOCS_VERSION`` and
-``READTHEDOCS_LANGUAGE`` are set on every Read the Docs build, even for
-single-version projects whose URLs contain neither segment; appending the
-version unconditionally published sitemap URLs such as
-``/ulwazi/main/content/...`` that do not exist.
+The two files use different strategies:
+
+* ``docs/conf.py`` keeps a fixed ``html_baseurl`` and detects the served
+  segments from ``READTHEDOCS_CANONICAL_URL`` (like the 404 prefix in
+  ``tests/test_notfound_prefix.py``). ``READTHEDOCS_VERSION`` and
+  ``READTHEDOCS_LANGUAGE`` are set on every Read the Docs build, even for
+  single-version projects whose URLs contain neither segment; appending the
+  version unconditionally published sitemap URLs such as
+  ``/ulwazi/main/content/...`` that do not exist.
+* ``docs/default-conf.py`` (the Sphinx Stack template) sets
+  ``html_baseurl`` to ``READTHEDOCS_CANONICAL_URL`` itself, which already
+  contains the served segments, and uses a plain ``{link}`` scheme.
 """
 
 from __future__ import annotations
@@ -100,7 +106,11 @@ def test_sitemap_url_scheme(
     errors = []
     for conf in CONF_FILES:
         base, url = _sitemap_url(conf)
-        expected = base + segments + LINK
+        if conf == "default-conf.py":
+            # The base already contains the served segments; append nothing.
+            expected = env.get("READTHEDOCS_CANONICAL_URL", "/") + LINK
+        else:
+            expected = base + segments + LINK
         if url != expected:
             errors.append(f"[docs/{conf}] expected {expected}, got {url}")
     assert not errors, "Sitemap URL checks failed:\n  - " + "\n  - ".join(errors)

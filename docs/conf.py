@@ -34,7 +34,7 @@ author = "Canonical Ltd."
 # Sidebar documentation title; best kept reasonably short
 #
 # TODO: To include a version number, add it here (hardcoded or automated).
-version = "1.0.1"
+version = "1.0.2"
 
 
 # TODO: To disable the title, set to an empty string.
@@ -212,6 +212,10 @@ html_context = {
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
     "logo_title": "Ulwazi",
     # TODO: Customize the footer.
+    # NOTE: When "ulwazi" is in extensions, unset footer keys default to:
+    #       product: True, license: True, and the Canonical
+    #       "Manage your tracker settings" entry. This explicit assignment
+    #       replaces those defaults.
     "footer": {
         # Whether to add the product name as the first entry.
         "product": True,
@@ -425,6 +429,10 @@ exclude_patterns = [
     # sphinx-llm pulls in sphinx-markdown-builder, which emits .md artifacts
     # into the build directory; keep Sphinx from re-reading them as source.
     "_build/**",
+    # _dev holds doctrees, warnings, and the run-default build output; never
+    # treat it as source (the sphinx-llm markdown subprocess loads this
+    # conf.py and would otherwise re-read those generated .md files).
+    "_dev",
 ]
 
 # Adds custom CSS files, located under 'html_static_path'
@@ -438,7 +446,9 @@ html_js_files = ["https://assets.ubuntu.com/v1/287a5e8f-bundle.js"]
 
 
 # Syntax highlighting settings
-highlight_language = "none"  # default
+# NOTE: Ulwazi defaults highlight_language to "none" when it is unset in
+#       conf.py or on the command line; this explicit assignment matches it.
+highlight_language = "none"
 
 # Specifies a reST snippet to be appended to each .rst file
 

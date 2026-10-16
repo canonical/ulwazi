@@ -96,7 +96,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.connect("html-page-context", _html_page_context)  # pyright: ignore [reportUnknownMemberType]
 
     return {
-        "version": "1.0.1",
+        "version": "1.0.2",
         "parallel_read_safe": True,
         "parallel_write_safe": True,
     }
@@ -144,7 +144,17 @@ def config_inited(app: Sphinx, config: Config) -> None:
     config.html_last_updated_fmt = ""
     config.html_permalinks_icon = "¶"
 
+    # Default the code-block highlight language to "none" (plain, unhighlighted
+    # code) unless explicitly set in conf.py or on the command line.
+    if (
+        "highlight_language" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "highlight_language" not in config.overrides
+    ):
+        config.highlight_language = "none"
+
     _configure_html_context(config.html_context)
+
+    _configure_html_title(config)
 
     # NOTE: This assigns the whole dict and would wipe any user-provided
     # html_theme_options. It also sets "sidebar_hide_name", which is not yet
@@ -203,6 +213,24 @@ def _configure_html_context(html_context: dict[str, Any]) -> None:
 
     for value, default in values_and_defaults:
         html_context.setdefault(value, default)
+
+    # Footer defaults are applied per key: a partially configured footer
+    # keeps its explicit values and only the missing keys are filled in.
+    footer_defaults: dict[str, Any] = {
+        "product": True,
+        "license": True,
+        "entries": [
+            (
+                '<a href="#tracker-settings" '
+                'class="js-revoke-cookie-manager muted-link">'
+                "Manage your tracker settings</a>"
+            ),
+        ],
+    }
+    footer = html_context.setdefault("footer", footer_defaults)
+    if isinstance(footer, dict):
+        for key, default in footer_defaults.items():
+            cast("dict[str, Any]", footer).setdefault(key, default)
 
     folder = str(html_context["repo_folder"]).strip("/")
     html_context["repo_folder"] = f"/{folder}/" if folder else "/"
@@ -266,6 +294,37 @@ def _configure_myst_defaults(app: Sphinx, config: Config) -> None:
     ):
         # A fresh set: never mutate a project-owned collection in place.
         config.myst_enable_extensions = {"substitution", "deflist", "linkify"}
+
+
+def _configure_html_title(config: Config) -> None:
+    """Provide a clean default ``html_title`` without duplicated words.
+
+    Sphinx's own default is ``'{project} {release} documentation'`` with
+    ``release`` defaulting to ``''``, which duplicates the word for projects
+    named like ``project = "Project documentation"`` (rendering "Project
+    documentation  documentation"). Ulwazi instead computes the default from
+    ``project`` (plus ``release`` when set) and appends the " documentation"
+    suffix only when the project name does not already end with it.
+
+    Explicit settings always win, including command-line overrides: same
+    precedence rules as :func:`_configure_notfound`. Sphinx does not expose
+    a public API for checking raw conf.py assignments.
+    """
+    if (
+        "html_title" not in config._raw_config  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        and "html_title" not in config.overrides
+    ):
+        project = str(config.project).strip()
+        release = str(config.release).strip()
+        title = project
+        if release:
+            title += f" {release}"
+        # The suffix rule is tied to the project name, not the joined title:
+        # a release must not reintroduce the suffix for projects that
+        # already end with "documentation".
+        if not project.endswith("documentation"):
+            title += " documentation"
+        config.html_title = title
 
 
 def _setup_modern_pdf_style(config: Config) -> None:

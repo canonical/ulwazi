@@ -128,6 +128,11 @@ site:
     source: ulwazi_structured_toc_styling and _separator_color_light/_dark conf.py values
     checks:
       - tests/test_structured_toc.py::test_structured_toc_styling_config
+  - name: Footer defaults for unset and partial footer configuration
+    source: ulwazi html_context footer defaults (unset, partial and explicit values; rendered default tracker-settings entry on the minimal fixture)
+    checks:
+      - tests/test_config_robustness.py::test_footer_defaults
+      - tests/test_config_robustness.py::test_config_robustness
   - name: MyST compatibility defaults and explicit-setting precedence
     source: temporary Sphinx site with myst_parser registered (unset, explicit empty/custom/singleton, and override myst_enable_extensions; both extension orders)
     checks:
@@ -138,3 +143,12 @@ site:
       - tests/test_config_robustness.py::test_myst_explicit_extensions_preserved[singleton-deflist]
       - tests/test_config_robustness.py::test_myst_overrides_take_precedence[override-only-empty]
       - tests/test_config_robustness.py::test_myst_overrides_take_precedence[override-vs-file]
+  - name: Default html_title without duplicated documentation suffix
+    source: temporary Sphinx site conf.py project/release values (unset html_title; explicit conf.py and CLI settings)
+    checks:
+      - tests/test_config_robustness.py::test_html_title_default_computed[regression-baseline]
+      - tests/test_config_robustness.py::test_html_title_default_computed[plain-default]
+      - tests/test_config_robustness.py::test_html_title_default_computed[with-release]
+      - tests/test_config_robustness.py::test_html_title_default_computed[release-no-suffix]
+      - tests/test_config_robustness.py::test_html_title_explicit_settings_preserved[conf-py-explicit]
+      - tests/test_config_robustness.py::test_html_title_explicit_settings_preserved[cli-override]

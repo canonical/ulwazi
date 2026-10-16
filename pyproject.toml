@@ -179,6 +179,8 @@ exclude = [
     # sources (e.g. sphinx-structured-toc copies its directives.py into
     # docs/_build/_static/), which pyright must not lint.
     "docs/_build",
+    # Same for the run-default build output (see docs/Makefile).
+    "docs/_dev",
 ]
 
 [tool.mypy]
