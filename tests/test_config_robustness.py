@@ -970,3 +970,137 @@ def test_myst_theme_only_loading_keeps_myst_default(tmp_path: Path) -> None:
     assert _myst_env_extensions(app) == set()
     failures = _check_myst_rendering(output, set())
     assert not failures, "; ".join(failures)
+
+
+# ---------------------------------------------------------------------------
+# Default HTML title (no duplicated "documentation" suffix)
+# ---------------------------------------------------------------------------
+
+TITLE_CONF_TEMPLATE = """
+project = {project!r}
+extensions = ["ulwazi"]
+html_theme = "ulwazi"
+{extra_config}
+"""
+
+TITLE_INDEX_RST = """\
+Test page
+=========
+
+Content.
+"""
+
+
+def _build_title_site(
+    tmp_path: Path,
+    project: str,
+    extra_config: str = "",
+    overrides: dict | None = None,
+) -> tuple[Sphinx, Path, str]:
+    """Build a tiny reST site and return (app, outdir, warnings).
+
+    The site is generated under ``tmp_path`` so the developer environment,
+    the sample docs, and other tests' fixtures are never touched. Builds run
+    in-process (with docutils patched) so coverage observes the theme hooks.
+    """
+    srcdir = tmp_path / "src"
+    srcdir.mkdir(parents=True)
+    (srcdir / "conf.py").write_text(
+        TITLE_CONF_TEMPLATE.format(project=project, extra_config=extra_config),
+        encoding="utf-8",
+    )
+    (srcdir / "index.rst").write_text(TITLE_INDEX_RST, encoding="utf-8")
+
+    output = tmp_path / "_build"
+    warnings = io.StringIO()
+    with patch_docutils(str(srcdir)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(srcdir),
+            confdir=str(srcdir),
+            outdir=str(output),
+            doctreedir=str(tmp_path / "_doctrees"),
+            buildername="html",
+            confoverrides=overrides,
+            status=io.StringIO(),
+            warning=warnings,
+            warningiserror=True,
+        )
+        app.build()
+    assert app.statuscode == 0, (
+        f"Sphinx exited with status {app.statuscode}: {warnings.getvalue()}"
+    )
+    return app, output, warnings.getvalue()
+
+
+def _title_text(output: Path) -> str:
+    """Return the rendered <title> text of the built index page."""
+    path = output / "index.html"
+    assert path.is_file(), f"Built page not found: {path}"
+    soup = BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
+    title = soup.title
+    assert title is not None, "Built page has no <title> element"
+    return title.get_text(" ", strip=True)
+
+
+# One representative value per distinct behaviour: the regression baseline
+# (a project name already ending in "documentation" must not gain a second
+# suffix), the plain default (suffix appended), a set release (joined
+# before the suffix), and the suffix rule tied to the project name rather
+# than the joined title (a release must not reintroduce the suffix).
+@pytest.mark.parametrize(
+    ("project", "release", "expected"),
+    [
+        ("Project documentation", "", "Project documentation"),
+        ("Foo", "", "Foo documentation"),
+        ("Foo", "2.0", "Foo 2.0 documentation"),
+        ("Project documentation", "2.0", "Project documentation 2.0"),
+    ],
+    ids=["regression-baseline", "plain-default", "with-release", "release-no-suffix"],
+)
+def test_html_title_default_computed(
+    tmp_path: Path, project: str, release: str, expected: str
+) -> None:
+    """An unset html_title gets a clean default, without duplication.
+
+    Sphinx's own default is ``'{project} {release} documentation'`` with
+    ``release`` defaulting to ``''``, which duplicates the word for projects
+    named like Canonical Sphinx Stack's ``project = "Project
+    documentation"`` (rendering "Project documentation  documentation").
+    Ulwazi computes the default from ``project`` (plus ``release`` when set)
+    and appends the " documentation" suffix only when the project name does
+    not already end with it.
+    """
+    extra_config = f"release = {release!r}\n" if release else ""
+    app, output, warnings = _build_title_site(tmp_path, project, extra_config)
+    assert not warnings, f"Unexpected warnings:\n{warnings}"
+    assert app.config.html_title == expected
+    # The rendered <title> prefixes the page title and appends the
+    # docstitle (html_title) exactly once, via layout.html's titlesuffix.
+    title = _title_text(output)
+    assert title == f"Test page — {expected}"
+
+
+@pytest.mark.parametrize(
+    ("extra_config", "overrides", "expected"),
+    [
+        ("html_title = 'Custom title'\n", None, "Custom title"),
+        ("", {"html_title": "CLI title"}, "CLI title"),
+    ],
+    ids=["conf-py-explicit", "cli-override"],
+)
+def test_html_title_explicit_settings_preserved(
+    tmp_path: Path,
+    extra_config: str,
+    overrides: dict | None,
+    expected: str,
+) -> None:
+    """Explicit html_title settings (conf.py or CLI) always win over the default."""
+    app, output, warnings = _build_title_site(
+        tmp_path,
+        "Foo",
+        extra_config=extra_config,
+        overrides=overrides,
+    )
+    assert not warnings, f"Unexpected warnings:\n{warnings}"
+    assert app.config.html_title == expected
+    assert _title_text(output) == f"Test page — {expected}"
