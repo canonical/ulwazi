@@ -199,7 +199,7 @@ setting a value, so an incomplete setup can produce a broken link.
 *
     - `license`
     - No license shown (even if `footer.license` is `True`).
-    - Dict with a `name` (e.g. an SPDX identifier like `"LGPL-3.0-only"`) and optional `url`, shown in the footer.
+    - Dict with a `name` (e.g. an SPDX identifier like `"GPL-3.0-only"`) and optional `url`, shown in the footer.
 *
     - `logo_link_URL`
     - If unset, the header logo links to an empty href.

@@ -34,7 +34,7 @@ author = "Canonical Ltd."
 # Sidebar documentation title; best kept reasonably short
 #
 # TODO: To include a version number, add it here (hardcoded or automated).
-version = "1.0.0"
+version = "1.0.1"
 
 
 # TODO: To disable the title, set to an empty string.
@@ -151,7 +151,7 @@ html_context = {
     # For the URL, link directly to the product's license statement, typically found on
     # the product's home page or in its GitHub project.
     "license": {
-        "name": "LGPL-3.0-only",
+        "name": "GPL-3.0-only",
         "url": github_repo + "/blob/" + source_branch + "/LICENSE",
     },
     # Your Discourse instance URL
