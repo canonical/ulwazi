@@ -317,6 +317,7 @@ and the side navigation is unchanged. `title` must be a non-empty string and
 absolute `http(s)` URL. An invalid value is ignored as a whole (with a build
 warning naming the offending key) rather than rendering a partial panel.
 
+(not-currently-supported)=
 ### Not currently supported
 
 Ulwazi supplies defaults for these `html_context` values, but no Ulwazi
@@ -341,11 +342,11 @@ the purposes below describe their intended or legacy use.
 *
     - `sequential_nav`
     - `"none"`
-    - Control previous/next page navigation (documented values: `none`, `prev`, `next`, `both`).
+    - Control previous/next page navigation (documented values: `none`, `prev`, `next`, `both`). Not yet supported; see [ulwazi#196](https://github.com/canonical/ulwazi/issues/196).
 *
     - `display_contributors`
     - `True`
-    - Toggle a contributors list (`True`/`False`).
+    - Toggle a contributors list (`True`/`False`). Not yet supported; the planned footer work in [ulwazi#196](https://github.com/canonical/ulwazi/issues/196) is expected to activate it.
 *
     - `path`
     - `"/docs"`
