@@ -3,47 +3,11 @@
 This page collects problems commonly seen when adopting Ulwazi, especially
 when migrating a project from the previous, Furo-based Canonical Sphinx
 Stack (v2.x and earlier). Each entry explains the symptom, the cause, and a
-workaround until the theme fixes it.
+fix or workaround.
 
 If your problem is not listed here, check the
 [configuration reference](configuration.md) first, then
 [open an issue](https://github.com/canonical/ulwazi/issues).
-
-## The root page `<title>` repeats the site title
-
-**Symptom:** the root page's browser tab or search-engine result reads like:
-
-```text
-Charmed Apache Kafka documentation — Charmed Apache Kafka documentation
-```
-
-**Cause:** Ulwazi renders `<title>{{ page heading }} — {{ html_title }}</title>`
-on every page. On the root page the page heading (the H1 title) commonly
-equals `html_title`, because projects following the Sphinx Stack guide set
-`project = "X documentation"` and use the same words for the index H1.
-
-**Workaround:** none in the theme yet. Until it is fixed, set the root page's
-H1 to something other than the site title (for example, "Welcome" or a
-product-specific landing title).
-
-**Tracked in** [ulwazi#202](https://github.com/canonical/ulwazi/issues/202).
-
-## The feedback button pre-fills "documentation" twice
-
-**Symptom:** clicking **Give feedback** opens a GitHub issue whose body reads:
-
-```text
-*Please describe the question or issue you're facing with X documentation documentation.*
-```
-
-**Cause:** the feedback template appends a hard-coded `" documentation"`
-after the project name. With `project = "X documentation"` (the recommended
-setting), the word is duplicated.
-
-**Workaround:** none in the theme yet; the string is fixed in the template.
-Setting `html_title` or other title values does not affect it.
-
-**Tracked in** [ulwazi#203](https://github.com/canonical/ulwazi/issues/203).
 
 ## Legacy `_templates/header.html` and `footer.html` overrides do nothing
 
@@ -74,26 +38,6 @@ configuration value:
   `_templates/sections/` in your project and edit it there.
 
 **Tracked in** [ulwazi#204](https://github.com/canonical/ulwazi/issues/204).
-
-## `repo_default_branch` is ignored; edit links point at the wrong branch
-
-**Symptom:** "edit this page" and "view source" links point at `main` even
-though the project's documentation branch is different.
-
-**Cause:** `repo_default_branch` was the `html_context` key used by the
-previous stack. Ulwazi reads `repo_branch` and only maps the older
-`github_version` alias, so a migrated `repo_default_branch` value is
-silently ignored.
-
-**Workaround:** rename the key:
-
-```python
-html_context = {
-    "repo_branch": "my-default-branch",
-}
-```
-
-**Tracked in** [ulwazi#195](https://github.com/canonical/ulwazi/issues/195).
 
 ## Previous/next page navigation buttons are gone
 
