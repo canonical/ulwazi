@@ -1125,10 +1125,10 @@ def test_html_title_default_computed(
     app, output, warnings = _build_title_site(tmp_path, project, extra_config)
     assert not warnings, f"Unexpected warnings:\n{warnings}"
     assert app.config.html_title == expected
-    # The rendered <title> prefixes the page title and appends the
-    # docstitle (html_title) exactly once, via layout.html's titlesuffix.
-    title = _title_text(output)
-    assert title == f"Test page — {expected}"
+    # The fixture's index page is the root doc, so layout.html withholds
+    # the docstitle suffix there (see test_root_title_without_suffix); the
+    # bare page heading is all that renders.
+    assert _title_text(output) == "Test page"
 
 
 @pytest.mark.parametrize(
@@ -1154,7 +1154,62 @@ def test_html_title_explicit_settings_preserved(
     )
     assert not warnings, f"Unexpected warnings:\n{warnings}"
     assert app.config.html_title == expected
-    assert _title_text(output) == f"Test page — {expected}"
+    assert _title_text(output) == "Test page"
+
+
+# The root page's H1 equals the project name (the Sphinx Stack guide's
+# recommended shape), so the docstitle suffix would duplicate the title
+# (ulwazi#202): the root page renders no suffix, other pages keep it.
+ROOT_TITLE_INDEX_RST = """\
+Foo documentation
+=================
+
+.. toctree::
+
+   page
+"""
+
+ROOT_TITLE_PAGE_RST = """\
+Sub page
+=========
+
+Content.
+"""
+
+
+def test_root_title_without_suffix(tmp_path: Path) -> None:
+    """The root page <title> drops the suffix when its H1 equals the docstitle."""
+    srcdir = tmp_path / "src"
+    srcdir.mkdir()
+    (srcdir / "conf.py").write_text(
+        TITLE_CONF_TEMPLATE.format(project="Foo documentation", extra_config=""),
+        encoding="utf-8",
+    )
+    (srcdir / "index.rst").write_text(ROOT_TITLE_INDEX_RST, encoding="utf-8")
+    (srcdir / "page.rst").write_text(ROOT_TITLE_PAGE_RST, encoding="utf-8")
+    output = tmp_path / "_build"
+    warnings = io.StringIO()
+    with patch_docutils(str(srcdir)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(srcdir),
+            confdir=str(srcdir),
+            outdir=str(output),
+            doctreedir=str(tmp_path / "_doctrees"),
+            buildername="html",
+            status=io.StringIO(),
+            warning=warnings,
+            warningiserror=True,
+        )
+        app.build()
+    assert app.statuscode == 0, warnings.getvalue()
+    # The root page renders the bare page heading, without duplicated docstitle.
+    assert _title_text(output) == "Foo documentation"
+    # A subpage keeps the page-heading + docstitle shape.
+    sub = BeautifulSoup(
+        (output / "page.html").read_text(encoding="utf-8"), "html.parser"
+    )
+    assert sub.title is not None, "Built subpage has no <title> element"
+    assert sub.title.get_text(" ", strip=True) == "Sub page — Foo documentation"
 
 
 # ---------------------------------------------------------------------------
@@ -1178,7 +1233,8 @@ def _feedback_body(output: Path) -> str:
     link = soup.select_one(".p-toc-feedback-block a.p-button--positive")
     assert link is not None, "Feedback link missing from the built page"
     href = link.get("href")
-    assert isinstance(href, str) and "body=" in href, "Feedback link has no body"
+    assert isinstance(href, str), "Feedback link has no href"
+    assert "body=" in href, "Feedback link has no body"
     return href.split("body=", 1)[1]
 
 

@@ -104,6 +104,10 @@ site:
     source: docs/_build index, contribute and tests/seo-metadata pages
     checks:
       - tests/test_seo_metadata.py::test_seo_metadata
+  - name: Root page title without duplicated docstitle, subpages keep the suffix
+    source: layout.html titlesuffix guard on root_doc; temporary Sphinx site whose index H1 equals the project name
+    checks:
+      - tests/test_config_robustness.py::test_root_title_without_suffix
   - name: WCAG AA colour contrast in light and dark themes
     source: docs/content/myst-cheat-sheet.md axe-core color-contrast scan in Chromium
     checks:

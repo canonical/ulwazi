@@ -13,7 +13,7 @@
 
   {% endblock head_meta -%}
 
-  {%- if not embedded and docstitle %}
+  {%- if not embedded and docstitle and pagename != root_doc %}
     {%- set titlesuffix = " &#8212; "|safe + docstitle|e %}
   {%- else %}
     {%- set titlesuffix = "" %}

@@ -31,7 +31,7 @@ assertions inside one grouped case do not.
 
     `test_layout_smoke.py` (**1 fast**) — every built page's article is inside the docs main column.
 * - 4\. Features and regressions
-  - `test_config_robustness.py` (**37 fast**) — four Read the Docs branch-selection cases; one grouped case for minimal, default, depth, legacy, maximum and fallback configuration; one footer-defaults case (unset, partial, and explicit `footer` values); one `repo_default_branch` alias case; two feedback issue-body suffix cases (no duplication for a project ending in "documentation", suffix appended otherwise); ten parametrized invalid `help_links` cases plus one theme-only loading case for the Get help panel; eleven MyST compatibility-default cases: restored defaults in both extension orders, explicit empty/custom/singleton preservation, override precedence, repeated/incremental build isolation, and the parser-absent and theme-only loading limits; and six default-`html_title` cases: the clean computed default (regression baseline, plain, with release, suffix tied to the project name) and explicit conf.py/CLI settings preserved.
+  - `test_config_robustness.py` (**38 fast**) — four Read the Docs branch-selection cases; one grouped case for minimal, default, depth, legacy, maximum and fallback configuration; one footer-defaults case (unset, partial, and explicit `footer` values); one `repo_default_branch` alias case; two feedback issue-body suffix cases (no duplication for a project ending in "documentation", suffix appended otherwise); one root-page `<title>` case (no duplicated docstitle on the root page, suffix kept on subpages); ten parametrized invalid `help_links` cases plus one theme-only loading case for the Get help panel; eleven MyST compatibility-default cases: restored defaults in both extension orders, explicit empty/custom/singleton preservation, override precedence, repeated/incremental build isolation, and the parser-absent and theme-only loading limits; and six default-`html_title` cases: the clean computed default (regression baseline, plain, with release, suffix tied to the project name) and explicit conf.py/CLI settings preserved.
 
     `test_features.py` (**7 fast, 1 slow**, {doc}`details <features>`) — grouped theme markup (TOCs, tabs, headings, admonitions including list-item code/tip adjacency, lists, tables, code, search mapping, Get help panel); six banner project-link cases (unset/empty/configured product website, HTML/directory HTML, custom root and nested/generated pages); and browser journeys (consent, navigation, drawer, tabs, copy, theme, search).
 
@@ -62,7 +62,7 @@ assertions inside one grouped case do not.
     `test_test_reporting.py` (**11 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, and the live time-left estimate.
 ```
 
-**Full selection:** 135 cases across 20 modules (106 fast, 29 slow); each case
+**Full selection:** 136 cases across 20 modules (107 fast, 29 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and
