@@ -178,9 +178,12 @@ def _configure_html_context(html_context: dict[str, Any]) -> None:
     """Apply legacy aliases, Canonical defaults, and RTD branch links."""
     # Deprecated aliases from the old canonical-sphinx theme: honour them if
     # set, but only when the user hasn't already set the new-style name.
+    # "repo_default_branch" is the canonical-sphinx-era name for the branch
+    # (see ulwazi#195); it maps like the other aliases.
     deprecated_aliases = [
         ("github_version", "repo_branch"),
         ("github_folder", "repo_folder"),
+        ("repo_default_branch", "repo_branch"),
     ]
     for old_name, new_name in deprecated_aliases:
         if old_name in html_context and new_name not in html_context:
