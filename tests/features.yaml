@@ -41,6 +41,11 @@ markup:
     source: docs/content/myst-cheat-sheet.md and rst-cheat-sheet.rst (inline-formatting section)
     checks:
       - tests/test_features.py::test_features_fast
+  - name: Feedback issue body without duplicated documentation suffix
+    source: ulwazi/theme/ulwazi/sections/feedback.html (project names with and without a documentation suffix)
+    checks:
+      - tests/test_config_robustness.py::test_feedback_body_suffix[no-duplication]
+      - tests/test_config_robustness.py::test_feedback_body_suffix[suffix-appended]
   - name: Copy button interaction
     source: docs/content/myst-cheat-sheet.md YAML block (Chromium button, target, and copied text)
     checks:

@@ -1155,3 +1155,66 @@ def test_html_title_explicit_settings_preserved(
     assert not warnings, f"Unexpected warnings:\n{warnings}"
     assert app.config.html_title == expected
     assert _title_text(output) == f"Test page — {expected}"
+
+
+# ---------------------------------------------------------------------------
+# Feedback issue body (no duplicated "documentation" suffix)
+# ---------------------------------------------------------------------------
+
+FEEDBACK_CONF_TEMPLATE = """
+project = {project!r}
+extensions = ["ulwazi"]
+html_theme = "ulwazi"
+html_context = {{
+    "feedback": True,
+    "github_url": "https://github.com/example/docs",
+}}
+"""
+
+
+def _feedback_body(output: Path) -> str:
+    """Return the pre-filled issue body of the feedback link."""
+    soup = _page(output)
+    link = soup.select_one(".p-toc-feedback-block a.p-button--positive")
+    assert link is not None, "Feedback link missing from the built page"
+    href = link.get("href")
+    assert isinstance(href, str) and "body=" in href, "Feedback link has no body"
+    return href.split("body=", 1)[1]
+
+
+@pytest.mark.parametrize(
+    ("project", "expected_phrase"),
+    [
+        # The regression: a project name ending in "documentation" must not
+        # gain a second suffix (ulwazi#203).
+        ("X documentation", "facing with X documentation."),
+        ("X", "facing with X documentation."),
+    ],
+    ids=["no-duplication", "suffix-appended"],
+)
+def test_feedback_body_suffix(
+    tmp_path: Path, project: str, expected_phrase: str
+) -> None:
+    """The feedback issue body appends " documentation" only once."""
+    srcdir = tmp_path / "src"
+    srcdir.mkdir()
+    (srcdir / "conf.py").write_text(
+        FEEDBACK_CONF_TEMPLATE.format(project=project), encoding="utf-8"
+    )
+    (srcdir / "index.rst").write_text("Test\n====\n\nContent.\n", encoding="utf-8")
+    output = tmp_path / "_build"
+    warnings = io.StringIO()
+    with patch_docutils(str(srcdir)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(srcdir),
+            confdir=str(srcdir),
+            outdir=str(output),
+            doctreedir=str(tmp_path / "_doctrees"),
+            buildername="html",
+            status=io.StringIO(),
+            warning=warnings,
+            warningiserror=True,
+        )
+        app.build()
+    assert app.statuscode == 0, warnings.getvalue()
+    assert expected_phrase in _feedback_body(output)
