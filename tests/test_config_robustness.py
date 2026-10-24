@@ -381,6 +381,13 @@ def test_rtd_source_branch(
     assert context["repo_folder"] == "/guides/"
 
 
+def test_repo_default_branch_alias() -> None:
+    """The canonical-sphinx-era repo_default_branch key maps to repo_branch."""
+    context = {"repo_default_branch": "release/2.0"}
+    _configure_html_context(context)
+    assert context["repo_branch"] == "release/2.0"
+
+
 def test_footer_defaults() -> None:
     """Unset and partial footer configs get the documented defaults per key."""
     default_entries = [

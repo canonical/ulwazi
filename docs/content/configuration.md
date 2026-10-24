@@ -359,10 +359,11 @@ theme) are still honoured for backwards compatibility. If you set an old
 name without also setting its replacement, Ulwazi copies the value across
 and logs a deprecation warning at build time:
 
-| Deprecated name  | Use instead   |
-| ---------------- | ------------- |
-| `github_version` | `repo_branch` |
-| `github_folder`  | `repo_folder` |
+| Deprecated name       | Use instead   |
+| --------------------- | ------------- |
+| `github_version`      | `repo_branch` |
+| `github_folder`       | `repo_folder` |
+| `repo_default_branch` | `repo_branch` |
 
 If both the old and new names are set, the new name takes precedence and no
 warning is shown.
