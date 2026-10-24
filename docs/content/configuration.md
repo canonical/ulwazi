@@ -66,7 +66,12 @@ Ulwazi also supplies a `404.html` template and chooses the 404 URL prefix from
 the Read the Docs canonical URL when available. Explicit `notfound_template`
 and `notfound_urls_prefix` settings take precedence. List `"ulwazi"` before
 `"sphinx_modern_pdf_style"` in `extensions` to enable Canonical PDF branding;
-Ulwazi stages the logo in the LaTeX output directory.
+Ulwazi stages the logo in the LaTeX output directory. With
+`fail_on_warning = true`, a wrong order fails the build (see
+{doc}`troubleshooting`).
+
+For problems commonly hit when migrating from the previous Furo-based
+Canonical Sphinx Stack, see {doc}`troubleshooting`.
 
 ### Default HTML title
 
