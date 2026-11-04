@@ -116,7 +116,7 @@ on all pages, set `feedback` to `False` in `html_context`.
 GTM container instead of the project's own.
 
 **Cause:** Ulwazi always includes a Google Tag Manager snippet, using
-`html_context["tag_id"]` (default `GTM-N384JMX2`). Projects that injected
+`html_context["tag_id"]` (defaults to `GTM-N384JMX2`, replacing the old default: `GTM-KNX3CJC`). Projects that injected
 their own GTM via a legacy `header.html` override lose it silently (see
 above), and the default container takes over.
 
