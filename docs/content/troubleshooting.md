@@ -120,7 +120,7 @@ GTM container instead of the project's own.
 their own GTM via a legacy `header.html` override lose it silently (see
 above), and the default container takes over.
 
-**Workaround:** set your container ID in `conf.py`:
+**Workaround:** for non Canonical users, set your container ID in `conf.py`:
 
 ```python
 html_context = {
