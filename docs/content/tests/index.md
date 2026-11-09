@@ -25,7 +25,7 @@ assertions inside one grouped case do not.
 * - 2\. Smoke
   - `test_smoke.py` (**1 fast**, {doc}`details <smoke>`) — home-page content, header/navigation/footer, skip link, active Home link, and no visible template delimiters.
 * - 3\. Assets and structure
-  - `test_assets_structure.py` (**1 fast, 1 slow**, {doc}`details <assets-structure>`) — representative built assets and theme controls; the slow remote-asset probe reports availability **advisorially**, not as a release gate.
+  - `test_assets_structure.py` (**2 fast, 1 slow**, {doc}`details <assets-structure>`) — representative built assets and theme controls; the compiled Vanilla CSS is below the 200 KB Read the Docs budget, freshly pruned for the current theme sources and styles no unused Vanilla class; the slow remote-asset probe reports availability **advisorially**, not as a release gate.
 
     `test_seo_metadata.py` (**1 fast**, {doc}`details <seo-metadata>`) — titles, descriptions, canonical URLs, favicons and Open Graph tags on three sample pages, including overrides.
 
@@ -62,7 +62,7 @@ assertions inside one grouped case do not.
     `test_test_reporting.py` (**11 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, and the live time-left estimate.
 ```
 
-**Full selection:** 132 cases across 20 modules (103 fast, 29 slow); each case
+**Full selection:** 133 cases across 20 modules (104 fast, 29 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and

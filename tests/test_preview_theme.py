@@ -1,6 +1,7 @@
 """Check preview preparation without editing real theme sources or starting a server."""
 
 import importlib.util
+import os
 from pathlib import Path
 from unittest.mock import patch
 
@@ -12,8 +13,18 @@ preview = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(preview)
 
 
-def test_preview_theme_fast(tmp_path):
-    """Theme edits refresh HTML; content edits do not; Sass runs first."""
+def _make_newer(path, than):
+    """Give ``path`` a modification time after ``than`` (no sleeps needed)."""
+    later = than.stat().st_mtime_ns + 1_000_000
+    os.utime(path, ns=(later, later))
+
+
+def test_preview_theme_fast(tmp_path):  # noqa: PLR0915
+    """Theme edits refresh HTML; content edits do not; Sass runs first.
+
+    The compiled CSS is pruned to the Vanilla classes used by theme sources,
+    so a newer script also recompiles it; a newer image does not.
+    """
     root = tmp_path / "project"
     theme = root / "ulwazi"
     scss = theme / "theme/ulwazi/assets"
@@ -31,9 +42,12 @@ def test_preview_theme_fast(tmp_path):
     script = theme / "theme/ulwazi/static/js/theme.js"
     script.parent.mkdir(parents=True)
     script.write_text("// version one", encoding="utf-8")
+    # The compiled CSS starts out newer than every theme source.
+    _make_newer(css, script)
 
     def compile_css(*_args, **_kwargs):
         css.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+        _make_newer(css, max(source, script, key=lambda p: p.stat().st_mtime_ns))
 
     with (
         patch.object(preview, "ROOT", root),
@@ -56,19 +70,24 @@ def test_preview_theme_fast(tmp_path):
         assert html.read_text(encoding="utf-8") == "built"
 
         script.write_text("// version two", encoding="utf-8")
+        _make_newer(script, css)
         preview.prepare()
+        assert compile_run.call_count == 1
         assert not html.exists()
         html.write_text("rebuilt", encoding="utf-8")
 
         logo = theme / "theme/ulwazi/static/images/logo.png"
         logo.parent.mkdir(parents=True)
         logo.write_bytes(b"new image")
+        _make_newer(logo, css)
         preview.prepare()
+        assert compile_run.call_count == 1
         assert not html.exists()
         html.write_text("rebuilt", encoding="utf-8")
 
         source.write_text("a{color:blue}", encoding="utf-8")
+        _make_newer(source, css)
         preview.prepare()
-        assert compile_run.call_count == 1
+        assert compile_run.call_count == 2
         assert css.read_text(encoding="utf-8") == source.read_text(encoding="utf-8")
         assert not html.exists()

@@ -161,8 +161,11 @@ make vanilla-main  # Install npm dependencies and compile SCSS to CSS
 
 1. Check the latest version: `npm view vanilla-framework version`
 2. Update the `vanilla-framework` version in `package.json` (`dependencies`)
-3. Install and recompile: `make vanilla-main` (runs `npm install` and compiles
-   `ulwazi/theme/ulwazi/assets/main.scss` to `ulwazi/theme/ulwazi/static/css/vanilla-main.css`)
+3. Install and recompile: `make vanilla-main` (runs `npm install`, compiles
+   `ulwazi/theme/ulwazi/assets/main.scss` and prunes the result into
+   `ulwazi/theme/ulwazi/static/css/vanilla-main.css`; see "Compiled CSS size"
+   under Important Notes). If Vanilla's `vf-p-icons` gained or renamed an icon,
+   update the explicit icon list in `main.scss`
 4. If SCSS compilation fails, check the
    [Vanilla Framework changelog](https://github.com/canonical/vanilla-framework/blob/main/CHANGELOG.md)
    for breaking changes (renamed/removed mixins or settings) and update
@@ -298,8 +301,32 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
 ## Important Notes
 
 - **Virtual Environment**: Located at `.venv/`, managed automatically by [uv](https://docs.astral.sh/uv/) through Make targets
-- **Build Artifacts**: `build/`, `*.egg-info/`, `.venv/`, `docs/_build/` are gitignored
+- **Build Artifacts**: `*.egg-info/`, `.venv/`, `docs/_build/`, `dist/`, `node_modules/` are gitignored (`build/` is not)
 - **Node Modules**: Required for Vanilla Framework compilation
+- **Compiled CSS size** (added 2026-11-09): Read the Docs truncates large
+  static files, so `vanilla-main.css` must stay below 200,000 bytes
+  (`VANILLA_CSS_BUDGET` in `tests/test_assets_structure.py`).
+  `make vanilla-main` compiles with `--style=compressed --no-source-map` into
+  `node_modules/.cache/ulwazi/vanilla-main.unpruned.css`, then
+  `ulwazi/theme/ulwazi/assets/prune_vanilla.py` (stdlib only, so it runs
+  before `uv sync`) drops every selector requiring a class in Vanilla's
+  namespaces (`p-`, `u-`, `l-`, `is-`, `has-`, `row`/`col-*`/`grid-*`) that
+  no file under `ulwazi/` mentions as a whole word. Classes inside
+  `:not()/:is()/:where()/:has()` and attribute selectors are never required;
+  rules are never reordered or rewritten. A run-time-built class needs its
+  prefix in the source as a word ending in `-`/`_` (e.g. `p-notification--`
+  in `__init__.py`). Never write a bare namespace like `p-` in theme sources
+  (the fast test `test_vanilla_css_size_and_pruning` fails; it also fails if
+  the CSS wasn't rebuilt after a source change, or is over budget). The
+  pruner skips its own file by name. `main.scss` overrides `vf-p-icons` with
+  an empty mixin and renders each icon once after `_ulwazi.scss` (Vanilla's
+  `@include vanilla` already includes all icons; including them again
+  re-emits ~40 KB of data URIs). No source map is shipped;
+  `make vanilla-main-debug` builds a readable one under `node_modules/.cache/`.
+  `docs/preview_theme.py` recompiles when any theme source is newer than the
+  CSS. The compiled file starts with a UTF-8 BOM (Sass, non-ASCII content)
+  and is excluded from pre-commit hooks. Vanilla classes used only in page
+  content (raw HTML) are not shipped. Note: `build/` is NOT git-ignored.
 - **Auto-rebuild**: `make run` watches both content and theme changes. Changes to shared navigation toctrees may leave older pages with stale sidebars; use `make rebuild` to refresh the site when needed.
 - **Metadata/SEO**: `<title>` suffix, `rel="canonical"`, favicon link, and Open Graph tags
   (`og:title`, `og:description`, `og:image`, etc.) are all generated automatically via

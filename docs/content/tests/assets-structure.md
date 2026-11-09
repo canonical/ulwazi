@@ -1,9 +1,27 @@
 # Asset and structural tests
 
 `tests/test_assets_structure.py` checks rendered assets and theme controls
-that Sphinx does not validate. It has a fast offline check and a slow,
-advisory check of external resources. Both use representative pages, not a
-whole-site crawl.
+that Sphinx does not validate. It has two fast offline checks and a slow,
+advisory check of external resources. The rendered-site checks use
+representative pages, not a whole-site crawl.
+
+## Fast: compiled Vanilla CSS
+
+The `test_vanilla_css_size_and_pruning` case reads the committed
+`ulwazi/theme/ulwazi/static/css/vanilla-main.css`, without building the site
+or running Sass. It fails if:
+
+- the file is 200,000 bytes or larger (`VANILLA_CSS_BUDGET`): Read the Docs
+  truncates larger static files;
+- a theme source names a bare Vanilla namespace prefix such as `p-`, which
+  would stop the build from pruning that namespace;
+- pruning the file again for the current theme sources would change it, so
+  the CSS is stale: compiled without `make vanilla-main`, or not rebuilt
+  after a template, script or Python hook changed its Vanilla classes;
+- the file styles a Vanilla class that no theme source uses.
+
+It doesn't check how the remaining rules render; the browser tests do that.
+See {ref}`contribute-compiled-css` for how the build prunes the CSS.
 
 ## Fast: local assets and structure
 

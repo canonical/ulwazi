@@ -4,6 +4,7 @@ Sphinx already warns about unresolved source references. These checks instead
 follow URLs and controls after rendering, including on nested dirhtml pages.
 """
 
+import importlib.util
 import ipaddress
 import socket
 import warnings
@@ -577,3 +578,92 @@ def test_assets_structure_slow(built_site):
     """Warn on temporarily unreachable remote resources; do not gate releases."""
     with requests.Session() as session:
         _check_remote_inventory(_remote_assets(built_site), session)
+
+
+# Read the Docs truncates large static files; the compiled Vanilla CSS must
+# stay below this size (in bytes) to be served intact.
+VANILLA_CSS_BUDGET = 200_000
+VANILLA_CSS = REPO / "ulwazi/theme/ulwazi/static/css/vanilla-main.css"
+PRUNER = REPO / "ulwazi/theme/ulwazi/assets/prune_vanilla.py"
+
+
+def _load_pruner():
+    spec = importlib.util.spec_from_file_location("prune_vanilla", PRUNER)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _vanilla_classes(css: str, pruner) -> set[str]:
+    """Classes in Vanilla's namespaces that some selector of ``css`` requires."""
+    classes = set()
+    for rule in tinycss2.parse_stylesheet(
+        css, skip_comments=True, skip_whitespace=True
+    ):
+        rules = [rule]
+        if rule.type == "at-rule" and rule.content is not None:
+            rules = tinycss2.parse_rule_list(
+                rule.content, skip_comments=True, skip_whitespace=True
+            )
+        for inner in rules:
+            if inner.type != "qualified-rule":
+                continue
+            for selector in pruner.split_selectors(tinycss2.serialize(inner.prelude)):
+                classes.update(
+                    name
+                    for name in pruner._required_classes(selector)
+                    if pruner.NAMESPACE.match(name)
+                )
+    return classes
+
+
+def test_vanilla_css_size_and_pruning():
+    """The shipped Vanilla CSS is small, freshly pruned and keeps used classes.
+
+    ``make vanilla-main`` prunes the compiled CSS to the Vanilla classes used
+    by the theme sources (``assets/prune_vanilla.py``). Fail if:
+
+    - the file exceeds the Read the Docs size budget;
+    - a theme source names a bare namespace prefix such as ``p-`` (that would
+      make the pruner keep every Vanilla class);
+    - the file is not the pruner's output for the current sources (pruning
+      it again changes it), e.g. CSS compiled without ``make vanilla-main``,
+      or theme sources changed without recompiling;
+    - it styles a Vanilla class that no theme source uses.
+    """
+    pruner = _load_pruner()
+    raw = VANILLA_CSS.read_bytes()
+    css = raw.decode("utf-8-sig")
+    words, prefixes = pruner.vocabulary(REPO / "ulwazi")
+    errors = []
+    if len(raw) >= VANILLA_CSS_BUDGET:
+        errors.append(
+            f"{VANILLA_CSS.name} is {len(raw):,} bytes; the budget is "
+            f"{VANILLA_CSS_BUDGET:,} bytes (Read the Docs truncates larger files)"
+        )
+    if bare := sorted(p for p in prefixes if p.rstrip("-_") in pruner.NAMESPACE_ROOTS):
+        errors.append(
+            f"theme sources name bare namespace prefixes {bare}; the pruner would "
+            "keep every Vanilla class in them (reword, e.g. 'the p-* classes')"
+        )
+    stamp = pruner.STAMP.search(css)
+    if (
+        stamp is None
+        or stamp.group(1) != pruner.vocabulary_digest(words, prefixes)
+        or pruner.stamp(words, prefixes) + pruner.prune(css, words, prefixes)
+        != css.rstrip("\n")
+    ):
+        errors.append(
+            f"{VANILLA_CSS.name} is not pruned for the current theme sources; "
+            "run `make vanilla-main`"
+        )
+    unused = sorted(
+        name
+        for name in _vanilla_classes(css, pruner)
+        if name not in words and not name.startswith(tuple(prefixes))
+    )
+    if unused:
+        errors.append(f"styles Vanilla classes no theme source uses: {unused[:10]}")
+    assert not errors, "Vanilla CSS checks failed:\n  - " + "\n  - ".join(errors)
