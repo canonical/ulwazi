@@ -109,10 +109,10 @@ The compiled stylesheet
 Read the Docs truncates large static files, so ``vanilla-main.css`` must stay
 below 200 KB. ``make vanilla-main`` keeps it small in two steps:
 
-1. Sass compiles all of Vanilla and Ulwazi's SCSS, compressed and without a
+1. Sass compiles all of Vanilla Framework and Ulwazi's SCSS, compressed and without a
    source map.
 2. ``ulwazi/theme/ulwazi/assets/prune_vanilla.py`` removes the selectors for
-   Vanilla classes (``p-``, ``u-``, ``l-``, ``is-``, ``has-`` and the grid
+   Vanilla Framework classes (``p-``, ``u-``, ``l-``, ``is-``, ``has-`` and the grid
    classes) that no file under ``ulwazi/`` mentions. Other rules are kept
    unchanged and in the same order.
 
@@ -125,12 +125,19 @@ As a result:
   source as a word.
 - Don't write a bare namespace such as ``p-`` in theme sources (write "the
   ``p-*`` classes" instead): the build would keep every class in it.
-- Vanilla classes that only a project's own page content uses aren't shipped.
+- Vanilla Framework classes that only a project's own page content uses aren't shipped.
+  ``make vanilla-main`` writes the removed classes to
+  ``vanilla-main.css.removed-classes.json``, and the theme warns at build time
+  when a page's content uses one of them (``ulwazi_warn_removed_classes =
+  False`` in a project's ``conf.py`` silences it). See the
+  :ref:`configuration reference <pruned-vanilla-stylesheet>`.
 - To debug the CSS, run ``make vanilla-main-debug`` for a readable, unpruned
   build with a source map under ``node_modules/.cache/ulwazi/debug/``.
 
 The fast test ``test_vanilla_css_size_and_pruning`` fails if the committed CSS
 is over the size budget or wasn't rebuilt after a theme source changed.
+``test_removed_classes_manifest`` checks that the manifest matches the
+unpruned CSS and lists no class the shipped CSS still styles.
 
 Run checks
 ----------

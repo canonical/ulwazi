@@ -325,8 +325,41 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   `make vanilla-main-debug` builds a readable one under `node_modules/.cache/`.
   `docs/preview_theme.py` recompiles when any theme source is newer than the
   CSS. The compiled file starts with a UTF-8 BOM (Sass, non-ASCII content)
-  and is excluded from pre-commit hooks. Vanilla classes used only in page
-  content (raw HTML) are not shipped. Note: `build/` is NOT git-ignored.
+  and is excluded from pre-commit hooks. Vanilla Framework classes used only
+  in page content (raw HTML) are not shipped. Note: `build/` is NOT git-ignored.
+- **Removed-classes manifest and build-time warning** (added 2026-11-09):
+  `make vanilla-main` also writes
+  `ulwazi/theme/ulwazi/static/css/vanilla-main.css.removed-classes.json`
+  (sorted `classes` list + `vocabulary` digest) via the pruner's
+  `removed_classes()`. The name starts with `vanilla-main.css` so the
+  pruner's `vocabulary()` skips it on the next run (it lists every removed
+  class as a bare word — reading it would keep everything);
+  `docs/preview_theme.py` excludes it from its recompile inputs the same
+  way. `ulwazi/__init__.py` loads it once per build in
+  `_setup_removed_classes_check` (connected to `builder-inited`, so it also
+  runs when Ulwazi is selected only via `html_theme`) and
+  `_warn_removed_classes` (called from `_html_page_context` after the body
+  transforms) warns per page whose content uses a removed class, naming the
+  page and the classes and pointing at `html_css_files` or the pruner's
+  `KEEP` list. The warning is a normal Sphinx warning (fails `-W` builds);
+  `ulwazi_warn_removed_classes = False` in conf.py opts out. At
+  `build-finished` (just before Sphinx's "build succeeded"),
+  `_removed_classes_summary` prints a green Pass line ("Vanilla Framework
+  CSS size optimization check: Pass! No page detected in your docs using
+  any pruned styles." — `logger.info(..., color="green")`, bright green on
+  a TTY, plain when piped) when no page used a removed class, or a red
+  Fail recap ("Fail! N page(s) detected in your docs using pruned styles
+  (see the warnings above).", `color="red"`) when warnings fired; it stays
+  silent for non-HTML builders, failed builds, and opted-out configs. Covered by
+  `tests/test_config_robustness.py::test_warn_removed_classes`,
+  `::test_removed_classes_all_clear` and `::test_warn_removed_classes_opt_out`
+  (fixture pages with `p-card` vs the shipped `p-notification--positive`)
+  and `tests/test_assets_structure.py::test_removed_classes_manifest`
+  (manifest present, sorted, skipped by `vocabulary()`, consistent with the
+  unpruned CSS in the sass cache — skipped when the cache is absent — and
+  listing no class the shipped CSS still styles). Update
+  `docs/content/tests/index.md` counts and `tests/features.yaml` when
+  touching this area.
 - **Auto-rebuild**: `make run` watches both content and theme changes. Changes to shared navigation toctrees may leave older pages with stale sidebars; use `make rebuild` to refresh the site when needed.
 - **Metadata/SEO**: `<title>` suffix, `rel="canonical"`, favicon link, and Open Graph tags
   (`og:title`, `og:description`, `og:image`, etc.) are all generated automatically via

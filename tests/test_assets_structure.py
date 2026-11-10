@@ -6,6 +6,7 @@ follow URLs and controls after rendering, including on nested dirhtml pages.
 
 import importlib.util
 import ipaddress
+import json
 import socket
 import warnings
 from collections import Counter, defaultdict
@@ -667,3 +668,48 @@ def test_vanilla_css_size_and_pruning():
     if unused:
         errors.append(f"styles Vanilla classes no theme source uses: {unused[:10]}")
     assert not errors, "Vanilla CSS checks failed:\n  - " + "\n  - ".join(errors)
+
+
+REMOVED_CLASSES_MANIFEST = VANILLA_CSS.with_name(
+    "vanilla-main.css.removed-classes.json"
+)
+
+
+def test_removed_classes_manifest():
+    """The pruner ships a manifest of removed classes for the build-time check.
+
+    ``ulwazi_warn_removed_classes`` (see ``ulwazi/__init__.py``) loads it at
+    ``builder-inited`` and warns per page whose content uses a class whose
+    styles were pruned away. Fail if:
+
+    - the manifest is missing or not valid JSON with a sorted ``classes`` list;
+    - it disagrees with what pruning the unpruned CSS would remove (stale
+      manifest: run ``make vanilla-main``);
+    - it lists a class the shipped CSS still styles;
+    - the pruner would keep every class in the manifest on the next run
+      (vocabulary() must skip the manifest file itself).
+    """
+    pruner = _load_pruner()
+    manifest = json.loads(REMOVED_CLASSES_MANIFEST.read_text(encoding="utf-8"))
+    classes = manifest["classes"]
+    assert classes == sorted(classes), "manifest classes are not sorted"
+    words, prefixes = pruner.vocabulary(REPO / "ulwazi")
+    # vocabulary() must not read the manifest: it lists every removed class
+    # as a bare word, so reading it would keep them all on the next run.
+    assert not any(name in words for name in classes), (
+        "vocabulary() reads the manifest; the pruner would keep every class"
+    )
+    unpruned = REPO / "node_modules/.cache/ulwazi/vanilla-main.unpruned.css"
+    if not unpruned.is_file():
+        pytest.skip(
+            "run `make vanilla-main` first: the unpruned CSS is not in the "
+            "sass cache (fresh clone or cleaned node_modules)"
+        )
+    assert classes == pruner.removed_classes(
+        unpruned.read_text(encoding="utf-8-sig"), words, prefixes
+    ), "manifest is stale; run `make vanilla-main`"
+    shipped = _vanilla_classes(VANILLA_CSS.read_text(encoding="utf-8-sig"), pruner)
+    assert not sorted(set(classes) & shipped), (
+        "manifest lists classes the shipped CSS still styles: "
+        f"{sorted(set(classes) & shipped)[:10]}"
+    )

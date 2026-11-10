@@ -43,11 +43,17 @@ Uses only the Python standard library, so it runs before any project
 dependencies are installed.
 
 Usage: python prune_vanilla.py THEME_SOURCE_DIR INPUT.css OUTPUT.css
+
+Also writes OUTPUT.css.removed-classes.json: the Vanilla classes whose rules were
+removed. The theme loads it at build time and warns when a page uses one of
+those classes, so authors of raw HTML learn immediately that the class is not
+shipped (see ulwazi/__init__.py, _setup_removed_classes_check).
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import sys
 from collections.abc import Iterable, Iterator
@@ -271,6 +277,49 @@ def prune(css: str, words: set[str], prefixes: set[str]) -> str:
     return "".join(out)
 
 
+def removed_classes(css: str, words: set[str], prefixes: set[str]) -> list[str]:
+    """Vanilla classes whose every rule was pruned, sorted for a stable file."""
+    dropped: set[str] = set()
+
+    def scan(text: str) -> None:
+        nonlocal dropped
+        i = 0
+        while i < len(text):
+            if text[i].isspace():
+                i += 1
+                continue
+            if text.startswith("/*", i):
+                i = _skip_comment(text, i)
+                continue
+            if text[i] == "@":
+                stop = _find(text, i, "{;")
+                if stop >= len(text) or text[stop] == ";":
+                    i = stop + 1
+                    continue
+                end = _block_end(text, stop)
+                at_rule = re.match(r"@([\w-]+)", text[i:stop])
+                if at_rule and at_rule.group(1).lower() in GROUPING_AT_RULES:
+                    scan(text[stop + 1 : end])
+                i = end + 1
+                continue
+            stop = _find(text, i, "{")
+            end = _block_end(text, stop)
+            for selector in split_selectors(text[i:stop]):
+                if keep_selector(selector, words, prefixes):
+                    continue
+                for name in _required_classes(selector):
+                    if (
+                        NAMESPACE.match(name)
+                        and name not in words
+                        and not any(name.startswith(prefix) for prefix in prefixes)
+                    ):
+                        dropped.add(name)
+            i = end + 1
+
+    scan(css)
+    return sorted(dropped)
+
+
 def main(argv: list[str]) -> int:
     """Prune the compiled CSS ``argv[1]`` into ``argv[2]`` for theme ``argv[0]``."""
     try:
@@ -284,9 +333,19 @@ def main(argv: list[str]) -> int:
     words, prefixes = vocabulary(theme, outputs=[source, target])
     pruned = stamp(words, prefixes) + prune(css, words, prefixes)
     target.write_bytes(bom + pruned.encode("utf-8") + b"\n")
+    manifest = {
+        "classes": removed_classes(css, words, prefixes),
+        "vocabulary": vocabulary_digest(words, prefixes),
+    }
+    # Named with a "vanilla-main.css" prefix so vocabulary() skips it on
+    # the next run (it lists every removed class as a bare word).
+    target.with_name(target.name + ".removed-classes.json").write_text(
+        json.dumps(manifest, indent=1, sort_keys=True) + "\n", encoding="utf-8"
+    )
     print(
         f"Pruned unused Vanilla selectors: {len(raw):,} -> "
-        f"{len(bom) + len(pruned.encode('utf-8')) + 1:,} bytes"
+        f"{len(bom) + len(pruned.encode('utf-8')) + 1:,} bytes "
+        f"({len(manifest['classes'])} removed classes listed for build-time checks)"
     )
     return 0
 

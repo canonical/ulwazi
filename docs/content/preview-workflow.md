@@ -22,7 +22,8 @@ Then simply edit files. The preview reacts as follows:
 - **SCSS edits** (`ulwazi/theme/ulwazi/assets/**`) — the CSS is recompiled
   *before* Sphinx runs, so the preview always serves the fresh
   `vanilla-main.css`. Template, script and Python edits recompile it too,
-  because the build keeps only the Vanilla classes that theme sources use.
+  because the build keeps only the Vanilla Framework classes that theme
+  sources use.
 
 Reload the page in your browser to see the result; the server keeps running
 until you stop it with `Ctrl+C`.
@@ -45,7 +46,8 @@ Sphinx. The helper does three things:
    a Vanilla class (`.py`, `.html`, `.js`, `.css` and similar), is newer than
    the compiled `vanilla-main.css` (or the CSS file is missing), it runs
    `make vanilla-main` to recompile it. The compiled CSS keeps only the
-   Vanilla classes that theme sources use, so a template edit can change it.
+   Vanilla Framework classes that theme sources use, so a template edit can
+   change it.
    This guarantees that Sphinx copies a fresh stylesheet into the build
    output.
 2. **Theme digest** — it computes a SHA-256 hash over every file in the

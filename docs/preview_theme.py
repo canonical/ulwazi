@@ -32,7 +32,12 @@ def _sources() -> list[Path]:
         if path.is_file()
         and "__pycache__" not in path.parts
         and path.suffix not in {".pyc", ".pyo"}
-        and path.name not in {CSS.name, CSS.name + ".map"}
+        and path.name
+        not in {
+            CSS.name,
+            CSS.name + ".map",
+            CSS.name + ".removed-classes.json",
+        }
     )
 
 

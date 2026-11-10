@@ -22,6 +22,7 @@ import logging
 import os
 import re
 import shutil
+import weakref
 from pathlib import Path
 from typing import Any, cast
 
@@ -69,6 +70,10 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.add_config_value(
         "ulwazi_structured_toc_separator_color_dark", default="", rebuild="html"
     )
+    # Warn when a page uses a Vanilla class whose styles the pruned
+    # stylesheet does not ship (see prune_vanilla.py). Sphinx warnings fail
+    # builds that use --fail-on-warning; set to False to silence them.
+    app.add_config_value("ulwazi_warn_removed_classes", default=True, rebuild="html")
     # sphinx-notfound-page is a bundled dependency: the theme ships a 404
     # template, a 404.svg asset, and the prefix computation, so the
     # extension is activated by default. setup_extension is idempotent
@@ -93,7 +98,9 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     # Validate html_context["help_links"] once per build (not per page),
     # including when Ulwazi is selected only via html_theme.
     app.connect("builder-inited", _setup_help_links)  # pyright: ignore [reportUnknownMemberType]
+    app.connect("builder-inited", _setup_removed_classes_check)  # pyright: ignore [reportUnknownMemberType]
     app.connect("html-page-context", _html_page_context)  # pyright: ignore [reportUnknownMemberType]
+    app.connect("build-finished", _removed_classes_summary)  # pyright: ignore [reportUnknownMemberType]
 
     return {
         "version": "1.0.2",
@@ -871,6 +878,125 @@ def _build_breadcrumb_map(_app: Sphinx, context: dict[str, Any]) -> str:
     return json.dumps(breadcrumb_map)
 
 
+_REMOVED_CLASSES: "weakref.WeakKeyDictionary[Sphinx, frozenset[str]]" = (
+    weakref.WeakKeyDictionary()
+)
+# Pages that used removed Vanilla classes, per app, for the build summary.
+_REMOVED_CLASSES_PAGES: "weakref.WeakKeyDictionary[Sphinx, set[str]]" = (
+    weakref.WeakKeyDictionary()
+)
+
+
+def _setup_removed_classes_check(app: Sphinx) -> None:
+    """Load the pruned stylesheet's list of removed Vanilla classes, once.
+
+    ``make vanilla-main`` writes ``vanilla-main.removed-classes.json`` next
+    to the compiled CSS (see ``assets/prune_vanilla.py``). If a page then
+    uses one of those classes in its content, the class renders unstyled:
+    the stylesheet ships only the Vanilla classes that the theme itself
+    uses. Warn per page so authors of raw HTML find out at build time
+    instead of after publishing. Connected to ``builder-inited`` (like
+    :func:`_copy_pdf_assets`) so it also runs when Ulwazi is selected only
+    via ``html_theme``.
+    """
+    if not app.config.ulwazi_warn_removed_classes:
+        _REMOVED_CLASSES[app] = frozenset()
+        return
+    css_dir = Path(__file__).parent / "theme/ulwazi/static/css"
+    manifest_path = css_dir / "vanilla-main.css.removed-classes.json"
+    try:
+        data: object = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        logger.warning(
+            "could not read %s (%s); the removed-classes check is disabled",
+            manifest_path.name,
+            error,
+            type="ulwazi",
+            subtype="removed_classes",
+        )
+        _REMOVED_CLASSES[app] = frozenset()
+        return
+    manifest: dict[str, object] = (
+        cast("dict[str, object]", data) if isinstance(data, dict) else {}
+    )
+    names = manifest.get("classes")
+    if not isinstance(names, list) or not all(
+        isinstance(name, str) for name in cast("list[object]", names)
+    ):
+        logger.warning(
+            "%s has no usable classes list; the removed-classes check is disabled",
+            manifest_path.name,
+            type="ulwazi",
+            subtype="removed_classes",
+        )
+        _REMOVED_CLASSES[app] = frozenset()
+        return
+    _REMOVED_CLASSES[app] = frozenset(cast("list[str]", names))
+
+
+def _warn_removed_classes(app: Sphinx, pagename: str, body_html: str) -> None:
+    """Warn once per page about Vanilla classes the stylesheet doesn't ship."""
+    classes = _REMOVED_CLASSES.get(app)
+    if not classes:
+        return
+    soup = BeautifulSoup(body_html, "html.parser")
+    used = {
+        name
+        for tag in soup.find_all(class_=True)
+        for name in cast(AttributeValueList, tag.get("class"))
+        if name in classes
+    }
+    # Record the scan itself, so the build summary can tell an all-clear
+    # HTML build from a build where no page was ever rendered (e.g. LaTeX).
+    pages = _REMOVED_CLASSES_PAGES.setdefault(app, set())
+    if used:
+        logger.warning(
+            "page %s uses Vanilla Framework classes that the Ulwazi theme "
+            "pruned for size optimization. The following classes render "
+            "unstyled: %s. Add custom CSS via html_css_files, or ask the "
+            "Ulwazi maintainers to add the classes to KEEP in the Ulwazi "
+            "theme's assets/prune_vanilla.py.",
+            pagename,
+            ", ".join(sorted(used)),
+            type="ulwazi",
+            subtype="removed_classes",
+        )
+        pages.add(pagename)
+
+
+def _removed_classes_summary(app: Sphinx, exception: BaseException | None) -> None:
+    """Print a green Pass (or a red Fail recap) near the end of the build.
+
+    Connected to ``build-finished``: fires after the last page is written
+    and just before Sphinx prints its own final status, so the summary
+    lands close to the end of the build output. Only runs for successful
+    HTML builds; a failed build (``exception`` set) has bigger problems.
+    """
+    if exception is not None:
+        return
+    if not app.config.ulwazi_warn_removed_classes:
+        return
+    pages = _REMOVED_CLASSES_PAGES.get(app)
+    if pages is None:
+        # No page was rendered through the check: a non-HTML builder (the
+        # scan runs from html-page-context) or the manifest failed to load.
+        return
+    if pages:
+        logger.info(
+            "Vanilla Framework CSS size optimization check: Fail! "
+            "%d page(s) detected in your docs using pruned styles "
+            "(see the warnings above).",
+            len(pages),
+            color="red",
+        )
+    else:
+        logger.info(
+            "Vanilla Framework CSS size optimization check: Pass! "
+            "No page detected in your docs using any pruned styles.",
+            color="green",
+        )
+
+
 def _html_page_context(
     app: Sphinx,
     pagename: str,
@@ -898,3 +1024,4 @@ def _html_page_context(
         context["body"] = apply_admonition_classes(context["body"])
         context["body"] = modify_inline_code(context["body"])
         context["body"] = convert_tabs(context["body"])
+        _warn_removed_classes(app, pagename, context["body"])
