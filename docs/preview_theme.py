@@ -11,6 +11,17 @@ THEME = ROOT / "ulwazi"
 SCSS = THEME / "theme/ulwazi/assets"
 CSS = THEME / "theme/ulwazi/static/css/vanilla-main.css"
 STATE = DOCS / "_build/.preview-theme-digest"
+# File types that prune_vanilla.py scans for used Vanilla classes.
+CLASS_SOURCE_SUFFIXES = {
+    ".py",
+    ".html",
+    ".js",
+    ".scss",
+    ".css",
+    ".toml",
+    ".json",
+    ".txt",
+}
 
 
 def _sources() -> list[Path]:
@@ -21,7 +32,12 @@ def _sources() -> list[Path]:
         if path.is_file()
         and "__pycache__" not in path.parts
         and path.suffix not in {".pyc", ".pyo"}
-        and path.name not in {CSS.name, CSS.name + ".map"}
+        and path.name
+        not in {
+            CSS.name,
+            CSS.name + ".map",
+            CSS.name + ".removed-classes.json",
+        }
     )
 
 
@@ -34,14 +50,22 @@ def _digest(paths: Iterable[Path]) -> str:
 
 
 def prepare() -> None:
-    """Compile changed SCSS, then invalidate only theme-dependent HTML output."""
-    scss = list(SCSS.rglob("*.scss"))
+    """Compile changed SCSS, then invalidate only theme-dependent HTML output.
+
+    The compiled CSS is pruned to the Vanilla classes that theme sources use
+    (``assets/prune_vanilla.py``), so a newer template, script or Python
+    module can also require a recompile, not only a newer SCSS file.
+    """
+    sources = _sources()
+    inputs = [
+        *SCSS.rglob("*.scss"),
+        *(path for path in sources if path.suffix in CLASS_SOURCE_SUFFIXES),
+    ]
     if not CSS.is_file() or any(
-        path.stat().st_mtime_ns > CSS.stat().st_mtime_ns for path in scss
+        path.stat().st_mtime_ns > CSS.stat().st_mtime_ns for path in inputs
     ):
         subprocess.run(["make", "vanilla-main"], cwd=ROOT, check=True)
 
-    sources = _sources()
     current = _digest(sources)
     previous = STATE.read_text(encoding="ascii") if STATE.is_file() else None
     if previous != current:

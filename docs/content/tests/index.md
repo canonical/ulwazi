@@ -25,13 +25,13 @@ assertions inside one grouped case do not.
 * - 2\. Smoke
   - `test_smoke.py` (**1 fast**, {doc}`details <smoke>`) — home-page content, header/navigation/footer, skip link, active Home link, and no visible template delimiters.
 * - 3\. Assets and structure
-  - `test_assets_structure.py` (**1 fast, 1 slow**, {doc}`details <assets-structure>`) — representative built assets and theme controls; the slow remote-asset probe reports availability **advisorially**, not as a release gate.
+  - `test_assets_structure.py` (**3 fast, 1 slow**, {doc}`details <assets-structure>`) — representative built assets and theme controls; the compiled Vanilla Framework CSS is below the 200 KB Read the Docs budget, freshly pruned for the current theme sources and styles no unused Vanilla class; the pruner's removed-classes manifest is present, sorted, skipped by the vocabulary scan, consistent with the unpruned CSS and lists no class the shipped CSS still styles; the slow remote-asset probe reports availability **advisorially**, not as a release gate.
 
     `test_seo_metadata.py` (**1 fast**, {doc}`details <seo-metadata>`) — titles, descriptions, canonical URLs, favicons and Open Graph tags on three sample pages, including overrides.
 
     `test_layout_smoke.py` (**1 fast**) — every built page's article is inside the docs main column.
 * - 4\. Features and regressions
-  - `test_config_robustness.py` (**34 fast**) — four Read the Docs branch-selection cases; one grouped case for minimal, default, depth, legacy, maximum and fallback configuration; one footer-defaults case (unset, partial, and explicit `footer` values); ten parametrized invalid `help_links` cases plus one theme-only loading case for the Get help panel; eleven MyST compatibility-default cases: restored defaults in both extension orders, explicit empty/custom/singleton preservation, override precedence, repeated/incremental build isolation, and the parser-absent and theme-only loading limits; and six default-`html_title` cases: the clean computed default (regression baseline, plain, with release, suffix tied to the project name) and explicit conf.py/CLI settings preserved.
+  - `test_config_robustness.py` (**37 fast**) — four Read the Docs branch-selection cases; one grouped case for minimal, default, depth, legacy, maximum and fallback configuration; one footer-defaults case (unset, partial, and explicit `footer` values); ten parametrized invalid `help_links` cases plus one theme-only loading case for the Get help panel; eleven MyST compatibility-default cases: restored defaults in both extension orders, explicit empty/custom/singleton preservation, override precedence, repeated/incremental build isolation, and the parser-absent and theme-only loading limits; six default-`html_title` cases: the clean computed default (regression baseline, plain, with release, suffix tied to the project name) and explicit conf.py/CLI settings preserved; and three removed-classes cases: a page using a pruned Vanilla class (e.g. `p-card`) warns with the page name while a shipped class (`p-notification--positive`) does not, a clean build ends with the green all-clear summary line, and `ulwazi_warn_removed_classes = False` silences both the warnings and the summary.
 
     `test_features.py` (**7 fast, 1 slow**, {doc}`details <features>`) — grouped theme markup (TOCs, tabs, headings, admonitions including list-item code/tip adjacency, lists, tables, code, search mapping, Get help panel); six banner project-link cases (unset/empty/configured product website, HTML/directory HTML, custom root and nested/generated pages); and browser journeys (consent, navigation, drawer, tabs, copy, theme, search).
 
@@ -62,7 +62,7 @@ assertions inside one grouped case do not.
     `test_test_reporting.py` (**11 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, and the live time-left estimate.
 ```
 
-**Full selection:** 132 cases across 20 modules (103 fast, 29 slow); each case
+**Full selection:** 137 cases across 20 modules (108 fast, 29 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and

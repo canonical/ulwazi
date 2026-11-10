@@ -181,6 +181,8 @@ exclude = [
     "docs/_build",
     # Same for the run-default build output (see docs/Makefile).
     "docs/_dev",
+    # Git-ignored test and analysis output (mypy excludes it too).
+    "results",
 ]
 
 [tool.mypy]

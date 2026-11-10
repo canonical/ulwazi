@@ -160,6 +160,131 @@ def _check_minimal(output: Path) -> None:
     ), "Pages without feedback still need a mobile navigation opener"
 
 
+def test_warn_removed_classes(tmp_path: Path) -> None:
+    """Pages using Vanilla classes the pruned stylesheet drops are flagged.
+
+    ``make vanilla-main`` prunes the compiled CSS to the Vanilla classes the
+    theme itself uses and writes the rest to a manifest
+    (``vanilla-main.css.removed-classes.json``). The theme warns at build
+    time when page content uses one of those classes, so authors of raw
+    HTML learn immediately that the class renders unstyled instead of
+    after publishing. ``ulwazi_warn_removed_classes = False`` opts out.
+    """
+    source = tmp_path / "src"
+    source.mkdir()
+    (source / "conf.py").write_text(
+        'extensions = ["ulwazi"]\nhtml_theme = "ulwazi"\n',
+        encoding="utf-8",
+    )
+    (source / "index.rst").write_text(
+        "Removed-classes fixture\n" + "=" * 23 + "\n\n"
+        ".. raw:: html\n\n"
+        '   <div class="p-card">Card</div>\n'
+        '   <div class="p-notification--positive">Kept</div>\n',
+        encoding="utf-8",
+    )
+    warnings = io.StringIO()
+    status_io = io.StringIO()
+    with patch_docutils(str(source)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(source),
+            confdir=str(source),
+            outdir=str(tmp_path / "_build"),
+            doctreedir=str(tmp_path / "_doctrees"),
+            buildername="html",
+            status=status_io,
+            warning=warnings,
+        )
+        app.build()
+    assert app.statuscode == 0
+    text = warnings.getvalue()
+    assert "p-card" in text, (
+        f"A page using the pruned class p-card must warn; got:\n{text}"
+    )
+    assert "index" in text, "The warning must name the page"
+    assert "p-notification--positive" not in text, (
+        "p-notification--positive is shipped; it must not warn"
+    )
+    status = status_io.getvalue()
+    assert "CSS size optimization check: Fail! 1 page(s) detected" in status, (
+        f"The build must end with a recap of the affected pages; got:\n{status[-400:]}"
+    )
+    assert "Pass! No page detected" not in status, (
+        "The green all-clear must not appear when a page used a removed class"
+    )
+
+
+def test_warn_removed_classes_opt_out(tmp_path: Path) -> None:
+    """``ulwazi_warn_removed_classes = False`` silences the warning."""
+    source = tmp_path / "src"
+    source.mkdir()
+    (source / "conf.py").write_text(
+        'extensions = ["ulwazi"]\n'
+        'html_theme = "ulwazi"\n'
+        "ulwazi_warn_removed_classes = False\n",
+        encoding="utf-8",
+    )
+    (source / "index.rst").write_text(
+        "Opt-out fixture\n" + "=" * 14 + "\n\n"
+        ".. raw:: html\n\n"
+        '   <div class="p-card">Card</div>\n',
+        encoding="utf-8",
+    )
+    warnings = io.StringIO()
+    with patch_docutils(str(source)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(source),
+            confdir=str(source),
+            outdir=str(tmp_path / "_build"),
+            confoverrides={"ulwazi_warn_removed_classes": False},
+            doctreedir=str(tmp_path / "_doctrees"),
+            buildername="html",
+            status=io.StringIO(),
+            warning=warnings,
+        )
+        app.build()
+    assert app.statuscode == 0
+    assert "p-card" not in warnings.getvalue(), (
+        f"The opt-out must silence the warning; got:\n{warnings.getvalue()}"
+    )
+
+
+def test_removed_classes_all_clear(tmp_path: Path) -> None:
+    """A clean build ends with the green all-clear summary line."""
+    source = tmp_path / "src"
+    source.mkdir()
+    (source / "conf.py").write_text(
+        'extensions = ["ulwazi"]\nhtml_theme = "ulwazi"\n',
+        encoding="utf-8",
+    )
+    (source / "index.rst").write_text(
+        "All-clear fixture\n" + "=" * 17 + "\n\n"
+        ".. raw:: html\n\n"
+        '   <div class="p-notification--positive">Kept</div>\n',
+        encoding="utf-8",
+    )
+    warnings = io.StringIO()
+    status_io = io.StringIO()
+    with patch_docutils(str(source)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(source),
+            confdir=str(source),
+            outdir=str(tmp_path / "_build"),
+            doctreedir=str(tmp_path / "_doctrees"),
+            buildername="html",
+            status=status_io,
+            warning=warnings,
+        )
+        app.build()
+    assert app.statuscode == 0
+    assert not warnings.getvalue(), f"Unexpected warnings:\n{warnings.getvalue()}"
+    status = status_io.getvalue()
+    assert "CSS size optimization check: Pass! No page detected" in status, (
+        f"A clean build must end with the green all-clear line; got:\n{status[-400:]}"
+    )
+    assert "Fail!" not in status
+
+
 def _check_default_footer(output: Path) -> None:
     """Without footer configuration, the documented defaults render."""
     footer = _page(output).select_one('footer nav[aria-label="Footer"]')

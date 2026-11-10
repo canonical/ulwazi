@@ -42,6 +42,14 @@ see [Switch to the Ulwazi theme](https://documentation.ubuntu.com/sphinx-stack/l
 
 ## Configuration notes
 
+### Vanilla Framework classes in your own content
+
+To stay below the file size that Read the Docs serves intact, Ulwazi ships
+only the [Vanilla Framework](https://vanillaframework.io/) styles that the
+theme itself uses. If your pages contain raw HTML with other Vanilla Framework
+classes (for example `p-card` or `p-chip`), they render unstyled, and the build
+warns you about it. Add your own CSS for them with Sphinx's `html_css_files`.
+
 ### Metadata and SEO
 
 Ulwazi's templates render the page `<title>`, a canonical link when
@@ -182,7 +190,10 @@ To upgrade it to a newer version:
    ```
 
    This runs `npm install` and compiles `ulwazi/theme/ulwazi/assets/main.scss` to
-   `ulwazi/theme/ulwazi/static/css/vanilla-main.css`.
+   `ulwazi/theme/ulwazi/static/css/vanilla-main.css`. The output is compressed
+   and pruned to the Vanilla Framework classes that the theme uses, so it stays below the
+   200 KB that Read the Docs serves intact; see
+   [the compiled stylesheet](https://documentation.ubuntu.com/ulwazi/content/contribute/#contribute-compiled-css).
 
    If the compilation fails, consult the
    [Vanilla Framework changelog](https://github.com/canonical/vanilla-framework/blob/main/CHANGELOG.md)
@@ -199,6 +210,8 @@ To upgrade it to a newer version:
    Additionally, check the sample documentation in a browser (`make run`) for visual
    regressions, especially on the
    [cheat sheet pages](docs/content/) that exercise most theme components.
+   If Vanilla's own `@mixin vanilla` gained or renamed an icon, also update the
+   icon list in `main.scss`, which renders the icons once.
 
 Both `package.json` and `package-lock.json` are tracked in git, so commit the
 updated lock file together with the version bump.

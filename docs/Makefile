@@ -64,7 +64,6 @@ run: install
 	  --host $(SPHINX_HOST) --port $(SPHINX_PORT) \
 	  --watch ../ulwazi \
 	  --ignore ../ulwazi/theme/ulwazi/static/css/vanilla-main.css \
-	  --ignore ../ulwazi/theme/ulwazi/static/css/vanilla-main.css.map \
 	  --pre-build '$(abspath $(DOCS_VENVDIR))/bin/python preview_theme.py' \
 	  "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS)
 
@@ -84,7 +83,6 @@ run-default: install
 	  --host $(SPHINX_HOST) --port $(SPHINX_PORT) \
 	  --watch ../ulwazi \
 	  --ignore ../ulwazi/theme/ulwazi/static/css/vanilla-main.css \
-	  --ignore ../ulwazi/theme/ulwazi/static/css/vanilla-main.css.map \
 	  --pre-build '$(abspath $(DOCS_VENVDIR))/bin/python preview_theme.py' \
 	  -c $(DEV_DIR)/default-conf \
 	  "$(DOCS_SOURCEDIR)" "$(DEV_DIR)/build-default" \

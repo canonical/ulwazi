@@ -1,9 +1,62 @@
 # Asset and structural tests
 
 `tests/test_assets_structure.py` checks rendered assets and theme controls
-that Sphinx does not validate. It has a fast offline check and a slow,
-advisory check of external resources. Both use representative pages, not a
-whole-site crawl.
+that Sphinx does not validate. It has three fast offline checks and a slow,
+advisory check of external resources. The rendered-site checks use
+representative pages, not a whole-site crawl.
+
+## Fast: compiled Vanilla Framework CSS
+
+The `test_vanilla_css_size_and_pruning` case reads the committed
+`ulwazi/theme/ulwazi/static/css/vanilla-main.css`, without building the site
+or running Sass. It fails if:
+
+- the file is 200,000 bytes or larger (`VANILLA_CSS_BUDGET`): Read the Docs
+  truncates larger static files;
+- a theme source names a bare Vanilla Framework namespace prefix such as `p-`, which
+  would stop the build from pruning that namespace;
+- pruning the file again for the current theme sources would change it, so
+  the CSS is stale: compiled without `make vanilla-main`, or not rebuilt
+  after a template, script or Python hook changed its Vanilla classes;
+- the file styles a Vanilla Framework class that no theme source uses.
+
+It doesn't check how the remaining rules render; the browser tests do that.
+See {ref}`contribute-compiled-css` for how the build prunes the CSS.
+
+### Removed-classes manifest
+
+The pruner also writes `vanilla-main.css.removed-classes.json`, the list of
+Vanilla Framework classes whose styles were removed. The theme reads it to
+warn about pages that use those classes (see
+{ref}`pruned-vanilla-stylesheet`). The `test_removed_classes_manifest` case
+fails if:
+
+- the manifest is missing, not valid JSON, or its `classes` list is unsorted;
+- the pruner's vocabulary scan reads the manifest (it would then keep every
+  listed class on the next run);
+- the manifest differs from what pruning the unpruned CSS removes, so it is
+  stale: run `make vanilla-main`;
+- it lists a class the shipped CSS still styles.
+
+The staleness comparison needs the Sass output in `node_modules/.cache/ulwazi/`.
+The case is skipped, not failed, when that cache is absent (fresh clone or
+cleaned `node_modules`); run `make vanilla-main` to enable it.
+
+### Build-time warning and summary
+
+Three cases in `tests/test_config_robustness.py` build tiny generated sites
+with raw HTML and check what the theme reports:
+
+| Case | Page content | Expected |
+| --- | --- | --- |
+| `test_warn_removed_classes` | `p-card` (pruned) and `p-notification--positive` (shipped) | A warning naming the page and `p-card` only, plus the red `Fail!` summary |
+| `test_removed_classes_all_clear` | `p-notification--positive` only | No warnings and the green `Pass!` summary |
+| `test_warn_removed_classes_opt_out` | `p-card` with `ulwazi_warn_removed_classes = False` | No warning and no summary line |
+
+The assertions match the page name, class names and the `Pass!`/`Fail!`
+markers, not the full message text, so rewording the advice doesn't break
+them. Run them with
+`uv run pytest tests/test_config_robustness.py -k removed_classes`.
 
 ## Fast: local assets and structure
 

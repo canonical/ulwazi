@@ -82,7 +82,12 @@ Use this table to find the files and checks that usually apply:
    * - SCSS
      - Edit ``ulwazi/theme/ulwazi/assets/``. The preview compiles changed SCSS;
        run ``make vanilla-main`` to compile it explicitly. Commit
-       ``ulwazi/theme/ulwazi/static/css/vanilla-main.css`` and its map.
+       ``ulwazi/theme/ulwazi/static/css/vanilla-main.css``. See
+       :ref:`contribute-compiled-css`.
+   * - A Vanilla class in a template, script or Python hook
+     - Run ``make vanilla-main`` and commit the CSS: the build only keeps the
+       Vanilla classes that theme sources mention. See
+       :ref:`contribute-compiled-css`.
    * - Rendered markup or theme features
      - Update both :ref:`reST <rst_ref>` and :ref:`MyST <myst-ref>` cheat sheets
        when equivalent syntax exists. Add a test assertion and follow
@@ -95,6 +100,44 @@ Use this table to find the files and checks that usually apply:
        :ref:`test inventory <test-inventory>` when collected cases change.
    * - Documentation only
      - Run ``make docs`` and check the changed pages in the preview.
+
+.. _contribute-compiled-css:
+
+The compiled stylesheet
+***********************
+
+Read the Docs truncates large static files, so ``vanilla-main.css`` must stay
+below 200 KB. ``make vanilla-main`` keeps it small in two steps:
+
+1. Sass compiles all of Vanilla Framework and Ulwazi's SCSS, compressed and without a
+   source map.
+2. ``ulwazi/theme/ulwazi/assets/prune_vanilla.py`` removes the selectors for
+   Vanilla Framework classes (``p-``, ``u-``, ``l-``, ``is-``, ``has-`` and the grid
+   classes) that no file under ``ulwazi/`` mentions. Other rules are kept
+   unchanged and in the same order.
+
+As a result:
+
+- A Vanilla class that you add to a template, a script or a Python hook gets
+  its styles only after you run ``make vanilla-main``. Write the full class
+  name somewhere in the sources. For a class that is built at run time from a
+  prefix, such as ``f"p-notification--{kind}"``, the prefix must appear in the
+  source as a word.
+- Don't write a bare namespace such as ``p-`` in theme sources (write "the
+  ``p-*`` classes" instead): the build would keep every class in it.
+- Vanilla Framework classes that only a project's own page content uses aren't shipped.
+  ``make vanilla-main`` writes the removed classes to
+  ``vanilla-main.css.removed-classes.json``, and the theme warns at build time
+  when a page's content uses one of them (``ulwazi_warn_removed_classes =
+  False`` in a project's ``conf.py`` silences it). See the
+  :ref:`configuration reference <pruned-vanilla-stylesheet>`.
+- To debug the CSS, run ``make vanilla-main-debug`` for a readable, unpruned
+  build with a source map under ``node_modules/.cache/ulwazi/debug/``.
+
+The fast test ``test_vanilla_css_size_and_pruning`` fails if the committed CSS
+is over the size budget or wasn't rebuilt after a theme source changed.
+``test_removed_classes_manifest`` checks that the manifest matches the
+unpruned CSS and lists no class the shipped CSS still styles.
 
 Run checks
 ----------

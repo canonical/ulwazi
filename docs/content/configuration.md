@@ -57,6 +57,10 @@ These are set directly in `conf.py`.
     - `""`
     - Same as above, for the dark theme (default: white).
 *
+    - `ulwazi_warn_removed_classes`
+    - `True`
+    - Ulwazi ships a pruned Vanilla Framework stylesheet (see below) and warns at build time when a page's content uses a Vanilla Framework class whose styles were pruned away. Set to `False` to silence the warning.
+*
     - `highlight_language`
     - `"none"`
     - Sphinx's fallback language for code blocks without an explicit language. Ulwazi defaults it to `"none"` (plain, unhighlighted code) when unset in `conf.py` or on the command line.
@@ -112,6 +116,76 @@ If Ulwazi is selected only through `html_theme` (without `"ulwazi"` in
 command-line option -- use `conf.py` instead. The same restriction already
 applies to `notfound_enabled`; see above.
 ```
+
+(pruned-vanilla-stylesheet)=
+### Pruned Vanilla Framework stylesheet
+
+Read the Docs truncates large static files, so the compiled Vanilla
+Framework stylesheet (`vanilla-main.css`) is pruned at build time to the
+Vanilla Framework classes that Ulwazi's own templates and scripts use (see
+`assets/prune_vanilla.py`). A page that uses a Vanilla Framework class the
+pruned stylesheet no longer ships -- for example a raw-HTML `p-card` -- renders
+that element unstyled: no error, no console message, just missing styles.
+
+To make this visible, `make vanilla-main` also writes a manifest of the
+removed classes (`vanilla-main.css.removed-classes.json`), and the theme
+warns at build time when a page's content uses one of them:
+
+```text
+WARNING: page <docname> uses Vanilla Framework classes that the Ulwazi
+theme pruned for size optimization. The following classes render unstyled:
+<class1>, <class2>. Add custom CSS via html_css_files, or ask the
+Ulwazi maintainers to add the classes to KEEP in the Ulwazi theme's
+assets/prune_vanilla.py.
+```
+
+The warning is a normal Sphinx warning: it shows in the build output and
+fails builds that use `--fail-on-warning`. To use such a class anyway,
+either add the styles yourself via `html_css_files`, or ask for the class
+to be kept in the theme's `KEEP` list. Set
+`ulwazi_warn_removed_classes = False` in `conf.py` to silence the warning
+(for example while migrating content that knowingly uses unshipped
+classes).
+
+#### What the check does
+
+For every page, the theme scans the rendered body HTML (after its own
+transformations) for `class` attributes naming any class in the manifest.
+Only classes in Vanilla Framework's namespaces (`p-`, `u-`, `l-`, `is-`, `has-`,
+`row`/`col`/`grid`) can be listed; a class the stylesheet still ships is
+never reported. The check runs once per page, so a class used on many
+pages warns once per page that uses it.
+
+#### What to expect in the build output
+
+Near the end of the build (just before Sphinx's own final status), the
+check prints a one-line summary. There are three possible outcomes:
+
+**Pass** (green) -- every page is clean:
+
+```text
+Vanilla Framework CSS size optimization check: Pass! No page detected in your docs using any pruned styles.
+```
+
+**Fail** (red) -- one or more pages use pruned styles; each of them also
+gets the per-page `WARNING` shown above:
+
+```text
+Vanilla Framework CSS size optimization check: Fail! 2 page(s) detected in your docs using pruned styles (see the warnings above).
+```
+
+**No summary line** -- the check did not run or is silenced:
+
+- `ulwazi_warn_removed_classes = False` (opt-out; no warnings either),
+- a non-HTML builder (for example LaTeX/PDF; the scan runs per HTML page),
+- the build failed for another reason, or
+- the manifest could not be read (a `WARNING` names the file at build
+  start and the check is disabled).
+
+The summary is informational (INFO level): it never fails a build by
+itself. The per-page warnings are what fail `--fail-on-warning` builds.
+With `ulwazi_warn_removed_classes = False`, neither the warnings nor the
+summary line appear.
 
 ### MyST syntax defaults
 
