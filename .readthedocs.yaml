@@ -15,6 +15,7 @@ build:
   os: ubuntu-24.04
   tools:
     python: "3.12"
+    nodejs: "22"
   jobs:
     post_checkout:
       - git fetch --tags --unshallow # Also fetch tags
@@ -28,7 +29,10 @@ build:
       - make setup-docs DOCS_VENVDIR="${READTHEDOCS_VIRTUALENV_PATH}" UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}"
     build:
       html:
-        - make docs DOCS_VENVDIR="${READTHEDOCS_VIRTUALENV_PATH}" UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" DOCS_BUILDDIR="$READTHEDOCS_OUTPUT/html/"
+        - make -C docs html DOCS_VENVDIR="${READTHEDOCS_VIRTUALENV_PATH}" UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" DOCS_BUILDDIR="$READTHEDOCS_OUTPUT/html/"
+    post_build:
+      - npx --yes purgecss --css "$READTHEDOCS_OUTPUT/html/_static/css/vanilla-main.css" --content "$READTHEDOCS_OUTPUT/html/**/*.html" "$READTHEDOCS_OUTPUT/html/_static/**/*.js" --output "$READTHEDOCS_OUTPUT/html/_static/css/"
+      - npx --yes lightningcss-cli --minify --output-dir "$READTHEDOCS_OUTPUT/html/_static/css/" "$READTHEDOCS_OUTPUT/html/_static/css/"*.css
 
 formats:
   - pdf

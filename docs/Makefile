@@ -93,6 +93,12 @@ run-default: install
 # Does not depend on $(DOCS_BUILDDIR) to rebuild properly at every run.
 html: install
 	. $(DOCS_VENV); $(SPHINX_BUILD) --fail-on-warning --keep-going -b dirhtml "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" -w $(DEV_DIR)/warnings.txt $(SPHINX_OPTS)
+	$(MAKE) --no-print-directory optimize-css
+
+.PHONY: optimize-css
+optimize-css:
+	npx --yes purgecss --css "$(DOCS_BUILDDIR)/_static/css/vanilla-main.css" --content "$(DOCS_BUILDDIR)/**/*.html" "$(DOCS_BUILDDIR)/_static/**/*.js" --output "$(DOCS_BUILDDIR)/_static/css/"
+	npx --yes lightningcss-cli --minify --output-dir "$(DOCS_BUILDDIR)/_static/css/" "$(DOCS_BUILDDIR)/_static/css/"*.css
 
 epub: install
 	. $(DOCS_VENV); $(SPHINX_BUILD) -b epub "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" -w $(DEV_DIR)/warnings.txt $(SPHINX_OPTS)
