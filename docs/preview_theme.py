@@ -1,4 +1,4 @@
-"""Prepare changed theme assets before sphinx-autobuild renders the preview."""
+"""Prepare changed theme assets before sphinx-autobuild renders the local preview."""
 
 import hashlib
 import subprocess

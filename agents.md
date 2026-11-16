@@ -305,7 +305,8 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
 - **Node Modules**: Required for Vanilla Framework compilation
 - **Compiled CSS size** (added 2026-11-09): Read the Docs truncates large
   static files, so `vanilla-main.css` must stay below 200,000 bytes
-  (`VANILLA_CSS_BUDGET` in `tests/test_assets_structure.py`).
+   (`STATIC_ASSET_SIZE_BUDGET_BYTES` in `tests/test_assets_structure.py`, a
+   per-file static asset budget currently enforced only for this stylesheet).
   `make vanilla-main` compiles with `--style=compressed --no-source-map` into
   `node_modules/.cache/ulwazi/vanilla-main.unpruned.css`, then
   `ulwazi/theme/ulwazi/assets/prune_vanilla.py` (stdlib only, so it runs

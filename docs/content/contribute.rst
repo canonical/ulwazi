@@ -81,12 +81,12 @@ Use this table to find the files and checks that usually apply:
        inspect the affected pages in ``make run``.
    * - SCSS
      - Edit ``ulwazi/theme/ulwazi/assets/``. The preview compiles changed SCSS;
-       run ``make vanilla-main`` to compile it explicitly. Commit
-       ``ulwazi/theme/ulwazi/static/css/vanilla-main.css``. See
+       run ``make vanilla-main`` to compile it explicitly. Commit the CSS
+       and removed-classes manifest. See
        :ref:`contribute-compiled-css`.
    * - A Vanilla class in a template, script or Python hook
-     - Run ``make vanilla-main`` and commit the CSS: the build only keeps the
-       Vanilla classes that theme sources mention. See
+     - Run ``make vanilla-main`` and commit the CSS and removed-classes
+       manifest. See
        :ref:`contribute-compiled-css`.
    * - Rendered markup or theme features
      - Update both :ref:`reST <rst_ref>` and :ref:`MyST <myst-ref>` cheat sheets
@@ -106,38 +106,32 @@ Use this table to find the files and checks that usually apply:
 The compiled stylesheet
 ***********************
 
-Read the Docs truncates large static files, so ``vanilla-main.css`` must stay
-below 200 KB. ``make vanilla-main`` keeps it small in two steps:
+After changing SCSS or adding Vanilla Framework classes to theme sources:
 
-1. Sass compiles all of Vanilla Framework and Ulwazi's SCSS, compressed and without a
-   source map.
-2. ``ulwazi/theme/ulwazi/assets/prune_vanilla.py`` removes the selectors for
-   Vanilla Framework classes (``p-``, ``u-``, ``l-``, ``is-``, ``has-`` and the grid
-   classes) that no file under ``ulwazi/`` mentions. Other rules are kept
-   unchanged and in the same order.
+1. Run ``make vanilla-main``.
+2. Commit both generated files under
+   ``ulwazi/theme/ulwazi/static/css/``:
+   ``vanilla-main.css`` and ``vanilla-main.css.removed-classes.json``.
+3. Run ``make test`` and inspect the affected pages in the preview.
 
-As a result:
+When adding Vanilla Framework classes:
 
-- A Vanilla class that you add to a template, a script or a Python hook gets
-  its styles only after you run ``make vanilla-main``. Write the full class
-  name somewhere in the sources. For a class that is built at run time from a
-  prefix, such as ``f"p-notification--{kind}"``, the prefix must appear in the
-  source as a word.
-- Don't write a bare namespace such as ``p-`` in theme sources (write "the
-  ``p-*`` classes" instead): the build would keep every class in it.
-- Vanilla Framework classes that only a project's own page content uses aren't shipped.
-  ``make vanilla-main`` writes the removed classes to
-  ``vanilla-main.css.removed-classes.json``, and the theme warns at build time
-  when a page's content uses one of them (``ulwazi_warn_removed_classes =
-  False`` in a project's ``conf.py`` silences it). See the
-  :ref:`configuration reference <pruned-vanilla-stylesheet>`.
-- To debug the CSS, run ``make vanilla-main-debug`` for a readable, unpruned
-  build with a source map under ``node_modules/.cache/ulwazi/debug/``.
+- Include the full class name in a template, script or Python hook.
+  For dynamically constructed names such as
+  ``f"p-notification--{kind}"``, include the complete prefix
+  (``p-notification--``) as a word in the source.
+- Avoid bare namespace prefixes such as ``p-`` in theme sources: they
+  prevent pruning across that namespace.
+- To retain a class used only in documentation content, add it to
+  ``KEEP`` in ``ulwazi/theme/ulwazi/assets/prune_vanilla.py``.
 
-The fast test ``test_vanilla_css_size_and_pruning`` fails if the committed CSS
-is over the size budget or wasn't rebuilt after a theme source changed.
-``test_removed_classes_manifest`` checks that the manifest matches the
-unpruned CSS and lists no class the shipped CSS still styles.
+For CSS debugging, run ``make vanilla-main-debug``. The readable,
+unpruned stylesheet and source map are generated under
+``node_modules/.cache/ulwazi/debug/``; do not commit them.
+
+See :ref:`the stylesheet build explanation <vanilla-stylesheet-build>`
+for the build pipeline and pruning scope, and :doc:`tests/assets-structure`
+for the size limit and validation checks.
 
 Run checks
 ----------

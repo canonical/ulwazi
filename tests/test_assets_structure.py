@@ -581,9 +581,9 @@ def test_assets_structure_slow(built_site):
         _check_remote_inventory(_remote_assets(built_site), session)
 
 
-# Read the Docs truncates large static files; the compiled Vanilla CSS must
-# stay below this size (in bytes) to be served intact.
-VANILLA_CSS_BUDGET = 200_000
+# Per-file size budget for static assets, motivated by Read the Docs serving issues.
+# Currently enforced only for the compiled Vanilla stylesheet.
+STATIC_ASSET_SIZE_BUDGET_BYTES = 200_000
 VANILLA_CSS = REPO / "ulwazi/theme/ulwazi/static/css/vanilla-main.css"
 PRUNER = REPO / "ulwazi/theme/ulwazi/assets/prune_vanilla.py"
 
@@ -639,10 +639,11 @@ def test_vanilla_css_size_and_pruning():
     css = raw.decode("utf-8-sig")
     words, prefixes = pruner.vocabulary(REPO / "ulwazi")
     errors = []
-    if len(raw) >= VANILLA_CSS_BUDGET:
+    if len(raw) >= STATIC_ASSET_SIZE_BUDGET_BYTES:
         errors.append(
             f"{VANILLA_CSS.name} is {len(raw):,} bytes; the budget is "
-            f"{VANILLA_CSS_BUDGET:,} bytes (Read the Docs truncates larger files)"
+            f"{STATIC_ASSET_SIZE_BUDGET_BYTES:,} bytes "
+            "(Read the Docs truncates larger files)"
         )
     if bare := sorted(p for p in prefixes if p.rstrip("-_") in pruner.NAMESPACE_ROOTS):
         errors.append(
