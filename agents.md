@@ -7,7 +7,7 @@ It provides both generic Vanilla styling and Canonical-specific theming for docu
 
 **Tech Stack**: Python, Sphinx, Jinja2, Vanilla Framework (SCSS), JavaScript
 **License**: GPL-3.0
-**Python**: >=`3.10` (`3.11` is recommended)
+**Python**: >=`3.11.5`
 
 ## Common Tasks
 
