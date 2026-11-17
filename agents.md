@@ -305,8 +305,8 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
 - **Node Modules**: Required for Vanilla Framework compilation
 - **Compiled CSS size** (added 2026-11-09): Read the Docs truncates large
   static files, so `vanilla-main.css` must stay below 200,000 bytes
-   (`STATIC_ASSET_SIZE_BUDGET_BYTES` in `tests/test_assets_structure.py`, a
-   per-file static asset budget currently enforced only for this stylesheet).
+  (`STATIC_ASSET_SIZE_BUDGET_BYTES` in `tests/test_assets_structure.py`, a
+  per-file static asset budget currently enforced only for this stylesheet).
   `make vanilla-main` compiles with `--style=compressed --no-source-map` into
   `node_modules/.cache/ulwazi/vanilla-main.unpruned.css`, then
   `ulwazi/theme/ulwazi/assets/prune_vanilla.py` (stdlib only, so it runs
@@ -341,8 +341,10 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   runs when Ulwazi is selected only via `html_theme`) and
   `_warn_removed_classes` (called from `_html_page_context` after the body
   transforms) warns per page whose content uses a removed class, naming the
-  page and the classes and pointing at `html_css_files` or the pruner's
-  `KEEP` list. The warning is a normal Sphinx warning (fails `-W` builds);
+  page and the classes and pointing at `html_css_files` (then the opt-out:
+  the check never reads project CSS, so restored styles still warn) or the
+  pruner's `KEEP` list. The warning is a normal Sphinx warning (fails `-W`
+  builds);
   `ulwazi_warn_removed_classes = False` in conf.py opts out. At
   `build-finished` (just before Sphinx's "build succeeded"),
   `_removed_classes_summary` prints a green Pass line ("Vanilla Framework

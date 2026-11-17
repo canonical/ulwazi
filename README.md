@@ -49,6 +49,8 @@ only the [Vanilla Framework](https://vanillaframework.io/) styles that the
 theme itself uses. If your pages contain raw HTML with other Vanilla Framework
 classes (for example `p-card` or `p-chip`), they render unstyled, and the build
 warns you about it. Add your own CSS for them with Sphinx's `html_css_files`.
+The warning can't detect restored styles, so then set
+`ulwazi_warn_removed_classes = False` in `conf.py`.
 
 ### Metadata and SEO
 

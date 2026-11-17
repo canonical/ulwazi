@@ -953,8 +953,10 @@ def _warn_removed_classes(app: Sphinx, pagename: str, body_html: str) -> None:
         logger.warning(
             "page %s uses Vanilla Framework classes that the Ulwazi theme "
             "pruned for size optimization. The following classes render "
-            "unstyled: %s. Add custom CSS via html_css_files, or ask the "
-            "Ulwazi maintainers to add the classes to KEEP in the Ulwazi "
+            "unstyled: %s. To restore their styles, add custom CSS via "
+            "html_css_files; this check cannot detect restored styles, so "
+            "then set ulwazi_warn_removed_classes = False. Alternatively, ask "
+            "the Ulwazi maintainers to add the classes to KEEP in the Ulwazi "
             "theme's assets/prune_vanilla.py.",
             pagename,
             ", ".join(sorted(used)),

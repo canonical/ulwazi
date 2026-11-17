@@ -143,6 +143,11 @@ need custom CSS supplied through Sphinx's `html_css_files` setting, or a
 theme change by the Ulwazi maintainers to retain them in the pruner's
 `KEEP` list.
 
+Conversely, restoring the styles does not silence the check: it compares
+page classes with the theme's list of removed classes and does not read
+project CSS. After restoring styles through `html_css_files`, disable the
+check with the setting above.
+
 The {ref}`removed-classes-build-check` section of the asset and structural
 tests documentation explains the scan, its manifest, and the possible
 build-output messages.

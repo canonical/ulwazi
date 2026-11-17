@@ -205,6 +205,10 @@ def test_warn_removed_classes(tmp_path: Path) -> None:
     assert "p-notification--positive" not in text, (
         "p-notification--positive is shipped; it must not warn"
     )
+    assert "ulwazi_warn_removed_classes = False" in text, (
+        "The advice must say how to silence the check after restoring styles, "
+        "which it cannot detect"
+    )
     status = status_io.getvalue()
     assert "CSS size optimization check: Fail! 1 page(s) detected" in status, (
         f"The build must end with a recap of the affected pages; got:\n{status[-400:]}"
