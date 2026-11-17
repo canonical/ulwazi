@@ -55,12 +55,11 @@ from bs4 import BeautifulSoup
 # Single source of truth for the supported Python version range.
 #
 # This list MUST stay in sync with:
-#   - ``requires-python`` in ``pyproject.toml`` (currently ``>=3.10``)
+#   - ``requires-python`` in ``pyproject.toml`` (currently ``>=3.11.5``)
 #   - the ``matrix.python-version`` list in
 #     ``.github/workflows/test-python-versions.yaml``
 # ---------------------------------------------------------------------------
 SUPPORTED_PYTHON_VERSIONS: tuple[str, ...] = (
-    "3.10",
     "3.11",
     "3.12",
     "3.13",

@@ -118,7 +118,7 @@ def config_inited(app: Sphinx, config: Config) -> None:
                 app.setup_extension(package)
             else:
                 print(f"{package} not found.\n{package} will not be configured.")
-        except ModuleNotFoundError:  # noqa: PERF203
+        except ModuleNotFoundError:
             print(f"{package} not found.\n{package} will not be configured.")
 
     extra_js = [
