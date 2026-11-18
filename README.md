@@ -117,7 +117,7 @@ for the full workflow, including checks and pull request guidance.
 
 ### Prerequisites
 
-- **Git**, **make**, and **Python** `>=3.10` (`3.11` is recommended)
+- **Git**, **make**, and **Python** `>=3.11.5`
 - **uv**: the Make targets install it if it is missing
 - **Node.js** and **npm**: required only when compiling SCSS to CSS; `make vanilla-main`
   tries to install Node.js if `npm` is missing

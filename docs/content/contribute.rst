@@ -15,7 +15,7 @@ Before you start
 You need:
 
 - Git and ``make``
-- Python 3.10 or later (3.11 is recommended)
+- Python 3.11.5 or later
 - `uv <https://docs.astral.sh/uv/>`_ -- the Make targets install it if it is
   missing
 - Node.js and npm only when compiling SCSS -- ``make vanilla-main`` tries to

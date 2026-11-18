@@ -44,9 +44,7 @@ All cases also need `make`. The Python sources are the root `*.py` files,
 ## How it is tested
 
 The fast checks read the repository files directly. `pyproject.toml` is read
-with the standard library's `tomllib` on Python 3.11 and later. Python 3.10
-has no `tomllib`, so it uses `tomli`, which pytest already depends on there.
-The inventory check starts two `pytest --collect-only` subprocesses, one per
+with the standard library's `tomllib`. The inventory check starts two `pytest --collect-only` subprocesses, one per
 tier. They collect tests without running them and take about a second.
 
 Each linter case runs `make -s <target>` in the repository root with `CI` unset,
@@ -98,5 +96,5 @@ A failing check lists each problem on its own line:
 
 ```text
 Python version declarations disagree with SUPPORTED_PYTHON_VERSIONS (tests/test_python_versions.py):
-- pyproject.toml Python classifiers are ['3.10', '3.11']; expected ['3.10', '3.11', '3.12', '3.13', '3.14']
+- pyproject.toml Python classifiers are ['3.11', '3.12']; expected ['3.11', '3.12', '3.13', '3.14']
 ```

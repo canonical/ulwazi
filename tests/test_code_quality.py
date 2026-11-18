@@ -17,6 +17,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -26,13 +27,6 @@ from jinja2.sandbox import SandboxedEnvironment
 
 from conftest import SLOW_CATEGORY_OVERRIDES, TEST_CATEGORIES, _category
 from test_python_versions import SUPPORTED_PYTHON_VERSIONS
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    # tomllib joined the standard library in Python 3.11. On 3.10, pytest
-    # itself depends on tomli (see uv.lock), so it is always installed.
-    import tomli as tomllib  # pyright: ignore[reportMissingImports]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 TESTS_DIR = REPO_ROOT / "tests"
@@ -113,10 +107,12 @@ def test_python_versions_in_sync():
         problems.append(f"SUPPORTED_PYTHON_VERSIONS is not ascending: {supported}")
 
     requires = pyproject["project"]["requires-python"]
-    match = re.fullmatch(r">=\s*(\d+\.\d+)", requires)
+    # A patch-level floor (for example, >=3.11.5) belongs to the tested minor.
+    match = re.fullmatch(r">=\s*(\d+\.\d+)(?:\.\d+)?", requires)
     if not match or match[1] != floor:
         problems.append(
-            f"pyproject.toml requires-python is {requires!r}; expected '>={floor}'"
+            f"pyproject.toml requires-python is {requires!r}; expected '>={floor}' "
+            "or a patch release of it"
         )
 
     classifiers = sorted(
