@@ -597,8 +597,9 @@ def _load_pruner():
     return module
 
 
-def _vanilla_classes(css: str, pruner) -> set[str]:
-    """Classes in Vanilla's namespaces that some selector of ``css`` requires."""
+def _vanilla_classes(css: str, pruner, *, required: bool = True) -> set[str]:
+    """Vanilla-namespace classes that selectors of ``css`` require or mention."""
+    find = pruner._required_classes if required else pruner.CLASS.findall
     classes = set()
     for rule in tinycss2.parse_stylesheet(
         css, skip_comments=True, skip_whitespace=True
@@ -613,9 +614,7 @@ def _vanilla_classes(css: str, pruner) -> set[str]:
                 continue
             for selector in pruner.split_selectors(tinycss2.serialize(inner.prelude)):
                 classes.update(
-                    name
-                    for name in pruner._required_classes(selector)
-                    if pruner.NAMESPACE.match(name)
+                    name for name in find(selector) if pruner.NAMESPACE.match(name)
                 )
     return classes
 
@@ -686,7 +685,7 @@ def test_removed_classes_manifest():
     - the manifest is missing or not valid JSON with a sorted ``classes`` list;
     - it disagrees with what pruning the unpruned CSS would remove (stale
       manifest: run ``make vanilla-main``);
-    - it lists a class the shipped CSS still styles;
+    - it lists a class that a shipped selector still mentions;
     - the pruner would keep every class in the manifest on the next run
       (vocabulary() must skip the manifest file itself).
     """
@@ -709,8 +708,26 @@ def test_removed_classes_manifest():
     assert classes == pruner.removed_classes(
         unpruned.read_text(encoding="utf-8-sig"), words, prefixes
     ), "manifest is stale; run `make vanilla-main`"
-    shipped = _vanilla_classes(VANILLA_CSS.read_text(encoding="utf-8-sig"), pruner)
+    shipped = _vanilla_classes(
+        VANILLA_CSS.read_text(encoding="utf-8-sig"), pruner, required=False
+    )
     assert not sorted(set(classes) & shipped), (
-        "manifest lists classes the shipped CSS still styles: "
+        "manifest lists classes the shipped CSS still mentions: "
         f"{sorted(set(classes) & shipped)[:10]}"
     )
+
+
+@pytest.mark.parametrize(
+    ("css", "pruned", "removed"),
+    [
+        (".p-a{x:1}.p-b{y:1}", ".p-b{y:1}", ["p-a"]),
+        (".p-a{x:1}:is(.p-a){y:1}", ":is(.p-a){y:1}", []),
+        (".p-a{x:1}.p-b:has(.p-a){y:1}", ".p-b:has(.p-a){y:1}", []),
+        ("@media print{.p-a{x:1}}.p-b:not(.p-a){y:1}", ".p-b:not(.p-a){y:1}", []),
+    ],
+    ids=["plain", "is", "has", "not-in-media"],
+)
+def test_removed_classes_match_pruned_css(css, pruned, removed):
+    """The manifest never lists a class that a kept selector still mentions."""
+    pruner = _load_pruner()
+    assert pruner.prune_and_report(css, {"p-b"}, set()) == (pruned, removed)

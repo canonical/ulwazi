@@ -24,7 +24,8 @@ are kept and rules are never reordered. Classes built at run time count as
 used when their prefix (ending in ``-`` or ``_``) appears; to keep any other
 class, add it to ``KEEP``.
 
-Also writes ``OUTPUT.css.removed-classes.json``, listing the removed classes.
+Also writes ``OUTPUT.css.removed-classes.json``, listing the Vanilla classes
+that no remaining selector mentions.
 
 Uses only the Python standard library.
 
@@ -221,11 +222,13 @@ def prune_and_report(
 ) -> tuple[str, list[str]]:
     """Return the pruned CSS and the sorted removed Vanilla classes.
 
-    A class counts as removed if a dropped selector required it.
+    A class counts as removed only if a dropped selector required it and no
+    kept selector mentions it at all, even inside ``:is()`` or ``:has()``.
     """
     dropped: set[str] = set()
-    pruned = _prune(css, words, prefixes, dropped)
-    return pruned, sorted(dropped)
+    kept: set[str] = set()
+    pruned = _prune(css, words, prefixes, dropped, kept)
+    return pruned, sorted(dropped - kept)
 
 
 def prune(css: str, words: set[str], prefixes: set[str]) -> str:
@@ -238,8 +241,10 @@ def removed_classes(css: str, words: set[str], prefixes: set[str]) -> list[str]:
     return prune_and_report(css, words, prefixes)[1]
 
 
-def _prune(css: str, words: set[str], prefixes: set[str], dropped: set[str]) -> str:
-    """Prune ``css``, collecting the unused classes of dropped selectors."""
+def _prune(
+    css: str, words: set[str], prefixes: set[str], dropped: set[str], kept: set[str]
+) -> str:
+    """Prune ``css``, collecting classes of dropped and kept selectors."""
     out: list[str] = []
     i = 0
     while i < len(css):
@@ -263,7 +268,7 @@ def _prune(css: str, words: set[str], prefixes: set[str], dropped: set[str]) -> 
             end = _block_end(css, stop)
             name = re.match(r"@([\w-]+)", css[i:stop])
             if name and name.group(1).lower() in GROUPING_AT_RULES:
-                inner = _prune(css[stop + 1 : end], words, prefixes, dropped)
+                inner = _prune(css[stop + 1 : end], words, prefixes, dropped, kept)
                 if inner:
                     out.append(css[i:stop].strip() + "{" + inner + "}")
             else:
@@ -274,7 +279,7 @@ def _prune(css: str, words: set[str], prefixes: set[str], dropped: set[str]) -> 
         if stop >= len(css):
             raise ValueError(f"unexpected trailing CSS: {css[i : i + 60]!r}")
         end = _block_end(css, stop)
-        selectors = _kept_selectors(css[i:stop], words, prefixes, dropped)
+        selectors = _kept_selectors(css[i:stop], words, prefixes, dropped, kept)
         if selectors:
             out.append(",".join(selectors) + css[stop : end + 1])
         i = end + 1
@@ -282,13 +287,14 @@ def _prune(css: str, words: set[str], prefixes: set[str], dropped: set[str]) -> 
 
 
 def _kept_selectors(
-    prelude: str, words: set[str], prefixes: set[str], dropped: set[str]
+    prelude: str, words: set[str], prefixes: set[str], dropped: set[str], kept: set[str]
 ) -> list[str]:
-    """Return the usable selectors of ``prelude``, collecting dropped classes."""
+    """Return the usable selectors of ``prelude``, collecting their classes."""
     selectors: list[str] = []
     for selector in split_selectors(prelude):
         if keep_selector(selector, words, prefixes):
             selectors.append(selector)
+            kept.update(CLASS.findall(selector))
         else:
             dropped.update(
                 name

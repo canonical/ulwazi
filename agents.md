@@ -332,7 +332,9 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   `make vanilla-main` also writes
   `ulwazi/theme/ulwazi/static/css/vanilla-main.css.removed-classes.json`
   (sorted `classes` list + `vocabulary` digest) via the pruner's
-  `removed_classes()`. The name starts with `vanilla-main.css` so the
+  `prune_and_report()`, the same walk that prunes the CSS: a class is
+  listed only if a dropped selector required it and no kept selector
+  mentions it (even inside `:is()`/`:has()`/`:not()`). The name starts with `vanilla-main.css` so the
   pruner's `vocabulary()` skips it on the next run (it lists every removed
   class as a bare word — reading it would keep everything);
   `docs/preview_theme.py` excludes it from its recompile inputs the same
@@ -360,7 +362,8 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   and `tests/test_assets_structure.py::test_removed_classes_manifest`
   (manifest present, sorted, skipped by `vocabulary()`, consistent with the
   unpruned CSS in the sass cache — skipped when the cache is absent — and
-  listing no class the shipped CSS still styles). Update
+  listing no class the shipped CSS still mentions) and
+  `::test_removed_classes_match_pruned_css` (pruner snippets). Update
   `docs/content/tests/index.md` counts and `tests/features.yaml` when
   touching this area.
 - **Auto-rebuild**: `make run` watches both content and theme changes. Changes to shared navigation toctrees may leave older pages with stale sidebars; use `make rebuild` to refresh the site when needed.

@@ -1,7 +1,7 @@
 # Asset and structural tests
 
 `tests/test_assets_structure.py` checks rendered assets and theme controls
-that Sphinx does not validate. It has three fast offline checks and a slow,
+that Sphinx does not validate. It has fast offline checks and a slow,
 advisory check of external resources. The rendered-site checks use
 representative pages, not a whole-site crawl.
 
@@ -64,7 +64,9 @@ It doesn't check how the remaining rules render; the browser tests do that.
 ### Removed-classes manifest
 
 The pruner also writes `vanilla-main.css.removed-classes.json`, the list of
-Vanilla Framework classes whose styles were removed. The theme reads it to
+Vanilla Framework classes whose styles were removed: a dropped selector
+required the class, and no kept selector mentions it, not even inside
+`:is()`, `:has()` or `:not()`. The theme reads it to
 warn about pages that use those classes (see
 {ref}`pruned-vanilla-stylesheet`). The `test_removed_classes_manifest` case
 fails if:
@@ -74,7 +76,12 @@ fails if:
   listed class on the next run);
 - the manifest differs from what pruning the unpruned CSS removes, so it is
   stale (`make vanilla-main` regenerates it from the current sources);
-- it lists a class the shipped CSS still styles.
+- it lists a class that a shipped selector still mentions.
+
+The parametrized `test_removed_classes_match_pruned_css` cases run the pruner
+on small CSS snippets and check that the manifest agrees with the kept
+selectors, including classes kept only inside `:is()`, `:has()` and
+`:not()`.
 
 The staleness comparison needs the Sass output in `node_modules/.cache/ulwazi/`.
 The case is skipped, not failed, when that cache is absent (fresh clone or
