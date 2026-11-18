@@ -114,6 +114,10 @@ After changing SCSS or adding Vanilla Framework classes to theme sources:
    ``vanilla-main.css`` and ``vanilla-main.css.removed-classes.json``.
 3. Run ``make test`` and inspect the affected pages in the preview.
 
+Keep ``vanilla-main.css`` below about 200 KB. This empirical budget guards
+against Read the Docs truncating large static files, and ``make test``
+enforces it.
+
 When adding Vanilla Framework classes:
 
 - Include the full class name in a template, script or Python hook.

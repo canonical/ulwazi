@@ -44,9 +44,10 @@ see [Switch to the Ulwazi theme](https://documentation.ubuntu.com/sphinx-stack/l
 
 ### Vanilla Framework classes in your own content
 
-To stay below the file size that Read the Docs serves intact, Ulwazi ships
-only the [Vanilla Framework](https://vanillaframework.io/) styles that the
-theme itself uses. If your pages contain raw HTML with other Vanilla Framework
+To keep the compiled stylesheet small (the project aims for under roughly
+200 KB), Ulwazi ships only the
+[Vanilla Framework](https://vanillaframework.io/) styles that the theme itself
+uses. If your pages contain raw HTML with other Vanilla Framework
 classes (for example `p-card` or `p-chip`), they render unstyled, and the build
 warns you about it. Add your own CSS for them with Sphinx's `html_css_files`.
 The warning can't detect restored styles, so then set
@@ -193,8 +194,10 @@ To upgrade it to a newer version:
 
    This runs `npm install` and compiles `ulwazi/theme/ulwazi/assets/main.scss` to
    `ulwazi/theme/ulwazi/static/css/vanilla-main.css`. The output is compressed
-   and pruned to the Vanilla Framework classes that the theme uses, so it stays below the
-   200 KB that Read the Docs serves intact; see
+   and pruned to the Vanilla Framework classes that the theme uses, which
+   minimizes the size of the served CSS file. Keep it below about 200 KB: Read
+   the Docs has been seen to truncate larger static files. This is an empirical
+   budget, not a documented platform limit. See
    [the compiled stylesheet](https://documentation.ubuntu.com/ulwazi/content/contribute/#contribute-compiled-css).
 
    If the compilation fails, consult the
