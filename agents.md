@@ -314,7 +314,8 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   namespaces (`p-`, `u-`, `l-`, `is-`, `has-`, `row`/`col-*`/`grid-*`) that
   no file under `ulwazi/` mentions as a whole word. Classes inside
   `:not()/:is()/:where()/:has()` and attribute selectors are never required;
-  rules are never reordered or rewritten. A run-time-built class needs its
+  rules are never reordered or rewritten, and `@layer` blocks are copied
+  unchanged (dropping one could change the layer order). A run-time-built class needs its
   prefix in the source as a word ending in `-`/`_` (e.g. `p-notification--`
   in `__init__.py`). Never write a bare namespace like `p-` in theme sources
   (the fast test `test_vanilla_css_size_and_pruning` fails; it also fails if

@@ -23,6 +23,8 @@ prunes unused Vanilla Framework selectors to meet the budget.
 2. `ulwazi/theme/ulwazi/assets/prune_vanilla.py` removes selectors that
    require a Vanilla Framework class absent from the theme's source
    vocabulary. The remaining rules keep their contents and cascade order.
+   `@layer` blocks are copied unchanged, because removing one could change
+   the layer order.
 
 The vocabulary comes from class names referenced as whole words in
 supported source files under `ulwazi/`, including HTML templates, scripts,
@@ -81,7 +83,7 @@ fails if:
 The parametrized `test_removed_classes_match_pruned_css` cases run the pruner
 on small CSS snippets and check that the manifest agrees with the kept
 selectors, including classes kept only inside `:is()`, `:has()` and
-`:not()`.
+`:not()`, and that `@layer` blocks keep their order.
 
 The staleness comparison needs the Sass output in `node_modules/.cache/ulwazi/`.
 The case is skipped, not failed, when that cache is absent (fresh clone or

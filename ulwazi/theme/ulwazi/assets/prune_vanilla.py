@@ -20,7 +20,9 @@
 A selector is dropped only if it requires a class in a Vanilla namespace
 (``p-``, ``u-``, ``l-``, ``is-``, ``has-``, ``row``, ``col-*``, ``grid-*``)
 that doesn't appear as a whole word in the theme sources. All other selectors
-are kept and rules are never reordered. Classes built at run time count as
+are kept and rules are never reordered. ``@layer`` blocks are copied
+unchanged, because dropping one could change the layer order. Classes built
+at run time count as
 used when their prefix (ending in ``-`` or ``_``) appears; to keep any other
 class, add it to ``KEEP``.
 
@@ -56,8 +58,9 @@ WORD = re.compile(
 
 SOURCE_SUFFIXES = {".py", ".html", ".js", ".scss", ".css", ".toml", ".json", ".txt"}
 
-# At-rules whose block contains rules (pruned recursively).
-GROUPING_AT_RULES = {"media", "supports", "container", "layer", "document"}
+# At-rules whose block contains rules (pruned recursively). Not ``layer``:
+# a layer's first block fixes its cascade order, so it must never be dropped.
+GROUPING_AT_RULES = {"media", "supports", "container", "document"}
 
 # Pseudo-classes whose arguments are never treated as required.
 LOGICAL_PSEUDO = re.compile(r":(?:not|is|where|has|matches|-webkit-any|-moz-any)\(")
@@ -273,6 +276,7 @@ def _prune(
                     out.append(css[i:stop].strip() + "{" + inner + "}")
             else:
                 out.append(css[i : end + 1])
+                kept.update(CLASS.findall(css[stop + 1 : end]))  # still styled
             i = end + 1
             continue
         stop = _find(css, i, "{")

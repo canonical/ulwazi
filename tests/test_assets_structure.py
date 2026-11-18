@@ -597,13 +597,17 @@ def _load_pruner():
     return module
 
 
-def _vanilla_classes(css: str, pruner, *, required: bool = True) -> set[str]:
+def _vanilla_classes(
+    css: str, pruner, *, required: bool = True, skip_layers: bool = False
+) -> set[str]:
     """Vanilla-namespace classes that selectors of ``css`` require or mention."""
     find = pruner._required_classes if required else pruner.CLASS.findall
     classes = set()
     for rule in tinycss2.parse_stylesheet(
         css, skip_comments=True, skip_whitespace=True
     ):
+        if skip_layers and rule.type == "at-rule" and rule.lower_at_keyword == "layer":
+            continue
         rules = [rule]
         if rule.type == "at-rule" and rule.content is not None:
             rules = tinycss2.parse_rule_list(
@@ -660,9 +664,10 @@ def test_vanilla_css_size_and_pruning():
             f"{VANILLA_CSS.name} is not pruned for the current theme sources; "
             "run `make vanilla-main`"
         )
+    # The pruner copies @layer blocks unchanged, so they may keep unused classes.
     unused = sorted(
         name
-        for name in _vanilla_classes(css, pruner)
+        for name in _vanilla_classes(css, pruner, skip_layers=True)
         if name not in words and not name.startswith(tuple(prefixes))
     )
     if unused:
@@ -724,8 +729,13 @@ def test_removed_classes_manifest():
         (".p-a{x:1}:is(.p-a){y:1}", ":is(.p-a){y:1}", []),
         (".p-a{x:1}.p-b:has(.p-a){y:1}", ".p-b:has(.p-a){y:1}", []),
         ("@media print{.p-a{x:1}}.p-b:not(.p-a){y:1}", ".p-b:not(.p-a){y:1}", []),
+        (
+            "@layer a{.p-a{x:1}}@layer b{.p-b{y:1}}@layer a{.p-b{z:1}}.p-a{w:1}",
+            "@layer a{.p-a{x:1}}@layer b{.p-b{y:1}}@layer a{.p-b{z:1}}",
+            [],
+        ),
     ],
-    ids=["plain", "is", "has", "not-in-media"],
+    ids=["plain", "is", "has", "not-in-media", "layer-order"],
 )
 def test_removed_classes_match_pruned_css(css, pruned, removed):
     """The manifest never lists a class that a kept selector still mentions."""
