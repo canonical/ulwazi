@@ -65,7 +65,11 @@ markup:
     checks:
       - tests/test_assets_structure.py::test_vanilla_css_size_and_pruning
       - tests/test_assets_structure.py::test_removed_classes_manifest
-      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css
+      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[plain]
+      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[is]
+      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[has]
+      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[not-in-media]
+      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[layer-order]
 
 site:
   - name: Banner project link uses the product website or documentation root
