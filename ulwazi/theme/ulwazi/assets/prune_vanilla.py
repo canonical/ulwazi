@@ -15,39 +15,20 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Remove Vanilla selectors for classes that Ulwazi never uses.
+"""Remove Vanilla selectors for classes that the theme never uses.
 
-Ulwazi renders all of Vanilla (``@include vanilla`` in ``main.scss``), but
-its templates, scripts and HTML hooks use only a fraction of Vanilla's
-classes. ``make vanilla-main`` runs this script on the compressed Sass output
-to keep the shipped stylesheet small: Read the Docs truncates large static
-files.
+A selector is dropped only if it requires a class in a Vanilla namespace
+(``p-``, ``u-``, ``l-``, ``is-``, ``has-``, ``row``, ``col-*``, ``grid-*``)
+that doesn't appear as a whole word in the theme sources. All other selectors
+are kept and rules are never reordered. Classes built at run time count as
+used when their prefix (ending in ``-`` or ``_``) appears; to keep any other
+class, add it to ``KEEP``.
 
-A selector is dropped only if it requires a class in one of Vanilla's own
-namespaces (``p-``, ``u-``, ``l-``, ``is-``, ``has-`` and the grid classes
-``row``, ``col-*`` and ``grid-*``) that doesn't occur anywhere in the theme
-sources (``ulwazi/``). Element selectors and selectors for any other class
-are kept, and rules are never reordered or rewritten, so the cascade of the
-remaining rules is unchanged. Classes inside ``:not()``, ``:is()``,
-``:where()`` and ``:has()`` and inside attribute selectors are not treated
-as required, so those selectors are kept.
+Also writes ``OUTPUT.css.removed-classes.json``, listing the removed classes.
 
-A class is "used" if it occurs as a whole word in any theme source file.
-Class names built at run time from a prefix (for example
-``f"p-notification--{kind}"``) count as used when the prefix itself
-(``p-notification--``) occurs, as a word ending in ``-`` or ``_``. Vanilla
-classes that only appear in a project's own page content (raw HTML) aren't
-covered. To keep one, add it to KEEP below.
-
-Uses only the Python standard library, so it runs before any project
-dependencies are installed.
+Uses only the Python standard library.
 
 Usage: python prune_vanilla.py THEME_SOURCE_DIR INPUT.css OUTPUT.css
-
-Also writes OUTPUT.css.removed-classes.json: the Vanilla classes whose rules were
-removed. The theme loads it at build time and warns when a page uses one of
-those classes, so authors of raw HTML learn immediately that the class is not
-shipped (see ulwazi/__init__.py, _setup_removed_classes_check).
 """
 
 from __future__ import annotations
@@ -67,6 +48,7 @@ NAMESPACE_ROOTS = ("p", "u", "l", "is", "has", "row", "col", "grid")
 NAMESPACE = re.compile(r"^(?:(?:p|u|l|is|has)-|row(?:$|-)|col(?:$|-)|grid-)")
 
 # Candidate class names (or prefixes ending in "-" or "_") in theme sources.
+# A prefix such as ``p-notification--`` covers names built at run time.
 WORD = re.compile(
     r"(?<![\w-])((?:p|u|l|is|has)-[\w-]*|(?:row|col|grid)(?:-[\w-]*)?)(?![\w])"
 )
