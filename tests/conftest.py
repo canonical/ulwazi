@@ -399,6 +399,22 @@ def built_site(tmp_path_factory):
     return BuiltSite(output)
 
 
+def _check_passed(check: str, passed: set[str], selected) -> bool:
+    """Whether a features.yaml check passed in this run.
+
+    An exact node ID must have passed. A plain function name without a
+    ``[...]`` suffix also matches a parametrized test: every selected case
+    (``check[...]``) must have passed, and at least one must be selected, so
+    a failing, skipped or deselected parameter still leaves it unchecked.
+    """
+    if check in passed:
+        return True
+    if "[" in check:
+        return False
+    cases = {nodeid for nodeid in selected if nodeid.startswith(check + "[")}
+    return bool(cases) and cases <= passed
+
+
 def pytest_terminal_summary(config, terminalreporter) -> None:
     """Recap selected test categories; report feature checks on coverage runs."""
     if not config.option.collectonly and config.option.verbose <= 0:
@@ -422,7 +438,9 @@ def pytest_terminal_summary(config, terminalreporter) -> None:
     for group in manifest.values():
         for feature in group:
             checks = feature.get("checks", [])
-            if checks and all(check in passed for check in checks):
+            if checks and all(
+                _check_passed(check, passed, SELECTED_TESTS) for check in checks
+            ):
                 covered.append(feature["name"])
             else:
                 missing.append(feature["name"])

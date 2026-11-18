@@ -59,10 +59,10 @@ assertions inside one grouped case do not.
 * - Test infrastructure
   - `test_coverage_metrics.py` (**8 fast**, {doc}`details <infrastructure>`) — V8 line accounting, aggregate coverage summaries, missing-report rejection, PR baseline comparisons and workflow baseline revision isolation.
 
-    `test_test_reporting.py` (**11 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, and the live time-left estimate.
+    `test_test_reporting.py` (**19 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, the live time-left estimate, and feature checks matching plain names of parametrized tests.
 ```
 
-**Full selection:** 141 cases across 20 modules (113 fast, 28 slow); each case
+**Full selection:** 149 cases across 20 modules (121 fast, 28 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and

@@ -5,7 +5,13 @@ from types import SimpleNamespace
 
 import pytest
 
-from conftest import LiveProgress, _category, _category_recap, _category_results
+from conftest import (
+    LiveProgress,
+    _category,
+    _category_recap,
+    _category_results,
+    _check_passed,
+)
 
 pytest_plugins = ("pytester",)
 
@@ -246,3 +252,76 @@ def test_new_file_appears_by_name_in_actual_pytest_output(pytester: pytest.Pytes
     )
     assert "test_new_suite.py::test_simple: Fast(1/1): PASSED" in lines
     assert "test_new_suite.py::test_skipped: Fast(0/1): INCOMPLETE (1 skipped)" in lines
+
+
+@pytest.mark.parametrize(
+    ("check", "passed", "expected"),
+    [
+        ("t.py::plain", {"t.py::plain"}, True),
+        ("t.py::param", {"t.py::param[a]", "t.py::param[b]"}, True),
+        ("t.py::param", {"t.py::param[a]"}, False),
+        ("t.py::param[a]", {"t.py::param[a]"}, True),
+        ("t.py::param[b]", {"t.py::param[a]"}, False),
+        ("t.py::par", {"t.py::param[a]", "t.py::param[b]"}, False),
+        ("t.py::unselected", set(), False),
+    ],
+    ids=[
+        "exact",
+        "all-params-passed",
+        "one-param-not-passed",
+        "exact-param",
+        "exact-param-not-passed",
+        "prefix-is-not-a-match",
+        "not-selected",
+    ],
+)
+def test_feature_check_accepts_plain_name_of_parametrized_test(check, passed, expected):
+    """A plain name covers a parametrized test only if every case passed."""
+    selected = {"t.py::plain", "t.py::param[a]", "t.py::param[b]"}
+    assert _check_passed(check, passed, selected) is expected
+
+
+def test_feature_report_matches_plain_name_in_actual_pytest_run(
+    pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch
+):
+    """End to end: plain names count only when all their parameters pass."""
+    pytester.makeconftest(Path(__file__).with_name("conftest.py").read_text())
+    pytester.makefile(
+        ".yaml",
+        features="""
+        markup:
+          - name: All params pass
+            checks:
+              - test_feat.py::test_good
+          - name: One param fails
+            checks:
+              - test_feat.py::test_mixed
+          - name: Passing param listed exactly
+            checks:
+              - test_feat.py::test_mixed[0]
+        """,
+    )
+    pytester.makepyfile(
+        test_feat="""
+        import pytest
+
+        @pytest.mark.parametrize("value", [0, 1])
+        def test_good(value):
+            assert True
+
+        @pytest.mark.parametrize("value", [0, 1])
+        def test_mixed(value):
+            assert value == 0
+        """
+    )
+    monkeypatch.setenv("ULWAZI_COVERAGE_REPORT", "1")
+
+    result = pytester.runpytest_subprocess("-q")
+
+    result.assert_outcomes(passed=3, failed=1)
+    result.stdout.fnmatch_lines(
+        [
+            "Feature checks: 2/3 mapped features (67%)",
+            "Unchecked features: One param fails",
+        ]
+    )

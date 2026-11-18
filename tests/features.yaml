@@ -5,6 +5,8 @@
 # must actually assert this specific behavior. Unimplemented checks use
 # `checks: []` so they stay visible in the denominator. The source field
 # identifies the sample content or implementation exercised by the check.
+# A plain function name (no `[...]`) covers a parametrized test only if every
+# selected case passed; list `name[id]` to require specific cases only.
 # Extend this list when adding a feature or a regression check.
 
 markup:
@@ -65,11 +67,7 @@ markup:
     checks:
       - tests/test_assets_structure.py::test_vanilla_css_size_and_pruning
       - tests/test_assets_structure.py::test_removed_classes_manifest
-      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[plain]
-      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[is]
-      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[has]
-      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[not-in-media]
-      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css[layer-order]
+      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css
 
 site:
   - name: Banner project link uses the product website or documentation root
