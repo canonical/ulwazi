@@ -70,7 +70,12 @@ Ulwazi also supplies a `404.html` template and chooses the 404 URL prefix from
 the Read the Docs canonical URL when available. Explicit `notfound_template`
 and `notfound_urls_prefix` settings take precedence. List `"ulwazi"` before
 `"sphinx_modern_pdf_style"` in `extensions` to enable Canonical PDF branding;
-Ulwazi stages the logo in the LaTeX output directory.
+Ulwazi stages the logo in the LaTeX output directory. With
+`fail_on_warning = true`, a wrong order fails the build (see
+{doc}`troubleshooting`).
+
+For problems commonly hit when migrating from the previous Furo-based
+Canonical Sphinx Stack, see {doc}`troubleshooting`.
 
 ### Default HTML title
 
@@ -356,6 +361,7 @@ and the side navigation is unchanged. `title` must be a non-empty string and
 absolute `http(s)` URL. An invalid value is ignored as a whole (with a build
 warning naming the offending key) rather than rendering a partial panel.
 
+(not-currently-supported)=
 ### Not currently supported
 
 Ulwazi supplies defaults for these `html_context` values, but no Ulwazi
@@ -380,11 +386,11 @@ the purposes below describe their intended or legacy use.
 *
     - `sequential_nav`
     - `"none"`
-    - Control previous/next page navigation (documented values: `none`, `prev`, `next`, `both`).
+    - Control previous/next page navigation (documented values: `none`, `prev`, `next`, `both`). Not yet supported; see [ulwazi#196](https://github.com/canonical/ulwazi/issues/196).
 *
     - `display_contributors`
     - `True`
-    - Toggle a contributors list (`True`/`False`).
+    - Toggle a contributors list (`True`/`False`). Not yet supported; the planned footer work in [ulwazi#196](https://github.com/canonical/ulwazi/issues/196) is expected to activate it.
 *
     - `path`
     - `"/docs"`
@@ -398,10 +404,11 @@ theme) are still honoured for backwards compatibility. If you set an old
 name without also setting its replacement, Ulwazi copies the value across
 and logs a deprecation warning at build time:
 
-| Deprecated name  | Use instead   |
-| ---------------- | ------------- |
-| `github_version` | `repo_branch` |
-| `github_folder`  | `repo_folder` |
+| Deprecated name       | Use instead   |
+| --------------------- | ------------- |
+| `github_version`      | `repo_branch` |
+| `github_folder`       | `repo_folder` |
+| `repo_default_branch` | `repo_branch` |
 
 If both the old and new names are set, the new name takes precedence and no
 warning is shown.
