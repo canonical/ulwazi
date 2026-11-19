@@ -27,11 +27,11 @@ declared minimum version, or a broken install path.
 
 ## Supported Python versions
 
-The theme declares `requires-python = ">=3.10"` in `pyproject.toml`. The
+The theme declares `requires-python = ">=3.11.5"` in `pyproject.toml`; the
+patched Soup Sieve releases it requires do not support older interpreters. The
 currently tested versions are:
 
-- Python 3.10
-- Python 3.11
+- Python 3.11 (the latest patch release that `uv` provides)
 - Python 3.12
 - Python 3.13
 - Python 3.14
@@ -40,7 +40,8 @@ The authoritative list lives in `SUPPORTED_PYTHON_VERSIONS` in
 `tests/test_python_versions.py`. The fast
 {doc}`code quality check <code-quality>` `test_python_versions_in_sync` fails
 if the list disagrees with the GitHub Actions matrix in
-`.github/workflows/test-python-versions.yaml`, the `requires-python` floor,
+`.github/workflows/test-python-versions.yaml`, the `requires-python` minor
+version floor,
 the Python classifiers, or the ruff, mypy and pyright target versions in
 `pyproject.toml`.
 

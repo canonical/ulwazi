@@ -57,6 +57,10 @@ These are set directly in `conf.py`.
     - `""`
     - Same as above, for the dark theme (default: white).
 *
+    - `ulwazi_warn_removed_classes`
+    - `True`
+    - Ulwazi ships a pruned Vanilla Framework stylesheet (see below) and warns at build time when a page's content uses a Vanilla Framework class whose styles were pruned away. Set to `False` to silence the warning.
+*
     - `highlight_language`
     - `"none"`
     - Sphinx's fallback language for code blocks without an explicit language. Ulwazi defaults it to `"none"` (plain, unhighlighted code) when unset in `conf.py` or on the command line.
@@ -112,6 +116,41 @@ If Ulwazi is selected only through `html_theme` (without `"ulwazi"` in
 command-line option -- use `conf.py` instead. The same restriction already
 applies to `notfound_enabled`; see above.
 ```
+
+(pruned-vanilla-stylesheet)=
+### Pruned Vanilla Framework stylesheet
+
+Ulwazi ships a size-optimized Vanilla Framework stylesheet
+(`vanilla-main.css`), pruned to the classes used by the theme itself.
+Other Vanilla Framework classes used in raw HTML, such as `p-card`, may
+therefore render without their expected styles.
+
+`ulwazi_warn_removed_classes` is a boolean setting in `conf.py`, with a
+default of `True`. When enabled, it produces a Sphinx warning for each
+HTML page using a class whose styles were removed, plus a build-end
+Pass/Fail summary. The warnings fail builds that use `--fail-on-warning`;
+the summary is informational and does not fail a build by itself.
+
+The following configuration disables both the warnings and the summary,
+for example during a content migration:
+
+```python
+ulwazi_warn_removed_classes = False
+```
+
+Disabling the check does not restore the missing styles. Such classes
+need custom CSS supplied through Sphinx's `html_css_files` setting, or a
+theme change by the Ulwazi maintainers to retain them in the pruner's
+`KEEP` list.
+
+Conversely, restoring the styles does not silence the check: it compares
+page classes with the theme's list of removed classes and does not read
+project CSS. After restoring styles through `html_css_files`, disable the
+check with the setting above.
+
+The {ref}`removed-classes-build-check` section of the asset and structural
+tests documentation explains the scan, its manifest, and the possible
+build-output messages.
 
 ### MyST syntax defaults
 

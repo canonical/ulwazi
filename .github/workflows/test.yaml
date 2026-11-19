@@ -22,5 +22,12 @@ jobs:
       - name: Build SCSS
         run: make vanilla-main
 
+      - name: Verify committed CSS and manifest
+        run: |
+          git diff --exit-code -- \
+            ulwazi/theme/ulwazi/static/css/vanilla-main.css \
+            ulwazi/theme/ulwazi/static/css/vanilla-main.css.removed-classes.json \
+            || { echo "::error::Committed CSS or manifest is stale. Run 'make vanilla-main' and commit both files."; exit 1; }
+
       - name: Run fast tests
         run: make test

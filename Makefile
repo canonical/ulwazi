@@ -42,17 +42,42 @@ else
 endif
 
 # Ulwazi-specific targets
+VANILLA_CSS := ulwazi/theme/ulwazi/static/css/vanilla-main.css
+# Intermediate and debug output stay in node_modules (git-ignored, never packaged).
+VANILLA_UNPRUNED := node_modules/.cache/ulwazi/vanilla-main.unpruned.css
+VANILLA_DEBUG := node_modules/.cache/ulwazi/debug/vanilla-main.css
+
+# The shipped stylesheet is compressed and pruned to the Vanilla classes the
+# theme uses (see ulwazi/theme/ulwazi/assets/prune_vanilla.py): Read the Docs
+# truncates large static files. Pruning changes every offset in the output,
+# so no source map is shipped; use `make vanilla-main-debug` for one.
 vanilla-main: install-npm  ## Install Vanilla and compile CSS
 	npm install --no-audit --no-fund
 	echo "Compiling SCSS to CSS..."
 
 	@echo "Using local sass..."
+	@mkdir -p $(dir $(VANILLA_UNPRUNED))
 	@./node_modules/.bin/sass \
 		--load-path=node_modules \
+		--style=compressed \
+		--no-source-map \
 		ulwazi/theme/ulwazi/assets/main.scss \
-		ulwazi/theme/ulwazi/static/css/vanilla-main.css
+		$(VANILLA_UNPRUNED)
+	@python3 ulwazi/theme/ulwazi/assets/prune_vanilla.py \
+		ulwazi $(VANILLA_UNPRUNED) $(VANILLA_CSS)
+	@rm -f $(VANILLA_CSS).map
 
 	@echo "SCSS compilation complete!"
+
+.PHONY: vanilla-main-debug
+vanilla-main-debug: install-npm  ##- Compile readable, unpruned CSS with a source map (for debugging only)
+	npm install --no-audit --no-fund
+	@mkdir -p $(dir $(VANILLA_DEBUG))
+	./node_modules/.bin/sass \
+		--load-path=node_modules \
+		ulwazi/theme/ulwazi/assets/main.scss \
+		$(VANILLA_DEBUG)
+	@echo "Unpruned CSS and source map: $(dir $(VANILLA_DEBUG)) (not shipped)"
 
 .PHONY: product-menu
 product-menu:  ## Update the product menu
