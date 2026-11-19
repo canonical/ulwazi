@@ -1,9 +1,177 @@
 # Asset and structural tests
 
 `tests/test_assets_structure.py` checks rendered assets and theme controls
-that Sphinx does not validate. It has a fast offline check and a slow,
-advisory check of external resources. Both use representative pages, not a
-whole-site crawl.
+that Sphinx does not validate. It has fast offline checks and a slow,
+advisory check of external resources. The rendered-site checks use
+representative pages, not a whole-site crawl.
+
+## Fast: compiled Vanilla Framework CSS
+
+Read the Docs can sometimes truncate large static files, so the project defines
+a per-file static asset size budget of 200,000 bytes
+(`STATIC_ASSET_SIZE_BUDGET_BYTES`). The budget is currently enforced only for
+the shipped `vanilla-main.css`, which must stay below that size. The build
+prunes unused Vanilla Framework selectors to meet the budget.
+
+(vanilla-stylesheet-build)=
+### How the stylesheet is built
+
+`make vanilla-main` produces the stylesheet in two steps:
+
+1. Sass compiles all of Vanilla Framework and Ulwazi's SCSS into compressed
+   CSS without a source map, under `node_modules/.cache/ulwazi/`.
+2. `ulwazi/theme/ulwazi/assets/prune_vanilla.py` removes selectors that
+   require a Vanilla Framework class absent from the theme's source
+   vocabulary. The remaining rules keep their contents and cascade order.
+   `@layer` blocks are copied unchanged, because removing one could change
+   the layer order.
+
+The vocabulary comes from class names referenced as whole words in
+supported source files under `ulwazi/`, including HTML templates, scripts,
+stylesheets and Python hooks. Class-name prefixes ending in `-` or `_`
+also retain dynamically constructed classes, such as
+`p-notification--{kind}`. A bare namespace prefix would therefore retain
+every class in that namespace.
+
+Pruning applies only to Vanilla Framework's namespaces (`p-`, `u-`, `l-`,
+`is-`, `has-` and the grid classes). Element selectors and classes outside
+these namespaces are kept. Classes inside `:not()`, `:is()`, `:where()`,
+`:has()` and attribute selectors are not treated as required.
+
+Documentation content is not scanned, including this repository's sample
+pages under `docs/`. A class appearing only there does not cause its
+styles to be retained; explicit exceptions belong in the pruner's `KEEP`
+list. The build also writes a removed-classes manifest so the theme can
+warn about content using styles that were removed, as described below.
+
+The {ref}`contribute-compiled-css` section of the contribution guide covers
+the rebuild, commit and debugging workflow.
+
+### CSS validation
+
+The `test_vanilla_css_size_and_pruning` case reads the committed
+`ulwazi/theme/ulwazi/static/css/vanilla-main.css`, without building the site
+or running Sass. It fails if:
+
+- the file is 200,000 bytes or larger (`STATIC_ASSET_SIZE_BUDGET_BYTES`);
+- a theme source names a bare Vanilla Framework namespace prefix such as `p-`, which
+  would stop the build from pruning that namespace;
+- pruning the file again for the current theme sources would change it, so
+  the CSS is stale: compiled without `make vanilla-main`, or not rebuilt
+  after a template, script or Python hook changed its Vanilla classes;
+- the file styles a Vanilla Framework class that no theme source uses.
+
+It doesn't check how the remaining rules render; the browser tests do that.
+
+### Removed-classes manifest
+
+The pruner also writes `vanilla-main.css.removed-classes.json`, the list of
+Vanilla Framework classes whose styles were removed: a dropped selector
+required the class, and no kept selector mentions it, not even inside
+`:is()`, `:has()` or `:not()`. The theme reads it to
+warn about pages that use those classes (see
+{ref}`pruned-vanilla-stylesheet`). The `test_removed_classes_manifest` case
+fails if:
+
+- the manifest is missing, not valid JSON, or its `classes` list is unsorted;
+- the pruner's vocabulary scan reads the manifest (it would then keep every
+  listed class on the next run);
+- the manifest differs from what pruning the unpruned CSS removes, so it is
+  stale (`make vanilla-main` regenerates it from the current sources);
+- it lists a class that a shipped selector still mentions.
+
+The parametrized `test_removed_classes_match_pruned_css` cases run the pruner
+on small CSS snippets and check that the manifest agrees with the kept
+selectors, including classes kept only inside `:is()`, `:has()` and
+`:not()`, and that `@layer` blocks keep their order.
+
+The staleness comparison needs the Sass output in `node_modules/.cache/ulwazi/`.
+The case is skipped, not failed, when that cache is absent (fresh clone or
+cleaned `node_modules`). `make vanilla-main` generates the Sass cache needed
+for the comparison.
+
+(removed-classes-build-check)=
+### Build-time warning and summary
+
+Pruning keeps the stylesheet small, but content using a removed Vanilla
+Framework class renders without that class's styles. This does not cause
+a browser error or console message. The manifest generated by
+`make vanilla-main` lets the theme identify these uses during the Sphinx
+build instead. The {ref}`pruned-vanilla-stylesheet` configuration reference
+describes the setting that controls the check and the options for
+providing missing styles.
+
+#### Scan scope
+
+For every HTML page, the theme scans the rendered body (after its own
+transformations) for `class` attributes naming a class in the manifest.
+Only classes in Vanilla Framework's namespaces (`p-`, `u-`, `l-`, `is-`,
+`has-`, `row`/`col`/`grid`) can be listed; a class the stylesheet still
+ships is never reported. The check runs once per page, so a class used
+on multiple pages is reported on each page that uses it.
+
+#### Verified scenarios
+
+Three cases in `tests/test_config_robustness.py` build tiny generated sites
+with raw HTML and check what the theme reports:
+
+| Case | Page content | Expected |
+| --- | --- | --- |
+| `test_warn_removed_classes` | `p-card` (pruned) and `p-notification--positive` (shipped) | A warning naming the page and `p-card` only, plus the red `Fail!` summary |
+| `test_removed_classes_all_clear` | `p-notification--positive` only | No warnings and the green `Pass!` summary |
+| `test_warn_removed_classes_opt_out` | `p-card` with `ulwazi_warn_removed_classes = False` | No warning and no summary line |
+
+The assertions match the page name, class names and the `Pass!`/`Fail!`
+markers, not the full message text, so rewording the advice doesn't break
+them. These cases can be selected with
+`uv run pytest tests/test_config_robustness.py -k removed_classes`.
+
+#### Build-output examples
+
+The table above records the tested scenarios; the details below explain
+the check's output and when it is absent.
+
+Each affected page produces a Sphinx warning naming the page and the
+removed classes it uses:
+
+```text
+WARNING: page <docname> uses Vanilla Framework classes that the Ulwazi
+theme pruned for size optimization. The following classes render unstyled:
+<class1>, <class2>. To restore their styles, add custom CSS via
+html_css_files; this check cannot detect restored styles, so then set
+ulwazi_warn_removed_classes = False. Alternatively, ask the Ulwazi
+maintainers to add the classes to KEEP in the Ulwazi theme's
+assets/prune_vanilla.py.
+```
+
+Near the end of the build, just before Sphinx's own final status, the
+check prints a one-line summary. There are three possible outcomes:
+
+**Pass** (green) -- no page uses a class listed in the manifest:
+
+```text
+Vanilla Framework CSS size optimization check: Pass! No page detected in your docs using any pruned styles.
+```
+
+**Fail** (red) -- one or more pages use pruned styles; each also gets
+the per-page warning shown above:
+
+```text
+Vanilla Framework CSS size optimization check: Fail! 2 page(s) detected in your docs using pruned styles (see the warnings above).
+```
+
+**No summary line** -- the check did not run or was silenced:
+
+- `ulwazi_warn_removed_classes = False` (opt-out; no warnings either),
+- a non-HTML builder (for example LaTeX/PDF; the scan runs per HTML page),
+- the build failed for another reason, or
+- the manifest could not be read (a warning names the file at build
+  start and the check is disabled).
+
+The summary is informational (INFO level): it never fails a build by
+itself. The per-page warnings are what fail `--fail-on-warning` builds.
+A Pass result means no removed classes were detected, not that all
+styles render correctly; that needs browser verification.
 
 ## Fast: local assets and structure
 
@@ -59,7 +227,7 @@ loaded. The slow check therefore reports an unavailable primary with
 failover is added, it needs a separate browser test that blocks the primary
 and observes the secondary loading successfully.
 
-## How it is tested
+## Running the tests
 
 The checks parse a fresh `dirhtml` build with Beautiful Soup. Run the fast
 case with `make test`, or the slow advisory with `make test-slow` (which also

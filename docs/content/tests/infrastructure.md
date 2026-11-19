@@ -12,7 +12,9 @@ are fast and run with `make test`.
 `tests/test_test_reporting.py` checks the behaviour described in
 {ref}`test-output-convention` and {ref}`test-progress-estimate`. Most tests
 call the reporting functions in `tests/conftest.py` directly, with fake
-reports. The last test runs a real pytest session.
+reports. `test_new_file_appears_by_name_in_actual_pytest_output` and
+`test_feature_report_matches_plain_name_in_actual_pytest_run` run real pytest
+sessions.
 
 | Test | What it checks |
 | --- | --- |
@@ -27,6 +29,8 @@ reports. The last test runs a real pytest session.
 | `test_recap_reserves_green_for_passing_results` | Only the passing count and `PASSED` are green. Failures are red, and category names are bold. |
 | `test_live_progress_estimates_time_left_from_previous_durations` | The time left adds up previous durations and uses an average for new tests. Nothing is shown when there's no data. |
 | `test_new_file_appears_by_name_in_actual_pytest_output` | In a real pytest run, a new unmapped file appears in the recap by test ID, with no setup. |
+| `test_feature_check_accepts_plain_name_of_parametrized_test` | A `features.yaml` check that is a plain function name covers a parametrized test only if every selected case passed. Exact node IDs still match one case, and a name prefix is not a match (7 cases). |
+| `test_feature_report_matches_plain_name_in_actual_pytest_run` | In a real coverage-report run, a plain name counts when all its parameters pass and stays unchecked when one fails. |
 
 These tests don't check terminal drawing, such as escape codes or line width,
 or behaviour with xdist. To see the real output, run `make test` in a terminal.

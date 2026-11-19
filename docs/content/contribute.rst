@@ -81,8 +81,13 @@ Use this table to find the files and checks that usually apply:
        inspect the affected pages in ``make run``.
    * - SCSS
      - Edit ``ulwazi/theme/ulwazi/assets/``. The preview compiles changed SCSS;
-       run ``make vanilla-main`` to compile it explicitly. Commit
-       ``ulwazi/theme/ulwazi/static/css/vanilla-main.css`` and its map.
+       run ``make vanilla-main`` to compile it explicitly. Commit the CSS
+       and removed-classes manifest. See
+       :ref:`contribute-compiled-css`.
+   * - A Vanilla class in a template, script or Python hook
+     - Run ``make vanilla-main`` and commit the CSS and removed-classes
+       manifest. See
+       :ref:`contribute-compiled-css`.
    * - Rendered markup or theme features
      - Update both :ref:`reST <rst_ref>` and :ref:`MyST <myst-ref>` cheat sheets
        when equivalent syntax exists. Add a test assertion and follow
@@ -95,6 +100,42 @@ Use this table to find the files and checks that usually apply:
        :ref:`test inventory <test-inventory>` when collected cases change.
    * - Documentation only
      - Run ``make docs`` and check the changed pages in the preview.
+
+.. _contribute-compiled-css:
+
+The compiled stylesheet
+***********************
+
+After changing SCSS or adding Vanilla Framework classes to theme sources:
+
+1. Run ``make vanilla-main``.
+2. Commit both generated files under
+   ``ulwazi/theme/ulwazi/static/css/``:
+   ``vanilla-main.css`` and ``vanilla-main.css.removed-classes.json``.
+3. Run ``make test`` and inspect the affected pages in the preview.
+
+Keep ``vanilla-main.css`` below about 200 KB. This empirical budget guards
+against Read the Docs truncating large static files, and ``make test``
+enforces it.
+
+When adding Vanilla Framework classes:
+
+- Include the full class name in a template, script or Python hook.
+  For dynamically constructed names such as
+  ``f"p-notification--{kind}"``, include the complete prefix
+  (``p-notification--``) as a word in the source.
+- Avoid bare namespace prefixes such as ``p-`` in theme sources: they
+  prevent pruning across that namespace.
+- To retain a class used only in documentation content, add it to
+  ``KEEP`` in ``ulwazi/theme/ulwazi/assets/prune_vanilla.py``.
+
+For CSS debugging, run ``make vanilla-main-debug``. The readable,
+unpruned stylesheet and source map are generated under
+``node_modules/.cache/ulwazi/debug/``; do not commit them.
+
+See :ref:`the stylesheet build explanation <vanilla-stylesheet-build>`
+for the build pipeline and pruning scope, and :doc:`tests/assets-structure`
+for the size limit and validation checks.
 
 Run checks
 ----------
