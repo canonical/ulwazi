@@ -46,8 +46,7 @@ markup:
   - name: Feedback issue body without duplicated documentation suffix
     source: ulwazi/theme/ulwazi/sections/feedback.html (project names with and without a documentation suffix)
     checks:
-      - tests/test_config_robustness.py::test_feedback_body_suffix[no-duplication]
-      - tests/test_config_robustness.py::test_feedback_body_suffix[suffix-appended]
+      - tests/test_config_robustness.py::test_feedback_body_suffix
   - name: Copy button interaction
     source: docs/content/myst-cheat-sheet.md YAML block (Chromium button, target, and copied text)
     checks:

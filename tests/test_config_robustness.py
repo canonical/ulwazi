@@ -1373,9 +1373,10 @@ def _feedback_body(output: Path) -> str:
         # The regression: a project name ending in "documentation" must not
         # gain a second suffix (ulwazi#203).
         ("X documentation", "facing with X documentation."),
+        ("X Documentation", "facing with X Documentation."),
         ("X", "facing with X documentation."),
     ],
-    ids=["no-duplication", "suffix-appended"],
+    ids=["no-duplication", "no-duplication-mixed-case", "suffix-appended"],
 )
 def test_feedback_body_suffix(
     tmp_path: Path, project: str, expected_phrase: str

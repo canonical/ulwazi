@@ -15,8 +15,9 @@
     <!-- Warning: lacking parameters in conf.py: guthub_url or pagename -->
   {%- endif -%}
   {#- Append " documentation" unless the project name already ends with it
-      (ulwazi#203): "X documentation documentation" duplicates the word. -#}
-  {%- set docs_suffix = "" if project.endswith("documentation") else " documentation" -%}
+      (ulwazi#203), ignoring case: "X documentation documentation" duplicates
+      the word. -#}
+  {%- set docs_suffix = "" if project.lower().endswith("documentation") else " documentation" -%}
   <a href="{{ github_url }}/issues/new?title=docs%3A+TYPE+YOUR+QUESTION+HERE&amp;body=*Please describe the question or issue you're facing with {{ project }}{{ docs_suffix }}.*%0A%0A%0A%0A%0A---%0A*Reported+from%3A+{{ pagename }}"
        target="_blank" class="p-button p-button--positive p-button--orange">Give feedback</a>
 
