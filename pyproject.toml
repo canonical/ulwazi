@@ -1,7 +1,7 @@
 [project]
 name = "ulwazi"
 description = 'Ulwazi theme for Sphinx documentation projects'
-requires-python = ">=3.10"
+requires-python = ">=3.11.5"
 dynamic = ["version", "readme"]
 license = {text = "GPL-3.0-only"}
 authors = [
@@ -16,7 +16,6 @@ classifiers = [
     'Environment :: Console',
     'Environment :: Web Environment',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
@@ -30,6 +29,7 @@ dependencies = [
     "sphinx-basic-ng",
     "sphinxcontrib-jquery>=4.1",
     "beautifulsoup4",
+    "soupsieve>=4.0",
     "sphinx-notfound-page~=1.1",
     # Supplies the linkify-it-py dependency for the MyST "linkify" syntax extension
     "linkify-it-py~=2.0",
@@ -169,7 +169,7 @@ exclude_also = ["if (typing\\.)?TYPE_CHECKING:"]
 
 [tool.pyright]
 strict = ["ulwazi"]
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 pythonPlatform = "Linux"
 exclude = [
     "**/.*",
@@ -181,10 +181,12 @@ exclude = [
     "docs/_build",
     # Same for the run-default build output (see docs/Makefile).
     "docs/_dev",
+    # Git-ignored test and analysis output (mypy excludes it too).
+    "results",
 ]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 exclude = ["build", "results"]
 warn_unused_configs = true
 warn_redundant_casts = true
@@ -206,7 +208,7 @@ strict = false
 
 [tool.ruff]
 line-length = 88
-target-version = "py310"
+target-version = "py311"
 src = ["ulwazi", "tests"]
 exclude = [
     "*/_version.py",

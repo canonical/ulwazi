@@ -42,6 +42,17 @@ see [Switch to the Ulwazi theme](https://documentation.ubuntu.com/sphinx-stack/l
 
 ## Configuration notes
 
+### Vanilla Framework classes in your own content
+
+To keep the compiled stylesheet small (the project aims for under roughly
+200 KB), Ulwazi ships only the
+[Vanilla Framework](https://vanillaframework.io/) styles that the theme itself
+uses. If your pages contain raw HTML with other Vanilla Framework
+classes (for example `p-card` or `p-chip`), they render unstyled, and the build
+warns you about it. Add your own CSS for them with Sphinx's `html_css_files`.
+The warning can't detect restored styles, so then set
+`ulwazi_warn_removed_classes = False` in `conf.py`.
+
 ### Metadata and SEO
 
 Ulwazi's templates render the page `<title>`, a canonical link when
@@ -107,7 +118,7 @@ for the full workflow, including checks and pull request guidance.
 
 ### Prerequisites
 
-- **Git**, **make**, and **Python** `>=3.10` (`3.11` is recommended)
+- **Git**, **make**, and **Python** `>=3.11.5`
 - **uv**: the Make targets install it if it is missing
 - **Node.js** and **npm**: required only when compiling SCSS to CSS; `make vanilla-main`
   tries to install Node.js if `npm` is missing
@@ -182,7 +193,12 @@ To upgrade it to a newer version:
    ```
 
    This runs `npm install` and compiles `ulwazi/theme/ulwazi/assets/main.scss` to
-   `ulwazi/theme/ulwazi/static/css/vanilla-main.css`.
+   `ulwazi/theme/ulwazi/static/css/vanilla-main.css`. The output is compressed
+   and pruned to the Vanilla Framework classes that the theme uses, which
+   minimizes the size of the served CSS file. Keep it below about 200 KB: Read
+   the Docs has been seen to truncate larger static files. This is an empirical
+   budget, not a documented platform limit. See
+   [the compiled stylesheet](https://documentation.ubuntu.com/ulwazi/content/contribute/#contribute-compiled-css).
 
    If the compilation fails, consult the
    [Vanilla Framework changelog](https://github.com/canonical/vanilla-framework/blob/main/CHANGELOG.md)
@@ -199,6 +215,8 @@ To upgrade it to a newer version:
    Additionally, check the sample documentation in a browser (`make run`) for visual
    regressions, especially on the
    [cheat sheet pages](docs/content/) that exercise most theme components.
+   If Vanilla's own `@mixin vanilla` gained or renamed an icon, also update the
+   icon list in `main.scss`, which renders the icons once.
 
 Both `package.json` and `package-lock.json` are tracked in git, so commit the
 updated lock file together with the version bump.

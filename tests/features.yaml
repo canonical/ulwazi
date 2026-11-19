@@ -5,6 +5,8 @@
 # must actually assert this specific behavior. Unimplemented checks use
 # `checks: []` so they stay visible in the denominator. The source field
 # identifies the sample content or implementation exercised by the check.
+# A plain function name (no `[...]`) covers a parametrized test only if every
+# selected case passed; list `name[id]` to require specific cases only.
 # Extend this list when adding a feature or a regression check.
 
 markup:
@@ -65,6 +67,12 @@ markup:
     checks:
       - tests/test_structured_toc.py::test_structured_toc_markup
       - tests/test_structured_toc.py::test_structured_toc_styling_slow
+  - name: Vanilla CSS pruning budget and removed-classes manifest
+    source: ulwazi/theme/ulwazi/assets/prune_vanilla.py; vanilla-main.css and vanilla-main.css.removed-classes.json in static/css
+    checks:
+      - tests/test_assets_structure.py::test_vanilla_css_size_and_pruning
+      - tests/test_assets_structure.py::test_removed_classes_manifest
+      - tests/test_assets_structure.py::test_removed_classes_match_pruned_css
 
 site:
   - name: Banner project link uses the product website or documentation root
@@ -117,6 +125,12 @@ site:
     checks:
       - tests/test_scss_propagation.py::test_scss_styles_propagation
       - tests/test_scss_propagation.py::test_rendered_color
+  - name: Build-time warning for pruned Vanilla classes in page content
+    source: temporary Sphinx site with raw HTML using p-card (pruned) and p-notification--positive (shipped); green all-clear summary on clean builds; ulwazi_warn_removed_classes opt-out
+    checks:
+      - tests/test_config_robustness.py::test_warn_removed_classes
+      - tests/test_config_robustness.py::test_removed_classes_all_clear
+      - tests/test_config_robustness.py::test_warn_removed_classes_opt_out
   - name: Cookie consent
     source: Canonical cookie bundle integration
     checks:
