@@ -2,14 +2,14 @@
 
 Ulwazi is under active development.
 This roadmap shows the current direction of travel and the major milestones
-we want to reach over the next by end of year 2026.
+we want to reach over the coming cycles.
 
 This is a living document for the internal team and all contributors.
 Priorities may shift as we learn from adoption and feedback.
 
-## Now (26.04)
+## Past (26.04)
 
-These are the goals we are working on in this cycle:
+These are the goals we completed in the 26.04 cycle:
 
 * [x] The theme is published as a Python package
 * [x] Developer documentation for contributors is available
@@ -21,23 +21,48 @@ These are the goals we are working on in this cycle:
 * [x] The theme repository is public and ready for external contributions
 * [x] Initial public-theme experience (brand-neutral usage) is supported
 
-## Next (26.10)
+## Past (26.10)
 
-These are the goals we plan to work on in the next cycle:
+These are the goals we completed in the 26.10 cycle, which ended with
+Ulwazi becoming the default theme of the Sphinx Stack:
+
+* [x] The theme is used by default in Sphinx Stack
+* [x] The theme has a comprehensive test suite
+* [x] There is an established feedback process and technical support/maintenance
+* [x] Design system consistency and visual refinement are improved
+* [x] The theme has accessibility checks
+* [x] The theme supports all recommended Sphinx extensions
+
+## Now (27.04)
+
+These are the goals we are working on in this cycle. With Ulwazi now the
+default theme of the Sphinx Stack, this cycle focuses on wide adoption, hot fixes,
+and maintenance: rapid feedback, timely patches, and support for teams migrating
+their documentation.
 
 * [ ] The theme is widely used for Canonical's own documentation
-* [ ] The theme has a comprehensive test suite
-* [ ] There is an established feedback process and technical support/maintenance
-* [ ] Design system consistency and visual refinement are improved
-* [ ] The theme has accessibility checks
-* [ ] The theme supports all recommended Sphinx extensions
 * [ ] Full public-theme experience (brand-neutral usage) support
+* [ ] Standardized feedback channels and rapid triage workflow are operational
+* [ ] Critical rendering, layout, and functional blockers get timely hot fixes
+* [ ] Additional extensibility and customization follow prioritized feature requests
+* [ ] Migration guides, default templates, and troubleshooting documentation are updated
+* [ ] Direct technical support is provided for complex documentation migrations
+* [ ] The theme meets mobile-first SEO and responsive design requirements
 
-## Later (post-26.10)
+## Next (27.10)
+
+These are the goals we propose for the next cycle, following the
+initial adoption and maintenance focus of 27.04:
+
+* [ ] Pragma design early implementation prototype
+* [ ] Cross-browser rendering checks run in Firefox as well as Chromium
+* [ ] Accessibility checks go beyond colour contrast to keyboard and landmark structure
+* [ ] Performance and UX polish
+* [ ] Release process maturity and compatibility policy
+
+## Later (post-27.10)
 
 These are the topics we hope to cover later (after the next cycle):
 
-* [ ] Additional extensibility and customization
-* [ ] Performance and UX polish
-* [ ] Release process maturity and compatibility policy
 * [ ] Community growth
+* [ ] Full Pragma design adoption
