@@ -15,7 +15,3 @@ stylesheets = [
 sidebars = [
     "globaltoc.html",
 ]
-
-[options]
-globaltoc_collapse = "true"
-globaltoc_maxdepth = "3"

@@ -726,6 +726,139 @@ def test_help_links_theme_only_loading(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Sidebar navigation depth (globaltoc_max_depth, globaltoc_max_depth_mode)
+# ---------------------------------------------------------------------------
+
+# Root document with two hidden toctrees: one sets :maxdepth: 1, the other
+# leaves it unset. Each starts a three-level chain of pages (a > b > c and
+# x > y > z) linked by nested toctrees.
+GLOBALTOC_INDEX = (
+    "Home\n====\n\n"
+    ".. toctree::\n   :hidden:\n   :maxdepth: 1\n\n   a\n\n"
+    ".. toctree::\n   :hidden:\n\n   x\n"
+)
+GLOBALTOC_CHAINS = (("a", "b"), ("b", "c"), ("c", None), ("x", "y"), ("y", "z"))
+
+
+def _build_globaltoc_site(
+    root: Path, conf: str, *, theme_only: bool = False
+) -> tuple[set[str], str]:
+    """Build the depth fixture; return the sidebar link titles and warnings."""
+    source = root / "src"
+    source.mkdir(parents=True)
+    extensions = "[]" if theme_only else '["ulwazi"]'
+    (source / "conf.py").write_text(
+        f'extensions = {extensions}\nhtml_theme = "ulwazi"\n{conf}', encoding="utf-8"
+    )
+    (source / "index.rst").write_text(GLOBALTOC_INDEX, encoding="utf-8")
+    for name, child in (*GLOBALTOC_CHAINS, ("z", None)):
+        body = f"Page {name.upper()}\n======\n"
+        if child:
+            body += f"\n.. toctree::\n\n   {child}\n"
+        (source / f"{name}.rst").write_text(body, encoding="utf-8")
+    warnings = io.StringIO()
+    with patch_docutils(str(source)), docutils_namespace():
+        app = Sphinx(
+            srcdir=str(source),
+            confdir=str(source),
+            outdir=str(root / "_build"),
+            doctreedir=str(root / "_doctrees"),
+            buildername="html",
+            status=io.StringIO(),
+            warning=warnings,
+        )
+        app.build()
+    assert app.statuscode == 0, warnings.getvalue()
+    nav = _page(root / "_build").select_one("nav#drawer")
+    assert nav is not None, "Sidebar navigation missing"
+    links = {
+        link.get_text(strip=True).removeprefix("Page ")
+        for link in nav.select("a.p-side-navigation__link")
+    }
+    return links, warnings.getvalue()
+
+
+# (label, conf.py lines, theme-only loading, expected sidebar pages,
+#  expected warning fragments)
+GLOBALTOC_CASES: list[tuple[str, str, bool, set[str], tuple[str, ...]]] = [
+    # Default: unlimited depth, directive :maxdepth: ignored (Furo parity).
+    ("default", "", False, {"A", "B", "C", "X", "Y", "Z"}, ()),
+    (
+        "None is unlimited",
+        "globaltoc_max_depth = None\n",
+        False,
+        {"A", "B", "C", "X", "Y", "Z"},
+        (),
+    ),
+    # Override: one limit for every root toctree.
+    ("override 2", "globaltoc_max_depth = 2\n", False, {"A", "B", "X", "Y"}, ()),
+    # Fallback, unlimited: native Sphinx (explicit :maxdepth: 1 applies).
+    (
+        "fallback unlimited",
+        'globaltoc_max_depth_mode = "fallback"\n',
+        False,
+        {"A", "X", "Y", "Z"},
+        (),
+    ),
+    # Fallback, finite: only the toctree without :maxdepth: gets the value.
+    (
+        "fallback 2",
+        'globaltoc_max_depth = 2\nglobaltoc_max_depth_mode = "fallback"\n',
+        False,
+        {"A", "X", "Y"},
+        (),
+    ),
+    # Invalid values warn and fall back to the defaults.
+    (
+        "invalid",
+        'globaltoc_max_depth = 0\nglobaltoc_max_depth_mode = "enforce"\n',
+        False,
+        {"A", "B", "C", "X", "Y", "Z"},
+        ("globaltoc_max_depth must be", "globaltoc_max_depth_mode must be"),
+    ),
+    # Theme-only loading reads the conf.py values too.
+    (
+        "theme-only fallback 2",
+        'globaltoc_max_depth = 2\nglobaltoc_max_depth_mode = "fallback"\n',
+        True,
+        {"A", "X", "Y"},
+        (),
+    ),
+]
+
+
+def test_globaltoc_max_depth(tmp_path: Path) -> None:
+    """The sidebar depth settings prune the global navigation tree as documented."""
+    errors: list[str] = []
+    for index, (label, conf, theme_only, expected, fragments) in enumerate(
+        GLOBALTOC_CASES
+    ):
+
+        def check(
+            conf: str = conf,
+            theme_only: bool = theme_only,  # noqa: FBT001
+            expected: set[str] = expected,
+            fragments: tuple[str, ...] = fragments,
+            index: int = index,
+        ) -> None:
+            links, warnings = _build_globaltoc_site(
+                tmp_path / str(index), conf, theme_only=theme_only
+            )
+            assert links == expected, (
+                f"sidebar pages {sorted(links)}, expected {sorted(expected)}"
+            )
+            for fragment in fragments:
+                assert warnings.count(fragment) == 1, (
+                    f"expected one warning containing {fragment!r}; got:\n{warnings}"
+                )
+            if not fragments:
+                assert "globaltoc" not in warnings, f"unexpected warning:\n{warnings}"
+
+        _record(errors, label, check)
+    assert not errors, "Sidebar depth checks failed:\n  - " + "\n  - ".join(errors)
+
+
+# ---------------------------------------------------------------------------
 # MyST compatibility defaults (restored from canonical-sphinx)
 # ---------------------------------------------------------------------------
 
