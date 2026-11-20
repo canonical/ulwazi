@@ -1,13 +1,13 @@
-<footer class="l-docs__footer p-strip is-dark">
+<footer class="l-docs__footer slop-footer">
   <div class="l-docs__subgrid">
     <div class="l-docs__sidebar u-fixed-width">
       <p>&copy; {{ copyright }} {{ author }}</p>
     </div>
     <div class="l-docs__main">
-      <nav class="row" aria-label="Footer">
-        <ul class="p-list">
+      <nav class="slop-footer__nav" aria-label="Footer">
+        <ul class="slop-footer__list">
           {%- if footer and footer.product -%}
-          <li class="p-list__item">
+          <li class="slop-footer__item">
             {%- if product_page %}
             <a href="https://{{ product_page }}">{{ project }} {{ version }}</a>
             {%- else -%}
@@ -16,7 +16,7 @@
           </li>
           {%- endif -%}
           {%- if footer and footer.license and license and license.name -%}
-          <li class="p-list__item">
+          <li class="slop-footer__item">
             {%- if license.url -%}
             This page is licensed under <a href="{{ license.url }}">{{ license.name }}</a>
             {%- else -%}
@@ -26,7 +26,7 @@
           {%- endif -%}
           {%- if footer and footer.entries -%}
             {%- for item in footer.entries -%}
-            <li class="p-list__item">
+            <li class="slop-footer__item">
               {{ item }}
             </li>
             {%- endfor -%}

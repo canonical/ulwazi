@@ -1,61 +1,59 @@
 {% macro nav_logo() %}
-<div class="p-navigation__tagged-logo">
-  <a class="p-navigation__link" href="{{ logo_link_URL }}">
-    <div class="p-navigation__logo-tag">
-      <img class="p-navigation__logo-icon" src="{{ logo_img_URL }}" alt="">
-    </div>
-  <span class="p-navigation__logo-title">{{ logo_title }}</span>
+<div class="slop-brand">
+  <a class="slop-brand-link" href="{{ logo_link_URL }}">
+    <img class="slop-brand-icon" src="{{ logo_img_URL }}" alt="">
+    <span class="slop-brand-title">{{ logo_title }}</span>
   </a>
 </div>
-<a href="#navigation" class="p-navigation__toggle--open" title="menu">Menu</a>
-<a href="#navigation-closed" class="p-navigation__toggle--close" title="close menu">Close menu</a>
+<a href="#navigation" class="slop-nav-toggle slop-nav-toggle--open" title="menu">Menu</a>
+<a href="#navigation-closed" class="slop-nav-toggle slop-nav-toggle--close" title="close menu">Close menu</a>
 {% endmacro %}
 
 {% macro nav_items() %}
-  <ul class="p-navigation__items">
-    <li class="p-navigation__item">
+  <ul class="slop-nav-links">
+    <li class="slop-nav-item">
       {%- if product_page -%}
-      <a class="p-navigation__link" href="https://{{ product_page }}">{{ project }}</a>
+      <a class="slop-nav-link" href="https://{{ product_page }}">{{ project }}</a>
       {%- else -%}
-      <a class="p-navigation__link" href="{{ pathto(root_doc)|e }}">{{ project }}</a>
+      <a class="slop-nav-link" href="{{ pathto(root_doc)|e }}">{{ project }}</a>
       {%- endif -%}
     </li>
 
     {% if link1_name and link1_URL %}
-    <li class="p-navigation__item">
-      <a class="p-navigation__link" href="{{ link1_URL }}">{{ link1_name }}</a>
+    <li class="slop-nav-item">
+      <a class="slop-nav-link" href="{{ link1_URL }}">{{ link1_name }}</a>
     </li>
     {% endif %}
 
     {% if link2_name and link2_URL %}
-    <li class="p-navigation__item">
-      <a class="p-navigation__link" href="{{ link2_URL }}">{{ link2_name }}</a>
+    <li class="slop-nav-item">
+      <a class="slop-nav-link" href="{{ link2_URL }}">{{ link2_name }}</a>
     </li>
     {% endif %}
-    <li class="p-navigation__item--dropdown-toggle" id="link-2">
-      <a href="#link-2-menu" aria-controls="link-2-menu" class="p-navigation__link">Resources</a>
-      <ul class="p-navigation__dropdown" id="link-2-menu" aria-hidden="true">
+    <li class="slop-nav-item slop-nav-item--dropdown-toggle" id="link-2">
+      <a href="#link-2-menu" aria-controls="link-2-menu" class="slop-nav-link">Resources</a>
+      <ul class="slop-nav-dropdown" id="link-2-menu" aria-hidden="true">
         {% if discourse %}
         <li>
-          <a href="{{ discourse }}" class="p-navigation__dropdown-item">Discourse</a>
+          <a href="{{ discourse }}" class="slop-nav-dropdown-item">Discourse</a>
         </li>
         {% endif %}
 
         {% if mattermost %}
         <li>
-          <a href="{{ mattermost }}" class="p-navigation__dropdown-item">Mattermost</a>
+          <a href="{{ mattermost }}" class="slop-nav-dropdown-item">Mattermost</a>
         </li>
         {% endif %}
 
         {% if matrix %}
         <li>
-          <a href="{{ matrix }}" class="p-navigation__dropdown-item">Matrix</a>
+          <a href="{{ matrix }}" class="slop-nav-dropdown-item">Matrix</a>
         </li>
         {% endif %}
 
         {% if github_url %}
         <li>
-          <a href="{{ github_url }}" class="p-navigation__dropdown-item">GitHub</a>
+          <a href="{{ github_url }}" class="slop-nav-dropdown-item">GitHub</a>
         </li>
         {% endif %}
       </ul>
@@ -63,18 +61,18 @@
   </ul>
 {% endmacro %}
 
-<header id="navigation" class="p-navigation is-dark">
+<header id="navigation" class="slop-navbar">
   {% include "components/analytics.html" %}
   <a href="#content" class="p-link--skip">Jump to main content</a>
   <div class="l-docs__subgrid">
     <div class="l-docs__sidebar">
-      <div class="p-navigation__banner">
+      <div class="slop-navbar__banner">
         {{ nav_logo() }}
       </div>
     </div>
     <div class="l-docs__main">
-      <div class="p-navigation__row u-fixed-width">
-        <nav class="p-navigation__nav" aria-label="Main">
+      <div class="slop-navbar__row">
+        <nav class="slop-navbar__nav" aria-label="Main">
           {{ nav_items() }}
         </nav>
       </div>

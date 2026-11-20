@@ -71,6 +71,41 @@ This is a new higher-level section.
 This is a test about SCSS propagation.
 ```
 
+## Slopstrap demo
+
+```{note}
+This section is a **framework demo fixture** for the Slopstrap experiment
+branch. The widgets below are auto-hydrated by `slopstrap.js` and their
+content is fake by design. Remove this section before merging to `main`.
+```
+
+<div class="slop-status"><span class="slop-dot slop-dot-green"></span> All Systems Operational</div>
+
+<h2 class="slop-h2 slop-text-gradient">Supercharge your <span class="slop-serif-emphasis">documentation</span> at scale</h2>
+
+<div class="slop-grid-3">
+  <div class="slop-card slop-border-l-purple">
+    <div class="slop-icon-box">⚡</div>
+    <h3 class="slop-h3">⚡ Glass Cards</h3>
+    <p class="slop-muted">Frosted surfaces with cursor spotlight.</p>
+  </div>
+  <div class="slop-card slop-card-beam slop-border-l-cyan">
+    <div class="slop-icon-box slop-icon-cyan">🌀</div>
+    <h3 class="slop-h3">🌀 Border Beams</h3>
+    <p class="slop-muted">Rotating conic gradient borders.</p>
+  </div>
+  <div class="slop-card slop-border-l-emerald">
+    <div class="slop-icon-box slop-icon-emerald">🚀</div>
+    <h3 class="slop-h3">🚀 Bento Grids</h3>
+    <p class="slop-muted">Asymmetrical glowing tiles.</p>
+  </div>
+</div>
+
+<div class="slop-alert slop-border-l-purple">
+  <span class="slop-dot slop-dot-purple"></span>
+  <div><strong>✨ AI Insight:</strong> This alert is a Slopstrap component rendered through the theme's admonition transform.</div>
+</div>
+
 ```{toctree}
 :hidden:
 :caption: Sample content
@@ -78,6 +113,7 @@ Home <self>
 content/test
 content/rst-cheat-sheet.rst
 content/myst-cheat-sheet.md
+content/slop-demo
 ```
 
 ```{toctree}

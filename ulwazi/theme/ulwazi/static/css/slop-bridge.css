@@ -1,0 +1,1572 @@
+/*
+  slop-bridge.css — Slopstrap experiment branch.
+
+  Bridges the Ulwazi theme onto the Slopstrap design language. Slopstrap is
+  "zero-conflict": it styles only .slop-* classes and ships no base element
+  styles, so this file supplies:
+
+    1. A --vf-* token shim for the hand-written theme stylesheets that still
+       reference Vanilla Framework custom properties.
+    2. Base typography and content styling for docs pages (Slopstrap's
+       .slop-h1/.slop-h2/.slop-h3 are landing-page scale; docs headings are
+       re-scaled here for long-form reading).
+    3. The docs layout grid (l-docs__*) re-implemented in plain CSS.
+    4. The side navigation tree + drawer behaviour (p-side-navigation__*,
+       is-drawer-*) that Vanilla used to provide.
+    5. Fallback styling for structural classes kept from the Vanilla era
+       (row/col-*, p-table-of-contents__*, p-search-box, p-top, p-icon--*).
+    6. The Slopstrap navbar/footer/brand classes used by the theme templates.
+
+  Load order: slopstrap.css (framework) -> slop-bridge.css (this file) ->
+  hand-written theme sheets -> pygments. Later sheets win on equal
+  specificity, so the bridge avoids styling what the kept hand-written
+  sheets already style.
+*/
+
+/* ==========================================================================
+   1. --vf-* token shim
+   ========================================================================== */
+
+/* Declared on html:root, not :root: docs/conf.py links Canonical's
+   cookie-banner stylesheet (https://assets.ubuntu.com/v1/d86746ef-cookie_banner.css)
+   via html_css_files, and it redeclares the Vanilla --vf-* tokens on :root.
+   The project stylesheet loads after the theme (priority 800 vs 200), so a
+   plain :root shim would be clobbered. html:root (0,1,1) out-ranks :root
+   (0,1,0) regardless of load order. */
+html:root {
+  --slop-code-bg: #1e1330;
+  --slop-code-bg-hover: #241a3d;
+  --slop-link-purple: #c084fc;
+  /* Slopstrap palette aliases for the Vanilla-era token names. */
+  --vf-color-text-default: var(--slop-text, #f8fafc);
+  --vf-color-text-muted: var(--slop-text-muted, #94a3b8);
+  --vf-color-text-inactive: var(--slop-text-dim, #64748b);
+  --vf-color-background-default: transparent;
+  --vf-color-background-alt: rgba(15, 23, 42, 0.68);
+  --vf-color-background-hover: rgba(148, 163, 184, 0.12);
+  --vf-color-background-active: rgba(168, 85, 247, 0.18);
+  --vf-color-background-inputs: rgba(15, 23, 42, 0.8);
+  --vf-color-background-overlay: rgba(3, 7, 18, 0.7);
+  --vf-color-border-default: rgba(255, 255, 255, 0.1);
+  --vf-color-border-low-contrast: rgba(255, 255, 255, 0.06);
+  --vf-color-border-high-contrast: rgba(255, 255, 255, 0.25);
+  --vf-color-border-information: var(--slop-cyan, #06b6d4);
+  --vf-color-border-positive: var(--slop-emerald, #10b981);
+  --vf-color-border-negative: var(--slop-rose, #f43f5e);
+  --vf-color-border-caution: var(--slop-amber, #f59e0b);
+  --vf-color-border-neutral: rgba(255, 255, 255, 0.1);
+  --vf-color-link-default: #c4b5fd;
+  --vf-color-link-visited: #c4b5fd;
+  --vf-color-focus: #a855f7;
+  --vf-focus-outline-color: #a855f7;
+  --vf-color-accent: #a855f7;
+  --vf-color-button-positive-default: linear-gradient(135deg, #6366f1, #a855f7);
+  --vf-color-button-positive-text: #ffffff;
+  --vf-color-button-positive-hover: linear-gradient(135deg, #818cf8, #c084fc);
+  --vf-color-button-positive-active: linear-gradient(135deg, #818cf8, #c084fc);
+  --vf-color-button-negative-default: #f43f5e;
+  --vf-color-button-negative-text: #ffffff;
+  --vf-color-button-negative-hover: #fb7185;
+  --vf-color-button-negative-active: #fb7185;
+  --vf-color-background-information-default: rgba(6, 182, 212, 0.12);
+  --vf-color-background-information-hover: rgba(6, 182, 212, 0.2);
+  --vf-color-background-information-active: rgba(6, 182, 212, 0.28);
+  --vf-color-background-positive-default: rgba(16, 185, 129, 0.12);
+  --vf-color-background-positive-hover: rgba(16, 185, 129, 0.2);
+  --vf-color-background-positive-active: rgba(16, 185, 129, 0.28);
+  --vf-color-background-caution-default: rgba(245, 158, 11, 0.12);
+  --vf-color-background-caution-hover: rgba(245, 158, 11, 0.2);
+  --vf-color-background-caution-active: rgba(245, 158, 11, 0.28);
+  --vf-color-background-negative-default: rgba(244, 63, 94, 0.12);
+  --vf-color-background-negative-hover: rgba(244, 63, 94, 0.2);
+  --vf-color-background-negative-active: rgba(244, 63, 94, 0.28);
+  --vf-color-background-neutral-default: rgba(148, 163, 184, 0.12);
+  --vf-color-background-neutral-hover: rgba(148, 163, 184, 0.2);
+  --vf-color-background-neutral-active: rgba(148, 163, 184, 0.28);
+}
+
+/* Light-mode overrides (body.is-light): the bridge keeps a best-effort light
+   palette so the theme toggle stays functional. Slopstrap ships no light
+   palette, so these are hand-picked for readability, not fidelity.
+   body.is-light (0,1,1) also out-ranks the cookie banner's :root (0,1,0). */
+body.is-light {
+  --vf-color-text-default: #0f172a;
+  --vf-color-text-muted: #475569;
+  --vf-color-text-inactive: #64748b;
+  --vf-color-background-default: transparent;
+  --vf-color-background-alt: #ffffff;
+  --vf-color-background-hover: rgba(15, 23, 42, 0.06);
+  --vf-color-background-active: rgba(139, 92, 246, 0.12);
+  --vf-color-background-inputs: #ffffff;
+  --vf-color-border-default: rgba(15, 23, 42, 0.15);
+  --vf-color-border-low-contrast: rgba(15, 23, 42, 0.08);
+  --vf-color-border-high-contrast: rgba(15, 23, 42, 0.4);
+  --vf-color-link-default: #6d28d9;
+  --vf-color-link-visited: #6d28d9;
+}
+
+/* ==========================================================================
+   2. Base typography & content elements
+   ========================================================================== */
+
+/* Specificity note: .slop-body (0,1,0) in slopstrap.css sets color and
+   background; this body rule (0,0,1) would lose to it, so the theme-scoped
+   colour is re-asserted on body.slop-body (0,1,1) below. */
+body.slop-body {
+  font-family: var(--slop-font-sans, "Inter", system-ui, sans-serif);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--vf-color-text-default);
+  background-color: var(--slop-bg, #030712);
+  margin: 0;
+}
+
+/* Docs-scale headings (Slopstrap's .slop-h* are landing-page scale). */
+h1.slop-h1,
+h2.slop-h2,
+h3.slop-h3,
+h4.slop-h4,
+h5.slop-h5,
+h6.slop-h6 {
+  color: var(--slop-text, #f8fafc);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 2rem 0 0.75rem;
+  line-height: 1.25;
+}
+
+h1.slop-h1 {
+  font-size: 2.25rem;
+  margin-top: 0;
+  font-weight: 800;
+}
+
+h2.slop-h2 {
+  font-size: 1.6rem;
+}
+
+h3.slop-h3 {
+  font-size: 1.25rem;
+}
+
+h4.slop-h4 {
+  font-size: 1.05rem;
+}
+
+h5.slop-h5 {
+  font-size: 0.95rem;
+}
+
+h6.slop-h6 {
+  font-size: 0.875rem;
+  color: var(--vf-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+a {
+  color: var(--vf-color-link-default);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+  color: var(--slop-purple, #a855f7);
+}
+
+strong,
+b {
+  color: var(--slop-text, #f8fafc);
+  font-weight: 600;
+}
+
+/* Code */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--slop-font-mono, "JetBrains Mono", ui-monospace, monospace);
+  font-size: 0.875em;
+}
+
+code {
+  background-color: var(--slop-code-bg);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.35rem;
+  color: #e2e8f0;
+}
+
+pre {
+  background-color: var(--slop-code-bg);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: var(--slop-radius-md, 0.75rem);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.highlight {
+  background-color: var(--slop-code-bg);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: var(--slop-radius-md, 0.75rem);
+  padding: 1rem 1.25rem;
+  margin: 0 0 1.25rem;
+  overflow-x: auto;
+}
+
+.highlight pre {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Lists */
+ul,
+ol {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.35rem;
+}
+
+/* Blockquote */
+blockquote {
+  border-left: 4px solid var(--slop-purple, #a855f7);
+  margin: 0 0 1rem;
+  padding: 0.25rem 0 0.25rem 1rem;
+  color: var(--vf-color-text-muted);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--vf-color-border-default);
+  margin: 2rem 0;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.25rem;
+  font-size: 0.925rem;
+}
+
+th,
+td {
+  border: 1px solid var(--vf-color-border-default);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background-color: rgba(148, 163, 184, 0.08);
+  color: var(--slop-text, #f8fafc);
+  font-weight: 600;
+}
+
+tbody tr:hover {
+  background-color: var(--vf-color-background-hover);
+}
+
+/* Details/summary */
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--slop-text, #f8fafc);
+  padding: 0.35rem 0;
+}
+
+summary:hover {
+  color: var(--slop-purple, #a855f7);
+}
+
+details {
+  border: 1px solid var(--vf-color-border-default);
+  border-radius: var(--slop-radius-md, 0.75rem);
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Definition lists */
+dt {
+  font-weight: 600;
+  color: var(--slop-text, #f8fafc);
+  margin-top: 0.75rem;
+}
+
+dd {
+  margin-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Admonitions (Slopstrap alerts; structure built by ulwazi/__init__.py) */
+.slop-alert {
+  margin: 0 0 1.25rem;
+}
+
+.slop-alert strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.slop-alert__body {
+  color: var(--vf-color-text-muted);
+}
+
+.slop-alert__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Headerlinks (permalinks) */
+a.headerlink {
+  color: var(--vf-color-text-inactive);
+  font-size: 0.85em;
+  margin-left: 0.35rem;
+  text-decoration: none;
+}
+
+a.headerlink:hover {
+  color: var(--slop-purple, #a855f7);
+}
+
+/* Footnotes / captions */
+p.caption,
+.rubric {
+  color: var(--vf-color-text-muted);
+  font-style: italic;
+}
+
+/* Guilabel / kbd (re-styled from _ulwazi.scss) */
+.guilabel {
+  background-color: rgba(6, 182, 212, 0.12);
+  border: 1px solid var(--vf-color-border-information);
+  border-radius: 0.5em;
+  color: var(--vf-color-text-default);
+  font-size: 0.9em;
+  padding: 0 0.3em;
+}
+
+kbd:not(.compound) {
+  background-color: rgba(148, 163, 184, 0.12);
+  border: 1px solid var(--vf-color-border-default);
+  border-radius: 0.2rem;
+  color: var(--vf-color-text-default);
+  display: inline-block;
+  margin: 0 0.2rem;
+  padding: 0 0.35rem;
+  vertical-align: middle;
+}
+
+kbd.compound {
+  background: transparent;
+  border: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+/* Utility classes kept from the Vanilla era */
+.hidden {
+  display: none !important;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.u-off-screen,
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Skip link */
+.p-link--skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--slop-bg-elevated, #0b1120);
+  color: var(--slop-text, #f8fafc);
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 0.5rem 0;
+}
+
+.p-link--skip:focus {
+  left: 0;
+}
+
+/* ==========================================================================
+   3. Docs layout grid (l-docs__*)
+   ========================================================================== */
+
+/* Page shell: header, content, footer stack. */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer-block {
+  margin-top: auto;
+}
+
+/* Content grid: sidebar | main | meta. Mirrors the Vanilla-era geometry
+   (15rem sidebar, 47rem main, 15rem meta) with Slopstrap spacing. */
+.l-docs {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 47rem) 15rem;
+  grid-template-areas: "sidebar main meta";
+  gap: 0 2.5rem;
+  justify-content: center;
+  padding: 0 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.l-docs__sidebar {
+  grid-area: sidebar;
+  min-width: 0;
+}
+
+.l-docs__main {
+  grid-area: main;
+  min-width: 0;
+}
+
+.l-docs__meta {
+  grid-area: meta;
+  min-width: 0;
+}
+
+/* Header/footer subgrid: banner column + main column. */
+.l-docs__subgrid {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: 0 2.5rem;
+  max-width: 82rem;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.l-docs__subgrid .l-docs__sidebar {
+  grid-column: 1;
+}
+
+.l-docs__subgrid .l-docs__main {
+  grid-column: 2;
+}
+
+/* Sticky footer when content is short. */
+.l-docs__footer {
+  margin-top: 3rem;
+  border-top: 1px solid var(--vf-color-border-default);
+  padding: 2rem 1.5rem 2.5rem;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.l-docs__footer p {
+  margin: 0 0 0.5rem;
+  color: var(--vf-color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* Wide layout: keep the article a comfortable reading column. */
+@media screen and (min-width: 1030px) {
+  .l-docs {
+    grid-template-columns: 15rem minmax(0, 47rem) 15rem;
+  }
+}
+
+/* Narrow layout: single column; sidebar and meta stack. */
+@media screen and (max-width: 1029px) {
+  .l-docs {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "main"
+      "meta";
+    padding: 0 1rem;
+  }
+
+  .l-docs__sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(20rem, 85vw);
+    z-index: 40;
+    background: var(--slop-bg-elevated, #0b1120);
+    border-right: 1px solid var(--vf-color-border-default);
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    overflow-y: auto;
+    padding: 1rem;
+  }
+
+  /* The drawer state classes live on the nav inside the sidebar panel;
+     :has() lifts the open state to the sliding container. */
+  .l-docs__sidebar:has(.p-side-navigation--raw-html.is-drawer-expanded) {
+    transform: translateX(0);
+  }
+
+  .l-docs__subgrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .l-docs__subgrid .l-docs__sidebar {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   4. Slopstrap navbar (header.html)
+   ========================================================================== */
+
+.slop-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--vf-color-border-default);
+}
+
+.slop-navbar__banner {
+  padding: 0.75rem 0;
+}
+
+.slop-navbar__row {
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+}
+
+.slop-navbar__nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.slop-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.slop-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--slop-text, #f8fafc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.slop-brand-link:hover {
+  text-decoration: none;
+  color: var(--slop-purple, #a855f7);
+}
+
+.slop-brand-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+}
+
+.slop-brand-title {
+  white-space: nowrap;
+}
+
+.slop-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.slop-nav-item {
+  position: relative;
+}
+
+.slop-nav-link {
+  color: var(--vf-color-text-muted);
+  text-decoration: none;
+  font-size: 0.925rem;
+  font-weight: 500;
+  padding: 0.4rem 0;
+  display: inline-block;
+}
+
+.slop-nav-link:hover,
+.slop-nav-link:focus {
+  color: var(--slop-text, #f8fafc);
+  text-decoration: none;
+}
+
+.slop-nav-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 12rem;
+  background: var(--slop-bg-elevated, #0b1120);
+  border: 1px solid var(--vf-color-border-default);
+  border-radius: var(--slop-radius-md, 0.75rem);
+  padding: 0.5rem;
+  list-style: none;
+  margin: 0.35rem 0 0;
+  z-index: 60;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.slop-nav-item.is-active .slop-nav-dropdown,
+.slop-nav-dropdown.show {
+  display: block;
+}
+
+.slop-nav-dropdown-item {
+  display: block;
+  padding: 0.45rem 0.75rem;
+  color: var(--vf-color-text-muted);
+  text-decoration: none;
+  border-radius: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.slop-nav-dropdown-item:hover,
+.slop-nav-dropdown-item:focus {
+  background: var(--vf-color-background-hover);
+  color: var(--slop-text, #f8fafc);
+  text-decoration: none;
+}
+
+/* Mobile nav toggles (anchor-based; hidden on wide screens). */
+.slop-nav-toggle {
+  display: none;
+}
+
+@media screen and (max-width: 1029px) {
+  .slop-navbar__row {
+    flex-wrap: wrap;
+  }
+
+  .slop-navbar__nav {
+    display: none;
+    width: 100%;
+    padding-bottom: 0.75rem;
+  }
+
+  .slop-navbar:target .slop-navbar__nav {
+    display: block;
+  }
+
+  .slop-nav-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    white-space: normal;
+  }
+
+  .slop-nav-toggle {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid var(--vf-color-border-default);
+    border-radius: 0.4rem;
+    color: var(--vf-color-text-muted);
+    font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .slop-nav-toggle--close {
+    display: none;
+  }
+
+  .slop-navbar:target .slop-nav-toggle--open {
+    display: none;
+  }
+
+  .slop-navbar:target .slop-nav-toggle--close {
+    display: inline-block;
+  }
+}
+
+/* ==========================================================================
+   5. Footer (footer.html)
+   ========================================================================== */
+
+.slop-footer__nav {
+  display: block;
+}
+
+.slop-footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.5rem;
+}
+
+.slop-footer__item {
+  margin: 0;
+}
+
+.slop-footer__item a {
+  color: var(--vf-color-text-muted);
+  font-size: 0.9rem;
+}
+
+.slop-footer__item a:hover {
+  color: var(--slop-purple, #a855f7);
+}
+
+/* ==========================================================================
+   6. Side navigation tree + drawer (sidebar-primary.html, sidenav.css)
+   ========================================================================== */
+
+/* Wide layout: static sticky column. */
+@media screen and (min-width: 1030px) {
+  .p-side-navigation--raw-html {
+    position: sticky;
+    top: 4.5rem;
+    max-height: calc(100vh - 5rem);
+    overflow-y: auto;
+    padding: 1.5rem 0;
+  }
+
+  .p-side-navigation__overlay,
+  .p-side-navigation__drawer-header {
+    display: none !important;
+  }
+}
+
+/* Drawer chrome (narrow layout): the drawer is the .l-docs__sidebar panel
+   itself; these elements provide the scrim and close button. */
+/* The overlay is a child of the drawer nav (inside the sidebar stacking
+   context), so it paints above the drawer content regardless of z-index.
+   Keep it transparent over the drawer area by clipping it to the right of
+   the sidebar panel instead of dimming it. */
+.p-side-navigation__overlay {
+  display: none !important;
+  position: fixed;
+  inset: 0;
+  left: min(20rem, 85vw);
+  background: var(--vf-color-background-overlay);
+  cursor: pointer;
+}
+
+/* Narrow-layout-only chrome: hidden on wide screens in the media block below
+   via !important, because a later unscoped rule would otherwise out-rank the
+   media query (media conditions add no specificity). */
+.p-side-navigation__drawer-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.25rem 0;
+}
+
+.p-side-navigation__toggle--in-drawer {
+  background: transparent;
+  border: 1px solid var(--vf-color-border-default);
+  border-radius: 0.4rem;
+  color: var(--vf-color-text-muted);
+  font-size: 0.8rem;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+}
+
+.p-side-navigation__toggle--in-drawer:hover {
+  color: var(--slop-text, #f8fafc);
+}
+
+/* Drawer open state: nav-toggle.js toggles is-drawer-expanded on #drawer.
+   The sliding container is .l-docs__sidebar (see the narrow layout above);
+   the overlay scrim is shown while the drawer is expanded. The !important is
+   required to re-enable display inside the wide-block's display:none !important
+   — and the whole rule is harmless on wide screens because the overlay is
+   fixed-positioned off-canvas only when the drawer opens (drawer opening on
+   wide screens is not possible; the toggle button is hidden). */
+@media screen and (max-width: 1029px) {
+  .p-side-navigation--raw-html.is-drawer-expanded .p-side-navigation__overlay {
+    display: block !important;
+  }
+}
+
+/* Tree list */
+.p-side-navigation__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.p-side-navigation__item {
+  margin: 0;
+}
+
+.p-side-navigation__link,
+.p-side-navigation--raw-html li > a {
+  display: block;
+  padding: 0.3rem 0.75rem;
+  color: var(--vf-color-text-muted);
+  text-decoration: none;
+  border-radius: 0.4rem;
+  line-height: 1.4;
+}
+
+.p-side-navigation__link:hover,
+.p-side-navigation--raw-html li > a:hover {
+  background: var(--vf-color-background-hover);
+  color: var(--slop-text, #f8fafc);
+  text-decoration: none;
+}
+
+.p-side-navigation__link.is-active,
+.p-side-navigation--raw-html li.current > a {
+  color: var(--slop-purple, #a855f7);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   7. Secondary TOC (sidebar-secondary.html, local-toc.css)
+   ========================================================================== */
+
+.p-table-of-contents {
+  font-size: 0.875rem;
+}
+
+.p-table-of-contents__header {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--vf-color-text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.p-table-of-contents__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.p-table-of-contents__item {
+  margin: 0 0 0.35rem;
+}
+
+.p-table-of-contents__link {
+  color: var(--vf-color-text-muted);
+  text-decoration: none;
+  display: block;
+  padding: 0.15rem 0;
+}
+
+.p-table-of-contents__link:hover {
+  color: var(--slop-purple, #a855f7);
+  text-decoration: none;
+}
+
+/* Nested TOC lists */
+.p-table-of-contents__list ul {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding-left: 0.9rem;
+}
+
+/* Back to top */
+.p-top {
+  margin-top: 1rem;
+}
+
+.p-top__link {
+  color: var(--vf-color-text-muted);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.p-top__link:hover {
+  color: var(--slop-purple, #a855f7);
+}
+
+/* Sticky meta column */
+.l-docs__sticky-container {
+  position: sticky;
+  top: 4.5rem;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 1029px) {
+  .l-docs__sticky-container {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* ==========================================================================
+   8. Buttons (p-button* fallbacks + slop-btn sizing in docs context)
+   ========================================================================== */
+
+.p-button,
+.p-button--positive,
+.p-button--negative,
+.p-button--base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: 1px solid var(--vf-color-border-default);
+  background: var(--vf-color-background-inputs);
+  color: var(--vf-color-text-default);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.p-button:hover,
+.p-button--positive:hover,
+.p-button--negative:hover,
+.p-button--base:hover {
+  background: var(--vf-color-background-hover);
+  text-decoration: none;
+}
+
+/* Docs-context sizing for Slopstrap buttons (avoid landing-page scale). */
+.l-docs__main .slop-btn {
+  font-size: 0.875rem;
+  padding: 0.4rem 1rem;
+}
+
+/* ==========================================================================
+   9. Search box (searchbox.html)
+   ========================================================================== */
+
+.p-search-box {
+  display: flex;
+  margin: 0.5rem 0 1rem;
+}
+
+.p-search-box__input {
+  flex: 1;
+  min-width: 0;
+  background: var(--vf-color-background-inputs);
+  border: 1px solid var(--vf-color-border-default);
+  border-right: none;
+  border-radius: 0.5rem 0 0 0.5rem;
+  color: var(--vf-color-text-default);
+  font-size: 0.875rem;
+  padding: 0.4rem 0.75rem;
+  font-family: inherit;
+}
+
+.p-search-box__input:focus {
+  outline: 2px solid var(--vf-color-focus);
+  outline-offset: -1px;
+}
+
+.p-search-box__reset,
+.p-search-box__button {
+  background: var(--vf-color-background-inputs);
+  border: 1px solid var(--vf-color-border-default);
+  color: var(--vf-color-text-muted);
+  cursor: pointer;
+  padding: 0 0.6rem;
+  font-size: 0.8rem;
+}
+
+.p-search-box__reset {
+  border-right: none;
+}
+
+.p-search-box__button {
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.p-search-box__button:hover {
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+}
+
+/* ==========================================================================
+   10. Vanilla-era grid fallbacks (row/col-*; genindex, search, 404,
+   product menu)
+   ========================================================================== */
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 0 0 1.5rem;
+}
+
+.row > [class*="col-"] {
+  min-width: 0;
+}
+
+.row--25-75 {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+}
+
+@media screen and (max-width: 1029px) {
+  .row,
+  .row--25-75 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.col-3 { grid-column: span 3; }
+.col-4 { grid-column: span 4; }
+.col-5 { grid-column: span 5; }
+.col-6 { grid-column: span 6; }
+.col-7 { grid-column: span 7; }
+.col-8 { grid-column: span 8; }
+.col-9 { grid-column: span 9; }
+.col-12 { grid-column: span 12; }
+
+@media screen and (max-width: 1029px) {
+  .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9 {
+    grid-column: span 12;
+  }
+}
+
+.u-fixed-width {
+  max-width: 82rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.u-hide,
+.u-hide--large {
+  display: none;
+}
+
+@media screen and (max-width: 1029px) {
+  .u-hide--large {
+    display: inline-flex;
+  }
+}
+
+.u-no-margin {
+  margin: 0;
+}
+
+.u-no-margin--bottom {
+  margin-bottom: 0;
+}
+
+.u-no-padding {
+  padding: 0;
+}
+
+/* ==========================================================================
+   11. Icons (p-icon--* fallbacks: feedback.css provides the containers)
+   ========================================================================== */
+
+.p-icon--edit,
+.p-icon--show,
+.p-icon--search,
+.p-icon--close,
+.p-icon--chevron-down,
+.p-icon--chevron-up,
+.p-icon--menu,
+.p-icon--highlight-on,
+.p-icon--highlight-off {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  background-color: currentColor;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  vertical-align: middle;
+}
+
+/* Theme toggle button: sized by its icon class (see masks below). */
+/* Theme toggle button: sized by its icon class (see masks below). The purple
+   fills the sun/moon mask, matching Slopstrap's link purple (#c084fc) so the
+   toggle reads as one of the icon actions next to edit / view-source. */
+button.theme-toggle.p-icon--highlight-off,
+button.theme-toggle.p-icon--highlight-on {
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: #c084fc;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+button.theme-toggle.p-icon--highlight-off:hover,
+button.theme-toggle.p-icon--highlight-on:hover {
+  background-color: var(--slop-purple, #a855f7);
+}
+
+/* State-driven icon: the template hardcodes p-icon--highlight-off (sun), so
+   dark mode swaps the mask to the moon without touching theme-toggle.js. */
+body.is-dark button.theme-toggle.p-icon--highlight-off {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E");
+}
+
+/* SVG data-URI masks (Vanilla's icon sprites are gone). */
+.p-icon--chevron-down {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+.p-icon--chevron-up {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 15 12 9 18 15'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 15 12 9 18 15'/%3E%3C/svg%3E");
+}
+
+.p-icon--close {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
+}
+
+.p-icon--search {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+}
+
+.p-icon--edit {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5'/%3E%3Cpath d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5'/%3E%3Cpath d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/%3E%3C/svg%3E");
+}
+
+.p-icon--show {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+}
+
+/* Theme toggle: sun (light mode active) / moon (dark mode active). The
+   button in feedback.html carries p-icon--highlight-off by default and
+   theme-toggle.js swaps it for p-icon--highlight-on in dark mode. */
+.p-icon--highlight-off {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41'/%3E%3C/svg%3E");
+}
+
+.p-icon--highlight-on {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   12. Misc kept classes
+   ========================================================================== */
+
+/* p-notification fallback (any stragglers outside the admonition transform) */
+.p-notification,
+[class^="p-notification--"] {
+  border: 1px solid var(--vf-color-border-default);
+  border-left: 4px solid var(--slop-purple, #a855f7);
+  border-radius: var(--slop-radius-md, 0.75rem);
+  background: rgba(15, 23, 42, 0.8);
+  padding: 1rem 1.25rem;
+  margin: 0 0 1.25rem;
+}
+
+.p-notification--positive { border-left-color: var(--slop-emerald, #10b981); }
+.p-notification--negative { border-left-color: var(--slop-rose, #f43f5e); }
+.p-notification--caution { border-left-color: var(--slop-amber, #f59e0b); }
+.p-notification--information { border-left-color: var(--slop-cyan, #06b6d4); }
+
+.p-notification__title {
+  color: var(--slop-text, #f8fafc);
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.p-notification__message {
+  color: var(--vf-color-text-muted);
+}
+
+.p-notification__message > :last-child {
+  margin-bottom: 0;
+}
+
+/* p-text--small-caps (product menu) */
+.p-text--small-caps {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  color: var(--vf-color-text-muted);
+}
+
+/* p-strip (footer used it; now generic dark surface) */
+.p-strip {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+/* Tabs (tabs.py emits p-tabs*) */
+.p-tabs__list {
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0 0 -1px;
+  padding: 0;
+  border-bottom: 1px solid var(--vf-color-border-default);
+}
+
+.p-tabs__link {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  color: var(--vf-color-text-muted);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 0.5rem 0.5rem 0 0;
+  font-size: 0.9rem;
+}
+
+.p-tabs__link:hover {
+  color: var(--slop-text, #f8fafc);
+}
+
+.p-tabs__link[aria-selected="true"] {
+  color: var(--slop-text, #f8fafc);
+  background: var(--vf-color-background-alt);
+  border-color: var(--vf-color-border-default);
+  border-bottom-color: transparent;
+}
+
+.p-tabs__item[role="tabpanel"] {
+  border: 1px solid var(--vf-color-border-default);
+  border-radius: 0 0 var(--slop-radius-md, 0.75rem) var(--slop-radius-md, 0.75rem);
+  padding: 1rem 1.25rem;
+  background: var(--vf-color-background-alt);
+}
+
+/* RTD flyouts stay fixed (from _ulwazi.scss) */
+readthedocs-flyout,
+readthedocs-notification,
+readthedocs-search,
+readthedocs-hotkeys,
+readthedocs-filetreediff,
+readthedocs-docdiff {
+  position: fixed;
+}
+
+/* Light-mode readability patches (best-effort; Slopstrap is dark-native). */
+body.is-light .slop-navbar {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom-color: rgba(15, 23, 42, 0.12);
+}
+
+body.is-light .slop-brand-link,
+body.is-light .slop-nav-link:hover,
+body.is-light .slop-nav-dropdown-item:hover,
+body.is-light summary,
+body.is-light th,
+body.is-light dt,
+body.is-light strong,
+body.is-light h1.slop-h1,
+body.is-light h2.slop-h2,
+body.is-light h3.slop-h3,
+body.is-light h4.slop-h4,
+body.is-light h5.slop-h5,
+body.is-light h6.slop-h6 {
+  color: #0f172a;
+}
+
+body.is-light .slop-nav-link,
+body.is-light .slop-nav-dropdown-item,
+body.is-light .slop-alert__body,
+body.is-light .p-notification__message,
+body.is-light .slop-footer__item a,
+body.is-light .p-top__link,
+body.is-light .p-table-of-contents__link,
+body.is-light .p-side-navigation__link,
+body.is-light .p-side-navigation--raw-html li > a {
+  color: #475569;
+}
+
+body.is-light {
+  --slop-code-bg: #f3eefa;
+}
+
+body.is-light code,
+body.is-light .highlight {
+  background-color: var(--slop-code-bg);
+  color: #0f172a;
+}
+
+body.is-light .slop-navbar {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+body.is-light .l-docs__footer {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+body.is-light .p-notification,
+body.is-light [class^="p-notification--"] {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+body.is-light .slop-orb-layer {
+  opacity: 0.25;
+}
+
+/* Light shell: Slopstrap's .slop-body paints the dark canvas, so the light
+   mode must re-assert a light background at matching specificity. */
+body.slop-body.is-light {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+body.is-light.slop-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ==========================================================================
+   13. Expandable nav tree (ported from _ulwazi.scss; no longer compiled)
+   ========================================================================== */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item a {
+  width: 100%;
+  font-size: 0.9rem;
+  line-height: 1.5rem;
+}
+
+/* Arrow label: pushed to the right, row-height. */
+.nav-item label {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  padding-left: 6px;
+  margin-bottom: 0;
+  padding-top: 0;
+  cursor: pointer;
+  margin-left: auto;
+  align-self: stretch;
+}
+
+li.current:not(:has(li.current)) > .nav-item > label {
+  background: var(--vf-color-background-active);
+  color: var(--vf-color-text-default);
+}
+
+.nav-item label:hover,
+.nav-item label:focus {
+  background: var(--vf-color-background-hover);
+  color: var(--vf-color-text-default);
+}
+
+.nav-item .icon,
+.nav-item svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+/* Show chevron-down by default, hide chevron-up; swap when expanded. */
+.nav-item label .p-icon--chevron-down {
+  display: inline-block;
+}
+.nav-item label .p-icon--chevron-up {
+  display: none;
+}
+.nav-item input:checked + label .p-icon--chevron-down {
+  display: none;
+}
+.nav-item input:checked + label .p-icon--chevron-up {
+  display: inline-block;
+}
+
+/* arrow-toggle helper (main.scss) */
+.arrow-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.arrow-toggle .icon,
+.arrow-toggle svg {
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+}
+
+/* Spacing helpers ported from _ulwazi.scss */
+.p-list__item p,
+.p-list__item pre,
+dd p,
+th > p {
+  margin-bottom: 0;
+}
+
+.p-table-of-contents__list ul {
+  padding-left: 0;
+}
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+
+.align-right td, .align-right th { text-align: right; }
+.align-center td, .align-center th { text-align: center; }
+.align-left td, .align-left th { text-align: left; }
+
+/* SCSS propagation canary (fixture for the dormant test suite). */
+.heading-test-scss {
+  color: purple;
+}
+
+/* Terminal blocks keep their own dark surface. */
+.terminal .highlight,
+.terminal .highlight pre {
+  background-color: transparent;
+}
+
+.terminal-code pre {
+  color: #ebebeb;
+  margin-bottom: 0;
+}
+
+.terminal .input code,
+.terminal .command code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+div.terminal {
+  margin-bottom: 1.5em;
+}
+
+div.terminal > div.input > button.copybtn svg {
+  color: #f8f8f8;
+}
+
+/* Copy buttons are transparent surfaces. */
+button.copybtn,
+button.copybtn:hover,
+.highlight button.copybtn:hover {
+  background: none;
+  background-color: transparent;
+  border: none;
+}
+
+.highlight button.copybtn {
+  color: var(--vf-color-text-muted);
+}
+
+.highlight button.copybtn.success {
+  color: var(--vf-color-border-positive);
+}
+
+/* sphinx-tabs hardcoded colours neutralised (tabs.py emits p-tabs). */
+[role="tablist"] {
+  border-bottom: 1px solid var(--vf-color-border-default);
+}
+
+.sphinx-tabs-tab {
+  background-color: transparent;
+  color: var(--vf-color-text-default);
+}
+
+.sphinx-tabs-tab[aria-selected="true"] {
+  border: 1px solid var(--vf-color-border-default);
+  border-bottom-color: transparent;
+  background-color: var(--vf-color-background-alt);
+}
+
+.sphinx-tabs-panel {
+  border: 1px solid var(--vf-color-border-default);
+  background: var(--vf-color-background-alt);
+}
+
+.p-tabs > .p-tabs__item[role="tabpanel"] {
+  min-width: 0;
+  width: 100%;
+}
+
+/* configoption extension (Furo-targeted) chevron sizing. */
+.configoption .basicinfo .anchor .icon svg {
+  width: 1rem;
+  height: 1rem;
+  transform: none;
+}
+
+.configoption:has(> .details:not([hidden])) .basicinfo .anchor .icon svg {
+  transform: rotate(90deg);
+}
+
+.configoption {
+  --color-table-border: var(--vf-color-border-low-contrast);
+}
+
+/* Tooltip suppression for copy buttons. */
+.copybtn.o-tooltip--left[data-tooltip]::before,
+.copybtn.o-tooltip--left[data-tooltip]::after {
+  content: none !important;
+  display: none !important;
+}
+
+.input button.copybtn {
+  background-color: transparent !important;
+  z-index: 999;
+}
+
+div.input > button.copybtn svg {
+  height: 1.4em !important;
+  width: 1.4em !important;
+}

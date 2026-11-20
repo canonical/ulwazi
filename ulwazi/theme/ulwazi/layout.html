@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html{% block html_tag_attrs %} lang="{{ language }}" data-content_root="{{ content_root }}"{% endblock %}>
+<html{% block html_tag_attrs %} lang="{{ language }}" data-content_root="{{ content_root }}" data-slop-level="3"{% endblock %}>
 <head>
   {% block head_meta -%}
 
@@ -50,8 +50,11 @@
 
   {% endblock head_links -%}
 
-  {% block head_stylesheets -%}
-  {% if not omit_skeleton_css -%}
+  {% block head_stylesheets -%}  {%- if ulwazi_slopstrap_fonts -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="{{ ulwazi_slopstrap_fonts_url }}" rel="stylesheet" />
+  {%- endif -%}  {% if not omit_skeleton_css -%}
     <link rel="stylesheet" href="{{ pathto('_static/skeleton.css', 1) }}" type="text/css" />
   {%- endif -%}
 
@@ -74,20 +77,33 @@
   {% block head_javascript %}
   <script>
     // Apply saved theme early to prevent flash of wrong theme on page load.
+    // Dark is the hard default on this branch (Slopstrap's native palette);
+    // light mode is a best-effort override, so it is only applied when
+    // explicitly saved.
     (function () {
       var theme = localStorage.getItem("ulwazi-theme");
-      if (theme === "is-dark" || theme === "is-light") {
+      if (theme === "is-light" || theme === "is-dark") {
         document.documentElement.classList.add(theme);
+      } else {
+        document.documentElement.classList.add("is-dark");
       }
     })();
   </script>
   {% endblock %}
   {% block head_extra %}{% endblock %}
 </head>
-<body{% block body_tag_attrs %}{% endblock %}>
+<body{% block body_tag_attrs %} class="slop-body slop-grid-bg"{% endblock %}>
+  <div class="slop-orb-layer" aria-hidden="true">
+    <div class="slop-orb slop-orb-purple"></div>
+    <div class="slop-orb slop-orb-cyan"></div>
+    <div class="slop-orb slop-orb-pink"></div>
+    <div class="slop-orb slop-orb-emerald"></div>
+  </div>
+  <div class="slop-content-layer">
   {% block body %}
   <article role="main"></article>
   {% endblock body -%}
+  </div>
   {% block body_javascript -%}
   {% for js in script_files -%}
     {{ js_tag(js) }}
