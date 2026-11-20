@@ -48,10 +48,16 @@ OVERRIDES = {
 
 
 def _check_title(name: str, soup: BeautifulSoup) -> list[str]:
-    """<title> must include the site-name suffix, not just the page heading."""
+    """<title> must include the site-name suffix, not just the page heading.
+
+    The root page is exempt: its H1 commonly equals the site title, so the
+    suffix would duplicate it (see the Troubleshooting page).
+    """
     title = soup.title
     if title is None:
         return [f"[{name}] missing <title> element"]
+    if name == "index":
+        return []
     if " — " not in title.text and "&#8212;" not in str(title):
         return [f"[{name}] <title> is missing the site-name suffix: {title.text!r}"]
     return []

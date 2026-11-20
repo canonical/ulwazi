@@ -84,6 +84,7 @@ content/myst-cheat-sheet.md
 :hidden:
 :caption: Ulwazi documentation
 content/configuration
+content/troubleshooting
 content/contribute
 content/preview-workflow
 content/tests/index
