@@ -17,5 +17,4 @@ sidebars = [
 ]
 
 [options]
-globaltoc_collapse = "true"
-globaltoc_maxdepth = "3"
+globaltoc_maxdepth = "-1"

@@ -98,6 +98,8 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     # Validate html_context["help_links"] once per build (not per page),
     # including when Ulwazi is selected only via html_theme.
     app.connect("builder-inited", _setup_help_links)  # pyright: ignore [reportUnknownMemberType]
+    # Validate the globaltoc_maxdepth theme option once per build, likewise.
+    app.connect("builder-inited", _setup_globaltoc_depth)  # pyright: ignore [reportUnknownMemberType]
     app.connect("builder-inited", _setup_removed_classes_check)  # pyright: ignore [reportUnknownMemberType]
     app.connect("html-page-context", _html_page_context)  # pyright: ignore [reportUnknownMemberType]
     app.connect("build-finished", _removed_classes_summary)  # pyright: ignore [reportUnknownMemberType]
@@ -163,13 +165,15 @@ def config_inited(app: Sphinx, config: Config) -> None:
 
     _configure_html_title(config)
 
-    # NOTE: This assigns the whole dict and would wipe any user-provided
-    # html_theme_options. It also sets "sidebar_hide_name", which is not yet
-    # an Ulwazi theme option (no template reads it). Mirrors the behaviour
-    # inherited from canonical-sphinx-config; revisit when the option is
-    # implemented in the theme.
+    # NOTE: "sidebar_hide_name" is not yet an Ulwazi theme option (no template
+    # reads it). Mirrors the behaviour inherited from canonical-sphinx-config;
+    # revisit when the option is implemented in the theme. The user's own
+    # html_theme_options (for example globaltoc_maxdepth) are kept.
     if config.html_title == "":
-        config.html_theme_options = {"sidebar_hide_name": True}
+        config.html_theme_options = {
+            **config.html_theme_options,
+            "sidebar_hide_name": True,
+        }
 
     # The opt-out skips Ulwazi's defaults even if the user loads the extension.
     if config.notfound_enabled:
@@ -560,14 +564,70 @@ def _setup_help_links(app: Sphinx) -> None:
     app._ulwazi_help_links_validated = True  # type: ignore[attr-defined] # noqa: SLF001 # pyright: ignore [reportAttributeAccessIssue]
 
 
+def _parse_globaltoc_maxdepth(value: object) -> int | None:
+    """Convert a ``globaltoc_maxdepth`` theme option to a Sphinx ``maxdepth``.
+
+    Theme options are strings in ``theme.toml`` and with ``-D``, but an
+    integer in ``html_theme_options``; both are accepted. The result follows
+    Sphinx's own convention: ``-1`` is unlimited, ``0`` uses each toctree
+    directive's own ``:maxdepth:``, and a positive number is a level limit.
+    An empty string means ``0``, as in Sphinx's ``basic`` theme.
+
+    :returns: The depth, or ``None`` if the value is not valid
+    """
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return 0
+        try:
+            value = int(text)
+        except ValueError:
+            return None
+    if isinstance(value, int) and value >= -1:
+        return value
+    return None
+
+
+def _setup_globaltoc_depth(app: Sphinx) -> None:
+    """Validate the ``globaltoc_maxdepth`` theme option once per HTML build.
+
+    Connected to ``builder-inited`` (like :func:`_setup_help_links`), when the
+    theme and the project's ``html_theme_options`` are already resolved. An
+    invalid value warns once here and falls back to unlimited depth; the
+    result is stored on the app for :func:`_compute_navigation_tree`.
+    """
+    if app.builder.format != "html":
+        return
+    builder = cast(Any, app.builder)
+    default = builder.theme.get_config("options", "globaltoc_maxdepth", "-1")
+    value = builder.theme_options.get("globaltoc_maxdepth", default)
+    depth = _parse_globaltoc_maxdepth(value)
+    if depth is None:
+        logger.warning(
+            "Ulwazi: the globaltoc_maxdepth theme option must be an integer of "
+            "-1 or more (-1: unlimited, 0: use each toctree's own :maxdepth:); "
+            "got %r. Using unlimited depth.",
+            value,
+            type="ulwazi",
+            subtype="globaltoc",
+        )
+        depth = -1
+    app._ulwazi_globaltoc_maxdepth = depth  # type: ignore[attr-defined] # noqa: SLF001 # pyright: ignore [reportAttributeAccessIssue]
+
+
 def _compute_navigation_tree(app: Sphinx, context: dict[str, Any]) -> str:
-    # The globaltoc tree by Sphinx
+    # The globaltoc tree by Sphinx. Without an explicit maxdepth Sphinx prunes
+    # it to the root toctree's :maxdepth:; the validated globaltoc_maxdepth
+    # theme option (default -1, unlimited, like Furo) is passed instead.
     if "toctree" in context:
         toctree = context["toctree"]
         toctree_html = toctree(
             collapse=False,
             titles_only=True,
             includehidden=True,
+            maxdepth=getattr(app, "_ulwazi_globaltoc_maxdepth", -1),
         )
     else:
         toctree_html = ""

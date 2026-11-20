@@ -77,6 +77,49 @@ Ulwazi stages the logo in the LaTeX output directory. With
 For problems commonly hit when migrating from the previous Furo-based
 Canonical Sphinx Stack, see {doc}`troubleshooting`.
 
+(sidebar-navigation-depth)=
+### Sidebar navigation depth
+
+By default, the sidebar shows the full page hierarchy, with an expand control
+for every page that has sub-pages, whatever `:maxdepth:` the toctree
+directives set. This matches Furo, the theme used by `canonical-sphinx`.
+
+Sphinx uses a toctree directive's `:maxdepth:` for two things: the list the
+directive renders in page content, and the depth of the sidebar tree. Ulwazi
+keeps the first and, by default, no longer applies the second.
+
+To change the sidebar depth, set the `globaltoc_maxdepth` theme option in
+`html_theme_options`. It follows Sphinx's own `maxdepth` convention:
+
+- `-1` (default): show every level.
+- `0`: use each root toctree's own `:maxdepth:`. This is native Sphinx
+  behaviour.
+- `1` or more: show that many levels, counting the root toctree's entries as
+  level 1, whatever the directives' `:maxdepth:` says.
+
+```python
+html_theme_options = {
+    # Show two levels in the sidebar
+    "globaltoc_maxdepth": 2,
+}
+```
+
+The value can be a number or a string, so the command-line form
+`-D html_theme_options.globaltoc_maxdepth=2` also works. An empty string
+means `0`, as in Sphinx's `basic` theme. Any other value, such as text or a
+number below `-1`, is ignored with a build warning and the sidebar shows every
+level.
+
+Only toctrees in the root document (`root_doc`, usually `index`) affect the
+sidebar. Sphinx inlines nested toctrees into the sidebar tree and ignores
+their `:maxdepth:`. A toctree without `:maxdepth:` counts as `:maxdepth: -1`,
+so with `0` it is shown in full.
+
+```{note}
+Earlier Ulwazi releases pruned the sidebar to the root toctree's
+`:maxdepth:`. To keep that behaviour, set `"globaltoc_maxdepth": 0`.
+```
+
 ### Default HTML title
 
 When `html_title` is unset, Sphinx's own default is

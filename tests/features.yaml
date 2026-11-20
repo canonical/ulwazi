@@ -91,6 +91,10 @@ site:
     source: side navigation drawer browser interaction
     checks:
       - tests/test_features.py::test_features_slow
+  - name: Sidebar navigation depth (globaltoc_maxdepth theme option)
+    source: temporary Sphinx site with two root toctrees (one with maxdepth 1, one without) and three-level page chains; default, numeric, string, native, invalid, command-line and theme-only configurations
+    checks:
+      - tests/test_config_robustness.py::test_globaltoc_maxdepth
   - name: Side navigation drawer opens and closes on small screens
     source: hamburger menu browser interaction at tablet width
     checks:
