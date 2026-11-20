@@ -175,6 +175,20 @@ make vanilla-main  # Install npm dependencies and compile SCSS to CSS
    (`make run`) for visual regressions
 6. Commit `package.json` and `package-lock.json` together (both are tracked in git)
 
+### Preparing release notes
+
+Release notes are hand-curated summaries of merged PRs, published as the GitHub
+release body for a semver tag. There is no in-repo changelog file. Generate the
+deterministic draft with
+[`.github/scripts/generate_release_notes.py`](.github/scripts/generate_release_notes.py)
+(`--prev <PREV> --target <TARGET>`, defaults to the last tag → HEAD) — it produces everything except the intro/summary, which you write following the quality
+rules in
+[`.github/instructions/release-notes.instructions.md`](.github/instructions/release-notes.instructions.md)
+(filling the placeholder, minimal polish of the script's otherwise-canonical
+output, and the no-hard-wrapping rule). The [1.0.0 release](https://github.com/canonical/ulwazi/releases/tag/1.0.0) is
+the current style reference. Never publish a release or its notes without an
+explicit request.
+
 ### Quick start
 
 Prefer Makefile targets.

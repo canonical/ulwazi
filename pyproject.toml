@@ -352,6 +352,9 @@ max-args = 8
 "docs/*.py" = [
     "INP001",  # Sphinx confdir scripts are run directly, not imported as a package.
 ]
+".github/scripts/*.py" = [
+    "INP001",  # Standalone CLI scripts, not package modules.
+]
 "__init__.py" = [
     "I001", # isort leaves init files alone by default, this makes ruff ignore them too.
     "F401", # Allows unused imports in __init__ files.
