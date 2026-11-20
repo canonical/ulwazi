@@ -792,6 +792,15 @@ GLOBALTOC_CASES: list[tuple[str, str, bool, set[str], tuple[str, ...]]] = [
     ),
     # Override: one limit for every root toctree.
     ("override 2", "globaltoc_max_depth = 2\n", False, {"A", "B", "X", "Y"}, ()),
+    # 0 is Sphinx's own "use each toctree's :maxdepth:", in either mode.
+    ("native 0", "globaltoc_max_depth = 0\n", False, {"A", "X", "Y", "Z"}, ()),
+    (
+        "native 0, fallback mode",
+        'globaltoc_max_depth = 0\nglobaltoc_max_depth_mode = "fallback"\n',
+        False,
+        {"A", "X", "Y", "Z"},
+        (),
+    ),
     # Fallback, unlimited: native Sphinx (explicit :maxdepth: 1 applies).
     (
         "fallback unlimited",
@@ -811,7 +820,7 @@ GLOBALTOC_CASES: list[tuple[str, str, bool, set[str], tuple[str, ...]]] = [
     # Invalid values warn and fall back to the defaults.
     (
         "invalid",
-        'globaltoc_max_depth = 0\nglobaltoc_max_depth_mode = "enforce"\n',
+        'globaltoc_max_depth = -2\nglobaltoc_max_depth_mode = "enforce"\n',
         False,
         {"A", "B", "C", "X", "Y", "Z"},
         ("globaltoc_max_depth must be", "globaltoc_max_depth_mode must be"),

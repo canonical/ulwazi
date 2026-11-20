@@ -39,7 +39,7 @@ These are set directly in `conf.py`.
 *
     - `globaltoc_max_depth`
     - `-1`
-    - Limits the depth of the sidebar navigation tree. `-1` or `None` shows every level. See [Sidebar navigation depth](sidebar-navigation-depth).
+    - Limits the depth of the sidebar navigation tree. `-1` or `None` shows every level; `0` uses each toctree's own `:maxdepth:`, as Sphinx does. See [Sidebar navigation depth](sidebar-navigation-depth).
 *
     - `globaltoc_max_depth_mode`
     - `"override"`
@@ -94,8 +94,10 @@ would also use it to prune the sidebar.
 Two settings change the sidebar depth:
 
 - `globaltoc_max_depth`: the number of levels to show, counting the root
-  toctree's entries as level 1. `-1` or `None` shows every level. Other values
-  below `1` are ignored with a build warning.
+  toctree's entries as level 1. It follows Sphinx's own `maxdepth` convention:
+  `-1` or `None` shows every level, and `0` uses each root toctree's own
+  `:maxdepth:` (native Sphinx behaviour, whichever mode is set). Values below
+  `-1` are ignored with a build warning.
 - `globaltoc_max_depth_mode`:
 
   - `"override"` (default): `globaltoc_max_depth` applies to the whole sidebar
@@ -113,6 +115,9 @@ globaltoc_max_depth = 2
 # Respect :maxdepth: on the root toctrees; limit the rest to three levels
 globaltoc_max_depth = 3
 globaltoc_max_depth_mode = "fallback"
+
+# Native Sphinx behaviour: every root toctree's own :maxdepth: limits the sidebar
+globaltoc_max_depth = 0
 ```
 
 Only toctrees in the root document (`root_doc`, usually `index`) affect the
@@ -123,8 +128,8 @@ same as `:maxdepth: -1`, so in `"fallback"` mode both get
 
 ```{note}
 Earlier Ulwazi releases pruned the sidebar to the root toctree's
-`:maxdepth:`. To keep that behaviour, set
-`globaltoc_max_depth_mode = "fallback"`.
+`:maxdepth:`. To keep that behaviour, set `globaltoc_max_depth = 0` (or
+`globaltoc_max_depth_mode = "fallback"`).
 
 If Ulwazi is selected only through `html_theme` (without `"ulwazi"` in
 `extensions`), set these values in `conf.py` rather than with `-D`.

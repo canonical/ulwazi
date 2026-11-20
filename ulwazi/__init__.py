@@ -573,23 +573,22 @@ def _setup_help_links(app: Sphinx) -> None:
 
 
 def _validate_globaltoc_depth(value: object, *, warn: bool = True) -> int:
-    """Normalise ``globaltoc_max_depth``: a positive int, or -1 for unlimited.
+    """Normalise ``globaltoc_max_depth``: -1, 0, or a positive int.
 
-    ``None`` and ``-1`` mean unlimited. Anything else (``0``, values below
+    Follows Sphinx's own ``maxdepth`` convention: ``-1`` (or ``None``) is
+    unlimited, ``0`` defers to each toctree directive's own ``:maxdepth:``,
+    and a positive number is a level limit. Anything else (values below
     ``-1``, booleans, non-integers) is invalid: warn and use unlimited.
     """
     if value is None:
         return -1
-    if (
-        isinstance(value, int)
-        and not isinstance(value, bool)
-        and (value == -1 or value >= 1)
-    ):
+    if isinstance(value, int) and not isinstance(value, bool) and value >= -1:
         return value
     if warn:
         logger.warning(
-            "Ulwazi: globaltoc_max_depth must be a positive integer, or -1 or "
-            "None for unlimited depth; got %r. Using unlimited depth.",
+            "Ulwazi: globaltoc_max_depth must be an integer of -1 or more "
+            "(-1 or None: unlimited, 0: use each toctree's own :maxdepth:); "
+            "got %r. Using unlimited depth.",
             value,
             type="ulwazi",
             subtype="globaltoc",
@@ -702,10 +701,11 @@ def _sidebar_toctree_html(app: Sphinx, context: dict[str, Any]) -> str:
     flags = {"collapse": False, "titles_only": True, "includehidden": True}
     depth, mode = _globaltoc_depth_settings(app)
     if mode == GLOBALTOC_MODE_OVERRIDE:
-        # A non-zero maxdepth takes precedence over every directive's
-        # :maxdepth:; -1 means unlimited.
+        # A positive maxdepth takes precedence over every directive's
+        # :maxdepth:; -1 means unlimited; 0 is Sphinx's own "use each
+        # toctree's :maxdepth:" (native behaviour).
         return str(toctree(maxdepth=depth, **flags))
-    if depth == -1 or not hasattr(app.builder, "render_partial"):
+    if depth <= 0 or not hasattr(app.builder, "render_partial"):
         # Native Sphinx behaviour: an absent :maxdepth: is already unlimited.
         return str(toctree(**flags))
     pagename = context.get("pagename", "")
