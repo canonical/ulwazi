@@ -1,7 +1,8 @@
 [theme]
 inherit = "basic-ng"
 stylesheets = [
-    "css/vanilla-main.css",
+    "css/slopstrap.css",
+    "css/slop-bridge.css",
     "css/pygments-light.css",
     "css/pygments-dark.css",
     "css/default.css",

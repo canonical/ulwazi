@@ -74,6 +74,20 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     # stylesheet does not ship (see prune_vanilla.py). Sphinx warnings fail
     # builds that use --fail-on-warning; set to False to silence them.
     app.add_config_value("ulwazi_warn_removed_classes", default=True, rebuild="html")
+    # Slopstrap experiment branch: load the Google Fonts (Inter, Instrument
+    # Serif italic, JetBrains Mono) that Slopstrap's design language expects.
+    # Set ulwazi_slopstrap_fonts = False to skip the external font request.
+    app.add_config_value("ulwazi_slopstrap_fonts", default=True, rebuild="html")
+    app.add_config_value(
+        "ulwazi_slopstrap_fonts_url",
+        default=(
+            "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1"
+            "&family=Inter:wght@400;500;600;700;800"
+            "&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        ),
+        rebuild="html",
+        types=str,
+    )
     # sphinx-notfound-page is a bundled dependency: the theme ships a 404
     # template, a 404.svg asset, and the prefix computation, so the
     # extension is activated by default. setup_extension is idempotent
@@ -136,6 +150,10 @@ def config_inited(app: Sphinx, config: Config) -> None:
         "js/nav-toggle.js",
         "js/search.js",
         "js/theme-toggle.js",
+        # Slopstrap runtime: hydrates the declarative widgets (marquee,
+        # testimonials, stat counters, copy buttons) and the slop intensity
+        # level. Loaded last so it sees the final DOM.
+        "js/slopstrap.js",
     ]
 
     for item in extra_js:
@@ -587,17 +605,17 @@ def _compute_navigation_tree(app: Sphinx, context: dict[str, Any]) -> str:
 
 
 def apply_heading_classes(body_html: str) -> str:
-    """Add custom CSS classes to headings in the generated body HTML."""
+    """Add Slopstrap classes to headings in the generated body HTML."""
     if not body_html:
         return body_html
 
     heading_classes = {
-        "h1": "p-heading--1",
-        "h2": "p-heading--2",
-        "h3": "p-heading--3",
-        "h4": "p-heading--4",
-        "h5": "p-heading--5",
-        "h6": "p-heading--6",
+        "h1": "slop-h1",
+        "h2": "slop-h2",
+        "h3": "slop-h3",
+        "h4": "slop-h4",
+        "h5": "slop-h5",
+        "h6": "slop-h6",
     }
 
     soup = BeautifulSoup(body_html, "html.parser")
@@ -647,7 +665,7 @@ def apply_list_classes(body_html: str) -> str:
 
 
 def apply_admonition_classes(body_html: str) -> str:
-    """Convert admonition classes to notifications in the generated body HTML."""
+    """Convert admonitions to Slopstrap alerts in the generated body HTML."""
     if not body_html:
         return body_html
 
@@ -655,55 +673,47 @@ def apply_admonition_classes(body_html: str) -> str:
 
     admonitions = soup.find_all(class_="admonition")
 
+    # Sphinx severity -> Slopstrap accent (border-l colour + dot colour).
     admonition_classes = {
-        "Attention": "caution",
-        "Caution": "caution",
-        "Danger": "caution",
-        "Error": "negative",
-        "Hint": "positive",
-        "Important": "information",
-        "Note": "information",
-        "Tip": "positive",
-        "Warning": "caution",
+        "Attention": "amber",
+        "Caution": "amber",
+        "Danger": "pink",
+        "Error": "red",
+        "Hint": "emerald",
+        "Important": "indigo",
+        "Note": "purple",
+        "Tip": "emerald",
+        "Warning": "amber",
     }
 
     for admonition in admonitions:
         child_tags = admonition.find_all(recursive=False)
-        div_tag = soup.new_tag("div")
-        message = soup.new_tag("div", attrs={"class": "p-notification__message"})
         div_id: str = cast(str, admonition.get("id", ""))
+        accent = "purple"
         title: Tag | None = None
+        alert = soup.new_tag(
+            "div", attrs={"class": "slop-alert slop-border-l-purple"}
+        )
+        if div_id:
+            alert["id"] = div_id
+        message = soup.new_tag("div", attrs={"class": "slop-alert__body"})
 
         for child in child_tags:
             if child.get("class") == ["admonition-title"]:
-                # Default to 'information' class notification
-                div_tag = soup.new_tag(
-                    "div", attrs={"class": "p-notification--information"}
-                )
-                if div_id:
-                    div_tag["id"] = div_id
-                title = soup.new_tag("h5", attrs={"class": "p-notification__title"})
-                title.string = child.string if child.string else ""
-
-                # Apply notification class defined in `admonition_classes'
                 if child.text in admonition_classes:
-                    div_tag = soup.new_tag(
-                        "div",
-                        attrs={
-                            "class": f"p-notification--{admonition_classes[child.text]}"
-                        },
-                    )
-                    if div_id:
-                        div_tag["id"] = div_id
-                    title = soup.new_tag("h5", attrs={"class": "p-notification__title"})
-                    title.string = child.string if child.string is not None else ""
+                    accent = admonition_classes[child.text]
+                alert["class"] = f"slop-alert slop-border-l-{accent}"
+                title = soup.new_tag("strong")
+                title.string = child.string if child.string is not None else ""
             else:
                 message.append(child)
 
+        dot = soup.new_tag("span", attrs={"class": f"slop-dot slop-dot-{accent}"})
+        alert.append(dot)
         if title:
-            div_tag.append(title)
-        div_tag.append(message)
-        admonition.replace_with(div_tag)
+            alert.append(title)
+        alert.append(message)
+        admonition.replace_with(alert)
 
     return str(soup)
 
@@ -1011,6 +1021,14 @@ def _html_page_context(
 ) -> None:
     # Values computed from page-level context.
     context["expandable_navigation_tree"] = _compute_navigation_tree(app, context)
+
+    # Slopstrap experiment branch: expose the font-loading gate to layout.html.
+    context["ulwazi_slopstrap_fonts"] = bool(
+        getattr(app.config, "ulwazi_slopstrap_fonts", True)
+    )
+    context["ulwazi_slopstrap_fonts_url"] = str(
+        getattr(app.config, "ulwazi_slopstrap_fonts_url", "")
+    )
 
     if "toc" in context:
         context["toc"] = modify_local_toc(context["toc"])

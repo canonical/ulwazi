@@ -300,6 +300,26 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
 
 ## Important Notes
 
+- **Slopstrap experiment branch** (added 2026-11-20, branch
+  `design-framework-experiment`, local only): this branch re-skins the theme
+  onto [Slopstrap](https://slopstrap.mikelacher.com/) instead of the Vanilla
+  Framework. The vendored `slopstrap.css`/`slopstrap.js` (MIT, v4.2) ship
+  from `ulwazi/theme/ulwazi/static/`, plus a hand-written
+  `slop-bridge.css` that supplies the `--vf-*` token shim, base typography,
+  the `l-docs__*` grid, the side-nav drawer, and fallbacks for kept
+  structural classes. `vanilla-main.css` is no longer linked (the file stays
+  in-tree for an easy revert); `make vanilla-main` is dormant;
+  `docs/preview_theme.py` no longer recompiles SCSS;
+  `ulwazi_warn_removed_classes = False` in `docs/conf.py` (the removed-classes
+  manifest describes the now-unshipped stylesheet); all Vanilla-specific
+  test suites are collect-ignored in `tests/conftest.py`, leaving only
+  `tests/test_slopstrap_smoke.py`. Demo fixtures live in `docs/index.md`
+  ("Slopstrap demo" section) and `docs/content/slop-demo.md` — both are
+  labelled and must be removed before merging to `main`. Headings emit
+  `slop-h1..6` and admonitions emit `slop-alert slop-border-l-*` via
+  `ulwazi/__init__.py`; the Google Fonts block is gated by the
+  `ulwazi_slopstrap_fonts` config value (default on).
+
 - **Virtual Environment**: Located at `.venv/`, managed automatically by [uv](https://docs.astral.sh/uv/) through Make targets
 - **Build Artifacts**: `*.egg-info/`, `.venv/`, `docs/_build/`, `dist/`, `node_modules/` are gitignored (`build/` is not)
 - **Node Modules**: Required for Vanilla Framework compilation

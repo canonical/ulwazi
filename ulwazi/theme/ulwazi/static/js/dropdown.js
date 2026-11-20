@@ -63,4 +63,4 @@ function initNavDropdowns(containerClass) {
   });
 }
 
-initNavDropdowns('.p-navigation:not(.p-navigation--reduced) .p-navigation__item--dropdown-toggle')
+initNavDropdowns('.slop-navbar .slop-nav-item--dropdown-toggle')

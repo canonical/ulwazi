@@ -19,7 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (savedTheme === "is-light" || savedTheme === "is-dark") {
     applyTheme(savedTheme);
   } else {
-    applyTheme("is-light");
+    // Slopstrap experiment branch: default to dark (the framework's native
+    // palette); the toggle still switches to the best-effort light mode.
+    applyTheme("is-dark");
   }
 
   if (!toggleButton) {

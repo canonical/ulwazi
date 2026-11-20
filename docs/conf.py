@@ -309,6 +309,11 @@ html_theme = "ulwazi"
 html_static_path = ["_static"]
 templates_path = ["_templates"]
 
+# Slopstrap experiment branch: the removed-classes manifest describes the
+# pruning of vanilla-main.css, which this branch no longer ships. The check
+# would warn on every page, so it is opted out here.
+ulwazi_warn_removed_classes = False
+
 
 #############
 # Redirects #
