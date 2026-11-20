@@ -37,14 +37,6 @@ These are set directly in `conf.py`.
     - `3`
     - Limits the local table of contents to H2–H4 on a page with an H1 title. Set to `-1` or `None` to show every heading level.
 *
-    - `globaltoc_max_depth`
-    - `-1`
-    - Limits the depth of the sidebar navigation tree. `-1` or `None` shows every level; `0` uses each toctree's own `:maxdepth:`, as Sphinx does. See [Sidebar navigation depth](sidebar-navigation-depth).
-*
-    - `globaltoc_max_depth_mode`
-    - `"override"`
-    - How `globaltoc_max_depth` treats the `:maxdepth:` option of the root document's toctrees: `"override"` ignores it for the sidebar, `"fallback"` applies `globaltoc_max_depth` only to toctrees that don't set it.
-*
     - `slug`
     - `""`
     - Path segment for the project's hosted documentation, used to prefix links on the bundled 404 page. For example, use `"ulwazi"` for `documentation.ubuntu.com/ulwazi/`.
@@ -87,52 +79,40 @@ By default, the sidebar shows the full page hierarchy, with an expand control
 for every page that has sub-pages, whatever `:maxdepth:` the toctree
 directives set. This matches Furo, the theme used by `canonical-sphinx`.
 
-The `:maxdepth:` option of a toctree directive still controls the visible
-list the directive renders in page content. Without Ulwazi's settings, Sphinx
-would also use it to prune the sidebar.
+Sphinx uses a toctree directive's `:maxdepth:` for two things: the list the
+directive renders in page content, and the depth of the sidebar tree. Ulwazi
+keeps the first and, by default, no longer applies the second.
 
-Two settings change the sidebar depth:
+To change the sidebar depth, set the `globaltoc_maxdepth` theme option in
+`html_theme_options`. It follows Sphinx's own `maxdepth` convention:
 
-- `globaltoc_max_depth`: the number of levels to show, counting the root
-  toctree's entries as level 1. It follows Sphinx's own `maxdepth` convention:
-  `-1` or `None` shows every level, and `0` uses each root toctree's own
-  `:maxdepth:` (native Sphinx behaviour, whichever mode is set). Values below
-  `-1` are ignored with a build warning.
-- `globaltoc_max_depth_mode`:
-
-  - `"override"` (default): `globaltoc_max_depth` applies to the whole sidebar
-    and every directive's `:maxdepth:` is ignored there.
-  - `"fallback"`: a root toctree's own `:maxdepth:` wins.
-    `globaltoc_max_depth` applies only to root toctrees without `:maxdepth:`.
-    With `globaltoc_max_depth = -1`, this is the default Sphinx behaviour.
-
-  An unknown mode is ignored with a build warning.
+- `-1` (default): show every level.
+- `0`: use each root toctree's own `:maxdepth:`. This is native Sphinx
+  behaviour.
+- `1` or more: show that many levels, counting the root toctree's entries as
+  level 1, whatever the directives' `:maxdepth:` says.
 
 ```python
-# Show two levels in the sidebar, regardless of toctree :maxdepth: options
-globaltoc_max_depth = 2
-
-# Respect :maxdepth: on the root toctrees; limit the rest to three levels
-globaltoc_max_depth = 3
-globaltoc_max_depth_mode = "fallback"
-
-# Native Sphinx behaviour: every root toctree's own :maxdepth: limits the sidebar
-globaltoc_max_depth = 0
+html_theme_options = {
+    # Show two levels in the sidebar
+    "globaltoc_maxdepth": 2,
+}
 ```
+
+The value can be a number or a string, so the command-line form
+`-D html_theme_options.globaltoc_maxdepth=2` also works. An empty string
+means `0`, as in Sphinx's `basic` theme. Any other value, such as text or a
+number below `-1`, is ignored with a build warning and the sidebar shows every
+level.
 
 Only toctrees in the root document (`root_doc`, usually `index`) affect the
 sidebar. Sphinx inlines nested toctrees into the sidebar tree and ignores
-their `:maxdepth:`. Sphinx also treats a toctree without `:maxdepth:` the
-same as `:maxdepth: -1`, so in `"fallback"` mode both get
-`globaltoc_max_depth`.
+their `:maxdepth:`. A toctree without `:maxdepth:` counts as `:maxdepth: -1`,
+so with `0` it is shown in full.
 
 ```{note}
 Earlier Ulwazi releases pruned the sidebar to the root toctree's
-`:maxdepth:`. To keep that behaviour, set `globaltoc_max_depth = 0` (or
-`globaltoc_max_depth_mode = "fallback"`).
-
-If Ulwazi is selected only through `html_theme` (without `"ulwazi"` in
-`extensions`), set these values in `conf.py` rather than with `-D`.
+`:maxdepth:`. To keep that behaviour, set `"globaltoc_maxdepth": 0`.
 ```
 
 ### Default HTML title

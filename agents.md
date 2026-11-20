@@ -384,15 +384,16 @@ make test-all     # all tests (fast and slow, including PDF and Python version t
   cheat sheets for working examples. Do not remove `sphinxext-opengraph` or the
   `favicon_url`/`pageurl`/`docstitle` references in `layout.html` without re-verifying
   metadata output in the built HTML.
-- **Sidebar navigation depth** (issue #217): `_sidebar_toctree_html` in
-  `ulwazi/__init__.py` decides the depth from `globaltoc_max_depth`
-  (default `-1`, unlimited) and `globaltoc_max_depth_mode` (`"override"`
-  default: passes `maxdepth` to Sphinx's `toctree()`, ignoring directives;
-  `"fallback"`: per-root-toctree resolution in `_fallback_toctree_html`).
+- **Sidebar navigation depth** (issue #217): `_compute_navigation_tree` in
+  `ulwazi/__init__.py` passes the `globaltoc_maxdepth` theme option (declared
+  in `theme.toml`, default `"-1"`, unlimited; set via `html_theme_options`)
+  as `maxdepth` to Sphinx's `toctree()`. Sphinx's convention applies: `-1`
+  unlimited, `0` use each toctree's own `:maxdepth:`, `N` limit to N levels.
   Without an explicit `maxdepth`, Sphinx prunes the sidebar to the root
   toctree's `:maxdepth:` (only root-document toctrees matter; absent equals
-  `-1`). Values are validated once at `builder-inited`. Covered by
-  `tests/test_config_robustness.py::test_globaltoc_max_depth`; documented in
+  `-1`). The value is parsed and validated once at `builder-inited`
+  (`_setup_globaltoc_depth`); an invalid value warns and uses `-1`. Covered by
+  `tests/test_config_robustness.py::test_globaltoc_maxdepth`; documented in
   `docs/content/configuration.md` ("Sidebar navigation depth").
 - **Sphinx context variable gotcha**: use `favicon_url` in templates, not `favicon`
   (the latter is a stale sphinx-basic-ng convention that Sphinx 7.4+ no longer

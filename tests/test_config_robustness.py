@@ -25,7 +25,7 @@ import io
 import runpy
 from collections.abc import Callable, Iterable
 from pathlib import Path
-from typing import cast
+from typing import NamedTuple, cast
 
 import pytest
 from bs4 import BeautifulSoup
@@ -726,24 +726,54 @@ def test_help_links_theme_only_loading(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Sidebar navigation depth (globaltoc_max_depth, globaltoc_max_depth_mode)
+# Sidebar navigation depth (the globaltoc_maxdepth theme option)
 # ---------------------------------------------------------------------------
 
 # Root document with two hidden toctrees: one sets :maxdepth: 1, the other
 # leaves it unset. Each starts a three-level chain of pages (a > b > c and
-# x > y > z) linked by nested toctrees.
+# x > y > z) linked by nested toctrees. The nested toctrees set :maxdepth: 1
+# too: Sphinx ignores it for the sidebar, as the documentation says.
 GLOBALTOC_INDEX = (
     "Home\n====\n\n"
     ".. toctree::\n   :hidden:\n   :maxdepth: 1\n\n   a\n\n"
     ".. toctree::\n   :hidden:\n\n   x\n"
 )
 GLOBALTOC_CHAINS = (("a", "b"), ("b", "c"), ("c", None), ("x", "y"), ("y", "z"))
+# Page title -> title of its sub-page; a page with a visible sub-page in the
+# sidebar must get an expand control (the symptom reported in issue #217).
+GLOBALTOC_PARENTS = {
+    parent.upper(): child.upper() for parent, child in GLOBALTOC_CHAINS if child
+}
+
+
+def _sidebar(page: BeautifulSoup) -> tuple[set[str], set[str]]:
+    """Return the sidebar's link titles and the titles of expandable entries."""
+    nav = page.select_one("nav#drawer")
+    assert nav is not None, "Sidebar navigation missing"
+
+    def title(tag: Tag) -> str:
+        return tag.get_text(strip=True).removeprefix("Page ")
+
+    links = {title(link) for link in nav.select("a.p-side-navigation__link")}
+    expandable = {
+        title(link)
+        for item in nav.select("li.has-children")
+        if (link := item.select_one(".nav-item a")) is not None
+    }
+    return links, expandable
 
 
 def _build_globaltoc_site(
-    root: Path, conf: str, *, theme_only: bool = False
-) -> tuple[set[str], str]:
-    """Build the depth fixture; return the sidebar link titles and warnings."""
+    root: Path,
+    conf: str,
+    *,
+    theme_only: bool = False,
+    overrides: dict[str, str] | None = None,
+) -> tuple[set[str], set[str], str]:
+    """Build the depth fixture.
+
+    Returns the sidebar link titles, the expandable entries and the warnings.
+    """
     source = root / "src"
     source.mkdir(parents=True)
     extensions = "[]" if theme_only else '["ulwazi"]'
@@ -754,7 +784,7 @@ def _build_globaltoc_site(
     for name, child in (*GLOBALTOC_CHAINS, ("z", None)):
         body = f"Page {name.upper()}\n======\n"
         if child:
-            body += f"\n.. toctree::\n\n   {child}\n"
+            body += f"\n.. toctree::\n   :maxdepth: 1\n\n   {child}\n"
         (source / f"{name}.rst").write_text(body, encoding="utf-8")
     warnings = io.StringIO()
     with patch_docutils(str(source)), docutils_namespace():
@@ -764,97 +794,136 @@ def _build_globaltoc_site(
             outdir=str(root / "_build"),
             doctreedir=str(root / "_doctrees"),
             buildername="html",
+            confoverrides=overrides,
             status=io.StringIO(),
             warning=warnings,
         )
         app.build()
     assert app.statuscode == 0, warnings.getvalue()
-    nav = _page(root / "_build").select_one("nav#drawer")
-    assert nav is not None, "Sidebar navigation missing"
-    links = {
-        link.get_text(strip=True).removeprefix("Page ")
-        for link in nav.select("a.p-side-navigation__link")
-    }
-    return links, warnings.getvalue()
+    links, expandable = _sidebar(_page(root / "_build"))
+    # The sidebar is the same on a deep page as on the home page.
+    assert _sidebar(_page(root / "_build", "c")) == (links, expandable), (
+        "the sidebar on page C differs from the one on the home page"
+    )
+    return links, expandable, warnings.getvalue()
 
 
-# (label, conf.py lines, theme-only loading, expected sidebar pages,
-#  expected warning fragments)
-GLOBALTOC_CASES: list[tuple[str, str, bool, set[str], tuple[str, ...]]] = [
+ALL_PAGES = {"A", "B", "C", "X", "Y", "Z"}
+# With each toctree's own :maxdepth: (A's toctree sets 1, X's sets none):
+NATIVE_PAGES = {"A", "X", "Y", "Z"}
+INVALID_WARNING = "globaltoc_maxdepth theme option must be"
+
+
+class GlobaltocCase(NamedTuple):
+    """One sidebar-depth scenario: configuration in, sidebar pages out."""
+
+    label: str
+    conf: str
+    expected: set[str]
+    warnings: tuple[str, ...] = ()
+    theme_only: bool = False
+    overrides: dict[str, str] | None = None
+
+
+GLOBALTOC_CASES = [
     # Default: unlimited depth, directive :maxdepth: ignored (Furo parity).
-    ("default", "", False, {"A", "B", "C", "X", "Y", "Z"}, ()),
-    (
-        "None is unlimited",
-        "globaltoc_max_depth = None\n",
-        False,
-        {"A", "B", "C", "X", "Y", "Z"},
-        (),
+    GlobaltocCase("default", "", ALL_PAGES),
+    GlobaltocCase(
+        "explicit -1", 'html_theme_options = {"globaltoc_maxdepth": -1}\n', ALL_PAGES
     ),
-    # Override: one limit for every root toctree.
-    ("override 2", "globaltoc_max_depth = 2\n", False, {"A", "B", "X", "Y"}, ()),
-    # 0 is Sphinx's own "use each toctree's :maxdepth:", in either mode.
-    ("native 0", "globaltoc_max_depth = 0\n", False, {"A", "X", "Y", "Z"}, ()),
-    (
-        "native 0, fallback mode",
-        'globaltoc_max_depth = 0\nglobaltoc_max_depth_mode = "fallback"\n',
-        False,
-        {"A", "X", "Y", "Z"},
-        (),
+    # One limit for every root toctree, as an int or a string.
+    GlobaltocCase(
+        "limit 2",
+        'html_theme_options = {"globaltoc_maxdepth": 2}\n',
+        {"A", "B", "X", "Y"},
     ),
-    # Fallback, unlimited: native Sphinx (explicit :maxdepth: 1 applies).
-    (
-        "fallback unlimited",
-        'globaltoc_max_depth_mode = "fallback"\n',
-        False,
-        {"A", "X", "Y", "Z"},
-        (),
+    GlobaltocCase(
+        "limit '2' (string)",
+        'html_theme_options = {"globaltoc_maxdepth": "2"}\n',
+        {"A", "B", "X", "Y"},
     ),
-    # Fallback, finite: only the toctree without :maxdepth: gets the value.
-    (
-        "fallback 2",
-        'globaltoc_max_depth = 2\nglobaltoc_max_depth_mode = "fallback"\n',
-        False,
-        {"A", "X", "Y"},
-        (),
+    GlobaltocCase(
+        "limit 1", 'html_theme_options = {"globaltoc_maxdepth": 1}\n', {"A", "X"}
     ),
-    # Invalid values warn and fall back to the defaults.
-    (
-        "invalid",
-        'globaltoc_max_depth = -2\nglobaltoc_max_depth_mode = "enforce"\n',
-        False,
-        {"A", "B", "C", "X", "Y", "Z"},
-        ("globaltoc_max_depth must be", "globaltoc_max_depth_mode must be"),
+    # 0 and "" are Sphinx's own "use each toctree's :maxdepth:".
+    GlobaltocCase(
+        "native 0",
+        'html_theme_options = {"globaltoc_maxdepth": 0}\n',
+        NATIVE_PAGES,
     ),
-    # Theme-only loading reads the conf.py values too.
-    (
-        "theme-only fallback 2",
-        'globaltoc_max_depth = 2\nglobaltoc_max_depth_mode = "fallback"\n',
-        True,
-        {"A", "X", "Y"},
-        (),
+    GlobaltocCase(
+        "native empty string",
+        'html_theme_options = {"globaltoc_maxdepth": ""}\n',
+        NATIVE_PAGES,
+    ),
+    # Invalid values warn once and fall back to unlimited depth.
+    GlobaltocCase(
+        "invalid text",
+        'html_theme_options = {"globaltoc_maxdepth": "abc"}\n',
+        ALL_PAGES,
+        (INVALID_WARNING,),
+    ),
+    GlobaltocCase(
+        "invalid below -1",
+        'html_theme_options = {"globaltoc_maxdepth": -2}\n',
+        ALL_PAGES,
+        (INVALID_WARNING,),
+    ),
+    GlobaltocCase(
+        "invalid boolean",
+        'html_theme_options = {"globaltoc_maxdepth": True}\n',
+        ALL_PAGES,
+        (INVALID_WARNING,),
+    ),
+    # The same option from the command line (-D), where values are strings.
+    GlobaltocCase(
+        "-D limit 2",
+        "",
+        {"A", "B", "X", "Y"},
+        overrides={"html_theme_options.globaltoc_maxdepth": "2"},
+    ),
+    # Theme-only loading (no "ulwazi" in extensions) reads the option too.
+    GlobaltocCase(
+        "theme-only limit 2",
+        'html_theme_options = {"globaltoc_maxdepth": 2}\n',
+        {"A", "B", "X", "Y"},
+        theme_only=True,
+    ),
+    # An empty html_title replaces html_theme_options in config-inited; the
+    # user's option must survive it.
+    GlobaltocCase(
+        "empty html_title keeps the option",
+        'html_title = ""\nhtml_theme_options = {"globaltoc_maxdepth": 2}\n',
+        {"A", "B", "X", "Y"},
     ),
 ]
 
 
-def test_globaltoc_max_depth(tmp_path: Path) -> None:
-    """The sidebar depth settings prune the global navigation tree as documented."""
+def test_globaltoc_maxdepth(tmp_path: Path) -> None:
+    """The ``globaltoc_maxdepth`` theme option prunes the sidebar as documented."""
     errors: list[str] = []
-    for index, (label, conf, theme_only, expected, fragments) in enumerate(
-        GLOBALTOC_CASES
-    ):
+    for index, case in enumerate(GLOBALTOC_CASES):
 
-        def check(
-            conf: str = conf,
-            theme_only: bool = theme_only,  # noqa: FBT001
-            expected: set[str] = expected,
-            fragments: tuple[str, ...] = fragments,
-            index: int = index,
-        ) -> None:
-            links, warnings = _build_globaltoc_site(
-                tmp_path / str(index), conf, theme_only=theme_only
+        def check(case: GlobaltocCase = case, index: int = index) -> None:
+            expected, fragments = case.expected, case.warnings
+            links, expandable, warnings = _build_globaltoc_site(
+                tmp_path / str(index),
+                case.conf,
+                theme_only=case.theme_only,
+                overrides=case.overrides,
             )
             assert links == expected, (
                 f"sidebar pages {sorted(links)}, expected {sorted(expected)}"
+            )
+            # A page gets an expand control exactly when its sub-page is shown.
+            expected_expandable = {
+                parent
+                for parent, child in GLOBALTOC_PARENTS.items()
+                if parent in expected and child in expected
+            }
+            assert expandable == expected_expandable, (
+                f"expandable entries {sorted(expandable)}, "
+                f"expected {sorted(expected_expandable)}"
             )
             for fragment in fragments:
                 assert warnings.count(fragment) == 1, (
@@ -863,7 +932,7 @@ def test_globaltoc_max_depth(tmp_path: Path) -> None:
             if not fragments:
                 assert "globaltoc" not in warnings, f"unexpected warning:\n{warnings}"
 
-        _record(errors, label, check)
+        _record(errors, case.label, check)
     assert not errors, "Sidebar depth checks failed:\n  - " + "\n  - ".join(errors)
 
 
