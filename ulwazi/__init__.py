@@ -103,7 +103,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.connect("build-finished", _removed_classes_summary)  # pyright: ignore [reportUnknownMemberType]
 
     return {
-        "version": "1.0.2",
+        "version": "1.0.3",
         "parallel_read_safe": True,
         "parallel_write_safe": True,
     }
