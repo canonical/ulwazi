@@ -377,8 +377,12 @@ def _notfound_urls_prefix(config: Config) -> str:
     last path segment, the language segment sits right before it.
 
     The project slug is never part of the Read the Docs URL (on
-    documentation.ubuntu.com it is added by the hosting proxy), so it always
+    documentation.ubuntu.com it is added by the hosting proxy), so it
     comes from the ``slug`` config value.
+
+    PR previews (``READTHEDOCS_VERSION_TYPE=external``) bypass the proxy,
+    so they use the ``READTHEDOCS_CANONICAL_URL`` path directly (or ``/``
+    at the root).
 
     The prefix is only applied when building on Read the Docs (i.e. when
     READTHEDOCS_CANONICAL_URL is set), because sphinx-notfound-page
@@ -397,6 +401,10 @@ def _notfound_urls_prefix(config: Config) -> str:
     # Path segments of the canonical URL, without the scheme and host:
     # "https://<host>/<language>/<version>/" -> ["<language>", "<version>"]
     path = canonical_url.rstrip("/").split("/")[3:]
+
+    if os.environ.get("READTHEDOCS_VERSION_TYPE") == "external":
+        joined = "/".join(segment for segment in path if segment)
+        return f"/{joined}/" if joined else "/"
 
     version = os.environ.get("READTHEDOCS_VERSION", "")
     language = os.environ.get("READTHEDOCS_LANGUAGE", "")

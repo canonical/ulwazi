@@ -34,6 +34,7 @@ RTD_VARS = (
     "READTHEDOCS_CANONICAL_URL",
     "READTHEDOCS_VERSION",
     "READTHEDOCS_LANGUAGE",
+    "READTHEDOCS_VERSION_TYPE",
 )
 
 
@@ -178,6 +179,62 @@ CASES = [
         },
         "/ulwazi/latest/",
         id="slug-stray-slashes-normalised",
+    ),
+    # Standalone PR preview: served without the proxy, so no slug is added.
+    pytest.param(
+        {
+            "slug": "robotics/docs",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-robotics--42.com.readthedocs.build/en/42/",
+                "READTHEDOCS_VERSION": "42",
+                "READTHEDOCS_LANGUAGE": "en",
+                "READTHEDOCS_VERSION_TYPE": "external",
+            },
+        },
+        "/en/42/",
+        id="pr-build-standalone-project",
+    ),
+    # Subproject PR preview: keep the subproject path from the canonical URL.
+    pytest.param(
+        {
+            "slug": "ulwazi",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-ubuntu-documentation-library--42.com.readthedocs.build/ulwazi/",
+                "READTHEDOCS_VERSION": "42",
+                "READTHEDOCS_LANGUAGE": "en",
+                "READTHEDOCS_VERSION_TYPE": "external",
+            },
+        },
+        "/ulwazi/",
+        id="pr-build-subproject",
+    ),
+    # Root-served PR preview: return "/" (not "") so nested 404 links resolve.
+    pytest.param(
+        {
+            "slug": "data/kafka/docs",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-kafka--42.com.readthedocs.build/",
+                "READTHEDOCS_VERSION": "42",
+                "READTHEDOCS_LANGUAGE": "en",
+                "READTHEDOCS_VERSION_TYPE": "external",
+            },
+        },
+        "/",
+        id="pr-build-single-version-root",
+    ),
+    # Branch and tag builds keep the slug added by the hosting proxy.
+    pytest.param(
+        {
+            "slug": "ulwazi",
+            "env": {
+                "READTHEDOCS_CANONICAL_URL": "https://canonical-ulwazi.readthedocs-hosted.com/en/latest/",
+                "READTHEDOCS_VERSION": "latest",
+                "READTHEDOCS_LANGUAGE": "en",
+                "READTHEDOCS_VERSION_TYPE": "branch",
+            },
+        },
+        "/ulwazi/en/latest/",
+        id="branch-build-keeps-slug",
     ),
 ]
 
