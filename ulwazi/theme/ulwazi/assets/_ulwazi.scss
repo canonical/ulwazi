@@ -145,6 +145,11 @@ body {
   align-self: end;
 }
 
+// Space between the article and the footer, matching Vanilla's docs site.
+main.l-docs__main {
+  @extend .p-section;
+}
+
 // Make the product listing behave in the grid. This is hacky and should be reworked.
 @media all {
   .p-navigation__nav {
