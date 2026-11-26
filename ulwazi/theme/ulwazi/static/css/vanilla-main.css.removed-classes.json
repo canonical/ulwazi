@@ -500,7 +500,6 @@
   "p-search-and-filter__search-prompt",
   "p-search-and-filter__search-query",
   "p-search-and-filter__selected-count",
-  "p-section",
   "p-section--deep",
   "p-section--hero",
   "p-segmented-control",
@@ -647,5 +646,5 @@
   "u-vertically-center",
   "u-visualise-font-metrics"
  ],
- "vocabulary": "a3e8360f0d9ba4a0"
+ "vocabulary": "7c5bfb21f81d819e"
 }
