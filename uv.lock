@@ -1761,11 +1761,17 @@ dependencies = [
 ]
 
 [package.dev-dependencies]
+adoption = [
+    { name = "jinja2" },
+    { name = "packaging" },
+]
 dev = [
     { name = "axe-playwright-python" },
     { name = "beautifulsoup4" },
     { name = "coverage" },
+    { name = "jinja2" },
     { name = "lxml" },
+    { name = "packaging" },
     { name = "playwright" },
     { name = "pytest" },
     { name = "pytest-xdist" },
@@ -1822,11 +1828,17 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
+adoption = [
+    { name = "jinja2", specifier = ">=3.1" },
+    { name = "packaging", specifier = ">=26.0" },
+]
 dev = [
     { name = "axe-playwright-python", specifier = ">=0.1.8" },
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
     { name = "coverage", extras = ["toml"], specifier = ">=7.13.5" },
+    { name = "jinja2", specifier = ">=3.1" },
     { name = "lxml", specifier = ">=6.0.2" },
+    { name = "packaging", specifier = ">=26.0" },
     { name = "playwright", specifier = ">=1.61.0" },
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "pytest-xdist", specifier = ">=3.6.0" },

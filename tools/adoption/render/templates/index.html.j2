@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ulwazi adoption dashboard</title>
+  <meta name="description" content="How many Canonical documentation projects use the Sphinx Stack and the Ulwazi theme.">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      var theme = localStorage.getItem("ulwazi-theme");
+      if (theme === "is-dark" || theme === "is-light") {
+        root.classList.add(theme);
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+{% macro chevron() %}<svg class="adopt-chevron" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>{% endmacro %}
+<a class="adopt-skip" href="#projects">Skip to the projects table</a>
+
+<header class="adopt-header">
+  <div class="adopt-wrap adopt-header__inner">
+    <a class="adopt-brand" href="./">
+      <span class="adopt-brand__mark" aria-hidden="true"></span>
+      <span>Ulwazi adoption</span>
+    </a>
+    <p class="adopt-header__meta">
+      Updated {{ generated }}
+      {% if summary.latest_sphinx_stack %}<span aria-hidden="true">&middot;</span> Sphinx Stack {{ summary.latest_sphinx_stack }}{% endif %}
+      {% if summary.latest_ulwazi %}<span aria-hidden="true">&middot;</span> Ulwazi {{ summary.latest_ulwazi }}{% endif %}
+    </p>
+    <nav class="adopt-header__links" aria-label="Dashboard links">
+      <a href="projects.csv">CSV</a>
+      <a href="adoption.json">JSON</a>
+      <a href="https://documentation.ubuntu.com/ulwazi/">Ulwazi docs</a>
+      <button type="button" class="adopt-button adopt-theme" id="theme-toggle" aria-pressed="false">
+        <span class="adopt-theme__label">Dark mode</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <h1 class="adopt-visually-hidden">Ulwazi adoption dashboard</h1>
+
+  <section class="adopt-stats" aria-label="Summary statistics">
+    <div class="adopt-wrap adopt-stats__grid">
+      <div class="adopt-headline">
+        <p class="adopt-eyebrow">Ulwazi adoption</p>
+        <p class="adopt-percent">
+          <span class="adopt-percent__value">{{ "%g"|format(summary.ulwazi_percent) }}</span><span class="adopt-percent__unit">%</span>
+          {% if ulwazi_delta %}<span class="adopt-delta">{{ ulwazi_delta }}</span>{% endif %}
+        </p>
+        <div class="adopt-progress" role="img" aria-label="{{ summary.ulwazi }} of {{ summary.sphinx_stack }} Sphinx Stack projects use Ulwazi">
+          <span style="width: {{ summary.ulwazi_percent }}%"></span>
+        </div>
+        <p class="adopt-headline__text">
+          <strong>{{ summary.ulwazi }}</strong> of <strong>{{ summary.sphinx_stack }}</strong> Sphinx Stack projects use Ulwazi
+        </p>
+      </div>
+
+      <ul class="adopt-tiles">
+        {% for tile in tiles %}
+        <li>
+          <button type="button" class="adopt-tile" data-preset="{{ tile.preset }}" aria-pressed="false" title="{{ tile.hint }}">
+            <span class="adopt-tile__label">{{ tile.label }}</span>
+            <span class="adopt-tile__value">{{ tile.value }}</span>
+            {% if tile.delta %}<span class="adopt-tile__delta">{{ tile.delta }}</span>{% endif %}
+          </button>
+        </li>
+        {% endfor %}
+      </ul>
+
+      {% if stack_bar %}
+      <div class="adopt-versions">
+        <div class="adopt-versions__bar" role="group" aria-label="Sphinx Stack versions">
+          {% for segment in stack_bar %}
+          <button type="button" class="adopt-seg adopt-seg--{{ segment.index }}" style="width: {{ segment.percent }}%" data-stack="{{ segment.version }}" aria-pressed="false" title="Sphinx Stack {{ segment.version }}: {{ segment.count }} projects">
+            <span class="adopt-visually-hidden">Sphinx Stack {{ segment.version }}: {{ segment.count }} projects</span>
+          </button>
+          {% endfor %}
+        </div>
+        <ul class="adopt-legend">
+          {% for segment in stack_bar %}
+          <li><span class="adopt-dot adopt-seg--{{ segment.index }}" aria-hidden="true"></span>{{ segment.version }} <span class="adopt-muted">{{ segment.count }}</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="adopt-projects" aria-labelledby="projects-heading">
+    <h2 id="projects-heading" class="adopt-visually-hidden">Documentation projects</h2>
+    <div class="adopt-toolbar">
+      <div class="adopt-wrap adopt-toolbar__inner" role="search">
+        <label class="adopt-visually-hidden" for="filter-q">Search projects</label>
+        <input id="filter-q" class="adopt-search js-only" type="search" placeholder="Search projects and repositories" autocomplete="off">
+        <label class="adopt-field js-only">
+          <span>Scope</span>
+          <select id="filter-scope">
+            <option value="">All</option>
+            <option value="in">Sphinx Stack projects</option>
+            <option value="out">Out of scope</option>
+          </select>
+        </label>
+        <label class="adopt-field js-only">
+          <span>Sphinx Stack</span>
+          <select id="filter-stack">
+            <option value="">All versions</option>
+            {% for version in stack_options %}<option value="{{ version }}">{{ version }}</option>{% endfor %}
+            {% if has_none %}<option value="none">N/A</option>{% endif %}
+          </select>
+        </label>
+        <label class="adopt-field js-only">
+          <span>Ulwazi</span>
+          <select id="filter-ulwazi">
+            <option value="">All</option>
+            <option value="yes">Uses Ulwazi</option>
+            <option value="no">Not Ulwazi</option>
+            <option value="pending">Pending deploy</option>
+          </select>
+        </label>
+        <button type="button" class="adopt-button js-only" id="filter-reset" hidden>Reset</button>
+        <p class="adopt-count" id="result-count" role="status" aria-live="polite">{{ rows|length }} projects</p>
+      </div>
+    </div>
+
+    <div class="adopt-wrap adopt-table-wrap">
+      <table class="adopt-table" id="projects">
+        <caption class="adopt-visually-hidden">Read the Docs projects with their repository, Sphinx Stack version and Ulwazi version</caption>
+        <thead>
+          <tr>
+            <th scope="col" data-key="name" aria-sort="ascending"><button type="button" class="adopt-sort">Project</button></th>
+            <th scope="col" data-key="repo"><button type="button" class="adopt-sort">Repository</button></th>
+            <th scope="col" data-key="stack"><button type="button" class="adopt-sort">Sphinx Stack</button></th>
+            <th scope="col" data-key="ulwazi"><button type="button" class="adopt-sort">Ulwazi</button></th>
+            <th scope="col" data-key="built"><button type="button" class="adopt-sort">Last build</button></th>
+            <th scope="col" class="adopt-col-expand"><span class="adopt-visually-hidden">Details</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+          <tr class="adopt-row{% if row.out %} is-out{% endif %}" id="row-{{ row.slug }}"
+              data-name="{{ row.name|lower }}" data-repo="{{ (row.repo.label or '')|lower }}"
+              data-stack="{{ row.stack.filter }}" data-stack-sort="{{ row.stack.sort }}"
+              data-ulwazi="{{ row.ulwazi.filter }}" data-ulwazi-sort="{{ row.ulwazi.sort }}"
+              data-scope="{{ 'out' if row.out else 'in' }}" data-latest="{{ 1 if row.latest else 0 }}"
+              data-built="{{ row.built.epoch }}" data-search="{{ row.search }}">
+            <td class="adopt-cell" data-label="Project">
+              <a class="adopt-name" href="{{ row.docs_url }}">{{ row.name }}</a>
+              <span class="adopt-sub">{{ row.slug }}</span>
+              {% if row.out %}<span class="adopt-reason">{{ row.reason }}</span>{% endif %}
+            </td>
+            <td class="adopt-cell" data-label="Repository">
+              {% if row.repo.url %}
+              <a class="adopt-repo" href="{{ row.repo.url }}">{{ row.repo.label or row.repo.host }}</a>
+              {% if row.repo.docs_path and row.repo.docs_url %}
+              <a class="adopt-sub adopt-path" href="{{ row.repo.docs_url }}">{{ row.repo.docs_path }}/</a>
+              {% endif %}
+              {% else %}
+              <span class="adopt-muted">No repository</span>
+              {% endif %}
+            </td>
+            <td class="adopt-cell" data-label="Sphinx Stack">
+              <span class="adopt-chip adopt-chip--{{ row.stack.tone }}"{% if row.stack.title %} title="{{ row.stack.title }}"{% endif %}>{{ row.stack.text }}</span>
+              {% if row.stack.tone == 'latest' %}<span class="adopt-tag">latest</span>{% endif %}
+              {% if row.stack.corrected %}<span class="adopt-tag adopt-tag--info" title="{{ row.stack.title }}">corrected</span>{% endif %}
+            </td>
+            <td class="adopt-cell" data-label="Ulwazi">
+              <span class="adopt-chip adopt-chip--{{ row.ulwazi.tone }}"{% if row.ulwazi.title %} title="{{ row.ulwazi.title }}"{% endif %}>{{ row.ulwazi.text }}</span>
+              {% if row.ulwazi.chip %}<span class="adopt-tag adopt-tag--caution" title="{{ row.ulwazi.title }}">{{ row.ulwazi.chip }}</span>{% endif %}
+            </td>
+            <td class="adopt-cell" data-label="Last build">
+              <time datetime="{{ row.built.iso }}" title="{{ row.built.title }}">{{ row.built.text }}</time>
+              {% if row.docs_commit %}<span class="adopt-sub">docs changed {{ row.docs_commit }}</span>{% endif %}
+            </td>
+            <td class="adopt-cell adopt-col-expand">
+              <button type="button" class="adopt-expand js-only" aria-expanded="false" aria-controls="ev-{{ row.slug }}">
+                <span class="adopt-visually-hidden">Show details for {{ row.name }}</span>{{ chevron() }}
+              </button>
+            </td>
+          </tr>
+          <tr class="adopt-evidence" id="ev-{{ row.slug }}" data-for="row-{{ row.slug }}">
+            <td colspan="6">
+              <dl class="adopt-evidence__list">
+                {% for item in row.evidence %}
+                <dt>{{ item.label }}</dt>
+                <dd>{% if item.url %}<a href="{{ item.url }}">{{ item.text }}</a>{% else %}{{ item.text }}{% endif %}</dd>
+                {% endfor %}
+                {% if row.error %}<dt>Error</dt><dd>{{ row.error }}</dd>{% endif %}
+                {% if row.manual %}<dt>Manual</dt><dd>Set in config.toml: {{ row.manual|join(", ") }}</dd>{% endif %}
+              </dl>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p class="adopt-empty" id="empty-state" hidden>No project matches the current filters.</p>
+    </div>
+  </section>
+
+  <section class="adopt-wrap adopt-more" aria-label="More details">
+    <details>
+      <summary>Trend and recent adoptions</summary>
+      {% if trend %}
+      <figure class="adopt-trend">
+        <svg viewBox="0 0 {{ trend.width }} {{ trend.height }}" role="img" aria-label="Share of Sphinx Stack projects using Ulwazi, from {{ trend.first }} to {{ trend.last }}">
+          <polygon class="adopt-trend__area" points="{{ trend.area }}"/>
+          <polyline class="adopt-trend__line" points="{{ trend.line }}"/>
+          <circle class="adopt-trend__end" cx="{{ trend.end.x }}" cy="{{ trend.end.y }}" r="3.5"/>
+        </svg>
+        <figcaption>Share of Sphinx Stack projects using Ulwazi, {{ trend.first }} to {{ trend.last }} (axis up to {{ trend.top }}%).</figcaption>
+      </figure>
+      <details class="adopt-nested">
+        <summary>View the trend as a table</summary>
+        <table class="adopt-mini-table">
+          <thead><tr><th scope="col">Date</th><th scope="col">Ulwazi share</th></tr></thead>
+          <tbody>{% for point in trend.rows %}<tr><td>{{ point.date }}</td><td>{{ point.percent }}%</td></tr>{% endfor %}</tbody>
+        </table>
+      </details>
+      {% else %}
+      <p class="adopt-muted">The trend appears after the second daily run.</p>
+      {% endif %}
+      <h3>Recently adopted</h3>
+      {% if recent %}
+      <ul>{% for item in recent %}<li><a href="{{ item.docs_url }}">{{ item.name }}</a> <span class="adopt-muted">since {{ item.since }}</span></li>{% endfor %}</ul>
+      {% else %}
+      <p class="adopt-muted">No project switched to Ulwazi in the last 30 days, or the history is too short.</p>
+      {% endif %}
+    </details>
+
+    <details>
+      <summary>How the numbers are determined</summary>
+      <ul class="adopt-method">
+        <li><strong>Projects</strong> are the public Read the Docs projects. Translations count with their parent project; private projects and repositories are left out.</li>
+        <li><strong>Sphinx Stack</strong> is read from the version file in the repository (<code>_dev/version</code>, or <code>.sphinx/version</code> before 2.0). Sphinx Stack 3.0 ships a version file that still says 2.0; projects with 3.0 files are reported as 3.0 and marked <em>corrected</em>.</li>
+        <li><strong>Ulwazi</strong> is read from the published documentation: the stylesheet and script checksums Sphinx adds to their links are compared with every released Ulwazi package. When the site cannot be checked, the repository's theme setting is used and the version is estimated (&asymp;) from the requirement.</li>
+        <li><strong>Pending deploy</strong> means the repository sets the Ulwazi theme but the published site does not serve it yet; it is not counted as adopted.</li>
+        <li><strong>Out of scope</strong> projects have no Sphinx Stack, are archived, are opted out of tracking, or use an unsupported code host. They are listed but not counted in the percentage.</li>
+        <li><strong>{{ summary.unique_repositories }}</strong> unique repositories back the {{ summary.sphinx_stack }} tracked projects.{% if summary.ulwazi_elsewhere %} Out of scope, {{ summary.ulwazi_elsewhere }} more {{ 'project uses' if summary.ulwazi_elsewhere == 1 else 'projects use' }} Ulwazi without the Sphinx Stack.{% endif %}</li>
+      </ul>
+    </details>
+  </section>
+</main>
+
+<footer class="adopt-footer">
+  <div class="adopt-wrap">
+    <p>Data generated on {{ generated }}. Source: <a href="https://github.com/canonical/ulwazi/tree/main/tools/adoption">tools/adoption</a>.</p>
+  </div>
+</footer>
+<script src="dashboard.js" defer></script>
+</body>
+</html>

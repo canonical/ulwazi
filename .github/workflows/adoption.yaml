@@ -1,0 +1,159 @@
+name: Adoption dashboard
+
+# Regenerates the Ulwazi adoption data every day, stores it on the orphan
+# `adoption-data` branch and (optionally) publishes the dashboard on GitHub
+# Pages. Runs never come from pull requests, so no secret reaches a fork.
+# See tools/adoption/README.md.
+
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Commit the data and deploy the dashboard"
+        type: boolean
+        default: true
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/adoption/**"
+      - ".github/workflows/adoption.yaml"
+
+# One run at a time: the data branch is a single linear history.
+concurrency:
+  group: adoption-dashboard
+  cancel-in-progress: false
+
+permissions: {}
+
+env:
+  UV_FROZEN: "true"
+  DATA_BRANCH: adoption-data
+
+jobs:
+  build:
+    name: Collect data and build the dashboard
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write # push the data branch
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+
+      - name: Install the Sass compiler
+        run: npm ci --no-audit --no-fund
+
+      - name: Restore the request cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: tools/adoption/.cache
+          key: adoption-cache-${{ github.run_id }}
+          restore-keys: adoption-cache-
+
+      - name: Fetch the previous data
+        run: |
+          set -euo pipefail
+          data="$RUNNER_TEMP/adoption-data"
+          if git ls-remote --exit-code --heads "https://github.com/${GITHUB_REPOSITORY}.git" "$DATA_BRANCH" > /dev/null; then
+            git clone --quiet --depth 1 --branch "$DATA_BRANCH" \
+              "https://github.com/${GITHUB_REPOSITORY}.git" "$data"
+          else
+            git init --quiet --initial-branch "$DATA_BRANCH" "$data"
+            git -C "$data" remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          fi
+          mkdir -p "$data/data"
+          echo "DATA_DIR=$data" >> "$GITHUB_ENV"
+
+      - name: Detect, process and render
+        env:
+          RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          uv run --only-group adoption python -m tools.adoption \
+            --data-dir "$DATA_DIR/data" \
+            --cache-dir tools/adoption/.cache \
+            --build-dir "$RUNNER_TEMP/site" \
+            all
+
+      - name: Summarize
+        if: always()
+        run: |
+          set -euo pipefail
+          file="$DATA_DIR/data/adoption.json"
+          [ -f "$file" ] || exit 0
+          # Only public numbers: Actions logs of public repositories are readable by anyone.
+          python3 - "$file" >> "$GITHUB_STEP_SUMMARY" << 'PY'
+          import json, sys
+          s = json.load(open(sys.argv[1]))["summary"]
+          print("## Ulwazi adoption")
+          print(f"- {s['ulwazi']} of {s['sphinx_stack']} Sphinx Stack projects use Ulwazi ({s['ulwazi_percent']}%)")
+          print(f"- {s['total']} public RTD projects, {s['latest']} on Sphinx Stack {s['latest_sphinx_stack']}")
+          print(f"- {s['out_of_scope']} out of scope, {s['errors']} errors")
+          PY
+
+      - name: Upload the rejected data for inspection
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: adoption-rejected
+          path: ${{ env.DATA_DIR }}/data/adoption.rejected.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Commit the data
+        if: github.event_name != 'workflow_dispatch' || inputs.publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd "$DATA_DIR"
+          rm -f data/adoption.rejected.json data/adoption.partial.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "The data did not change."
+            exit 0
+          fi
+          git commit --quiet -m "data: update adoption statistics ($(date -u +%F))"
+          auth="$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)"
+          git -c "http.extraheader=Authorization: Basic ${auth}" push origin "HEAD:${DATA_BRANCH}"
+
+      - name: Upload the dashboard
+        id: pages
+        if: github.event_name != 'workflow_dispatch' || inputs.publish
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: ${{ runner.temp }}/site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    # Opt in with the repository variable ADOPTION_PAGES=true after setting
+    # Settings > Pages > Source to "GitHub Actions".
+    if: vars.ADOPTION_PAGES == 'true' && (github.event_name != 'workflow_dispatch' || inputs.publish)
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

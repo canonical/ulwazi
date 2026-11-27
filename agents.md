@@ -131,6 +131,35 @@ See `docs/content/tests/coverage.md` for scope and limitations of all three
 coverage metrics; do not confuse the curated feature percentage with Python
 or JavaScript line coverage.
 
+### Adoption dashboard
+
+`tools/adoption/` tracks Ulwazi and Sphinx Stack adoption across public Read
+the Docs projects (detect → process → render). It is repository tooling, **not**
+part of the `ulwazi` package, and must stay outside `ulwazi/` (the CSS pruner
+reads every file there). See `tools/adoption/README.md` for the methodology.
+
+```bash
+make adoption-sample   # render the dashboard from made-up data
+make adoption-serve    # http://127.0.0.1:8001
+make adoption          # real run: needs RTD_TOKEN and a GitHub token
+```
+
+- The Sphinx Stack 3.0 release ships a version file that says `2.0`;
+  `process/corrections.py` corrects it from other files and switches itself off
+  when upstream fixes the tag. Keep its tests in `tests/test_adoption_pipeline.py`.
+  Only use signs the 3.0 release commits made (Ulwazi replacing
+  `canonical-sphinx`, dependency bumps): files added to upstream `main` between
+  tags, and `update_sp.py` (it copies itself from `main`), also appear in 2.0
+  projects. The code checks each sign against the tag and a pre-release
+  baseline commit.
+- Never write a private project or repository name into any output; the
+  tests check this. Data lives on the `adoption-data` branch, never on code
+  branches (`tools/adoption/data/` is git-ignored).
+- The dashboard's compiled CSS is built at render time from
+  `tools/adoption/render/assets/dashboard.scss` and is not committed.
+- Tests: `tests/test_adoption_pipeline.py` and `tests/test_adoption_dashboard.py`
+  (category "Test infrastructure"); they are listed in the test inventory.
+
 ### Cleaning
 
 Clean (delete) the built sample documentation content:

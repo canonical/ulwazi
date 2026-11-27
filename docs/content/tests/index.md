@@ -60,9 +60,13 @@ assertions inside one grouped case do not.
   - `test_coverage_metrics.py` (**8 fast**, {doc}`details <infrastructure>`) — V8 line accounting, aggregate coverage summaries, missing-report rejection, PR baseline comparisons and workflow baseline revision isolation.
 
     `test_test_reporting.py` (**19 fast**, {doc}`details <infrastructure>`) — CLI category/tier assignments, parameter and outcome accounting, unmapped-case visibility, green reserved for passing results, the live time-left estimate, and feature checks matching plain names of parametrized tests.
+
+    `test_adoption_pipeline.py` (**46 fast**) — the adoption dashboard's offline detection and processing layers (`tools/adoption`): configuration rules, privacy filtering of private projects and repositories, repository URL parsing, docs-folder location, Sphinx Stack version detection including the correction for the stale 3.0 version file, Ulwazi detection from the repository and from live-site checksums, statistics and history, scope rules, manual overrides and the refusal to publish when too many projects fail, well-formed batched GitHub queries, and the request cache under concurrent writes.
+
+    `test_adoption_dashboard.py` (**17 fast, 4 slow**) — the adoption dashboard page: statistics before the table, the requested columns, `N/A` and version notations, out-of-scope reasons, evidence rows, accessibility markup, escaping, CSV and JSON exports; the slow cases check in Chromium that the table is visible on the first screen at 1366×768 and 1440×900, that mobile has no horizontal scroll, and the filters, sorting, expanders and colour contrast in both themes.
 ```
 
-**Full selection:** 154 cases across 20 modules (126 fast, 28 slow); each case
+**Full selection:** 221 cases across 22 modules (189 fast, 32 slow); each case
 belongs to exactly one CLI group. `test_inventory_counts_match_collection`
 fails if this table or line drifts from what pytest collects. CLI grouping
 is separate from the curated {doc}`feature coverage <coverage>` metric and

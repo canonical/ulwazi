@@ -13,4 +13,8 @@ htmlcov/
 .coverage.*
 coverage.xml
 results/
+# Adoption dashboard: data lives on the adoption-data branch, never on code branches.
+tools/adoption/data/
+tools/adoption/.cache/
+tools/adoption/_build/
 **/_version.py
