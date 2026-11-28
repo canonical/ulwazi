@@ -1,0 +1,56 @@
+# Configuration of the Ulwazi adoption dashboard.
+#
+# Changes to this file go through pull requests, so every exclusion has an
+# author, a date and a reason in the Git history.
+
+[rtd]
+# Read the Docs Business. Use https://app.readthedocs.org for Read the Docs Community.
+base_url = "https://app.readthedocs.com"
+# Organization slug whose projects are listed (Business only).
+organization = "canonical"
+
+[tracking]
+# "auto":   track every public RTD project except the [[exclude]] entries (opt-out).
+# "manual": track only the [[include]] entries (opt-in); every other project is
+#           listed as "Not tracked".
+mode = "auto"
+
+[upstream]
+sphinx_stack_repo = "canonical/sphinx-stack"
+ulwazi_package = "ulwazi"
+
+[detection]
+# Report Sphinx Stack 3.0 for projects whose version file still says "2.0"
+# (the 3.0 release ships a stale file). See tools/adoption/process/corrections.py.
+correct_known_version_issues = true
+# Fetch each project's live documentation to find the deployed Ulwazi version.
+live_site_checks = true
+
+[safety]
+# Refuse to publish new data when more than this share of projects failed.
+max_error_ratio = 0.2
+
+# Opt-out: stop tracking a project. A reason is required.
+#
+# [[exclude]]
+# slug = "internal-*"             # shell-style pattern for the RTD slug
+# reason = "Internal documentation, not maintained by the docs team"
+#
+# [[exclude]]
+# repo = "canonical/old-project"  # shell-style pattern for owner/repo
+# reason = "Archived upstream"
+
+# Opt-in (used only when tracking.mode = "manual").
+#
+# [[include]]
+# slug = "ulwazi"
+
+# Manual corrections for one project. Overridden values are marked "manual".
+#
+# [[override]]
+# slug = "my-project"
+# repo = "canonical/real-repo"     # when RTD points at a mirror or fork
+# docs_path = "documentation"      # when the docs are not in docs/
+# sphinx_stack = "3.0"             # pin the detected Sphinx Stack version
+# ulwazi = "1.0.3"                 # pin the Ulwazi version
+# note = "Docs live in a monorepo"

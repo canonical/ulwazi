@@ -41,6 +41,9 @@ TEST_CATEGORIES = {
     "test_accessibility.py": "9. Accessibility",
     "test_coverage_metrics.py": "Test infrastructure",
     "test_test_reporting.py": "Test infrastructure",
+    # Repository tooling (tools/adoption), not theme behaviour.
+    "test_adoption_pipeline.py": "Test infrastructure",
+    "test_adoption_dashboard.py": "Test infrastructure",
 }
 SLOW_CATEGORY_OVERRIDES = {"test_layout_smoke.py": "6. Responsive layout"}
 SELECTED_TESTS: dict[str, tuple[str, str]] = {}

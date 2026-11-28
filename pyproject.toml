@@ -59,6 +59,13 @@ dev = [
     # Used by `make test-python-versions` to run the per-Python-version
     # build tests concurrently. See tests/test_python_versions.py.
     "pytest-xdist>=3.6.0",
+    {include-group = "adoption"},
+]
+# Runtime dependencies of the adoption dashboard (tools/adoption). Everything
+# else it needs comes from the standard library.
+adoption = [
+    "jinja2>=3.1",
+    "packaging>=26.0",
 ]
 docs = [
     "beautifulsoup4>=4.14.3",
@@ -144,7 +151,8 @@ line_length = 88
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = "tests"
-pythonpath = "tests"
+# "." lets tests import the repository's tools package (tools/adoption).
+pythonpath = [".", "tests"]
 xfail_strict = true
 markers = [
     "slow: slow tests",
@@ -332,6 +340,11 @@ ignore-decorators = [ # Functions with these decorators don't have to have docst
     "typing.override",
     "typing_extensions.override",
 ]
+
+[tool.ruff.lint.isort]
+# tools/adoption is repository tooling imported by tests; the theme itself
+# (ulwazi) stays classified as before.
+known-first-party = ["tools"]
 
 [tool.ruff.lint.pylint]
 max-args = 8

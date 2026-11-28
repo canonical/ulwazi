@@ -7,7 +7,7 @@ UV_TICS_GROUPS := "--group=tics"
 include common.mk
 
 DOCS_SCRIPTS_TO_LINT := docs/preview_theme.py
-SOURCES += $(DOCS_SCRIPTS_TO_LINT)
+SOURCES += $(DOCS_SCRIPTS_TO_LINT) tools
 
 .PHONY: format
 format: format-ruff format-codespell format-prettier format-pre-commit  ## Run all automatic formatters
@@ -172,3 +172,27 @@ endif
 	uv run coverage report -m
 	uv run coverage html
 	uv run python tests/coverage_summary.py
+
+# Adoption dashboard (tools/adoption). See tools/adoption/README.md.
+ADOPTION_PORT ?= 8001
+ADOPTION := uv run --only-group adoption python -m tools.adoption
+
+.PHONY: adoption
+adoption: install-npm  ## Detect, process and render the adoption dashboard (needs RTD_TOKEN)
+	npm install --no-audit --no-fund
+	$(ADOPTION) all
+
+.PHONY: adoption-render
+adoption-render: install-npm  ##- Render the dashboard from the data already collected
+	npm install --no-audit --no-fund
+	$(ADOPTION) render
+
+.PHONY: adoption-serve
+adoption-serve:  ##- Serve the rendered dashboard at http://127.0.0.1:$(ADOPTION_PORT)
+	$(ADOPTION) serve --port $(ADOPTION_PORT)
+
+.PHONY: adoption-sample
+adoption-sample: install-npm  ##- Render the dashboard from made-up sample data
+	npm install --no-audit --no-fund
+	PYTHONPATH=. uv run --only-group adoption python tests/adoption_samples.py tools/adoption/.sample-data
+	$(ADOPTION) --data-dir tools/adoption/.sample-data render
