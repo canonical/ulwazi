@@ -285,6 +285,18 @@ def test_view_handles_a_dashboard_without_deltas_or_history(tmp_path):
     assert all(tile["delta"] == "" for tile in view["tiles"])
     assert view["generated"].startswith("27 Nov 2026")
 
+    # A decrease (or no change) is shown as 0, an increase with a plus sign.
+    keys = ("total", "sphinx_stack", "latest", "ulwazi", "out_of_scope")
+    data["summary"]["deltas"] = dict(zip(keys, (-14, 0, 3, -1, None), strict=True))
+    view = build_view(data, [], now=NOW)
+    assert [tile["delta"] for tile in view["tiles"]] == [
+        "0 this week",
+        "0 this week",
+        "+3 this week",
+        "",
+    ]
+    assert view["ulwazi_delta"] == "0 this week"
+
 
 def test_css_compilation_error_is_reported(tmp_path, monkeypatch):
     monkeypatch.setattr("tools.adoption.render.SCSS_SOURCE", tmp_path / "missing.scss")

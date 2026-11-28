@@ -19,6 +19,7 @@ from adoption_samples import TODAY
 from tools.adoption.cache import Cache
 from tools.adoption.config import ConfigError, load_config
 from tools.adoption.detect.normalize import is_public, parse_repo_url
+from tools.adoption.detect.rtd_api import RtdClient, RtdError, detect_from_api
 from tools.adoption.detect.rtd_file import detect_from_file
 from tools.adoption.models import DataError, RtdProject, write_json
 from tools.adoption.process import pipeline
@@ -274,6 +275,34 @@ def test_privacy_rules():
     assert not is_public({}, base_url=business, assume_public=False)
     assert is_public({}, base_url=business, assume_public=True)
     assert is_public({}, base_url=community, assume_public=False)
+
+    # A private Business project whose default version is public (like
+    # canonical-ulwazi) is listed; a private version, an API error or a
+    # missing default version keeps it out.
+    class FakeRtd(RtdClient):
+        def __init__(self) -> None:
+            super().__init__(business, "token", Cache(None))
+
+        def list_projects(self, organization):
+            yield {"slug": "public-one", "privacy_level": "public"}
+            for slug in ("open-docs", PRIVATE_NAME, "broken", "no-version"):
+                yield {
+                    "slug": slug,
+                    "privacy_level": "private",
+                    "default_version": None if slug == "no-version" else "main",
+                    "readthedocs_yaml_path": None,
+                    "repository": {"url": f"git@github.com:canonical/{slug}.git"},
+                }
+
+        def version_privacy(self, slug, version):
+            if slug == "broken":
+                raise RtdError("HTTP 500")
+            return "public" if slug == "open-docs" else "private"
+
+    kept = detect_from_api(FakeRtd(), "canonical", include_builds=False)
+    assert [p.slug for p in kept] == ["public-one", "open-docs"]
+    assert kept[1].repo_url == "https://github.com/canonical/open-docs"
+    assert PRIVATE_NAME not in json.dumps([vars(p) for p in kept])
 
 
 def test_file_import_drops_private_and_translations(tmp_path):

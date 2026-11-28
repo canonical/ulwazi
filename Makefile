@@ -194,5 +194,5 @@ adoption-serve:  ##- Serve the rendered dashboard at http://127.0.0.1:$(ADOPTION
 .PHONY: adoption-sample
 adoption-sample: install-npm  ##- Render the dashboard from made-up sample data
 	npm install --no-audit --no-fund
-	PYTHONPATH=. uv run --only-group adoption python tests/adoption_samples.py tools/adoption/data
-	$(ADOPTION) render
+	PYTHONPATH=. uv run --only-group adoption python tests/adoption_samples.py tools/adoption/.sample-data
+	$(ADOPTION) --data-dir tools/adoption/.sample-data render

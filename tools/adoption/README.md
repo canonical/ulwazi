@@ -10,7 +10,8 @@ package. Keep it outside `ulwazi/`: the CSS pruner reads every file there.
 ## Quick start
 
 ```bash
-# Look at the dashboard with made-up data (no tokens needed):
+# Look at the dashboard with made-up data (no tokens needed). The sample
+# data goes to tools/adoption/.sample-data/, never into the real history:
 make adoption-sample
 make adoption-serve        # http://127.0.0.1:8001
 
@@ -46,6 +47,9 @@ the inspected commit.
 
 Out-of-scope projects stay in the table (dimmed, with the reason) but are not
 counted in the percentage.
+
+The statistics show the change against the run about a week earlier. A
+decrease is shown as `0 this week`.
 
 ## How the versions are determined
 
@@ -89,9 +93,12 @@ counted in the percentage.
 
 ## Scope and privacy
 
-- Only public RTD projects are listed. Private projects (and anything whose
-  privacy level is unknown) are dropped before any file is written, and
-  private or invisible GitHub repositories are dropped without a trace.
+- Only RTD projects with public documentation are listed: the project is
+  public, or (on Read the Docs Business) the project is private but its
+  default version is public, as with Ulwazi's own documentation. Other private
+  projects (and anything whose privacy level is unknown) are dropped before
+  any file is written, and private or invisible GitHub repositories are
+  dropped without a trace.
 - A project is _in scope_ when the Sphinx Stack was detected and it is not
   archived, opted out or hosted somewhere other than GitHub (v1 supports
   GitHub only). The headline percentage is Ulwazi projects divided by in-scope

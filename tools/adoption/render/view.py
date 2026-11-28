@@ -17,7 +17,6 @@ REASON_LABELS = {
     "error": "Error",
 }
 NONE_STACK = "none"
-MINUS = "\u2212"
 DAYS_PER_MONTH = 30
 DAYS_PER_YEAR = 365
 RECENT_DAYS = 30
@@ -162,12 +161,12 @@ def _row(project: dict[str, Any], now: dt.datetime) -> dict[str, Any]:
 
 
 def _delta_text(value: int | None) -> str:
+    """Weekly change; a decrease is shown as 0."""
     if value is None:
         return ""
-    if value == 0:
-        return "no change this week"
-    sign = "+" if value > 0 else MINUS
-    return f"{sign}{abs(value)} this week"
+    if value <= 0:
+        return "0 this week"
+    return f"+{value} this week"
 
 
 def _tiles(summary: dict[str, Any]) -> list[dict[str, Any]]:

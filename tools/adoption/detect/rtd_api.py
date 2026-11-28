@@ -105,6 +105,39 @@ class RtdClient:
         self._cache.put("rtd-build", slug, json.dumps(payload).encode("utf-8"))
         return found
 
+    def version_privacy(self, slug: str, version: str) -> str | None:
+        """Return the ``privacy_level`` of one version (Business only), cached."""
+        key = f"{slug}@{version}"
+        hit = self._cache.get("rtd-version", key, max_age=BUILD_CACHE_SECONDS)
+        if hit and hit.data:
+            return json.loads(hit.data).get("privacy_level")
+        data = self._get(f"{self.base_url}/api/v3/projects/{slug}/versions/{version}/")
+        level = data.get("privacy_level")
+        payload = {"privacy_level": level}
+        self._cache.put("rtd-version", key, json.dumps(payload).encode("utf-8"))
+        return None if level is None else str(level)
+
+
+def docs_are_public(client: RtdClient, item: dict[str, Any]) -> bool:
+    """Return True when a private project serves its default version publicly.
+
+    On Read the Docs Business the project's ``privacy_level`` and each
+    version's ``privacy_level`` are separate settings. A project can be private
+    in the dashboard while its documentation is public (Ulwazi's own docs are
+    set up like this). Any doubt, including an API error, counts as private.
+    """
+    if str(pick(item, "privacy_level") or "").lower() != "private":
+        return False
+    slug, version = pick(item, "slug"), pick(item, "default_version")
+    if not slug or not version:
+        return False
+    try:
+        level = client.version_privacy(str(slug), str(version))
+    except RtdError as error:
+        LOG.debug("Version privacy unknown, treating the project as private: %s", error)
+        return False
+    return str(level or "").lower() == "public"
+
 
 def detect_from_api(
     client: RtdClient,
@@ -116,7 +149,7 @@ def detect_from_api(
 ) -> list[RtdProject]:
     """List public projects. Private projects are dropped and never named."""
     projects: dict[str, RtdProject] = {}
-    private = translations = 0
+    private = translations = public_docs = 0
     for listed in client.list_projects(organization):
         if is_translation(listed):
             translations += 1
@@ -128,8 +161,10 @@ def detect_from_api(
                 **client.detail(str(item.get("slug")), item.get("modified")),
             }
         if not is_public(item, base_url=client.base_url, assume_public=assume_public):
-            private += 1
-            continue
+            if not docs_are_public(client, item):
+                private += 1
+                continue
+            public_docs += 1
         project = project_from_record(item, base_url=client.base_url)
         if project is None:
             continue
@@ -143,8 +178,10 @@ def detect_from_api(
         if limit and len(projects) >= limit:
             break
     LOG.info(
-        "Detected %d public projects (%d translations folded, %d non-public skipped)",
+        "Detected %d public projects (%d private projects with public docs "
+        "included, %d translations folded, %d non-public skipped)",
         len(projects),
+        public_docs,
         translations,
         private,
     )
